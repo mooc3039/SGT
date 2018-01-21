@@ -28,7 +28,8 @@ class fornecedorController extends Controller
      */
     public function create()
     {
-       return view('parametrizacao.fornecedor.novo');
+       
+         return view('parametrizacao.fornecedor.novo');
     }
 
     /**

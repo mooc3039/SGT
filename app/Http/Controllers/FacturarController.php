@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use DB;
 use App\Produto;//referente ao model que mexe com a tabela produtos
 use App\Saida; //
-use App\Cliente;
+use App\Model\Cliente;
 
 class FacturarController extends Controller
 {
@@ -14,7 +14,8 @@ class FacturarController extends Controller
     {
 
         $produtos = Produto::all();
-        return view('facturas.index', compact('produtos'));
+        $cliente =DB::table('clientes')->pluck('nome','id')->all(); //quando usar laravelcolletive tem que usar o DB no form select
+        return view('facturas.index', compact('produtos','cliente'));
     }
 
     public function insert(Request $request)
