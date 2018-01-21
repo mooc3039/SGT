@@ -13,8 +13,8 @@ class FacturarController extends Controller
     public function index()
     {
 
-        $lista_produtos = Produto::all();
-        return view('facturas.index', compact('$lista_produtos'));
+        $produtos = Produto::all();
+        return view('facturas.index', compact('produtos'));
     }
 
     public function insert(Request $request)
@@ -43,6 +43,11 @@ class FacturarController extends Controller
       }
       return back();
     }
-
+    //devolver o preço do produto
+    public function findPrice(Request $request)
+    {
+      $data = Produto::select('preco_venda')->where('id',$request->id)->first();
+      return response()->json($data);
+    }
     
 }

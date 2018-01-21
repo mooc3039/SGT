@@ -24,13 +24,15 @@ Route::group(['middleware'=>['authen']],function(){
   Route::get('/dashboard',['as'=>'dashboard','uses'=>'DashboardController@dashboard']);
 });
 
-Route::group(['middleware'=>['authen','roles'],'roles'=>['administrador']],function(){
+Route::group(['middleware'=>['authen','roles'],'roles'=>['Administrador']],function(){
+
   //para administrador
 
-  Route::get('/gerir/factura',['as'=>'indexFacturas','uses'=>'paginasController@indexFacturacao']);
+  //Route::get('/gerir/factura',['as'=>'indexFacturas','uses'=>'paginasController@indexFacturacao']);
   Route::get('/gerir/stock',['as'=>'indexStock','uses'=>'paginasController@indexStock']);
 //Rotas das views
   Route::get('/facturas/index',['as'=>'facturar','uses'=>'FacturarController@index']);
+  Route::get('/facturas/preco', ['as'=>'findPrice','uses'=>'FacturarController@findPrice']);
 
   Route::get('/gerir/usuario',['as'=>'indexUsuario','uses'=>'paginasController@indexUsuario']);
   Route::get('/gerir/cliente',['as'=>'indexCliente','uses'=>'paginasController@indexCliente']);
@@ -38,6 +40,17 @@ Route::group(['middleware'=>['authen','roles'],'roles'=>['administrador']],funct
   //Rotas de operações
   Route::resource('/fornecedores', 'fornecedorController');
   Route::resource('/produtos', 'produtoController');
+  
+
+  Route::group(['namespace' => 'Testes'], function(){
+    Route::resource('/teste_categoria', 'CategoriaController');
+    Route::resource('/teste_fornecedor', 'FornecedorController');
+    Route::resource('/teste_cliente', 'ClienteController');
+    Route::resource('/teste_role', 'RoleController');
+    Route::resource('/teste_permissao', 'PermissaoController');
+    Route::resource('/teste_saida', 'SaidaController');
+    Route::resource('/teste_iten_saida', 'ItenSaidaController');
+  });
 
 
 });

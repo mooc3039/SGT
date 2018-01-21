@@ -77,11 +77,13 @@
                 <td>
                   <select class="form-control descricao" name="descricao[]">
                     <option value="0" selected="true" disabled="true">Selecione Producto</option>        
-                          <option value=""></option>
+                    @foreach($produtos as $key => $p)
+                     <option value="{!!$key!!}">{!!$p->descricao!!}</option>
+                    @endforeach
                   </select>
                 </td>
                 <td><input type="text" name="quantidade[]" class="form-control quantidade"></td>
-                <td><input type="text" name="valor_total[]" class="form-control valor_total"></td>
+                <td><input type="text" name="preco_venda[]" class="form-control preco_venda"></td>
                 <td><input type="text" name="desconto[]" class="form-control desconto"></td>
                 <td><input type="text" name="subtotal[]" class="form-control subtotal"></td>
                 <td><a class="btn btn-danger remove" href="#"><i class="icon_close_alt2"></i></a></td>
@@ -105,3 +107,26 @@
 </div>
 
 @endsection
+<script text="text/javascript">
+  
+    //função que adiciona a linha
+    function addRow()
+    {
+      var tr='<tr>'+
+          '<td>'+
+            '<select class="form-control descricao" name="descricao[]">'+
+              '<option value="0" selected="true" disabled="true">Selecione Producto</option>'+     
+              '@foreach($produtos as $key => $p)'+
+             ' <option value="{!!$key!!}">{!!$p->descricao!!}</option>'+
+             '@endforeach'+
+            '</select>'+
+          '</td>'+
+          '<td><input type="text" name="quantidade[]" class="form-control quantidade"></td>'+
+          '<td><input type="text" name="preco_venda[]" class="form-control preco_venda"></td>'+
+          '<td><input type="text" name="desconto[]" class="form-control desconto"></td>'+
+          '<td><input type="text" name="valor_total[]" class="form-control valor_total"></td>'+
+          '<td><a class="btn btn-danger remove" href="#"><i class="icon_close_alt2"></i></a></td>'+
+       ' </tr>';
+       $('tbody').append(tr);
+    };
+</script>

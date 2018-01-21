@@ -132,28 +132,44 @@
   </body>
   <script type="text/javascript">
 
+    //====trocar de focus para o proximo campo a preencher
+    $('tbody').delegate('.descricao','change', function(){
+      var tr = $(this).parent().parent();
+      tr.find('.quantidade').focus();
+    });
+
+    //======pegar os valores dos campos e calcular o valor de cada produto====
+      $('tbody').delegate('.quantidade,.preco_venda,.desconto','keyup',function(){
+        var tr = $(this).parent().parent();
+        var quantidade = tr.find('.quantidade').val();
+        var preco_venda = tr.find('.preco_venda').val();
+        var desconto = tr.find('.desconto').val();
+        var subtotal = (quantidade*preco_venda)-(quantidade*preco_venda*desconto)/100;
+        tr.find('.subtotal').val(subtotal);
+        total();
+      });
+
+  //------devolver dados do price
+      $('tbody').delegate('.descricao','change',function(){
+        var tr= $(this).parent().parent();
+        var id = tr.find('.descricao').val();
+        var dataId={'id':id};
+        $.ajax({
+          type  : 'GET',
+          url   : '{!!URL::route('findPrice')!!}',
+          dataType: 'json',
+          data  : dataId,
+          success:function(data){
+            tr.find('.preco_venda').val(data.preco_venda);
+          }
+        });
+      });
+
     //==========adiciona mais uma linha da usando a função addRow==
     $('.addRow').on('click',function(){
       addRow();
     });
-  //função que adiciona a linha
-    function addRow()
-    {
-      var tr='<tr>'+
-          '<td>'+
-            '<select class="form-control descricao" name="descricao[]">'+
-              '<option value="0" selected="true" disabled="true">Selecione Producto</option>'+     
-                    '<option value=""></option>'+
-            '</select>'+
-          '</td>'+
-          '<td><input type="text" name="quantidade[]" class="form-control quantidade"></td>'+
-          '<td><input type="text" name="preco[]" class="form-control preco"></td>'+
-          '<td><input type="text" name="desconto[]" class="form-control desconto"></td>'+
-          '<td><input type="text" name="valor_total[]" class="form-control valor_total"></td>'+
-          '<td><a class="btn btn-danger remove" href="#"><i class="icon_close_alt2"></i></a></td>'+
-       ' </tr>';
-       $('tbody').append(tr);
-    };
+
     //====remove a linha adicionada, foram corrigidos muitos bugs aqui===
        
     $('tbody').on('click','.remove',function(){
@@ -163,6 +179,7 @@
           }else{
           $(this).parent().parent().remove(); 
           }
+          total();
         });
 
 

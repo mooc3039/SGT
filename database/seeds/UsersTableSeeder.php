@@ -12,12 +12,33 @@ class UsersTableSeeder extends Seeder
      */
     public function run()
     {
+
+      User::create([
+        'role_id'=>1,
+        'active'=>1,
+        'name'=>'Osorio Cassiano Malache',
+        'username'=>'osoriocassiano',
+        'email'=>'osoriocassiano@gmail.com',
+        'password'=>bcrypt('123456'),
+        'remember_token'=> str_random(10),
+      ]);
+
+      User::create([
+        'role_id'=>1,
+        'active'=>1,
+        'name'=>'Carlos Manhique',
+        'username'=>'carlosmanhique',
+        'email'=>'carlosmanhique@gmail.com',
+        'password'=>bcrypt('123456'),
+        'remember_token'=> str_random(10),
+      ]);
+
       User::create([
         'role_id'=>2,
         'active'=>1,
-        'name'=>'Carlos Gaide Manhique',
-        'username'=>'carlos',
-        'email'=>'carlosmanhique33@gmail.com',
+        'name'=>'Ossmane Dos Prazeres',
+        'username'=>'ossmane',
+        'email'=>'ossmane@gmail.com',
         'password'=>bcrypt('123456'),
         'remember_token'=> str_random(10),
       ]);

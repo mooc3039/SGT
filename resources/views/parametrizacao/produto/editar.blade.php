@@ -18,33 +18,33 @@
         Actualizar Produto
       </header>
 
-      {!! Form::open([ 'action' => ['produtoController@update', $produto->produto_id],'method' => 'POST', 'class' => 'form-horizontal']) !!}
+      {!! Form::open([ 'action' => ['produtoController@update', $produto->id],'method' => 'POST', 'class' => 'form-horizontal']) !!}
         <div class="panel-body" style="border-bottom: 1px solid #ccc; ">
           <div class="form-group">
 
               <div class="col-sm-3">
-                {{Form::label('nome', 'Nome do Produto')}}
-                {{Form::text('nome', $produto->nome, ['class' => 'form-control', 'placeholder' => 'Nome do Produto'])}}
+                {{Form::label('descricao', 'Descrição')}}
+                {{Form::text('descricao', $produto->descricao, ['class' => 'form-control', 'placeholder' => 'Descrição do Produto'])}}
               </div>
           
               <div class="col-sm-3">
-                {{Form::label('tipo', 'Categoria/Tipo')}}
-                {{Form::text('tipo', $produto->tipo, ['class' => 'form-control', 'placeholder' => 'Categoria/Tipo'])}}
+                {{Form::label('preco_venda', 'Preço de Venda')}}
+                {{Form::text('preco_venda', $produto->preco_venda, ['class' => 'form-control', 'placeholder' => 'Preço de Venda'])}}
               </div>
           
               <div class="col-sm-3">
-                {{Form::label('preco', 'Preço')}}
-                {{Form::text('preco', $produto->preco, ['class' => 'form-control', 'placeholder' => 'Preço '])}}
+                {{Form::label('preco_aquisicao', 'Preço de Aquisição')}}
+                {{Form::text('preco_aquisicao', $produto->preco_aquisicao, ['class' => 'form-control', 'placeholder' => 'Preço de Aquisição '])}}
               </div>
           
               <div class="col-sm-3">
-                {{Form::label('fornecedor', 'Fornecedor')}}
-                {{Form::text('fornecedor', $produto->fornecedor, ['class' => 'form-control', 'placeholder' => 'Fornecedor'])}}
+                {{Form::label('quantidade_dispo', 'Quantidade Disponível')}}
+                {{Form::text('quantidade_dispo', $produto->quantidade_dispo, ['class' => 'form-control', 'placeholder' => 'Quantidade Disponível'])}}
               </div>
         
               <div class="col-sm-3">
-                {{Form::label('validade', 'Validade')}}
-                {{Form::text('validade', $produto->validade, ['class' => 'form-control', 'placeholder' => 'Validade'])}}
+                {{Form::label('quantidade_min', 'Quantidade Minima')}}
+                {{Form::text('quantidade_min', $produto->quantidade_min, ['class' => 'form-control', 'placeholder' => 'Validade'])}}
               </div>
          
             </div>

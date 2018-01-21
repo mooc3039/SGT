@@ -13,10 +13,11 @@ class RolesTableSeeder extends Seeder
     public function run()
     {
       Role::insert([
-        ['nome'=>'Admin'],
+        ['nome'=>'Administrador'],
         ['nome'=>'Receiptionist'],
         ['nome'=>'Manager'],
         ['nome'=>'CEO']
+
       ]);
     }
 }

@@ -37,21 +37,20 @@ class produtoController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'nome' => 'required',
-            'tipo' => 'required ',
-            'preco' => 'required | numeric',
-            'fornecedor' => 'required',
-            'validade' => 'required',
-            
+            'descricao' => 'required',
+            'preco_venda' => 'required|numeric ',
+            'preco_aquisicao' => 'required | numeric',
+            'quantidade_dispo' => 'required|numeric',
+            'quantidade_min' => 'required|numeric',  
           ]);
   
           //criar fornecdor
           $produto = new Produto;
-          $produto->nome = $request->input('nome');
-          $produto->tipo = $request->input('tipo');
-          $produto->preco = $request->input('preco');
-          $produto->fornecedor = $request->input('fornecedor');
-          $produto->validade = $request->input('validade');       
+          $produto->descricao = $request->input('descricao');
+          $produto->preco_venda = $request->input('preco_venda');
+          $produto->preco_aquisicao = $request->input('preco_aquisicao');
+          $produto->quantidade_dispo = $request->input('quantidade_dispo');
+          $produto->quantidade_min = $request->input('quantidade_min');       
           $produto->save();
   
           return redirect('/produtos')->with('success', 'Produto criado com sucesso');
@@ -91,21 +90,19 @@ class produtoController extends Controller
     public function update(Request $request, $id)
     {
         $this->validate($request, [
-            'nome' => 'required',
-            'tipo' => 'required ',
-            'preco' => 'required | numeric',
-            'fornecedor' => 'required',
-            'validade' => 'required',
-            
+            'descricao' => 'required',
+            'preco_venda' => 'required|numeric ',
+            'preco_aquisicao' => 'required | numeric',
+            'quantidade_dispo' => 'required|numeric',
+            'quantidade_min' => 'required|numeric',  
           ]);
-  
           //criar fornecdor
           $produto = Produto::find($id);
-          $produto->nome = $request->input('nome');
-          $produto->tipo = $request->input('tipo');
-          $produto->preco = $request->input('preco');
-          $produto->fornecedor = $request->input('fornecedor');
-          $produto->validade = $request->input('validade');       
+          $produto->descricao = $request->input('descricao');
+          $produto->preco_venda = $request->input('preco_venda');
+          $produto->preco_aquisicao = $request->input('preco_aquisicao');
+          $produto->quantidade_dispo = $request->input('quantidade_dispo');
+          $produto->quantidade_min = $request->input('quantidade_min');       
           $produto->save();
   
           return redirect('/produtos')->with('success', 'Produto actualizado com sucesso');
