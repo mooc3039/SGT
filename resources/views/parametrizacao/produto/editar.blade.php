@@ -46,6 +46,16 @@
                 {{Form::label('quantidade_min', 'Quantidade Minima')}}
                 {{Form::text('quantidade_min', $produto->quantidade_min, ['class' => 'form-control', 'placeholder' => 'Validade'])}}
               </div>
+
+              <div class="col-sm-3">
+                {{Form::label('fornecedor_id', 'Fornecedor')}}
+                {{Form::select('fornecedor_id', [''=>'Selecione Fornecedor',] + $fornecedor, null, ['class'=>'form-control'] )}}
+              </div>
+  
+              <div class="col-sm-3">
+                {{Form::label('categoria_id', 'Categoria')}}
+                {{Form::select('categoria_id', [''=>'Selecione Categoria',] + $categoria, null, ['class'=>'form-control'] )}}
+              </div>
          
             </div>
           </div>

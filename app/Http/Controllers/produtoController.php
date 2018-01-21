@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use DB;
 use App\Produto;
+use App\Fornecedor;
+use App\Model\Categoria;
 
 class produtoController extends Controller
 {
@@ -25,7 +28,9 @@ class produtoController extends Controller
      */
     public function create()
     {
-        return view('parametrizacao.produto.novo');
+        $categoria =DB::table('categorias')->pluck('nome','id')->all();
+        $fornecedor =DB::table('fornecedors')->pluck('nome','id')->all();
+        return view('parametrizacao.produto.novo',compact('fornecedor','categoria'));
     }
 
     /**
@@ -41,16 +46,21 @@ class produtoController extends Controller
             'preco_venda' => 'required|numeric ',
             'preco_aquisicao' => 'required | numeric',
             'quantidade_dispo' => 'required|numeric',
-            'quantidade_min' => 'required|numeric',  
+            'quantidade_min' => 'required|numeric', 
+            'fornecedor_id' => 'required',
+            'categoria_id' => 'required',
           ]);
-  
+         
           //criar fornecdor
           $produto = new Produto;
           $produto->descricao = $request->input('descricao');
           $produto->preco_venda = $request->input('preco_venda');
           $produto->preco_aquisicao = $request->input('preco_aquisicao');
           $produto->quantidade_dispo = $request->input('quantidade_dispo');
-          $produto->quantidade_min = $request->input('quantidade_min');       
+          $produto->quantidade_min = $request->input('quantidade_min');
+
+          $produto->fornecedor_id = $request->input('fornecedor_id');    
+          $produto->categoria_id = $request->input('categoria_id');     
           $produto->save();
   
           return redirect('/produtos')->with('success', 'Produto criado com sucesso');
@@ -77,7 +87,9 @@ class produtoController extends Controller
     {
         //echo $id;
         $produto = Produto::find($id);
-        return view('parametrizacao.produto.editar')->with('produto', $produto);
+        $categoria =DB::table('categorias')->pluck('nome','id')->all();
+        $fornecedor =DB::table('fornecedors')->pluck('nome','id')->all();
+        return view('parametrizacao.produto.editar', compact('categoria','fornecedor'))->with('produto', $produto);
     }
 
     /**
@@ -95,6 +107,8 @@ class produtoController extends Controller
             'preco_aquisicao' => 'required | numeric',
             'quantidade_dispo' => 'required|numeric',
             'quantidade_min' => 'required|numeric',  
+            'fornecedor_id' => 'required',
+            'categoria_id' => 'required',
           ]);
           //criar fornecdor
           $produto = Produto::find($id);
@@ -102,7 +116,10 @@ class produtoController extends Controller
           $produto->preco_venda = $request->input('preco_venda');
           $produto->preco_aquisicao = $request->input('preco_aquisicao');
           $produto->quantidade_dispo = $request->input('quantidade_dispo');
-          $produto->quantidade_min = $request->input('quantidade_min');       
+          $produto->quantidade_min = $request->input('quantidade_min');  
+
+          $produto->fornecedor_id = $request->input('fornecedor_id');    
+          $produto->categoria_id = $request->input('categoria_id');     
           $produto->save();
   
           return redirect('/produtos')->with('success', 'Produto actualizado com sucesso');

@@ -21,41 +21,19 @@
       {!! Form::open(['action' => 'FacturarController@index', 'method' => 'POST', 'class' => 'form-horizontal']) !!}
         <div class="panel-body" style="border-bottom: 1px solid #ccc; ">
           <div class="form-group">
-
+              
               <div class="col-sm-3">
                 {{Form::label('nome', 'Nome do Cliente')}}
-                {{Form::text('nome', '', ['class' => 'form-control', 'placeholder' => 'Nome do Cliente'])}}
+                 {{Form::select('nome', [''=>'Selecione Cliente',] + $cliente, null, ['class'=>'form-control'] )}}
               </div>
-          
-              <div class="col-sm-3">
-                {{Form::label('endereco', 'Endereço')}}
-                {{Form::text('endereco', '', ['class' => 'form-control', 'placeholder' => 'Endereço'])}}
-              </div>
-          
-              <div class="col-sm-3">
-                {{Form::label('email', 'Email')}}
-                {{Form::text('email', '', ['class' => 'form-control', 'placeholder' => 'Email'])}}
-              </div>
-        
-              <div class="col-sm-3">
-                {{Form::label('telefone', 'Telefone')}}
-                {{Form::text('telefone', '', ['class' => 'form-control', 'placeholder' => 'Rubrica'])}}
-              </div>
-        
-          
-              <div class="col-sm-4">
-                {{Form::label('nuit', 'NUIT')}}
-                {{Form::text('nuit', '', ['class' => 'form-control', 'placeholder' => 'NUIT'])}}
-              </div>  
             </div>
           </div>
+         
           <div class="panel-footer">
             {{Form::submit('Facturar cliente', ['class'=>'btn btn-primary'])}}
           </div>
         
-      
- 
-     
+
         <!-- começa a secção de facturação na tabela-->
         
         <section class="panel">
@@ -76,7 +54,7 @@
               <tr>
                 <td>
                   <select class="form-control descricao" name="descricao[]">
-                    <option value="0" selected="true" disabled="true">Selecione Producto</option>        
+                    <option value="0" selected="true" disabled="true">Selecione Produto</option>        
                     @foreach($produtos as $key => $p)
                      <option value="{!!$key!!}">{!!$p->descricao!!}</option>
                     @endforeach
@@ -108,7 +86,7 @@
 
 @endsection
 <script text="text/javascript">
-  
+ 
     //função que adiciona a linha
     function addRow()
     {
@@ -124,7 +102,7 @@
           '<td><input type="text" name="quantidade[]" class="form-control quantidade"></td>'+
           '<td><input type="text" name="preco_venda[]" class="form-control preco_venda"></td>'+
           '<td><input type="text" name="desconto[]" class="form-control desconto"></td>'+
-          '<td><input type="text" name="valor_total[]" class="form-control valor_total"></td>'+
+          '<td><input type="text" name="subtotal[]" class="form-control subtotal"></td>'+
           '<td><a class="btn btn-danger remove" href="#"><i class="icon_close_alt2"></i></a></td>'+
        ' </tr>';
        $('tbody').append(tr);

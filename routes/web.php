@@ -28,7 +28,7 @@ Route::group(['middleware'=>['authen','roles'],'roles'=>['Administrador']],funct
 
   //para administrador
 
-  //Route::get('/gerir/factura',['as'=>'indexFacturas','uses'=>'paginasController@indexFacturacao']);
+
   Route::get('/gerir/stock',['as'=>'indexStock','uses'=>'paginasController@indexStock']);
 //Rotas das views
   Route::get('/facturas/index',['as'=>'facturar','uses'=>'FacturarController@index']);

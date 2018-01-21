@@ -50,12 +50,12 @@
 
             <div class="col-sm-3">
               {{Form::label('fornecedor_id', 'Fornecedor')}}
-              {{Form::text('fornecedor_id', '', ['class' => 'form-control', 'placeholder' => 'Fornecedor'])}}
+              {{Form::select('fornecedor_id', [''=>'Selecione Fornecedor',] + $fornecedor, null, ['class'=>'form-control'] )}}
             </div>
 
             <div class="col-sm-3">
               {{Form::label('categoria_id', 'Categoria')}}
-              {{Form::text('categoria_id', '', ['class' => 'form-control', 'placeholder' => 'Categoria'])}}
+              {{Form::select('categoria_id', [''=>'Selecione Categoria',] + $categoria, null, ['class'=>'form-control'] )}}
             </div>
 
             </div>

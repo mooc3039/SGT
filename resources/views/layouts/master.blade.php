@@ -149,6 +149,84 @@
         total();
       });
 
+      //==calculo do total de todas as linhas
+        function total()
+        {
+          var total =0;
+          $('.subtotal').each(function(i,e){
+            var subtotal = $(this).val()-0;
+            total +=subtotal;
+          })
+          $('.total').html(total.formatMoney(2,',','.')+ " Mtn");
+        };
+
+        // ==== formatando os numeros ====
+        Number.prototype.formatMoney = function(decPlaces, thouSeparator, decSeparator){
+          var n = this,
+              decPlaces = isNaN(decPlaces = Math.abs(decPlaces)) ? 2 : decPlaces,
+              decSeparator = decSeparator == undefined ? ".": decSeparator,
+              thouSeparator = thouSeparator == undefined ? ",": thouSeparator,
+              sign = n < 0 ? "-" : "",
+              i = parseInt(n = Math.abs(+n || 0).toFixed(decPlaces)) + "",
+              j = (j = i.length) > 3 ? j % 3 : 0;
+              return sign + (j ? i.substr(0,j) + thouSeparator : "")
+              + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thouSeparator)
+              + (decPlaces ? decSeparator + Math.abs(n-i).toFixed(decPlaces).slice(2) : "");
+        };
+//---começam aqui as funçoes que filtram somente números
+          //---find element by row--
+          function findRowNum(input){
+            $('tbody').delegate(input, 'keydown',function(){
+              var tr =$(this).parent().parent();
+              number(tr.find(input));
+            });
+          }
+
+          function findRowNumOnly(input){
+            $('tbody').delegate(input, 'keydown',function(){
+              var tr =$(this).parent().parent();
+              numberOnly(tr.find(input));
+            });
+          }
+
+      //--numeros e pontos
+      function number(input){
+        $(input).keypress(function (evt){
+          var theEvent = evt || window.event;
+          var key = theEvent.keyCode || theEvent.which;
+          key = String.fromCharCode( key );
+          var regex = /[-\d\.]/;
+          var objRegex = /^-?\d*[\.]?\d*$/;
+          var val = $(evt.target).val();
+          if(!regex.test(key) || !objRegex.test(val+key) ||
+            !theEvent.keyCode == 46 || !theEvent.keyCode == 8){
+              theEvent.returnValue = false;
+              if(theEvent.preventDefault) theEvent.preventDefault();
+            };
+        });
+      };
+        function findRowNumOnly(input){
+          $('tbody').delegate(input, 'keydown',function(){
+            var tr =$(this).parent().parent();
+            numberOnly(tr.find(input));
+          });
+        }
+        //-------------somente numeros
+            function numberOnly(input){
+              $(input).keypress(function(evt){
+                var e = event || evt;
+                var charCode = e.which || e.keyCode;
+                if (charCode > 31 && (charCode < 48 || charCode > 57))
+                return false;
+                return true;
+              });
+            }
+         //---limitando somente para entrada de números
+         findRowNum('.quantidade');
+         findRowNum('.preco_venda');
+         findRowNum('.desconto');   
+            
+
   //------devolver dados do price
       $('tbody').delegate('.descricao','change',function(){
         var tr= $(this).parent().parent();
@@ -178,8 +256,9 @@
             alert('Não poderá remover o ultimo campo de facturação');
           }else{
           $(this).parent().parent().remove(); 
-          }
           total();
+          }
+          
         });
 
 
