@@ -14,6 +14,7 @@ class Cliente extends Model
 		'nome',
 		'endereco',
 		'telefone',
+		'email',
 		'nuit'
 	];
 	public $timestamps = false;

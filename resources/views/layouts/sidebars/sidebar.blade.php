@@ -55,7 +55,7 @@
           <li><a class="" href="{{ route('fornecedores.index') }}">Fornecedores</a></li>
           <li><a class="" href="{{ route('produtos.index') }}">Produtos</a></li>
           <li><a class="" href="{{ route('indexUsuario') }}">Usuários</a></li>
-          <li><a class="" href="{{ route('indexCliente') }}"><span>Clientes</span></a></li>
+          <li><a class="" href="{{ route('cliente.index') }}"><span>Clientes</span></a></li>
         </ul>
       </li>
 

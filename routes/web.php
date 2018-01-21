@@ -40,6 +40,7 @@ Route::group(['middleware'=>['authen','roles'],'roles'=>['Administrador']],funct
   //Rotas de operações
   Route::resource('/fornecedores', 'fornecedorController');
   Route::resource('/produtos', 'produtoController');
+  Route::resource('/cliente', 'ClienteController');
   
 
   Route::group(['namespace' => 'Testes'], function(){
