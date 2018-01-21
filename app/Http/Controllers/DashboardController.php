@@ -13,6 +13,11 @@ class DashboardController extends Controller
 
 public function dashboard()
 {
+  
   return view('layouts.master');
+}
+public function paginaInicial()
+{
+  return view('layouts.home.inicio');
 }
 }

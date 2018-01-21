@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use DB;
 use App\Produto;//referente ao model que mexe com a tabela produtos
-use App\Saida; //
+use App\Model\Saida; //
 use App\Model\Cliente;
 
 class FacturarController extends Controller
@@ -20,14 +20,15 @@ class FacturarController extends Controller
 
     public function insert(Request $request)
     {
-      $clientes=new Cliente;
-      $clientes->nome=$request->nomefn;
-      $clientes->endereco=$request->endereco;
-      $clientes->email=$request->email;
-      $clientes->telefone=$request->telefone;
-      $clientes->nuit=$request->nuit;
+      $saidas=new Saida;
+    
+      $saidas->user_id=$request->user_id;
+      $saidas->cliente_id=$request->user_id;
+      $saidas->subtotal=$request->subtotal;
+      $saidas->desconto=$request->desconto;
+      $saidas->valor_total=$request->valor_total;
 
-      if ($clientes->save()) {
+      if ($saidas->save()) {
         $id = $clientes->id;
         foreach ($request->descricao as $key=> $v)
         {

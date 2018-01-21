@@ -22,6 +22,7 @@ Route::get('/noPermission',function(){
 Route::group(['middleware'=>['authen']],function(){
   Route::get('/logout',['as'=>'logout','uses'=>'LoginController@getLogout']);
   Route::get('/dashboard',['as'=>'dashboard','uses'=>'DashboardController@dashboard']);
+  Route::get('/dashboard/inicio',['as'=>'paginainicial','uses'=>'DashboardController@paginaInicial']);
 });
 
 Route::group(['middleware'=>['authen','roles'],'roles'=>['Administrador']],function(){

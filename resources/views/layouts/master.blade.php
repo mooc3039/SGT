@@ -33,11 +33,12 @@
     <section id="container" class="">
       @include('layouts.header.header')
       @include('layouts.sidebars.sidebar')
+      
       <section id="main-content">
         <div class="wrapper">
           @include('layouts.validation.alertas')
           @yield('content')
-
+            
         </div>
       </section>
 

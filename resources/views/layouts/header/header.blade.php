@@ -4,7 +4,7 @@
   </div>
 
   <!--logo start-->
-  <a href="#" class="logo">Gestão <span class="lite">Stocks</span></a>
+  <a href="{{ route('paginainicial' )}}" class="logo">Gestão <span class="lite">Stocks</span></a>
   <!--logo end-->
 
   <div class="nav search-row" id="top_menu">
