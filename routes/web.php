@@ -24,12 +24,13 @@ Route::group(['middleware'=>['authen']],function(){
   Route::get('/dashboard',['as'=>'dashboard','uses'=>'DashboardController@dashboard']);
 });
 
-Route::group(['middleware'=>['authen','roles'],'roles'=>['admin']],function(){
+Route::group(['middleware'=>['authen','roles'],'roles'=>['administrador']],function(){
   //para administrador
 
-  Route::get('/gerir/factura',['as'=>'indexFacturacao','uses'=>'paginasController@indexFacturacao']);
+  Route::get('/gerir/factura',['as'=>'indexFacturas','uses'=>'paginasController@indexFacturacao']);
   Route::get('/gerir/stock',['as'=>'indexStock','uses'=>'paginasController@indexStock']);
 //Rotas das views
+  Route::get('/facturas/index',['as'=>'facturar','uses'=>'FacturarController@index']);
 
   Route::get('/gerir/usuario',['as'=>'indexUsuario','uses'=>'paginasController@indexUsuario']);
   Route::get('/gerir/cliente',['as'=>'indexCliente','uses'=>'paginasController@indexCliente']);

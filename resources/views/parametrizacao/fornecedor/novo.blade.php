@@ -28,8 +28,8 @@
               </div>
           
               <div class="col-sm-3">
-                {{Form::label('contacto', 'Contacto')}}
-                {{Form::text('contacto', '', ['class' => 'form-control', 'placeholder' => 'Contacto do Fornecedor'])}}
+                {{Form::label('endereco', 'Endereço')}}
+                {{Form::text('endereco', '', ['class' => 'form-control', 'placeholder' => 'Endereço'])}}
               </div>
           
               <div class="col-sm-3">
@@ -38,20 +38,15 @@
               </div>
           
               <div class="col-sm-3">
-                {{Form::label('produto', 'Produto')}}
-                {{Form::text('produto', '', ['class' => 'form-control', 'placeholder' => 'Produto que fornece'])}}
+                {{Form::label('telefone', 'Telefone')}}
+                {{Form::text('telefone', '', ['class' => 'form-control', 'placeholder' => 'Telefone'])}}
               </div>
         
               <div class="col-sm-3">
                 {{Form::label('rubrica', 'Rubrica')}}
                 {{Form::text('rubrica', '', ['class' => 'form-control', 'placeholder' => 'Rubrica'])}}
               </div>
-        
-          
-              <div class="col-sm-6">
-                {{Form::label('descricao', 'Descrição')}}
-                {{Form::text('descricao', '', ['class' => 'form-control', 'placeholder' => 'Descrição do Fornecedor'])}}
-              </div>  
+ 
             </div>
           </div>
           <div class="panel-footer">

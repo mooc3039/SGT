@@ -14,7 +14,7 @@ class paginasController extends Controller
   //Paginas de Facturação
     public function indexFacturacao()
     {
-      return view('facturas.index_facturas');
+      return view('facturas.index');
     }
   //Paginas de Sock
   public function indexStock()

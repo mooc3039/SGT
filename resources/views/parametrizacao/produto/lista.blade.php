@@ -25,26 +25,26 @@
       <table class="table table-striped table-advance table-hover">
         <tbody>
           <tr>
-            <th><i class="icon_profile"></i>Nome do Produto</th>
-            <th><i class="icon_mobile"></i> Categoria/Tipo</th>
-            <th><i class="icon_mail_alt"></i> Preço</th>
-            <th><i class="icon_pin_alt"></i> Fornecedor</th>
-            <th><i class="icon_calendar"></i> Validade</th>
+            <th><i class="icon_profile"></i>Descrição</th>
+            <th><i class="icon_mobile"></i> Preço de Venda</th>
+            <th><i class="icon_mail_alt"></i> Preço de Aquisição</th>
+            <th><i class="icon_pin_alt"></i> Quantidade Disponível</th>
+            <th><i class="icon_calendar"></i> Quantidade Minima</th>
             <th><i class="icon_cogs"></i> Operações</th>
           </tr>
           @if(count($produtos) > 0)
           @foreach($produtos as $produto)
           <tr>
-            <td> {{$produto->nome}}</td>
-            <td>{{$produto->tipo}}</td>
-            <td>{{$produto->preco}}</td>
-            <td>{{$produto->fornecedor}}</td>
-            <td>{{$produto->validade}}</td>
+            <td> {{$produto->descricao}}</td>
+            <td>{{$produto->preco_venda}}</td>
+            <td>{{$produto->preco_aquisicao}}</td>
+            <td>{{$produto->quantidade_dispo}}</td>
+            <td>{{$produto->quantidade_min}}</td>
             <td>
               <div class="btn-group">
                 <a class="btn btn-primary" href="#"><i class="icon_plus_alt2"></i></a>
-                <a class="btn btn-success" href="{{route('produtos.edit', $produto->produto_id)}}"><i class="icon_check_alt2"></i></a>
-                <a class="btn btn-danger" href="{{route('produtos.destroy', $produto->produto_id)}}"><i class="icon_close_alt2"></i></a>
+                <a class="btn btn-success" href="{{route('produtos.edit', $produto->id)}}"><i class="icon_check_alt2"></i></a>
+                <a class="btn btn-danger" href="{{route('produtos.destroy', $produto->id)}}"><i class="icon_close_alt2"></i></a>
               </div>
             </td>
           </tr>

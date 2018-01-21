@@ -18,7 +18,7 @@
         Actualizar Dados do Fornecedor
       </header>
 
-      {!! Form::open(['action' => ['fornecedorController@update', $fornecedor->fornecedor_id], 'method' => 'POST', 'class' => 'form-horizontal']) !!}
+      {!! Form::open(['action' => ['fornecedorController@update', $fornecedor->id], 'method' => 'POST', 'class' => 'form-horizontal']) !!}
         <div class="panel-body" style="border-bottom: 1px solid #ccc; ">
           <div class="form-group">
 
@@ -28,8 +28,8 @@
               </div>
           
               <div class="col-sm-3">
-                {{Form::label('contacto', 'Contacto')}}
-                {{Form::text('contacto', $fornecedor->contacto, ['class' => 'form-control', 'placeholder' => 'Contacto do Fornecedor'])}}
+                {{Form::label('endereco', 'Endereço')}}
+                {{Form::text('endereco', $fornecedor->endereco, ['class' => 'form-control', 'placeholder' => 'Endereço'])}}
               </div>
           
               <div class="col-sm-3">
@@ -38,20 +38,15 @@
               </div>
           
               <div class="col-sm-3">
-                {{Form::label('produto', 'Produto')}}
-                {{Form::text('produto', $fornecedor->produto, ['class' => 'form-control', 'placeholder' => 'Produto que fornece'])}}
+                {{Form::label('telefone', 'Telefone')}}
+                {{Form::text('telefone', $fornecedor->telefone, ['class' => 'form-control', 'placeholder' => 'Telefone'])}}
               </div>
         
               <div class="col-sm-3">
                 {{Form::label('rubrica', 'Rubrica')}}
                 {{Form::text('rubrica', $fornecedor->rubrica, ['class' => 'form-control', 'placeholder' => 'Rubrica'])}}
               </div>
-        
-          
-              <div class="col-sm-6">
-                {{Form::label('descricao', 'Descrição')}}
-                {{Form::text('descricao', $fornecedor->descricao, ['class' => 'form-control', 'placeholder' => 'Descrição do Fornecedor'])}}
-              </div>  
+
             </div>
           </div>
           <div class="panel-footer">

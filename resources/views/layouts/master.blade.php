@@ -45,7 +45,7 @@
 
     {!!Html::script('js/jquery.js')!!}
     {!!Html::script('js/jquery-ui-1.10.4.min.js')!!}
-    {!!Html::script('js/jquery-1.8.3.min.js')!!}
+    {!!Html::script('js/jquery-3.2.1.min.js')!!}
     {!!Html::script('js/jquery-ui-1.9.2.custom.min.js')!!}
     {!!Html::script('js/bootstrap.min.js')!!}
     {!!Html::script('js/jquery.scrollTo.min.js')!!}
@@ -130,4 +130,41 @@
         });
       </script>
   </body>
+  <script type="text/javascript">
+
+    //==========adiciona mais uma linha da usando a função addRow==
+    $('.addRow').on('click',function(){
+      addRow();
+    });
+  //função que adiciona a linha
+    function addRow()
+    {
+      var tr='<tr>'+
+          '<td>'+
+            '<select class="form-control descricao" name="descricao[]">'+
+              '<option value="0" selected="true" disabled="true">Selecione Producto</option>'+     
+                    '<option value=""></option>'+
+            '</select>'+
+          '</td>'+
+          '<td><input type="text" name="quantidade[]" class="form-control quantidade"></td>'+
+          '<td><input type="text" name="preco[]" class="form-control preco"></td>'+
+          '<td><input type="text" name="desconto[]" class="form-control desconto"></td>'+
+          '<td><input type="text" name="valor_total[]" class="form-control valor_total"></td>'+
+          '<td><a class="btn btn-danger remove" href="#"><i class="icon_close_alt2"></i></a></td>'+
+       ' </tr>';
+       $('tbody').append(tr);
+    };
+    //====remove a linha adicionada, foram corrigidos muitos bugs aqui===
+       
+    $('tbody').on('click','.remove',function(){
+          var l=$('tbody tr').length;
+          if (l==1) {
+            alert('Não poderá remover o ultimo campo de facturação');
+          }else{
+          $(this).parent().parent().remove(); 
+          }
+        });
+
+
+  </script>
 </html>

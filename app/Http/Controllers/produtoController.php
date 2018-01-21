@@ -14,7 +14,7 @@ class produtoController extends Controller
      */
     public function index()
     {
-        $produtos = Produto::orderBy('nome','asc')->paginate(7);
+        $produtos = Produto::orderBy('descricao','asc')->paginate(7);
         return view('parametrizacao.produto.lista')->with('produtos',$produtos);
     }
 

@@ -26,9 +26,9 @@
         <tbody>
           <tr>
             <th><i class="icon_profile"></i>Nome do Fornecedor</th>
-            <th><i class="icon_mobile"></i> Contacto</th>
+            <th><i class="icon_mobile"></i> Endereço</th>
             <th><i class="icon_mail_alt"></i> Email</th>
-            <th><i class="icon_pin_alt"></i> Produto</th>
+            <th><i class="icon_pin_alt"></i> Telefone</th>
             <th><i class="icon_calendar"></i> Rubrica</th>
             <th><i class="icon_cogs"></i> Operações</th>
           </tr>
@@ -36,20 +36,21 @@
           @foreach($fornecedores as $fornecedor)
           <tr>
             <td> {{$fornecedor->nome}}</td>
-            <td>{{$fornecedor->contacto}}</td>
+            <td>{{$fornecedor->endereco}}</td>
             <td>{{$fornecedor->email}}</td>
-            <td>{{$fornecedor->produto}}</td>
+            <td>{{$fornecedor->telefone}}</td>
             <td>{{$fornecedor->rubrica}}</td>
             <td>
               <div class="btn-group">
                 <a class="btn btn-primary" href="#"><i class="icon_plus_alt2"></i></a>
-                <a class="btn btn-success" href="{{route('fornecedores.edit', $fornecedor->fornecedor_id)}}"><i class="icon_check_alt2"></i></a>
-                {!!Form::open(['route'=>['fornecedores.destroy', $fornecedor->fornecedor_id], 'method'=>'DELETE'])!!}
-                {{Form::submit('Delete', ['class' => 'btn btn-danger'])}}
+                <a class="btn btn-success" href="{{route('fornecedores.edit', $fornecedor->id)}}"><i class="icon_check_alt2"></i></a>
+               <!-- {!!Form::open(['route'=>['fornecedores.destroy', $fornecedor->fornecedor_id], 'method'=>'DELETE'])!!}
+                {{Form::submit('Delete', ['class' => 'btn btn-danger'])}} -->
                 {!!Form::close() !!}
                 
               </div>
             </td>
+            
           </tr>
           @endforeach
          

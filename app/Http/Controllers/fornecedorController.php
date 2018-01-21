@@ -39,21 +39,19 @@ class fornecedorController extends Controller
     {
         $this->validate($request, [
             'nome' => 'required',
-            'contacto' => 'required | numeric',
+            'endereco' => 'required',
             'email' => 'required | email',
-            'produto' => 'required',
-            'rubrica' => 'required',
-            'descricao' => 'required'
+            'telefone' => 'required | numeric',
+            'rubrica' => 'required'   
           ]);
   
           //criar fornecdor
           $fornecedor = new Fornecedor;
           $fornecedor->nome = $request->input('nome');
-          $fornecedor->contacto = $request->input('contacto');
+          $fornecedor->endereco = $request->input('endereco');
           $fornecedor->email = $request->input('email');
-          $fornecedor->produto = $request->input('produto');
+          $fornecedor->telefone = $request->input('telefone');
           $fornecedor->rubrica = $request->input('rubrica');
-          $fornecedor->descricao = $request->input('descricao');
           $fornecedor->save();
   
           return redirect('/fornecedores')->with('success', 'Fornecedor criado com sucesso');
@@ -93,21 +91,19 @@ class fornecedorController extends Controller
     {
         $this->validate($request, [
             'nome' => 'required',
-            'contacto' => 'required | numeric',
+            'endereco' => 'required',
             'email' => 'required | email',
-            'produto' => 'required',
-            'rubrica' => 'required',
-            'descricao' => 'required'
+            'telefone' => 'required | numeric',
+            'rubrica' => 'required'   
           ]);
   
           //criar fornecdor
           $fornecedor = Fornecedor::find($id);
           $fornecedor->nome = $request->input('nome');
-          $fornecedor->contacto = $request->input('contacto');
+          $fornecedor->endereco = $request->input('endereco');
           $fornecedor->email = $request->input('email');
-          $fornecedor->produto = $request->input('produto');
+          $fornecedor->telefone = $request->input('telefone');
           $fornecedor->rubrica = $request->input('rubrica');
-          $fornecedor->descricao = $request->input('descricao');
           $fornecedor->save();
   
           return redirect('/fornecedores')->with('success', 'Dados do Fornecedor Actualizados com Sucesso');

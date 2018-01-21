@@ -13,7 +13,7 @@ class UsersTableSeeder extends Seeder
     public function run()
     {
       User::create([
-        'role_id'=>1,
+        'role_id'=>2,
         'active'=>1,
         'name'=>'Carlos Gaide Manhique',
         'username'=>'carlos',
