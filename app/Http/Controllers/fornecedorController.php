@@ -17,6 +17,8 @@ class fornecedorController extends Controller
       //  $fornecedores = Fornecedor::all();
         $fornecedores = Fornecedor::orderBy('nome','asc')->paginate(7);
         return view('parametrizacao.fornecedor.lista')->with('fornecedores',$fornecedores);
+
+        
     }
 
     /**

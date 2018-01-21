@@ -24,7 +24,7 @@ Route::group(['middleware'=>['authen']],function(){
   Route::get('/dashboard',['as'=>'dashboard','uses'=>'DashboardController@dashboard']);
 });
 
-Route::group(['middleware'=>['authen','roles'],'roles'=>['admin']],function(){
+Route::group(['middleware'=>['authen','roles'],'roles'=>['Administrador']],function(){
   //para administrador
 
   Route::get('/gerir/factura',['as'=>'indexFacturacao','uses'=>'paginasController@indexFacturacao']);
@@ -37,6 +37,17 @@ Route::group(['middleware'=>['authen','roles'],'roles'=>['admin']],function(){
   //Rotas de operações
   Route::resource('/fornecedores', 'fornecedorController');
   Route::resource('/produtos', 'produtoController');
+  
+
+  Route::group(['namespace' => 'Testes'], function(){
+    Route::resource('/teste_categoria', 'CategoriaController');
+    Route::resource('/teste_fornecedor', 'FornecedorController');
+    Route::resource('/teste_cliente', 'ClienteController');
+    Route::resource('/teste_role', 'RoleController');
+    Route::resource('/teste_permissao', 'PermissaoController');
+    Route::resource('/teste_saida', 'SaidaController');
+    Route::resource('/teste_iten_saida', 'ItenSaidaController');
+  });
 
 
 });
