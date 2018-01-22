@@ -29,7 +29,7 @@
                   </a>
         <ul class="sub">
           <li><a class="" href="{{ route('facturar' )}}">Facturar</a></li>
-          <li><a class="" href="#">Saídas</a></li>
+          <li><a class="" href="{{route('saida.index')}}">Saídas</a></li>
           <li><a class="" href="#">Entradas</a></li>
         </ul>
       </li>

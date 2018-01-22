@@ -10,6 +10,7 @@ class ClienteController extends Controller
 {
 
     private $cliente;
+    
     public function __construct(Cliente $cliente){
         $this->cliente = $cliente;
     }
@@ -43,7 +44,7 @@ class ClienteController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ClienteStoreUpdateFormRequest $request)
     {
         //
         $dataForm = $request->all();

@@ -37,10 +37,14 @@ Route::group(['middleware'=>['authen','roles'],'roles'=>['Administrador']],funct
   Route::get('/gerir/usuario',['as'=>'indexUsuario','uses'=>'paginasController@indexUsuario']);
   Route::get('/gerir/cliente',['as'=>'indexCliente','uses'=>'paginasController@indexCliente']);
 
+  //Rotas get para gerar impressao em formato pdf
+  Route::get('/saida/pdf/{$id}', ['uses' => 'SaidaController@report', 'as' => 'saida_pdf']);
+
   //Rotas de operações
   Route::resource('/fornecedores', 'fornecedorController');
   Route::resource('/produtos', 'produtoController');
   Route::resource('/cliente', 'ClienteController');
+  Route::resource('/saida', 'SaidaController');
   
 
   Route::group(['namespace' => 'Testes'], function(){
