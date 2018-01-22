@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use DB;
 use App\Produto;//referente ao model que mexe com a tabela produtos
-use App\Saida; //
+use App\Model\Saida;
+use App\Model\ItenSaida; //
 use App\Model\Cliente;
+use App\User;
 
 class FacturarController extends Controller
 {
@@ -20,26 +22,29 @@ class FacturarController extends Controller
 
     public function insert(Request $request)
     {
-      $clientes=new Cliente;
-      $clientes->nome=$request->nomefn;
-      $clientes->endereco=$request->endereco;
-      $clientes->email=$request->email;
-      $clientes->telefone=$request->telefone;
-      $clientes->nuit=$request->nuit;
+      
+      $saidas=new Saida;
+      //$saidas->valor_total=$request->valor_total;
+      $saidas->user_id = auth()->user()->id;   
+      $saidas->cliente_id=$request->nome;
+      $saidas->desconto=$request->desconto;
+      $saidas->subtotal=$request->subtotal;
+      
+     
 
-      if ($clientes->save()) {
-        $id = $clientes->id;
+      if ($saidas->save()) {
+        $id = $saidas->id;
         foreach ($request->descricao as $key=> $v)
         {
           $data = [
-            'cliente_id'=>$id,
-            'user_id'=>$v,
-            'qty'=>$request->qty [$key],
-            'price'=>$request->price [$key],
-            'desconto'=>$request->dis [$key],
-            'subtotal'=>$request->amount [$key]
+            'saida_id'=>$id,
+            'produto_id'=>$v,
+            'quantidade'=>$request->quantidade [$key],
+            'valor'=>$request->valor_total [$key],
           ];
-          Saida::insert($data);
+          ItenSaida::insert($data);
+          return redirect('/facturas/index')->with('success', 'Cliente Facturado com sucesso');
+          
         }
       }
       return back();

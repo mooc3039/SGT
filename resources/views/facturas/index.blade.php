@@ -18,7 +18,8 @@
         Gerenciamento das Facturas
       </header>
 
-      {!! Form::open(['action' => 'FacturarController@index', 'method' => 'POST', 'class' => 'form-horizontal']) !!}
+   <!--   {!! Form::open(['action' => 'FacturarController@index', 'method' => 'POST', 'class' => 'form-horizontal']) !!} -->
+      {!!Form::open(['route'=>'insert','method'=>'POST', 'class' => 'form-horizontal'])!!}
         <div class="panel-body" style="border-bottom: 1px solid #ccc; ">
           <div class="form-group">
               
@@ -27,7 +28,7 @@
                  {{Form::select('nome', [''=>'Selecione Cliente',] + $cliente, null, ['class'=>'form-control'] )}}
               </div>
             </div>
-          </div>
+          </div> 
          
           <div class="panel-footer">
             {{Form::submit('Facturar cliente', ['class'=>'btn btn-primary'])}}
