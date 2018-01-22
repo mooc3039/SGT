@@ -34,6 +34,7 @@ Route::group(['middleware'=>['authen','roles'],'roles'=>['Administrador']],funct
 //Rotas das views
   Route::get('/facturas/index',['as'=>'facturar','uses'=>'FacturarController@index']);
   Route::get('/facturas/preco', ['as'=>'findPrice','uses'=>'FacturarController@findPrice']);
+  Route::post('/facturas/insert', ['as'=>'insert', 'uses'=>'FacturarController@insert']);
 
   Route::get('/gerir/usuario',['as'=>'indexUsuario','uses'=>'paginasController@indexUsuario']);
   Route::get('/gerir/cliente',['as'=>'indexCliente','uses'=>'paginasController@indexCliente']);

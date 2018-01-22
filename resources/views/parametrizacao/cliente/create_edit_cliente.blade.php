@@ -22,7 +22,7 @@
       {{ Form::model($cliente, ['route' => ['cliente.update', $cliente->id], 'method' => 'PUT', 'class' => 'form']) }}
 
       @else
-      {{ Form::open(['route' => 'cliente.store', 'class' => 'form']) }}
+      {{ Form::open(['route' => 'cliente.store','method'=>'POST', 'class' => 'form']) }}
       @endif
 
       <div class="panel-body" style="border-bottom: 1px solid #ccc; ">
