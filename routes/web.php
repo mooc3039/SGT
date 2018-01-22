@@ -40,7 +40,7 @@ Route::group(['middleware'=>['authen','roles'],'roles'=>['Administrador']],funct
   Route::get('/gerir/cliente',['as'=>'indexCliente','uses'=>'paginasController@indexCliente']);
 
   //Rotas get para gerar impressao em formato pdf
-  Route::get('/saida/pdf/{$id}', ['uses' => 'SaidaController@report', 'as' => 'saida_pdf']);
+  Route::get('/saida/pdf/{id}', ['as'=>'saida_pdf', 'uses'=>'SaidaController@report']);
 
   //Rotas de operações
   Route::resource('/fornecedores', 'fornecedorController');

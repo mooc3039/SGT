@@ -1,6 +1,17 @@
 @extends('layouts.empty_base')
 
+
 <div class="container">
+	<nav class="navbar navbar-light bg-light">
+  <form class="form-inline">
+    <div class="input-group">
+      <div class="input-group-prepend">
+        <span class="input-group-text" id="basic-addon1">@</span>
+      </div>
+      <input type="text" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1">
+    </div>
+  </form>
+</nav>
 	<div class="row" style="background-color: white">
 		<div class="col-md-5 border">
 			P&SA<br>

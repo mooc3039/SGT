@@ -7,10 +7,11 @@ use App\Model\Saida;
 use App\Model\Produto;
 use App\Model\Cliente;
 use App\User;
+use PDF;
 
 class SaidaController extends Controller
 {
-   
+
     private $saida;
     private $produto;
     private $cliente;
@@ -131,13 +132,24 @@ class SaidaController extends Controller
     }
 
     public function report($id){
+
         // Relatorio em pdf
         $saida = $this->saida->with('itensSaida.produto', 'cliente')->find($id);
 
-        $view = view('reports.saidas.report_saida', compact('saida'));
+        /*$view = view('reports.saidas.report_saida', compact('saida'));
         $pdf = \App::make('dompdf.wrapper');
         $pdf->loadHTML($view);
 
-        return $pdf->stream('saida');
+        return $pdf->stream('saida');*/
+
+        //$products = Product::all();
+
+        return \PDF::loadView('reports.saidas.report_saida', compact('saida'))
+                // Se quiser que fique no formato a4 retrato: ->setPaper('a4', 'landscape')
+        ->stream();
+
+        /*$pdf = PDF::loadView('reports.saidas.report_saida', compact('saida'));
+        return $pdf->download('mypdf.pdf');
+*/
     }
 }
