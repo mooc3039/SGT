@@ -20,16 +20,18 @@
         <tbody>
 
           <tr>
-            <th><i class="icon_profile"></i>Código da Saída</th>
-            <th><i class="icon_mobile"></i> Data de Emissão</th>
-            <th><i class="icon_mail_alt"></i> Valor Total</th>
-            <th><i class="icon_cogs"></i> Operações</th>
+            <th><i class="icon_profile"></i>Código da Saída </th>
+            <th><i class="icon_mobile"></i> Data de Emissão </th>
+            <th><i class="icon_mail_alt"></i> Cliente </th>
+            <th><i class="icon_mail_alt"></i> Valor Total </th>
+            <th><i class="icon_cogs"></i> Operações </th>
           </tr>
 
           @foreach($saidas as $saida)
           <tr>
             <td> {{$saida->id}} </td>
             <td> {{$saida->data}} </td>
+            <td> {{$saida->cliente->nome}} </td>
             <td> {{$saida->valor_total}} </td>
             <td>
               <div class="btn-group">

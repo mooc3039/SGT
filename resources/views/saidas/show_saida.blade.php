@@ -2,16 +2,7 @@
 
 
 <div class="container">
-	<nav class="navbar navbar-light bg-light">
-  <form class="form-inline">
-    <div class="input-group">
-      <div class="input-group-prepend">
-        <span class="input-group-text" id="basic-addon1">@</span>
-      </div>
-      <input type="text" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1">
-    </div>
-  </form>
-</nav>
+
 	<div class="row" style="background-color: white">
 		<div class="col-md-5 border">
 			P&SA<br>
@@ -26,8 +17,13 @@
 		</div>
 
 		<div class="col-md-3">
-			
-			Numero da Saida: {{$saida->id}}<br>
+			<div class="panel panel-default">
+				<div class="panel-heading">Numero da Saida:</div>
+				<div class="panel-body">
+					{{$saida->id}}
+				</div>
+			</div>
+			 
 
 		</div>
 	</div>
@@ -95,8 +91,8 @@
 	</div>
 
 	<div class="panel-footer"><a href="{{route('saida_pdf', $saida->id)}}" class="btn btn-primary">Imprimir Saída</a>
-        
-      </div>
+
+	</div>
 
 </div>
 
