@@ -3,10 +3,23 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Fornecedor;
+use Illuminate\Support\Facades\DB;
+use App\Model\Fornecedor;
+use App\Http\Requests\FornecedorStoreUpdateFormRequest;
 
 class fornecedorController extends Controller
 {
+
+  private $fornecedor;
+
+  public function __construct(Fornecedor $fornecedor){
+
+    $this->fornecedor = $fornecedor;
+
+  }
+
+
+
     /**
      * Display a listing of the resource.
      *
@@ -15,10 +28,10 @@ class fornecedorController extends Controller
     public function index()
     {
       //  $fornecedores = Fornecedor::all();
-        $fornecedores = Fornecedor::orderBy('nome','asc')->paginate(7);
-        return view('parametrizacao.fornecedor.lista')->with('fornecedores',$fornecedores);
+      $fornecedores = Fornecedor::where('activo', 1)->orderBy('nome','asc')->paginate(7);
+      return view('parametrizacao.fornecedor.lista')->with('fornecedores',$fornecedores);
 
-        
+
     }
 
     /**
@@ -28,9 +41,9 @@ class fornecedorController extends Controller
      */
     public function create()
     {
-       
-         return view('parametrizacao.fornecedor.novo');
-    }
+
+     return view('parametrizacao.fornecedor.create_edit_fornecedor');
+   }
 
     /**
      * Store a newly created resource in storage.
@@ -38,26 +51,23 @@ class fornecedorController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(FornecedorStoreUpdateFormRequest $request)
     {
-        $this->validate($request, [
-            'nome' => 'required',
-            'endereco' => 'required',
-            'email' => 'required | email',
-            'telefone' => 'required | numeric',
-            'rubrica' => 'required'   
-          ]);
-  
-          //criar fornecdor
-          $fornecedor = new Fornecedor;
-          $fornecedor->nome = $request->input('nome');
-          $fornecedor->endereco = $request->input('endereco');
-          $fornecedor->email = $request->input('email');
-          $fornecedor->telefone = $request->input('telefone');
-          $fornecedor->rubrica = $request->input('rubrica');
-          $fornecedor->save();
-  
-          return redirect('/fornecedores')->with('success', 'Fornecedor criado com sucesso');
+      $dataForm = $request->all();
+
+      $cadastro = $this->fornecedor->create($dataForm);
+      
+      if($cadastro){
+
+            $success = "Fornecedor cadastrado com sucesso.";
+            return redirect()->route('fornecedores.index')->with('success', $success);
+        }
+        else{
+
+            $error = "Não foi possível cadastrar o Fornecedor.";
+            return redirect()->route('fornecedores.index')->with('error', $error);
+        }
+
     }
 
     /**
@@ -68,7 +78,7 @@ class fornecedorController extends Controller
      */
     public function show($id)
     {
-        
+
     }
 
     /**
@@ -79,8 +89,8 @@ class fornecedorController extends Controller
      */
     public function edit($id)
     {
-        $fornecedor = Fornecedor::find($id);
-        return view('parametrizacao.fornecedor.editar')->with('fornecedor', $fornecedor);
+      $fornecedor = Fornecedor::find($id);
+      return view('parametrizacao.fornecedor.create_edit_fornecedor', compact('fornecedor'));
     }
 
     /**
@@ -90,26 +100,44 @@ class fornecedorController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(FornecedorStoreUpdateFormRequest $request, $id)
     {
-        $this->validate($request, [
-            'nome' => 'required',
-            'endereco' => 'required',
-            'email' => 'required | email',
-            'telefone' => 'required | numeric',
-            'rubrica' => 'required'   
-          ]);
-  
+      /*$this->validate($request, [
+        'nome' => 'required',
+        'endereco' => 'required',
+        'email' => 'required | email',
+        'telefone' => 'required | numeric',
+        'rubrica' => 'required'   
+      ]);*/
+
           //criar fornecdor
-          $fornecedor = Fornecedor::find($id);
-          $fornecedor->nome = $request->input('nome');
-          $fornecedor->endereco = $request->input('endereco');
-          $fornecedor->email = $request->input('email');
-          $fornecedor->telefone = $request->input('telefone');
-          $fornecedor->rubrica = $request->input('rubrica');
-          $fornecedor->save();
-  
-          return redirect('/fornecedores')->with('success', 'Dados do Fornecedor Actualizados com Sucesso');
+      /*$fornecedor = Fornecedor::find($id);
+      $fornecedor->nome = $request->input('nome');
+      $fornecedor->endereco = $request->input('endereco');
+      $fornecedor->email = $request->input('email');
+      $fornecedor->telefone = $request->input('telefone');
+      $fornecedor->rubrica = $request->input('rubrica');
+      $fornecedor->activo = $request->input('activo');
+      $fornecedor->save();*/
+
+      $dataForm = $request->all();
+
+      $fornecedor = $this->fornecedor->find($id);
+
+      $update = $fornecedor->update($dataForm);
+
+      if($update){
+
+                $success = "Fornecedor actualizado com sucesso.";
+                return redirect()->route('fornecedores.index')->with('success', $success);
+            }
+            else{
+
+                $error = "Não foi possível actualizar o Fornecedor.";
+                return redirect()->route('fornecedores.index')->with('error', $error);
+            }
+
+      //return redirect('/fornecedores')->with('success', 'Dados do Fornecedor Actualizados com Sucesso');
     }
 
     /**
@@ -121,8 +149,33 @@ class fornecedorController extends Controller
     public function destroy($id)
     {
         //echo $id;
-        $fornece = Fornecedor::find($id);
-        $fornece->delete();
-        return redirect('/fornecedores')->with('success', 'Fornecedor eliminado com sucesso!');
+      $fornece = Fornecedor::find($id);
+      $fornece->delete();
+      return redirect('/fornecedores')->with('success', 'Fornecedor eliminado com sucesso!');
     }
-}
+
+    public function inactivos(){
+
+      $fornecedores = $this->fornecedor->where('activo', 0)->get();
+      
+      return view('parametrizacao.fornecedor.lista', compact('fornecedores'));
+    }
+
+    // Funcao para activar o Fornecedor
+    public function activar($id){
+
+      DB::select('call SP_activar_fornecedor(?)', array($id));
+
+      return redirect()->back();
+
+    }
+
+    public function desactivar($id){
+
+      DB::select('call SP_desactivar_fornecedor(?)', array($id));
+
+      return redirect()->back();
+      
+    }
+
+  }

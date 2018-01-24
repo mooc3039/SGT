@@ -17,39 +17,73 @@
       <header class="panel-heading">
         Parametrizar Cliente
       </header>
-      <table class="table table-striped table-advance table-hover">
-        <tbody>
+      
+      <div class="panel-body">
 
-          <tr>
-            <th><i class="icon_profile"></i>Nome do Cliente</th>
-            <th><i class="icon_mobile"></i> Endereço</th>
-            <th><i class="icon_mail_alt"></i> Telefone</th>
-            <th><i class="icon_pin_alt"></i> Email</th>
-            <th><i class="icon_calendar"></i> NUIT</th>
-            <th><i class="icon_cogs"></i> Operações</th>
-          </tr>
+        <table class="table table-striped table-advance table-hover">
+          <tbody>
 
-          @foreach($clientes as $cliente)
-          <tr>
-            <td> {{$cliente->nome}} </td>
-            <td> {{$cliente->endereco}} </td>
-            <td> {{$cliente->telefone}} </td>
-            <td> {{$cliente->email}}</td>
-            <td> {{$cliente->nuit}}</td>
-            <td>
-              <div class="btn-group">
-                <a class="btn btn-primary" href="#"><i class="icon_plus_alt2"></i></a>
-                <a class="btn btn-success" href="{{route('cliente.edit', $cliente->id)}}"><i class="icon_check_alt2"></i></a>
-                
-              </div>
-            </td>
+            <tr>
+              <th><i class="icon_profile"></i>Nome do Cliente</th>
+              <th><i class="icon_mobile"></i> Endereço</th>
+              <th><i class="icon_mail_alt"></i> Telefone</th>
+              <th><i class="icon_pin_alt"></i> Email</th>
+              <th><i class="icon_calendar"></i> NUIT</th>
+              <th><i class="icon_calendar"></i> Activo</th>
+              <th class="text-center"><i class="icon_cogs"></i> Operações</th>
+            </tr>
+
+            @foreach($clientes as $cliente)
+            <tr>
+              <td> {{$cliente->nome}} </td>
+              <td> {{$cliente->endereco}} </td>
+              <td> {{$cliente->telefone}} </td>
+              <td> {{$cliente->email}}</td>
+              <td> {{$cliente->nuit}}</td>
+              <td>{{Form::checkbox('activo', $cliente->activo, $cliente->activo, ['class' => 'disabled'])}}
+              <td>
+                <div class="btn-group pull-right">
+                  <a class="btn btn-primary" href="#"><i class="icon_plus_alt2"></i></a>
+                  <a class="btn btn-success" href="{{route('cliente.edit', $cliente->id)}}"><i class="icon_check_alt2"></i></a>
+                  @if($cliente->activo == true)
+                  <a href="{{route('clientes_desactivar', $cliente->id)}}" class="btn btn-danger">Desactivar</a>
+                  @else
+                  <a href="{{route('clientes_activar', $cliente->id)}}" class="btn btn-info">Activar</a>
+                  @endif
+
+                </div>
+              </td>
+
+            </tr>
+            @endforeach
+          </tbody>
+        </table>
+
+      </div>
+
+      <div class="panel-footer">
+        <div class="row">
+          <div class="col-md-6">
+
+            <a href="{{route('cliente.create')}}" class="btn btn-primary">Adicionar Cliente</a>
+
+          </div>
+          <div class="col-md-6">
+
+            @if($cliente->activo == true)
+
+            <a href="{{route('clientes_inactivos')}}" class="btn btn-primary pull-right"> Inactivos </a>
+
+            @else
+
+            <a href="{{route('cliente.index')}}" class="btn btn-primary pull-right"> Activos </a>
+
+            @endif
             
-          </tr>
-          @endforeach
-        </tbody>
-      </table>
-
-      <div class="panel-footer"><a href="{{route('cliente.create')}}" class="btn btn-primary">Adicionar Cliente</a>
+            
+          </div>
+        </div>
+        
         
       </div>
 

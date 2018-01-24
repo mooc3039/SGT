@@ -5,8 +5,8 @@
     <h3 class="page-header"><i class="fa fa-file-text-o"></i>Parametrização</h3>
     <ol class="breadcrumb">
       <li><i class="fa fa-home"></i><a href="#">Home</a></li>
-      <li><i class="icon_document_alt"></i>Clientes</li>
-      <li><i class="fa fa-file-text-o"></i>Gerenciar Clientes</li>
+      <li><i class="icon_document_alt"></i>Fornecedor</li>
+      <li><i class="fa fa-file-text-o"></i>Gerenciar Fornecedor</li>
     </ol>
   </div>
 </div>
@@ -15,24 +15,28 @@
   <div class="col-lg-12">
     <section class="panel panel-default">
       <header class="panel-heading">
-        Parametrizar Cliente
+        Novo Fornecedor
       </header>
 
-      @if(isset($cliente))
-      {{ Form::model($cliente, ['route' => ['cliente.update', $cliente->id], 'method' => 'PUT', 'class' => 'form']) }}
+      @if(isset($fornecedor))
+
+      {{ Form::model($fornecedor, ['route' => ['fornecedores.update', $fornecedor->id], 'method' => 'PUT']) }}
 
       @else
-      {{ Form::open(['route' => 'cliente.store','method'=>'POST', 'class' => 'form']) }}
+
+      {{ Form::open(['route' => 'fornecedores.store','method'=>'POST']) }}
+
       @endif
 
       <div class="panel-body" style="border-bottom: 1px solid #ccc; ">
         <div class="form-group">
 
           <div class="row">
+
             <div class="col-sm-3">
-              {{Form::label('nome', 'Nome do Cliente')}}
+              {{Form::label('nome', 'Nome do Fornecedor')}}
               <div class="input-group">
-                {{Form::text('nome', null, ['placeholder' => 'Nome do Cliente', 'class' => 'form-control'])}}
+                {{Form::text('nome', null, ['placeholder' => 'Nome do Fornecedor', 'class' => 'form-control'])}}
                 <div class="input-group-addon">
                   <span class="fa fa-plus"></span>
                 </div>
@@ -68,16 +72,25 @@
                 </div>
               </div>
             </div>
+
           </div>
 
           <div class="row">
             <div class="col-sm-3">
-              {{Form::label('nuit', 'NUIT')}}
+              {{Form::label('rubrica', 'Rubrica')}}
               <div class="input-group">
-                {{Form::text('nuit', null, ['placeholder' => 'NUIT', 'class' => 'form-control'])}}
+                {{Form::text('rubrica', null, ['placeholder' => 'Rubrica', 'class' => 'form-control'])}}
                 <div class="input-group-addon">
                   <span class="fa fa-plus"></span>
                 </div>
+              </div>
+            </div>
+
+            <div class="col-sm-3">
+              <div class="input-group">
+                {{Form::label('activo', 'Activo')}}
+                {{Form::radio('activo', '1', ['class' => 'form-horizontal'])}} Sim
+                {{Form::radio('activo', '0', ['class' => 'form-horizontal'])}} Não
               </div>
             </div>
           </div>
@@ -85,41 +98,32 @@
 
         </div>
       </div>
-
-
       <div class="panel-footer">
-
         <div class="row">
           <div class="col-md-6">
 
-            @if(isset($cliente))
+            @if(isset($fornecedor))
 
-            {{ Form::button('Actualizar Cliente', ['type'=>'submit', 'class'=>'btn btn-success']) }}
+            {{Form::submit('Actualizar Fornecedor', ['class'=>'btn btn-primary'])}}
 
             @else
 
-            {{ Form::button('Adicionar Cliente', ['type'=>'submit', 'class'=>'btn btn-success']) }}
-            {{ Form::reset('Limpar', ['class'=>'btn btn-secondary']) }}
+            {{Form::submit('Adicionar Fornecedor', ['class'=>'btn btn-primary'])}}
+            {{Form::reset('Limpar', ['class'=>'btn btn-secondary'])}}
 
             @endif
 
           </div>
           <div class="col-md-6">
 
-            <a href="{{route('cliente.index')}}" class="btn btn-primary pull-right">Cancelar</a>
+            <a href="{{route('fornecedores.index')}}" class="btn btn-warning pull-right"> Cancelar</a>
 
           </div>
         </div>
-
-        
-
       </div>
 
+      {!! Form::close() !!}
 
-
-
-
-      {{Form::close()}}
     </section>
   </div>
 </div>
