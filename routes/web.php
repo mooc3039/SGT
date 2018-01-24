@@ -32,9 +32,11 @@ Route::group(['middleware'=>['authen','roles'],'roles'=>['Administrador']],funct
 
   Route::get('/gerir/stock',['as'=>'indexStock','uses'=>'paginasController@indexStock']);
 //Rotas das views
-  Route::get('/facturas/index',['as'=>'facturar','uses'=>'FacturarController@index']);
+ // Route::get('/facturas/index',['as'=>'facturar','uses'=>'FacturarController@index']);
+ //Facturação
   Route::get('/facturas/preco', ['as'=>'findPrice','uses'=>'FacturarController@findPrice']);
-  Route::post('/facturas/insert', ['as'=>'insert', 'uses'=>'FacturarController@insert']);
+  Route::post('/facturas/facturar','FacturarController@insert');
+ // Route::post('/facturas/insert', ['as'=>'insert', 'uses'=>'FacturarController@insert']);
 
   Route::get('/gerir/usuario',['as'=>'indexUsuario','uses'=>'paginasController@indexUsuario']);
   Route::get('/gerir/cliente',['as'=>'indexCliente','uses'=>'paginasController@indexCliente']);
@@ -43,6 +45,7 @@ Route::group(['middleware'=>['authen','roles'],'roles'=>['Administrador']],funct
   Route::resource('/fornecedores', 'fornecedorController');
   Route::resource('/produtos', 'produtoController');
   Route::resource('/cliente', 'ClienteController');
+  Route::resource('/facturas', 'FacturarController');
   
 
   Route::group(['namespace' => 'Testes'], function(){

@@ -20,33 +20,22 @@ class FacturarController extends Controller
         return view('facturas.index', compact('produtos','cliente'));
     }
 
-    public function insert(Request $request)
+    public function insert(Request $req)
     {
-      
-      $saidas=new Saida;
-      //$saidas->valor_total=$request->valor_total;
-      $saidas->user_id = auth()->user()->id;   
-      $saidas->cliente_id=$request->nome;
-      $saidas->desconto=$request->desconto;
-      $saidas->subtotal=$request->subtotal;
-      
-     
-
-      if ($saidas->save()) {
-        $id = $saidas->id;
-        foreach ($request->descricao as $key=> $v)
-        {
-          $data = [
-            'saida_id'=>$id,
-            'produto_id'=>$v,
-            'quantidade'=>$request->quantidade [$key],
-            'valor'=>$request->valor_total [$key],
-          ];
-          ItenSaida::insert($data);
-          return redirect('/facturas/index')->with('success', 'Cliente Facturado com sucesso');
-          
+      if($req->ajax()){
+        $count = count($req->id);
+        for($i=0; $i<$count; $i++){
+            $d = new Saida;
+            $d->cliente_id = $req->nome[$i];
+            $d->user_id = auth()->user()->id;
+            $d->desconto = $req->desconto[$i];
+            $d->subtotal = $req->subtotal[$i];
+            $d->save();
         }
-      }
+        return response()->json($req->all());
+    }
+    
+    
       return back();
     }
     //devolver o preço do produto

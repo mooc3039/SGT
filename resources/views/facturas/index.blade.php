@@ -18,14 +18,14 @@
         Gerenciamento das Facturas
       </header>
 
-   <!--   {!! Form::open(['action' => 'FacturarController@index', 'method' => 'POST', 'class' => 'form-horizontal']) !!} -->
-      {!!Form::open(['route'=>'insert','method'=>'POST', 'class' => 'form-horizontal'])!!}
+
+      {!!Form::open(['name'=>'data','id'=>'data','method'=>'POST', 'class' => 'form-horizontal'])!!}
         <div class="panel-body" style="border-bottom: 1px solid #ccc; ">
           <div class="form-group">
               
               <div class="col-sm-3">
                 {{Form::label('nome', 'Nome do Cliente')}}
-                 {{Form::select('nome', [''=>'Selecione Cliente',] + $cliente, null, ['class'=>'form-control'] )}}
+                 {{Form::select('nome[]', [''=>'Selecione Cliente',] + $cliente, null, ['class'=>'form-control'] )}}
               </div>
             </div>
           </div> 
@@ -64,9 +64,10 @@
                 <td><input type="text" name="quantidade[]" class="form-control quantidade"></td>
                 <td><input type="text" name="preco_venda[]" class="form-control preco_venda"></td>
                 <td><input type="text" name="desconto[]" class="form-control desconto"></td>
-                <td><input type="text" name="subtotal[]" class="form-control subtotal"></td>
+                <td><input type="text" name="subtotal[]" class="form-control subtotal" disabled></td>
                 <td><a class="btn btn-danger remove" href="#"><i class="icon_close_alt2"></i></a></td>
               </tr>
+                         
             </tbody>
             <tfoot>
                 <tr>
@@ -103,9 +104,10 @@
           '<td><input type="text" name="quantidade[]" class="form-control quantidade"></td>'+
           '<td><input type="text" name="preco_venda[]" class="form-control preco_venda"></td>'+
           '<td><input type="text" name="desconto[]" class="form-control desconto"></td>'+
-          '<td><input type="text" name="subtotal[]" class="form-control subtotal"></td>'+
+          '<td><input type="text" name="subtotal[]" class="form-control subtotal" disabled></td>'+
           '<td><a class="btn btn-danger remove" href="#"><i class="icon_close_alt2"></i></a></td>'+
        ' </tr>';
        $('tbody').append(tr);
+
     };
 </script>
