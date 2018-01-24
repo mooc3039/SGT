@@ -31,21 +31,37 @@ Route::group(['middleware'=>['authen','roles'],'roles'=>['Administrador']],funct
 
 
   Route::get('/gerir/stock',['as'=>'indexStock','uses'=>'paginasController@indexStock']);
-//Rotas das views
- // Route::get('/facturas/index',['as'=>'facturar','uses'=>'FacturarController@index']);
+
  //Facturação
   Route::get('/facturas/preco', ['as'=>'findPrice','uses'=>'FacturarController@findPrice']);
-  Route::post('/facturas/facturar','FacturarController@insert');
+  Route::post('/facturas/facturar',['as'=>'facturar','uses'=>'FacturarController@insert']);
  // Route::post('/facturas/insert', ['as'=>'insert', 'uses'=>'FacturarController@insert']);
 
   Route::get('/gerir/usuario',['as'=>'indexUsuario','uses'=>'paginasController@indexUsuario']);
   Route::get('/gerir/cliente',['as'=>'indexCliente','uses'=>'paginasController@indexCliente']);
 
+  //Rotas get para gerar impressao em formato pdf => Malache
+  Route::get('/saida/pdf/{id}', ['as'=>'saida_pdf', 'uses'=>'SaidaController@report']);
+  Route::get('/fornecedores/inactivos', ['as'=>'fornecedores_inactivos', 'uses'=>'fornecedorController@inactivos']);
+
+  // Rotas para ACTIVAR e DESACTIVAR o Fornecedor => Malache
+  Route::get('/fornecedores/activar/{id}', ['as'=>'fornecedores_activar', 'uses'=>'fornecedorController@activar']);
+  Route::get('/fornecedores/desactivar/{id}', ['as'=>'fornecedores_desactivar', 'uses'=>'fornecedorController@desactivar']);
+
+  // Rotas para Clientes ACTIVOS e para ACTIVAR e DESACTIVAR o Cliente => Malache
+  Route::get('/clientes/inactivos', ['as'=>'clientes_inactivos', 'uses'=>'ClienteController@inactivos']);
+  Route::get('/clientes/activar/{id}', ['as'=>'clientes_activar', 'uses'=>'ClienteController@activar']);
+  Route::get('/clientes/desactivar/{id}', ['as'=>'clientes_desactivar', 'uses'=>'ClienteController@desactivar']);
+
   //Rotas de operações
   Route::resource('/fornecedores', 'fornecedorController');
   Route::resource('/produtos', 'produtoController');
   Route::resource('/cliente', 'ClienteController');
+
   Route::resource('/facturas', 'FacturarController');
+
+  Route::resource('/saida', 'SaidaController');
+
   
 
   Route::group(['namespace' => 'Testes'], function(){
