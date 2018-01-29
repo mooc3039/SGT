@@ -12,6 +12,10 @@ use App\User;
 
 class FacturarController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('web');
+    }
     public function index()
     {
 
@@ -19,6 +23,7 @@ class FacturarController extends Controller
         $cliente =DB::table('clientes')->pluck('nome','id')->all(); //quando usar laravelcolletive tem que usar o DB no form select
         return view('facturas.index', compact('produtos','cliente'));
     }
+   
 
     public function insert(Request $req)
     {
@@ -36,7 +41,7 @@ class FacturarController extends Controller
     }
     
     
-      return back();
+     // return back();
     }
     //devolver o preço do produto
     public function findPrice(Request $request)
