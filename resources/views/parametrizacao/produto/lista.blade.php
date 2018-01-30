@@ -43,7 +43,7 @@
             <td>
               <div class="btn-group">
                 <a class="btn btn-primary" href="#"><i class="icon_plus_alt2"></i></a>
-                <a class="btn btn-success" href="{{route('produtos.edit', $produto->id)}}"><i class="icon_check_alt2"></i></a>
+                <a class="btn btn-success" href="{{route('produtos.edit', $produto->id)}}"><i class="fa fa-pencil"></i></a>
                 <a class="btn btn-danger" href="{{route('produtos.destroy', $produto->id)}}"><i class="icon_close_alt2"></i></a>
               </div>
             </td>

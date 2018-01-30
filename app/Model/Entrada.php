@@ -4,7 +4,7 @@ namespace App\Model;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Model\ItenEntrada;
-use App\Model\User;
+use App\User;
 
 class Entrada extends Model
 {
@@ -25,7 +25,7 @@ class Entrada extends Model
 
     public function user(){
 
-    	return $this->belongsTo('App\Model\User');
+    	return $this->belongsTo('App\User');
     	
     }
 }

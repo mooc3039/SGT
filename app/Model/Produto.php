@@ -10,10 +10,21 @@ use App\Model\ItenCotacao;
 
 class Produto extends Model
 {
+    protected $fillable = [
+        'descricao',
+        'quantidade_dispo',
+        'quantidade_min',
+        'preco_venda',
+        'preco_aquisicao',
+        'fornecedor_id',
+        'categoria_id'
+    ];
+    public $timestamps = false;
+
     //
     public function categoria(){
 
-    	return $this->belongTo('App\Model\Categoria');
+    	return $this->belongsTo('App\Model\Categoria');
 
     }
 

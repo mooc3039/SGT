@@ -52,11 +52,21 @@ Route::group(['middleware'=>['authen','roles'],'roles'=>['Administrador']],funct
   Route::get('/clientes/activar/{id}', ['as'=>'clientes_activar', 'uses'=>'ClienteController@activar']);
   Route::get('/clientes/desactivar/{id}', ['as'=>'clientes_desactivar', 'uses'=>'ClienteController@desactivar']);
 
+  // REPORTS
+  Route::get('/entradas/report_geral_entradas', ['as'=>'rg_entradas', 'uses'=>'EntradaController@reportGeralEntradas']);
+  Route::get('/fornecedores/report_geral_fornecedores', ['as'=>'rg_fornecedores', 'uses'=>'fornecedorController@reportGeralFornecedores']);
+  Route::get('/clientes/report_geral_clientes', ['as'=>'rg_clientes', 'uses'=>'ClienteController@reportGeralCliente']);
+  Route::get('/saidas/report_geral_saidas', ['as'=>'rg_saidas', 'uses'=>'SaidaController@reportGeralSaidas']);
+  Route::get('/produtos/report_geral_produtos', ['as'=>'rg_produtos', 'uses'=>'produtoController@reportGeralProdutos']);
+  Route::get('/cotacoes/report_geral_cotacoes', ['as'=>'rg_cotacoes', 'uses'=>'CotacaoController@reportGeralCotacoes']);
+
   //Rotas de operações
   Route::resource('/fornecedores', 'fornecedorController');
   Route::resource('/produtos', 'produtoController');
   Route::resource('/cliente', 'ClienteController');
   Route::resource('/saida', 'SaidaController');
+  Route::resource('/cotacao', 'CotacaoController');
+  Route::resource('/entrada', 'EntradaController');
   
 
   Route::group(['namespace' => 'Testes'], function(){
@@ -67,6 +77,7 @@ Route::group(['middleware'=>['authen','roles'],'roles'=>['Administrador']],funct
     Route::resource('/teste_permissao', 'PermissaoController');
     Route::resource('/teste_saida', 'SaidaController');
     Route::resource('/teste_iten_saida', 'ItenSaidaController');
+
   });
 
 

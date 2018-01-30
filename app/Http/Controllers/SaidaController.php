@@ -73,28 +73,9 @@ class SaidaController extends Controller
         //
 
         $saida = $this->saida->with('itensSaida.produto', 'cliente')->find($id); // Tras a saida. Tras os Itens da Saida e dentro da relacao ItensSaida eh possivel pegar a relacao Prodtuo atraves do dot ou ponto. NOTA: a relacao produto nao esta na saida e sim na itensSaida, mas eh possivel ter os seus dados partido da saida como se pode ver.
-        //$produto = $this->saida->with('itensSaida','produto')->find($id);
-        //$iten = $saida->itensSaida;
-        //$produto = $iten.produto;
-        //dump($saida->itensSaida);
-         /*foreach ($saida->itensSaida as $iten_saida) {
-
         
-           // $produto = $this->produto->find($iten_saida->produto_id);
-            //$cliente = $this->cliente->find($saida->cliente_id);
-           // $user = $this->user->find($saida->user_id);
-            $produto = $iten_saida->produto;
-
-            //echo "Produto: $produto->descricao <br>";
-            //echo "Preco Unitario: $produto->preco_venda <br>";
-            echo "Quantidade: $iten_saida->quantidade. <br>";
-            echo "Valor: $iten_saida->valor. </br>";
-            echo "Produto: $produto->descricao. </br>";
-            //echo "Cliente: $cliente->nome </br>===============<br><br>";
-            
-
-        }*/
         return view('saidas.show_saida', compact('saida'));
+
     }
 
     /**
@@ -151,5 +132,21 @@ class SaidaController extends Controller
         /*$pdf = PDF::loadView('reports.saidas.report_saida', compact('saida'));
         return $pdf->download('mypdf.pdf');
 */
+    }
+
+    public function reportGeralSaidas(){
+
+        $saidas = $this->saida->orderBy('id', 'asc')->get();
+
+        $valor_total_saidas = 0;
+
+        foreach ($saidas as $saida) {
+            
+            $valor_total_saidas = $valor_total_saidas + $saida->valor_total;
+
+        }
+
+        return view('reports.saidas.report_geral_saidas', compact('saidas', 'valor_total_saidas'));
+
     }
 }

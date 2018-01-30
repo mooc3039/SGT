@@ -30,7 +30,8 @@
         <ul class="sub">
           <li><a class="" href="{{ route('facturar' )}}">Facturar</a></li>
           <li><a class="" href="{{route('saida.index')}}">Saídas</a></li>
-          <li><a class="" href="#">Entradas</a></li>
+          <li><a class="" href="{{route('cotacao.index')}}">Cotações</a></li>
+          <li><a class="" href="{{route('entrada.index')}}">Entradas</a></li>
         </ul>
       </li>
 
@@ -52,10 +53,26 @@
                       <span class="menu-arrow arrow_carrot-right"></span>
                   </a>
         <ul class="sub">
-          <li><a class="" href="{{ route('fornecedores.index') }}">Fornecedores</a></li>
-          <li><a class="" href="{{ route('produtos.index') }}">Produtos</a></li>
-          <li><a class="" href="{{ route('indexUsuario') }}">Usuários</a></li>
-          <li><a class="" href="{{ route('cliente.index') }}"><span>Clientes</span></a></li>
+          <li><a class="" href="{{ route('fornecedores.index') }}"><i class="fa fa-tag"></i>Fornecedores</a></li>
+          <li><a class="" href="{{ route('produtos.index') }}"><i class="fa fa-tag"></i>Produtos</a></li>
+          <li><a class="" href="{{ route('indexUsuario') }}"><i class="fa fa-tag"></i>Usuários</a></li>
+          <li><a class="" href="{{ route('cliente.index') }}"><i class="fa fa-tag"></i><span>Clientes</span></a></li>
+        </ul>
+      </li>
+
+      <li class="sub-menu">
+        <a href="javascript:;" class="">
+                      <i class="icon_documents_alt"></i>
+                      <span>Relatórios Gérais</span>
+                      <span class="menu-arrow arrow_carrot-right"></span>
+                  </a>
+        <ul class="sub">
+          <li><a class="" href="{{ route('rg_produtos') }}"><i class="fa fa-file-text"></i>Produtos</a></li>
+          <li><a class="" href="{{ route('rg_fornecedores') }}"><i class="fa fa-file-text"></i>Fornecedores</a></li>
+          <li><a class="" href="{{ route('rg_clientes') }}"><i class="fa fa-file-text"></i>Clientes</a></li>
+          <li><a class="" href="{{ route('rg_entradas') }}"><i class="fa fa-file-text"></i>Entradas</a></li>
+          <li><a class="" href="{{ route('rg_saidas') }}"><i class="fa fa-file-text"></i>Saídas</a></li>
+          <li><a class="" href="{{ route('rg_cotacoes') }}"><i class="fa fa-file-text"></i>Cotações</a></li>
         </ul>
       </li>
 

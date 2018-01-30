@@ -4,12 +4,22 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use DB;
-use App\Produto;
-use App\Fornecedor;
+use App\Model\Produto;
+use App\Model\Fornecedor;
 use App\Model\Categoria;
 
 class produtoController extends Controller
 {
+    private $produto;
+    private $fornecedor;
+    private $categoria;
+
+    public function __construct(Produto $produto, Fornecedor $fornecedor, Categoria $categoria){
+
+        $this->produto = $produto;
+        $this->fornecedor = $fornecedor;
+        $this->categoria = $categoria;
+    }
     /**
      * Display a listing of the resource.
      *
@@ -137,5 +147,14 @@ class produtoController extends Controller
         $produto = Produto::find($id);
         $produto->delete();
         return redirect('/produtos')->with('success', 'Produto eliminado com sucesso!');
+    }
+
+
+    public function reportGeralProdutos(){
+
+        $produtos = $this->produto->with('fornecedor', 'categoria')->orderBy('descricao', 'asc')->get();
+
+        return view('reports.produtos.report_geral_produtos', compact('produtos'));
+
     }
 }

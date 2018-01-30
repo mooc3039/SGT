@@ -178,4 +178,12 @@ class fornecedorController extends Controller
       
     }
 
+    public function reportGeralFornecedores(){
+
+        $fornecedores = $this->fornecedor->orderBy('nome', 'asc')->get();
+
+        return view('reports.fornecedores.report_geral_fornecedores', compact('fornecedores'));
+
+    }
+
   }
