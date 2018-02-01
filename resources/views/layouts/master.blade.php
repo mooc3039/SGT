@@ -48,7 +48,7 @@
     
     {!!Html::script('js/jquery.js')!!} 
     {!!Html::script('js/jquery-ui-1.10.4.min.js')!!} 
-    {!!Html::script('js/jquery-3.2.1.min.js')!!} 
+    {!!Html::script('js/jquery-3.3.1.min.js')!!} 
     {!!Html::script('js/jquery-ui-1.9.2.custom.min.js')!!}
     {!!Html::script('js/bootstrap.min.js')!!}
     {!!Html::script('js/jquery.scrollTo.min.js')!!}

@@ -36,6 +36,8 @@ Route::group(['middleware'=>['authen','roles'],'roles'=>['Administrador']],funct
   Route::get('/facturas/preco', ['as'=>'findPrice','uses'=>'FacturacaoController@findPrice']);
   Route::get('/facturas/inicio',['as'=>'facturas','uses'=>'FacturacaoController@create']);
   Route::post('/facturas/facturar',['as'=>'facturacao','uses'=>'FacturacaoController@store']);
+  Route::get('/facturas/depende','FacturacaoController@subKategori');
+ 
  // 
 
   Route::get('/gerir/usuario',['as'=>'indexUsuario','uses'=>'paginasController@indexUsuario']);

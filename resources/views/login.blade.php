@@ -18,7 +18,7 @@
   {!!Html::style('css/style-responsive.css')!!}
 </head>
 
-<body class="login-img3-body">
+<body class="">
 
   <div class="container">
 
@@ -42,10 +42,10 @@
         <button class="btn btn-info btn-lg btn-block" type="submit">Signup</button>
       </div>
     </form>
-    <div class="text-right">
+    <div class="text-center">
       <div class="credits">
 
-          <a href="#/">Sistema de Gestão de Stock</a> criado por <a href="#/">M<b>2</b>OC -Dev. Ltd.</a>
+          <a href="#/">Sistema de Gestão de Stock</a> desenvolvido por <a href="#/">M<b>2</b>OC -Dev. Ltd.</a>
         </div>
     </div>
   </div>

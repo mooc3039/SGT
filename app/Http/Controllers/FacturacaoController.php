@@ -7,6 +7,7 @@ use DB;
 use App\Facturacao;
 use App\Produto;
 use App\Model\Cliente;
+use App\TipoCliente;
 use App\User;
 use PDF;
 
@@ -21,8 +22,9 @@ class FacturacaoController extends Controller
     {
        
         $produtos = Produto::all();
-        $cliente =DB::table('clientes')->pluck('nome','id')->all(); //quando usar laravelcolletive tem que usar o DB no form select
-        return view('facturas.index', compact('produtos','cliente'));
+        $tipo_clientes =TipoCliente::all();
+        $cliente = Cliente::all();
+        return view('facturas.index', compact('produtos','tipo_clientes','cliente'));
     }
 
     /**
@@ -33,8 +35,9 @@ class FacturacaoController extends Controller
     public function create()
     {
         $produtos = Produto::all();
-        $cliente =DB::table('clientes')->pluck('nome','id')->all(); //quando usar laravelcolletive tem que usar o DB no form select
-        return view('facturas.index', compact('produtos','cliente'));
+        $tipo_clientes =TipoCliente::all();
+        $cliente = Cliente::all();
+        return view('facturas.index', compact('produtos','tipo_clientes','cliente','sub_kategori'));
     }
 
     /**
@@ -119,5 +122,12 @@ class FacturacaoController extends Controller
     {
       $data = Produto::select('preco_venda')->where('id',$request->id)->first();
       return response()->json($data);
+    }
+    //trabalhando na dependencia dos combos
+    public function subKategori(Request $req)
+    {
+        $data = Cliente::select('nome','id')->where('tipo_cliente_id',$req->id)->take(100)->get();
+        return response()->json($data);
+        
     }
 }

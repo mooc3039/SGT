@@ -23,11 +23,23 @@
    
         <div class="panel-body" style="border-bottom: 1px solid #ccc; ">
           <div class="form-group">
-              
+            
+            <div class="col-sm-3">
+              {{Form::label('tipo_cliente', 'Tipo de Cliente')}}
+              <select class="form-control tipo_cliente" name="tipo_cliente" id="tipo_cliente">
+                <option value="0" selected="true" disabled="true">selecione categoria</option>        
+                @foreach($tipo_clientes as $tipo_cliente)
+                 <option value="{{$tipo_cliente->id}}">{{$tipo_cliente->tipo_cliente}}</option>
+                @endforeach
+              </select>
+            </div>  
+
               <div class="col-sm-3">
-                {{Form::label('nome', 'Nome do Cliente')}}
-                 {{Form::select('nome[]', [''=>'Selecione Cliente',] + $cliente, null, ['class'=>'form-control'] )}}
-              </div>
+               {{Form::label('nome', 'Selecione Cliente')}}
+                <select name="nome" id="nome" class="form-control nome">
+                  <option selected disabled>Selecione o Cliente</option>
+                </select>
+           </div>
             </div>
           </div> 
          
@@ -92,7 +104,42 @@
 @section('script')
 <script text="text/javascript">
   
- 
+
+  //trabalhando na dependencia
+   $(document).ready(function(){
+    
+    $(document).on('change','.tipo_cliente',function(){
+     // console.log("xa tchintxa");
+
+      var cat_id = $(this).val();
+     // console.log(cat_id);
+    var div = $(this).parent().parent();
+
+     var op="";
+     $.ajax({
+      type: 'get',
+      url: '{!!URL::to('/facturas/depende')!!}',
+      data:{'id':cat_id},
+      success:function(data){
+       // console.log('success');
+       // console.log(data);
+       op+='<option value="0" selected >Selecione Cliente</option>';
+       for(var i=0;i<data.length;i++){
+        op+='<option value="'+data[i].id+'">'+data[i].nome+'</option>';
+       }
+
+       div.find('.nome').html(" ");
+       div.find('.nome').append(op);
+      },
+      error:function(){
+
+      }
+     });
+
+    });
+  });  
+
+  
     //função que adiciona a linha
     function addRow()
     {
@@ -137,6 +184,7 @@
         var tr = $(this).parent().parent();
         tr.find('.quantidade').focus();
       });
+
 
        //------devolver dados do price
        $('tbody').delegate('.descricao','change',function(){
@@ -254,18 +302,7 @@
         });
     });   
 
-   {{--  $('form').submit(function(e){
-      e.preventDefault();
-      var data = $(this).serialize();
-        $.ajax({
-          type  : 'POST',
-          url   : '{!!URL::route('facturacao')!!}',
-          dataType: 'json',
-          data  : data,
-          success:function(data){
-            console.log(data);
-          }
-        });
-      });   --}} 
+
+
 </script>
 @endsection

@@ -9,13 +9,14 @@ use App\Model\Cotacao;
 class Cliente extends Model
 {
     //
-
+	protected $table = 'clientes';
     protected $fillable = [
 		'nome',
 		'endereco',
 		'telefone',
 		'email',
 		'nuit'
+		
 	];
 	public $timestamps = false;
 
