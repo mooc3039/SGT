@@ -186,4 +186,25 @@ class fornecedorController extends Controller
 
     }
 
+    public function storeRedirectBack(Request $request){
+
+        $fornecedor = $this->fornecedor->all();
+
+        $dataForm = $request->all();
+
+        $cadastro = $this->fornecedor->create($dataForm);
+
+        if($cadastro){
+
+            $success = "Fornecedor cadastrado com sucesso.";
+            return redirect()->back()->with('success', $success);
+        }
+        else{
+
+            $error = "Não foi possível cadastrar o Fornecedor.";
+            return redirect()->back()->with('error', $error);
+        }
+
+    }
+
   }

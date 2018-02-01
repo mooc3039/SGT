@@ -34,6 +34,7 @@
               <th><i class="icon_profile"></i> Endereço </th>
               <th><i class="icon_mobile"></i> Email </th>
               <th><i class="icon_mobile"></i> Telefone </th>
+              <th><i class="icon_mail_alt"></i> NUIT </th>
               <th><i class="icon_mail_alt"></i> Activo </th>
 
             </tr>

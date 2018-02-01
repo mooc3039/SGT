@@ -43,7 +43,7 @@
             <td>{{$fornecedor->email}}</td>
             <td>{{$fornecedor->telefone}}</td>
             <td>{{$fornecedor->rubrica}}</td>
-            <td>{{Form::checkbox('activo', $fornecedor->activo, $fornecedor->activo, ['class' => 'disabled'])}}</td>
+            <td>{{Form::checkbox('activo', $fornecedor->activo, $fornecedor->activo, ['disabled'])}}</td>
             <td>
               <div class="btn-group pull-right">
 

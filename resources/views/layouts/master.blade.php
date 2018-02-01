@@ -26,63 +26,73 @@
   {!!Html::style('css/style-responsive.css')!!}
   {!!Html::style('css/xcharts.min.css')!!}
   {!!Html::style('css/jquery-ui-1.10.4.min.css')!!}
+  {!!Html::style('css/select2.min.css')!!}
   @yield('style')
 </head>
-  <body>
+<body>
 
-    <section id="container" class="">
-      @include('layouts.header.header')
-      @include('layouts.sidebars.sidebar')
-      
-      <section id="main-content">
-        <div class="wrapper">
-          @include('layouts.validation.alertas')
-          @yield('content')
-            
-        </div>
-      </section>
 
+
+  {!!Html::script('js/jquery.js')!!}
+  {!!Html::script('js/jquery-ui-1.10.4.min.js')!!}
+  {!!Html::script('js/jquery-3.2.1.min.js')!!}
+  {!!Html::script('js/jquery-ui-1.9.2.custom.min.js')!!}
+  {!!Html::script('js/bootstrap.min.js')!!}
+  {!!Html::script('js/jquery.scrollTo.min.js')!!}
+  {!!Html::script('js/jquery.nicescroll.js')!!}
+  {!!Html::script('assets/jquery-knob/js/jquery.knob.js')!!}
+  {!!Html::script('js/jquery.sparkline.js')!!}
+  {!!Html::script('assets/jquery-easy-pie-chart/jquery.easy-pie-chart.js')!!}
+  {!!Html::script('js/owl.carousel.js')!!}
+  {!!Html::script('js/fullcalendar.min.js')!!}
+  {!!Html::script('assets/fullcalendar/fullcalendar/fullcalendar.js')!!}
+  {!!Html::script('js/calendar-custom.js')!!}
+  {!!Html::script('js/jquery.rateit.min.js')!!}
+  {!!Html::script('js/jquery.customSelect.min.js')!!}
+  {!!Html::script('assets/chart-master/Chart.js')!!}
+  {!!Html::script('js/scripts.js')!!}
+  {!!Html::script('js/sparkline-chart.js')!!}
+  {!!Html::script('js/easy-pie-chart.js')!!}
+  {!!Html::script('js/jquery-jvectormap-1.2.2.min.js')!!}
+  {!!Html::script('js/jquery-jvectormap-world-mill-en.js')!!}
+  {!!Html::script('js/xcharts.min.js')!!}
+  {!!Html::script('js/jquery.autosize.min.js')!!}
+  {!!Html::script('js/jquery.placeholder.min.js')!!}
+  {!!Html::script('js/gdp-data.js')!!}
+  {!!Html::script('js/morris.min.js')!!}
+  {!!Html::script('js/sparklines.js')!!}
+  {!!Html::script('js/charts.js')!!}
+  {!!Html::script('js/jquery.slimscroll.min.js')!!}
+  {!!Html::script('js/select2.min.js')!!}
+
+  
+
+  <section id="container" class="">
+    @include('layouts.header.header')
+    @include('layouts.sidebars.sidebar')
+
+    <section id="main-content">
+      <div class="wrapper">
+        @include('layouts.validation.alertas')
+        @yield('content')
+
+      </div>
     </section>
 
-    {!!Html::script('js/jquery.js')!!}
-    {!!Html::script('js/jquery-ui-1.10.4.min.js')!!}
-    {!!Html::script('js/jquery-3.2.1.min.js')!!}
-    {!!Html::script('js/jquery-ui-1.9.2.custom.min.js')!!}
-    {!!Html::script('js/bootstrap.min.js')!!}
-    {!!Html::script('js/jquery.scrollTo.min.js')!!}
-    {!!Html::script('js/jquery.nicescroll.js')!!}
-    {!!Html::script('assets/jquery-knob/js/jquery.knob.js')!!}
-    {!!Html::script('js/jquery.sparkline.js')!!}
-    {!!Html::script('assets/jquery-easy-pie-chart/jquery.easy-pie-chart.js')!!}
-    {!!Html::script('js/owl.carousel.js')!!}
-    {!!Html::script('js/fullcalendar.min.js')!!}
-    {!!Html::script('assets/fullcalendar/fullcalendar/fullcalendar.js')!!}
-    {!!Html::script('js/calendar-custom.js')!!}
-    {!!Html::script('js/jquery.rateit.min.js')!!}
-    {!!Html::script('js/jquery.customSelect.min.js')!!}
-    {!!Html::script('assets/chart-master/Chart.js')!!}
-    {!!Html::script('js/scripts.js')!!}
-    {!!Html::script('js/sparkline-chart.js')!!}
-    {!!Html::script('js/easy-pie-chart.js')!!}
-    {!!Html::script('js/jquery-jvectormap-1.2.2.min.js')!!}
-    {!!Html::script('js/jquery-jvectormap-world-mill-en.js')!!}
-    {!!Html::script('js/xcharts.min.js')!!}
-    {!!Html::script('js/jquery.autosize.min.js')!!}
-    {!!Html::script('js/jquery.placeholder.min.js')!!}
-    {!!Html::script('js/gdp-data.js')!!}
-    {!!Html::script('js/morris.min.js')!!}
-    {!!Html::script('js/sparklines.js')!!}
-    {!!Html::script('js/charts.js')!!}
-    {!!Html::script('js/jquery.slimscroll.min.js')!!}
+  </section>
+  @yield('script')
+  <script>
+    
+    /* SEARCH SELECT */
+    $('.select_search').select2();
+    /* FIM SEARCH SELECT */
 
-    @yield('script')
-      <script>
       //====
       $(document).ready(function(){
         $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
+          headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+          }
         });
       });
 
@@ -130,8 +140,8 @@
           });
         });
       </script>
-  </body>
-  <script type="text/javascript">
+    </body>
+    <script type="text/javascript">
 
     //====trocar de focus para o proximo campo a preencher
     $('tbody').delegate('.descricao','change', function(){
@@ -140,39 +150,39 @@
     });
 
     //======pegar os valores dos campos e calcular o valor de cada produto====
-      $('tbody').delegate('.quantidade,.preco_venda,.desconto','keyup',function(){
-        var tr = $(this).parent().parent();
-        var quantidade = tr.find('.quantidade').val();
-        var preco_venda = tr.find('.preco_venda').val();
-        var desconto = tr.find('.desconto').val();
-        var subtotal = (quantidade*preco_venda)-(quantidade*preco_venda*desconto)/100;
-        tr.find('.subtotal').val(subtotal);
-        total();
-      });
+    $('tbody').delegate('.quantidade,.preco_venda,.desconto','keyup',function(){
+      var tr = $(this).parent().parent();
+      var quantidade = tr.find('.quantidade').val();
+      var preco_venda = tr.find('.preco_venda').val();
+      var desconto = tr.find('.desconto').val();
+      var subtotal = (quantidade*preco_venda)-(quantidade*preco_venda*desconto)/100;
+      tr.find('.subtotal').val(subtotal);
+      total();
+    });
 
       //==calculo do total de todas as linhas
-        function total()
-        {
-          var total =0;
-          $('.subtotal').each(function(i,e){
-            var subtotal = $(this).val()-0;
-            total +=subtotal;
-          })
-          $('.total').html(total.formatMoney(2,',','.')+ " Mtn");
-        };
+      function total()
+      {
+        var total =0;
+        $('.subtotal').each(function(i,e){
+          var subtotal = $(this).val()-0;
+          total +=subtotal;
+        })
+        $('.total').html(total.formatMoney(2,',','.')+ " Mtn");
+      };
 
         // ==== formatando os numeros ====
         Number.prototype.formatMoney = function(decPlaces, thouSeparator, decSeparator){
           var n = this,
-              decPlaces = isNaN(decPlaces = Math.abs(decPlaces)) ? 2 : decPlaces,
-              decSeparator = decSeparator == undefined ? ".": decSeparator,
-              thouSeparator = thouSeparator == undefined ? ",": thouSeparator,
-              sign = n < 0 ? "-" : "",
-              i = parseInt(n = Math.abs(+n || 0).toFixed(decPlaces)) + "",
-              j = (j = i.length) > 3 ? j % 3 : 0;
-              return sign + (j ? i.substr(0,j) + thouSeparator : "")
-              + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thouSeparator)
-              + (decPlaces ? decSeparator + Math.abs(n-i).toFixed(decPlaces).slice(2) : "");
+          decPlaces = isNaN(decPlaces = Math.abs(decPlaces)) ? 2 : decPlaces,
+          decSeparator = decSeparator == undefined ? ".": decSeparator,
+          thouSeparator = thouSeparator == undefined ? ",": thouSeparator,
+          sign = n < 0 ? "-" : "",
+          i = parseInt(n = Math.abs(+n || 0).toFixed(decPlaces)) + "",
+          j = (j = i.length) > 3 ? j % 3 : 0;
+          return sign + (j ? i.substr(0,j) + thouSeparator : "")
+          + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thouSeparator)
+          + (decPlaces ? decSeparator + Math.abs(n-i).toFixed(decPlaces).slice(2) : "");
         };
 //---começam aqui as funçoes que filtram somente números
           //---find element by row--
@@ -201,48 +211,48 @@
           var val = $(evt.target).val();
           if(!regex.test(key) || !objRegex.test(val+key) ||
             !theEvent.keyCode == 46 || !theEvent.keyCode == 8){
-              theEvent.returnValue = false;
-              if(theEvent.preventDefault) theEvent.preventDefault();
-            };
-        });
+            theEvent.returnValue = false;
+          if(theEvent.preventDefault) theEvent.preventDefault();
+        };
+      });
       };
-        function findRowNumOnly(input){
-          $('tbody').delegate(input, 'keydown',function(){
-            var tr =$(this).parent().parent();
-            numberOnly(tr.find(input));
+      function findRowNumOnly(input){
+        $('tbody').delegate(input, 'keydown',function(){
+          var tr =$(this).parent().parent();
+          numberOnly(tr.find(input));
+        });
+      }
+        //-------------somente numeros
+        function numberOnly(input){
+          $(input).keypress(function(evt){
+            var e = event || evt;
+            var charCode = e.which || e.keyCode;
+            if (charCode > 31 && (charCode < 48 || charCode > 57))
+              return false;
+            return true;
           });
         }
-        //-------------somente numeros
-            function numberOnly(input){
-              $(input).keypress(function(evt){
-                var e = event || evt;
-                var charCode = e.which || e.keyCode;
-                if (charCode > 31 && (charCode < 48 || charCode > 57))
-                return false;
-                return true;
-              });
-            }
          //---limitando somente para entrada de números
          findRowNum('.quantidade');
          findRowNum('.preco_venda');
          findRowNum('.desconto');   
-            
+
 
   //------devolver dados do price
-      $('tbody').delegate('.descricao','change',function(){
-        var tr= $(this).parent().parent();
-        var id = tr.find('.descricao').val();
-        var dataId={'id':id};
-        $.ajax({
-          type  : 'GET',
-          url   : '{!!URL::route('findPrice')!!}',
-          dataType: 'json',
-          data  : dataId,
-          success:function(data){
-            tr.find('.preco_venda').val(data.preco_venda);
-          }
-        });
-      });
+  $('tbody').delegate('.descricao','change',function(){
+    var tr= $(this).parent().parent();
+    var id = tr.find('.descricao').val();
+    var dataId={'id':id};
+    $.ajax({
+      type  : 'GET',
+      url   : '{!!URL::route('findPrice')!!}',
+      dataType: 'json',
+      data  : dataId,
+      success:function(data){
+        tr.find('.preco_venda').val(data.preco_venda);
+      }
+    });
+  });
 
     //==========adiciona mais uma linha da usando a função addRow==
     $('.addRow').on('click',function(){
@@ -250,18 +260,18 @@
     });
 
     //====remove a linha adicionada, foram corrigidos muitos bugs aqui===
-       
+
     $('tbody').on('click','.remove',function(){
-          var l=$('tbody tr').length;
-          if (l==1) {
-            alert('Não poderá remover o ultimo campo de facturação');
-          }else{
-          $(this).parent().parent().remove(); 
-          total();
-          }
-          
-        });
+      var l=$('tbody tr').length;
+      if (l==1) {
+        alert('Não poderá remover o ultimo campo de facturação');
+      }else{
+        $(this).parent().parent().remove(); 
+        total();
+      }
+
+    });
 
 
   </script>
-</html>
+  </html>

@@ -110,4 +110,8 @@ class EntradaController extends Controller
         return view('reports.entradas.report_geral_entradas', compact('entradas'));
 
     }
+
+    public function entradaTeste($id){
+        echo "Teste";
+    }
 }

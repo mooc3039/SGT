@@ -24,6 +24,11 @@
           </div>
           <div class="col-md-6">
 
+            <select class="search_select" id="saidas">
+              <option value="1"> Entradas 1 </option>
+              <option value="2"> Entradas 2 </option>
+            </select>
+
             <span class="pull-right"> <h5><b> Valor Total das Saidas: {{$valor_total_saidas}} Mtn</b></h5> </span>
 
           </div>
@@ -61,5 +66,13 @@
     </section>
   </div>
 </div>
+
+<script type="text/javascript">
+  $(document).ready(function(){
+    $('#saidas').change( function() {
+      location.href = url('/entradas/report_geral_entradas/teste/'+$(this).val());
+    });
+  });
+</script>
 
 @endsection
