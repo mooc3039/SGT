@@ -27,10 +27,10 @@
 							
 							<div class="panel panel-default">
 								<div class="panel-body text-center">
-									<h2> <b> Dados do Cliente </b></h2> <hr>
-									Nome do Cliente: {{$saida->cliente->nome}}<br>
-									Endereço: {{$saida->cliente->endereco}}<br>
-									Nuit: {{$saida->cliente->nuit}}<br>
+
+									Usúario do Sistema:
+									{{$entrada->user->name}}
+
 								</div>
 							</div>
 						</div>
@@ -39,8 +39,8 @@
 
 							<div class="panel panel-default">
 								<div class="panel-body text-center">
-									<h2> <b> Numero de Saida / Factura </b> </h2> <hr>
-									<h1>{{$saida->id}}</h1>
+									<h2> <b> Numero da Entrada / Factura </b> </h2> <hr>
+									<h1>{{$entrada->id}}</h1>
 								</div>
 							</div>
 
@@ -49,7 +49,7 @@
 					</div>
 					<div class="row">
 						<div class="col-md-6"> MAPUTO</div>
-						<div class="col-md-6 text-right"> Data: {{$saida->data}} </div>
+						<div class="col-md-6 text-right"> Data: {{$entrada->data}} </div>
 					</div>
 				</div>
 
@@ -63,17 +63,17 @@
 
 									<tr>
 										<th><i class="icon_profile"></i>Quantidade</th>
-										<th><i class="icon_mobile"></i> Designação </th>
-										<th><i class="icon_mail_alt"></i> Preço Unitário </th>
-										<th><i class="icon_cogs"></i> Valor Total </th>
+										<th><i class="icon_mobile"></i> Valor </th>
+										<th><i class="icon_mobile"></i> Preço Aquisição </th>
+										
 									</tr>
 
-									@foreach($saida->itensSaida as $iten_saida)
+									@foreach($entrada->itensEntrada as $iten_entrada)
 									<tr>
-										<td> {{$iten_saida->quantidade}} </td>
-										<td> {{$iten_saida->produto->descricao}} </td>
-										<td> {{$iten_saida->produto->preco_venda}} </td>
-										<td> {{$iten_saida->valor}} </td>
+										<td> {{$iten_entrada->quantidade}} </td>
+										<td> {{$iten_entrada->produto->descricao}} </td>
+										<td> {{$iten_entrada->produto->preco_aquisicao}} </td>
+										
 
 									</tr>
 									@endforeach
@@ -100,15 +100,6 @@
 						<div class="col-md-6 text-right">
 
 							<table class="pull-right">
-								<tr>
-									<td>
-										Sub-Total:
-									</td>
-									<td>
-										{{$saida->subtotal}}
-									</td>
-								</tr>
-
 
 								<tr>
 									<td>
@@ -121,19 +112,10 @@
 
 								<tr>
 									<td>
-										Desconto:
-									</td>
-									<td>
-										{{$saida->desconto}}
-									</td>
-								</tr>
-
-								<tr>
-									<td>
 										Valor Total:
 									</td>
 									<td>
-										<b>{{$saida->valor_total}}</b>
+										<b>{{$entrada->valor}}</b>
 									</td>
 								</tr>
 							</table>
@@ -164,6 +146,14 @@
 
 						</div>
 
+					</div>
+					<div class="row">
+						<div class="col-md-6"><a href="" class="btn btn-primary">Imprimir Saída</a>
+
+					</div>
+					<div class="col-md-6 text-right"><a href="{{route('entrada.index')}}" class="btn btn-warning">Cancelar</a>
+
+					</div>
 					</div>
 				</div>
 

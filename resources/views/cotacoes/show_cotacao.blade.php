@@ -28,9 +28,9 @@
 							<div class="panel panel-default">
 								<div class="panel-body text-center">
 									<h2> <b> Dados do Cliente </b></h2> <hr>
-									Nome do Cliente: {{$saida->cliente->nome}}<br>
-									Endereço: {{$saida->cliente->endereco}}<br>
-									Nuit: {{$saida->cliente->nuit}}<br>
+									Nome do Cliente: {{$cotacao->cliente->nome}}<br>
+									Endereço: {{$cotacao->cliente->endereco}}<br>
+									Nuit: {{$cotacao->cliente->nuit}}<br>
 								</div>
 							</div>
 						</div>
@@ -39,8 +39,8 @@
 
 							<div class="panel panel-default">
 								<div class="panel-body text-center">
-									<h2> <b> Numero de Saida / Factura </b> </h2> <hr>
-									<h1>{{$saida->id}}</h1>
+									<h2> <b> Numero de Cotação / Factura </b> </h2> <hr>
+									<h1>{{$cotacao->id}}</h1>
 								</div>
 							</div>
 
@@ -49,7 +49,7 @@
 					</div>
 					<div class="row">
 						<div class="col-md-6"> MAPUTO</div>
-						<div class="col-md-6 text-right"> Data: {{$saida->data}} </div>
+						<div class="col-md-6 text-right"> Data: {{$cotacao->data}} </div>
 					</div>
 				</div>
 
@@ -68,12 +68,12 @@
 										<th><i class="icon_cogs"></i> Valor Total </th>
 									</tr>
 
-									@foreach($saida->itensSaida as $iten_saida)
+									@foreach($cotacao->itensCotacao as $iten_cotacao)
 									<tr>
-										<td> {{$iten_saida->quantidade}} </td>
-										<td> {{$iten_saida->produto->descricao}} </td>
-										<td> {{$iten_saida->produto->preco_venda}} </td>
-										<td> {{$iten_saida->valor}} </td>
+										<td> {{$iten_cotacao->quantidade}} </td>
+										<td> {{$iten_cotacao->produto->descricao}} </td>
+										<td> {{$iten_cotacao->produto->preco_venda}} </td>
+										<td> {{$iten_cotacao->valor}} </td>
 
 									</tr>
 									@endforeach
@@ -105,7 +105,7 @@
 										Sub-Total:
 									</td>
 									<td>
-										{{$saida->subtotal}}
+										{{$cotacao->subtotal}}
 									</td>
 								</tr>
 
@@ -124,7 +124,7 @@
 										Desconto:
 									</td>
 									<td>
-										{{$saida->desconto}}
+										{{$cotacao->desconto}}
 									</td>
 								</tr>
 
@@ -133,7 +133,7 @@
 										Valor Total:
 									</td>
 									<td>
-										<b>{{$saida->valor_total}}</b>
+										<b>{{$cotacao->valor_total}}</b>
 									</td>
 								</tr>
 							</table>
@@ -164,6 +164,14 @@
 
 						</div>
 
+					</div>
+					<div class="row">
+						<div class="col-md-6"><a href="" class="btn btn-primary">Imprimir Saída</a>
+
+					</div>
+					<div class="col-md-6 text-right"><a href="{{route('cotacao.index')}}" class="btn btn-warning">Cancelar</a>
+
+					</div>
 					</div>
 				</div>
 

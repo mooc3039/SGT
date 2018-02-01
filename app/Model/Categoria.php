@@ -13,6 +13,8 @@ class Categoria extends Model
     	'nome'
     ];
 
+    public $timestamps = false;
+
     
     public function produtos(){
 

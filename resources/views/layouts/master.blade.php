@@ -27,64 +27,75 @@
   {!!Html::style('css/style-responsive.css')!!}
   {!!Html::style('css/xcharts.min.css')!!}
   {!!Html::style('css/jquery-ui-1.10.4.min.css')!!}
+  {!!Html::style('css/select2.min.css')!!}
   @yield('style')
 
 </head>
-  <body>
+<body>
 
-    <section id="container" class="">
-      @include('layouts.header.header')
-      @include('layouts.sidebars.sidebar')
-      
-      <section id="main-content">
-        <div class="wrapper">
-          @include('layouts.validation.alertas')
-          @yield('content')
-            
-        </div>
-      </section>
 
+
+  {!!Html::script('js/jquery.js')!!}
+  {!!Html::script('js/jquery-ui-1.10.4.min.js')!!}
+  {!!Html::script('js/jquery-3.2.1.min.js')!!}
+  {!!Html::script('js/jquery-ui-1.9.2.custom.min.js')!!}
+  {!!Html::script('js/bootstrap.min.js')!!}
+  {!!Html::script('js/jquery.scrollTo.min.js')!!}
+  {!!Html::script('js/jquery.nicescroll.js')!!}
+  {!!Html::script('assets/jquery-knob/js/jquery.knob.js')!!}
+  {!!Html::script('js/jquery.sparkline.js')!!}
+  {!!Html::script('assets/jquery-easy-pie-chart/jquery.easy-pie-chart.js')!!}
+  {!!Html::script('js/owl.carousel.js')!!}
+  {!!Html::script('js/fullcalendar.min.js')!!}
+  {!!Html::script('assets/fullcalendar/fullcalendar/fullcalendar.js')!!}
+  {!!Html::script('js/calendar-custom.js')!!}
+  {!!Html::script('js/jquery.rateit.min.js')!!}
+  {!!Html::script('js/jquery.customSelect.min.js')!!}
+  {!!Html::script('assets/chart-master/Chart.js')!!}
+  {!!Html::script('js/scripts.js')!!}
+  {!!Html::script('js/sparkline-chart.js')!!}
+  {!!Html::script('js/easy-pie-chart.js')!!}
+  {!!Html::script('js/jquery-jvectormap-1.2.2.min.js')!!}
+  {!!Html::script('js/jquery-jvectormap-world-mill-en.js')!!}
+  {!!Html::script('js/xcharts.min.js')!!}
+  {!!Html::script('js/jquery.autosize.min.js')!!}
+  {!!Html::script('js/jquery.placeholder.min.js')!!}
+  {!!Html::script('js/gdp-data.js')!!}
+  {!!Html::script('js/morris.min.js')!!}
+  {!!Html::script('js/sparklines.js')!!}
+  {!!Html::script('js/charts.js')!!}
+  {!!Html::script('js/jquery.slimscroll.min.js')!!}
+  {!!Html::script('js/select2.min.js')!!}
+
+  
+
+  <section id="container" class="">
+    @include('layouts.header.header')
+    @include('layouts.sidebars.sidebar')
+
+    <section id="main-content">
+      <div class="wrapper">
+        @include('layouts.validation.alertas')
+        @yield('content')
+
+      </div>
     </section>
-    
-    {!!Html::script('js/jquery.js')!!} 
-    {!!Html::script('js/jquery-ui-1.10.4.min.js')!!} 
-    {!!Html::script('js/jquery-3.3.1.min.js')!!} 
-    {!!Html::script('js/jquery-ui-1.9.2.custom.min.js')!!}
-    {!!Html::script('js/bootstrap.min.js')!!}
-    {!!Html::script('js/jquery.scrollTo.min.js')!!}
-    {!!Html::script('js/jquery.nicescroll.js')!!}
-    {!!Html::script('assets/jquery-knob/js/jquery.knob.js')!!} 
-    {!!Html::script('js/jquery.sparkline.js')!!}
-    {!!Html::script('assets/jquery-easy-pie-chart/jquery.easy-pie-chart.js')!!} 
-    {!!Html::script('js/owl.carousel.js')!!}
-    {!!Html::script('js/fullcalendar.min.js')!!}
-    {!!Html::script('assets/fullcalendar/fullcalendar/fullcalendar.js')!!} 
-    {!!Html::script('js/calendar-custom.js')!!}
-    {!!Html::script('js/jquery.rateit.min.js')!!}
-    {!!Html::script('js/jquery.customSelect.min.js')!!}
-    {!!Html::script('assets/chart-master/Chart.js')!!} 
-    {!!Html::script('js/scripts.js')!!}
-    {!!Html::script('js/sparkline-chart.js')!!} 
-    {!!Html::script('js/easy-pie-chart.js')!!} -->
-    {!!Html::script('js/jquery-jvectormap-1.2.2.min.js')!!}
-    {!!Html::script('js/jquery-jvectormap-world-mill-en.js')!!}
-    {!!Html::script('js/xcharts.min.js')!!}
-    {!!Html::script('js/jquery.autosize.min.js')!!}
-    {!!Html::script('js/jquery.placeholder.min.js')!!}
-    {!!Html::script('js/gdp-data.js')!!}
-    {!!Html::script('js/morris.min.js')!!}
-    {!!Html::script('js/sparklines.js')!!}
-    {!!Html::script('js/charts.js')!!} 
-    {!!Html::script('js/jquery.slimscroll.min.js')!!}
 
-    @yield('script')
-      <script type="text/javascript">
-      //====Srcipts provenientes do thema====
+  </section>
+  @yield('script')
+  <script>
+    
+    /* SEARCH SELECT */
+    $('.select_search').select2();
+    /* FIM SEARCH SELECT */
+
+      //====
       $(document).ready(function(){
         $.ajaxSetup({
           headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        }
+          }
+        });
       });
     });
 
@@ -134,5 +145,4 @@
 
       
   </script>
-</body>
-</html>
+  </html>

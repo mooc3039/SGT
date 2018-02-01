@@ -151,4 +151,13 @@ class ClienteController extends Controller
       return redirect()->back();
       
     }
+
+    
+    public function reportGeralCliente(){
+
+        $clientes = $this->cliente->orderBy('nome', 'asc')->get();
+
+        return view('reports.clientes.report_geral_clientes', compact('clientes'));
+
+    }
 }

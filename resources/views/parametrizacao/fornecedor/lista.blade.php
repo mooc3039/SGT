@@ -32,7 +32,7 @@
             <th><i class="icon_mail_alt"></i> Email</th>
             <th><i class="icon_pin_alt"></i> Telefone</th>
             <th><i class="icon_calendar"></i> Rubrica</th>
-            <th><i class="icon_calendar"></i> Activo </th>
+            <th><i class="fa fa-unlock-alt"></i> Activo </th>
             <th class="text-center"><i class="icon_cogs"></i> Operações</th>
           </tr>
           @if(count($fornecedores) > 0)
@@ -43,19 +43,19 @@
             <td>{{$fornecedor->email}}</td>
             <td>{{$fornecedor->telefone}}</td>
             <td>{{$fornecedor->rubrica}}</td>
-            <td>{{Form::checkbox('activo', $fornecedor->activo, $fornecedor->activo, ['class' => 'disabled'])}}</td>
+            <td>{{Form::checkbox('activo', $fornecedor->activo, $fornecedor->activo, ['disabled'])}}</td>
             <td>
               <div class="btn-group pull-right">
 
 
 
                 <a class="btn btn-primary" href="#"><i class="icon_plus_alt2"></i></a>
-                <a class="btn btn-success" href="{{route('fornecedores.edit', $fornecedor->id)}}"><i class="icon_check_alt2"></i></a>
+                <a class="btn btn-success" href="{{route('fornecedores.edit', $fornecedor->id)}}"><i class="fa fa-pencil"></i></a>
 
                 @if($fornecedor->activo == true)
-                <a class="btn btn-danger" href="{{route('fornecedores_desactivar', $fornecedor->id)}}">Desactivar</a>
+                <a class="btn btn-danger" href="{{route('fornecedores_desactivar', $fornecedor->id)}}"><i class="fa fa-lock"></i></a>
                 @else
-                <a class="btn btn-info" href="{{route('fornecedores_activar', $fornecedor->id)}}">Activar</a>
+                <a class="btn btn-info" href="{{route('fornecedores_activar', $fornecedor->id)}}"><i class="fa fa-unlock"></i></a>
                 @endif
                <!-- {!!Form::open(['route'=>['fornecedores.destroy', $fornecedor->fornecedor_id], 'method'=>'DELETE'])!!}
                 {{Form::submit('Delete', ['class' => 'btn btn-danger'])}} -->

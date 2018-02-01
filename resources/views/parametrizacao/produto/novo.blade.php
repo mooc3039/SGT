@@ -14,61 +14,196 @@
 <div class="row">
   <div class="col-lg-12">
     <section class="panel panel-default">
-      <header class="panel-heading">
+     <!--  <header class="panel-heading">
         Parametrizar Produtos
-      </header>
+      </header> -->
 
       {!! Form::open([ 'action' => 'produtoController@store','method' => 'POST', 'class' => 'form-horizontal']) !!}
-        <div class="panel-body" style="border-bottom: 1px solid #ccc; ">
-          <div class="form-group">
+      
+     <!--  <div class="panel-body">
 
+     </div> -->
+     <!-- <div class="panel-footer"></div> -->
+
+
+     <div class="panel-body" style="border-bottom: 1px solid #ccc; ">
+
+      <div class="row" style="margin-bottom: 15px;">
+
+        <div class="form-horizontal">
+
+          <div class="col-md-4">
+
+            {{Form::label('categoria_id', 'Categoria')}}
+            <div class="input-group">
+              {{Form::select('categoria_id', [''=>'Selecione Categoria',] + $categoria, null, ['class'=>'form-control select_search'] )}}
+              {{Form::button('Adicionar', ['class'=>'input-group-addon', 'data-toggle'=>'modal', 'data-target'=>'#modalCategoria', 'style'=>'width:auto; font-weight:lighter'])}}
               
-            <div class="col-sm-3">
-              {{Form::label('descricao', 'Descrição')}}
-              {{Form::text('descricao', '', ['class' => 'form-control', 'placeholder' => 'Descrição do Produto'])}}
-            </div>
-        
-            <div class="col-sm-3">
-              {{Form::label('preco_venda', 'Preço de Venda')}}
-              {{Form::text('preco_venda', '', ['class' => 'form-control', 'placeholder' => 'Preço de Venda'])}}
-            </div>
-        
-            <div class="col-sm-3">
-              {{Form::label('preco_aquisicao', 'Preço de Aquisição')}}
-              {{Form::text('preco_aquisicao', '', ['class' => 'form-control', 'placeholder' => 'Preço de Aquisição '])}}
-            </div>
-        
-            <div class="col-sm-3">
-              {{Form::label('quantidade_dispo', 'Quantidade Disponível')}}
-              {{Form::text('quantidade_dispo', '', ['class' => 'form-control', 'placeholder' => 'Quantidade Disponível'])}}
-            </div>
-      
-            <div class="col-sm-3">
-              {{Form::label('quantidade_min', 'Quantidade Minima')}}
-              {{Form::text('quantidade_min', '', ['class' => 'form-control', 'placeholder' => 'Validade'])}}
             </div>
 
-            <div class="col-sm-3">
-              {{Form::label('fornecedor_id', 'Fornecedor')}}
-              {{Form::select('fornecedor_id', [''=>'Selecione Fornecedor',] + $fornecedor, null, ['class'=>'form-control'] )}}
-            </div>
-
-            <div class="col-sm-3">
-              {{Form::label('categoria_id', 'Categoria')}}
-              {{Form::select('categoria_id', [''=>'Selecione Categoria',] + $categoria, null, ['class'=>'form-control'] )}}
-            </div>
-
-            </div>
           </div>
-          <div class="panel-footer">
-            {{Form::submit('Adicionar Produto', ['class'=>'btn btn-primary'])}}
-          </div>
-        
-      {!! Form::close() !!}
 
-      
-    </section>
-  </div>
+          <div class="col-md-4">
+
+            {{Form::label('fornecedor_id', 'Fornecedor')}}
+            <div class="input-group">
+              {{Form::select('fornecedor_id', [''=>'Selecione Fornecedor',] + $fornecedor, null, ['class'=>'form-control select_search'] )}}
+              {{Form::button('Adicionar', ['class'=>'input-group-addon', 'data-toggle'=>'modal', 'data-target'=>'#modalFornecedor', 'style'=>'width:auto; font-weight:lighter'])}}
+            </div>
+
+          </div>
+
+
+        </div>
+
+      </div>
+
+      <hr style="border: 1px solid #ccc;">
+
+      <div class="row" style="margin-bottom: 15px;">
+
+        <div class="form-horizontal">
+
+          <div class="col-sm-4">
+            {{Form::label('descricao', 'Descrição')}}
+            {{Form::text('descricao', '', ['class' => 'form-control', 'placeholder' => 'Descrição do Produto'])}}
+          </div>
+
+          <div class="col-sm-4">
+            {{Form::label('preco_venda', 'Preço de Venda')}}
+            {{Form::text('preco_venda', '', ['class' => 'form-control', 'placeholder' => 'Preço de Venda'])}}
+          </div>
+
+          <div class="col-sm-4">
+            {{Form::label('preco_aquisicao', 'Preço de Aquisição')}}
+            {{Form::text('preco_aquisicao', '', ['class' => 'form-control', 'placeholder' => 'Preço de Aquisição '])}}
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="row">
+
+        <div class="form-horizontal">
+
+          <div class="col-sm-4">
+            {{Form::label('quantidade_dispo', 'Quantidade Disponível')}}
+            {{Form::text('quantidade_dispo', '', ['class' => 'form-control', 'placeholder' => 'Quantidade Disponível'])}}
+          </div>
+
+          <div class="col-sm-4">
+            {{Form::label('quantidade_min', 'Quantidade Minima')}}
+            {{Form::text('quantidade_min', '', ['class' => 'form-control', 'placeholder' => 'Validade'])}}
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+    <div class="panel-footer">
+      <div class="row">
+        <div class="col-md-6">
+
+          {{Form::submit('Adicionar Produto', ['class'=>'btn btn-primary'])}}
+
+        </div>
+        <div class="col-md-6 text-right">
+
+          <a href="{{route('produtos.index')}}" class="btn btn-warning"> Cancelar </a>
+        </div>
+      </div>
+
+    </div>
+
+    {!! Form::close() !!}
+
+
+  </section>
+</div>
 </div>
 
-@endsection
+<!-- MODAL CATEGORIA -->
+<div class="modal fade" tabindex="-1" role="dialog" id="modalCategoria">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Cadastrar Categoria</h4>
+      </div>
+      <div class="modal-body">
+
+        {{Form::open(['route'=>'categoria_salvar_rback', 'method'=>'POST'])}}
+        
+        <div class="form-group">
+          {{Form::label('nome', 'Nome', ['class'=>'control-lable'])}}
+          {{Form::text('nome', null, ['placeholder' => 'Nome', 'class' => 'form-control'])}}
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        {{Form::button('Fechar', ['class'=>'btn btn-default', 'data-dismiss'=>'modal'])}}
+        {{Form::submit('Salvar', ['class'=>'btn btn-primary'])}}
+
+        {{Form::close()}}
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<!-- FIM MODAL CATEGORIA -->
+
+
+<!-- MODAL FORNECEDOR -->
+<div class="modal fade" tabindex="-1" role="dialog" id="modalFornecedor">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Cadastrar Fornecedor</h4>
+      </div>
+      <div class="modal-body">
+
+        {{Form::open(['route'=>'fornecedor_salvar_rback', 'method'=>'POST'])}}
+        <div class="form-group">
+          {{Form::label('nome', 'Nome', ['class'=>'control-lable'])}}
+          {{Form::text('nome', null, ['placeholder' => 'Nome', 'class' => 'form-control'])}}
+        </div>
+        <div class="form-group">
+          {{Form::label('telefone', 'Telefone', ['class'=>'control-lable'])}}
+          {{Form::text('telefone', null, ['placeholder' => 'Telefone', 'class' => 'form-control'])}}
+        </div>
+        <div class="form-group">
+          {{Form::label('endereco', 'Endereço', ['class'=>'control-lable'])}}
+          {{Form::text('endereco', null, ['placeholder' => 'Endereço', 'class' => 'form-control'])}}
+        </div>
+        <div class="form-group">
+          {{Form::label('email', 'Email', ['class'=>'control-lable'])}}
+          {{Form::text('email', null, ['placeholder' => 'Email', 'class' => 'form-control'])}}
+        </div>
+        <div class="form-group">
+          {{Form::label('rubrica', 'Rubrica', ['class'=>'control-lable'])}}
+          {{Form::text('rubrica', null, ['placeholder' => 'Rubrica', 'class' => 'form-control'])}}
+        </div>
+        <div class="radio">
+          {{Form::radio('activo', '1')}} Activo
+        </div>
+        <div class="radio">
+          {{Form::radio('activo', '0')}} Inactivo
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        {{Form::button('Fechar', ['class'=>'btn btn-default', 'data-dismiss'=>'modal'])}}
+        {{Form::submit('Salvar', ['class'=>'btn btn-primary'])}}
+        <!-- <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+          <button type="button" class="btn btn-primary">Salvar</button> -->
+          {{Form::close()}}
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+  <!--FIM MODAL FORNECEDOR -->
+
+  @endsection

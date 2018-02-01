@@ -3,13 +3,24 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Requests\ProdutoStoreUpdateFormRequest;
 use DB;
-use App\Produto;
-use App\Fornecedor;
+use App\Model\Produto;
+use App\Model\Fornecedor;
 use App\Model\Categoria;
 
 class produtoController extends Controller
 {
+    private $produto;
+    private $fornecedor;
+    private $categoria;
+
+    public function __construct(Produto $produto, Fornecedor $fornecedor, Categoria $categoria){
+
+        $this->produto = $produto;
+        $this->fornecedor = $fornecedor;
+        $this->categoria = $categoria;
+    }
     /**
      * Display a listing of the resource.
      *
@@ -17,8 +28,9 @@ class produtoController extends Controller
      */
     public function index()
     {
-        $produtos = Produto::orderBy('descricao','asc')->paginate(7);
-        return view('parametrizacao.produto.lista')->with('produtos',$produtos);
+        $produtos = $this->produto->with('categoria', 'fornecedor')->paginate(6);
+
+        return view('parametrizacao.produto.index_produto', compact('produtos'));
     }
 
     /**
@@ -39,9 +51,26 @@ class produtoController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ProdutoStoreUpdateFormRequest $request)
     {
-        $this->validate($request, [
+        
+        $dataForm = $request->all();
+
+        $cadastro = $this->produto->create($dataForm);
+
+        if($cadastro){
+
+            $success = "Produto cadastrado com sucesso.";
+            return redirect()->route('produtos.index')->with('success', $success);
+        }
+        else{
+
+            $error = "Não foi possível cadastrar o Produto!";
+            return redirect()->route('produtos.index')->with('error', $error);
+        }
+
+
+        /*$this->validate($request, [
             'descricao' => 'required',
             'preco_venda' => 'required|numeric ',
             'preco_aquisicao' => 'required | numeric',
@@ -49,10 +78,11 @@ class produtoController extends Controller
             'quantidade_min' => 'required|numeric', 
             'fornecedor_id' => 'required',
             'categoria_id' => 'required',
-          ]);
+          ]);*/
          
           //criar fornecdor
-          $produto = new Produto;
+
+          /*$produto = new Produto;
           $produto->descricao = $request->input('descricao');
           $produto->preco_venda = $request->input('preco_venda');
           $produto->preco_aquisicao = $request->input('preco_aquisicao');
@@ -63,7 +93,7 @@ class produtoController extends Controller
           $produto->categoria_id = $request->input('categoria_id');     
           $produto->save();
   
-          return redirect('/produtos')->with('success', 'Produto criado com sucesso');
+          return redirect('/produtos')->with('success', 'Produto criado com sucesso');*/
     }
 
     /**
@@ -138,4 +168,37 @@ class produtoController extends Controller
         $produto->delete();
         return redirect('/produtos')->with('success', 'Produto eliminado com sucesso!');
     }
+
+    public function listarTodos()
+    {
+        /*$produtos = Produto::orderBy('descricao','asc')->paginate(7);
+        return view('parametrizacao.produto.lista')->with('produtos',$produtos);*/
+        $produtos = $this->produto->with('categoria', 'fornecedor')->paginate(7);
+
+        $categorias = DB::table('categorias')->select('nome', 'id')->get();
+
+        $fornecedores = DB::table('fornecedors')->select('nome', 'id')->get();
+
+        return view('reports.produtos.report_geal_produto', compact('produtos','fornecedores', 'categorias'));
+    }
+
+
+    public function listarPorCategoria($id){
+
+        $produtos = $this->produto->with('fornecedor', 'categoria')->where('categoria_id', $id)->orderBy('descricao', 'asc')->get();
+
+        return response()->json($produtos);
+
+    }
+    
+
+    public function listarPorFornecedor($id){
+
+        $produtos = $this->produto->with('fornecedor', 'categoria')->where('fornecedor_id', $id)->orderBy('descricao', 'asc')->get();
+
+        return response()->json($produtos);
+
+    }
+
+
 }

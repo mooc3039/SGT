@@ -56,14 +56,42 @@ Route::group(['middleware'=>['authen','roles'],'roles'=>['Administrador']],funct
   Route::get('/clientes/activar/{id}', ['as'=>'clientes_activar', 'uses'=>'ClienteController@activar']);
   Route::get('/clientes/desactivar/{id}', ['as'=>'clientes_desactivar', 'uses'=>'ClienteController@desactivar']);
 
+  // REPORTS => Malache
+  Route::get('/entradas/report_geral_entradas', ['as'=>'rg_entradas', 'uses'=>'EntradaController@reportGeralEntradas']);
+  Route::get('/entradas/report_geral_entradas/teste{id}', ['as'=>'entrada_teste', 'uses'=>'EntradaController@entradaTeste']);
+  Route::get('/fornecedores/report_geral_fornecedores', ['as'=>'rg_fornecedores', 'uses'=>'fornecedorController@reportGeralFornecedores']);
+  Route::get('/clientes/report_geral_clientes', ['as'=>'rg_clientes', 'uses'=>'ClienteController@reportGeralCliente']);
+  Route::get('/saidas/report_geral_saidas', ['as'=>'rg_saidas', 'uses'=>'SaidaController@reportGeralSaidas']);
+  /*Route::get('/produtos/report_geral_produtos', ['as'=>'rg_produtos', 'uses'=>'produtoController@reportGeralProdutos']);*/
+  Route::get('/cotacoes/report_geral_cotacoes', ['as'=>'rg_cotacoes', 'uses'=>'CotacaoController@reportGeralCotacoes']);
+
+  // CRITERIOS DOS REPORTS PARA PRODUTOS => Malache
+  Route::get('/produtos/report_geral/ajax', 'produtoController@listarTodos')->name('report_geral_produto');
+  
+  Route::get('/produtos/report_geral/listar_prod_categoria_ajax/{id}', 'produtoController@listarPorCategoria')->name('listar_prod_categoria_ajax');
+  
+  Route::get('/produtos/report_geral/listar_prod_fornecedor_ajax/{id}', 'produtoController@listarPorFornecedor')->name('listar_prod_fornecedor_ajax');
+
+  // CADSTRAR FORNECEDOR FAZENDO o redirect()->back() => Malache
+  Route::post('/fornecedores/fornecedor_salvar_rback', 'fornecedorController@storeRedirectBack')->name('fornecedor_salvar_rback');
+
+  // CADSTRAR CATEGORIA FAZENDO o redirect()->back() => Malache
+  Route::post('/categoria/categoria_salvar_rback', 'CategoriaController@storeRedirectBack')->name('categoria_salvar_rback');
+
+
+
   //Rotas de operações
   Route::resource('/fornecedores', 'fornecedorController');
   Route::resource('/produtos', 'produtoController');
+  Route::resource('/categoria', 'CategoriaController');
   Route::resource('/cliente', 'ClienteController');
 
  // Route::resource('/facturas', 'FacturacaoController');
 
   Route::resource('/saida', 'SaidaController');
+  Route::resource('/cotacao', 'CotacaoController');
+  Route::resource('/entrada', 'EntradaController');
+  
 
   
 /* 
@@ -75,6 +103,7 @@ Route::group(['middleware'=>['authen','roles'],'roles'=>['Administrador']],funct
     Route::resource('/teste_permissao', 'PermissaoController');
     Route::resource('/teste_saida', 'SaidaController');
     Route::resource('/teste_iten_saida', 'ItenSaidaController');
+
   });
  */
 

@@ -4,6 +4,8 @@ namespace App\Model;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Model\Cliente;
+use App\Model\ItenCotacao;
+
 
 class Cotacao extends Model
 {
@@ -22,6 +24,12 @@ class Cotacao extends Model
 
     	return $this->belongsTo('App\Model\Cliente');
     	
+    }
+
+    public function itensCotacao(){
+
+        return $this->hasMany('App\Model\ItenCotacao');
+        
     }
 
 }
