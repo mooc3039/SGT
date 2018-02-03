@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Database\QueryException;
 use App\Model\Categoria;
+use App\Http\Requests\CategoriaStoreUpdateFormRequest;
+
 
 class CategoriaController extends Controller
 {
@@ -49,7 +51,7 @@ class CategoriaController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CategoriaStoreUpdateFormRequest $request)
     {
         //
         $dataForm = $request->all();
@@ -101,7 +103,7 @@ class CategoriaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(CategoriaStoreUpdateFormRequest $request, $id)
     {
         //
         $dataForm = $request->all();
@@ -170,7 +172,7 @@ class CategoriaController extends Controller
         }
     }
 
-    public function storeRedirectBack(Request $request)
+    public function storeRedirectBack(CategoriaStoreUpdateFormRequest $request)
     {
 
         $dataForm = $request->all();

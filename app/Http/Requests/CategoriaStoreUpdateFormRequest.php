@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class FornecedorStoreUpdateFormRequest extends FormRequest
+class CategoriaStoreUpdateFormRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,25 +23,16 @@ class FornecedorStoreUpdateFormRequest extends FormRequest
      */
     public function rules()
     {
-        $id = $this->get('fornecedor_id');
-
         return [
             //
             'nome' => 'required',
-            'telefone' => 'required',
-            'email' => 'unique:fornecedors,email,'.$id.',id',
-            'activo' => 'required',
         ];
-
     }
 
     public function messages(){
 
         return [
-            'nome.required' => 'O nome do Fornecedor é obrigatório.',
-            'telefone.required' => 'O Telefone é obrigatório.',
-            'email.unique' => 'O Email já existe!',
-            'activo.required' => 'O Fornecedor deve ser Activo ou Inactivo.',
+            'nome.required' => 'O nome da Categoria é obrigatório.',
         ];
         
     }

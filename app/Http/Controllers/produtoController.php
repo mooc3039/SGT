@@ -42,7 +42,7 @@ class produtoController extends Controller
     {
         $categoria =DB::table('categorias')->pluck('nome','id')->all();
         $fornecedor =DB::table('fornecedors')->pluck('nome','id')->all();
-        return view('parametrizacao.produto.novo',compact('fornecedor','categoria'));
+        return view('parametrizacao.produto.create_edit_produto',compact('fornecedor','categoria'));
     }
 
     /**
@@ -53,7 +53,7 @@ class produtoController extends Controller
      */
     public function store(ProdutoStoreUpdateFormRequest $request)
     {
-        
+
         $dataForm = $request->all();
 
         $cadastro = $this->produto->create($dataForm);
@@ -69,31 +69,6 @@ class produtoController extends Controller
             return redirect()->route('produtos.index')->with('error', $error);
         }
 
-
-        /*$this->validate($request, [
-            'descricao' => 'required',
-            'preco_venda' => 'required|numeric ',
-            'preco_aquisicao' => 'required | numeric',
-            'quantidade_dispo' => 'required|numeric',
-            'quantidade_min' => 'required|numeric', 
-            'fornecedor_id' => 'required',
-            'categoria_id' => 'required',
-          ]);*/
-         
-          //criar fornecdor
-
-          /*$produto = new Produto;
-          $produto->descricao = $request->input('descricao');
-          $produto->preco_venda = $request->input('preco_venda');
-          $produto->preco_aquisicao = $request->input('preco_aquisicao');
-          $produto->quantidade_dispo = $request->input('quantidade_dispo');
-          $produto->quantidade_min = $request->input('quantidade_min');
-
-          $produto->fornecedor_id = $request->input('fornecedor_id');    
-          $produto->categoria_id = $request->input('categoria_id');     
-          $produto->save();
-  
-          return redirect('/produtos')->with('success', 'Produto criado com sucesso');*/
     }
 
     /**
@@ -119,7 +94,7 @@ class produtoController extends Controller
         $produto = Produto::find($id);
         $categoria =DB::table('categorias')->pluck('nome','id')->all();
         $fornecedor =DB::table('fornecedors')->pluck('nome','id')->all();
-        return view('parametrizacao.produto.editar', compact('categoria','fornecedor'))->with('produto', $produto);
+        return view('parametrizacao.produto.create_edit_produto', compact('categoria','fornecedor'))->with('produto', $produto);
     }
 
     /**
@@ -129,30 +104,28 @@ class produtoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(ProdutoStoreUpdateFormRequest $request, $id)
     {
-        $this->validate($request, [
-            'descricao' => 'required',
-            'preco_venda' => 'required|numeric ',
-            'preco_aquisicao' => 'required | numeric',
-            'quantidade_dispo' => 'required|numeric',
-            'quantidade_min' => 'required|numeric',  
-            'fornecedor_id' => 'required',
-            'categoria_id' => 'required',
-          ]);
-          //criar fornecdor
-          $produto = Produto::find($id);
-          $produto->descricao = $request->input('descricao');
-          $produto->preco_venda = $request->input('preco_venda');
-          $produto->preco_aquisicao = $request->input('preco_aquisicao');
-          $produto->quantidade_dispo = $request->input('quantidade_dispo');
-          $produto->quantidade_min = $request->input('quantidade_min');  
 
-          $produto->fornecedor_id = $request->input('fornecedor_id');    
-          $produto->categoria_id = $request->input('categoria_id');     
-          $produto->save();
-  
-          return redirect('/produtos')->with('success', 'Produto actualizado com sucesso');
+          $dataForm = $request->all();
+
+          $produto = $this->produto->find($id);
+
+          $update = $produto->update($dataForm);
+
+          $dataForm = $request->all();
+
+          if($update){
+
+            $success = "Produto actualizado com sucesso.";
+            return redirect()->route('produtos.index')->with('success', $success);
+        }
+        else{
+
+            $error = "Não foi possível actualizar o Produto.";
+            return redirect()->route('produtos.index')->with('error', $error);
+        }
+
     }
 
     /**
@@ -163,7 +136,7 @@ class produtoController extends Controller
      */
     public function destroy($id)
     {
-        
+
         $produto = Produto::find($id);
         $produto->delete();
         return redirect('/produtos')->with('success', 'Produto eliminado com sucesso!');
@@ -171,8 +144,7 @@ class produtoController extends Controller
 
     public function listarTodos()
     {
-        /*$produtos = Produto::orderBy('descricao','asc')->paginate(7);
-        return view('parametrizacao.produto.lista')->with('produtos',$produtos);*/
+        
         $produtos = $this->produto->with('categoria', 'fornecedor')->paginate(7);
 
         $categorias = DB::table('categorias')->select('nome', 'id')->get();

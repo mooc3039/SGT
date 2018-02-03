@@ -23,11 +23,14 @@ class ClienteStoreUpdateFormRequest extends FormRequest
      */
     public function rules()
     {
+        $id = $this->get('cliente_id'); // Este id vem do formulario a partir de um input hidden
+
         return [
             //
             'nome' => 'required',
             'telefone' => 'required',
-            'email' => 'unique:clientes',
+            'email' => 'unique:clientes,email,'.$id.',id',
+            'activo' => 'required',
         ];
     }
 
@@ -36,6 +39,7 @@ class ClienteStoreUpdateFormRequest extends FormRequest
             'nome.required' => 'O nome do cliente é obrigatório.',
             'telefone.required' => 'O telefone é obrigatório.',
             'email.unique' => 'O email já existe!',
+            'activo.required' => 'O Cliente deve ser "Activo" ou "Inactivo"',
         ];
     }
 }

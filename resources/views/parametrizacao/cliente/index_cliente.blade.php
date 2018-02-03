@@ -21,17 +21,20 @@
       <div class="panel-body">
 
         <table class="table table-striped table-advance table-hover">
-          <tbody>
-
+          
+          <thead>
             <tr>
               <th><i class="icon_profile"></i>Nome do Cliente</th>
-              <th><i class="icon_mobile"></i> Endereço</th>
-              <th><i class="icon_mail_alt"></i> Telefone</th>
-              <th><i class="icon_pin_alt"></i> Email</th>
+              <th><i class="icon_pin_alt"></i> Endereço</th>
+              <th><i class="icon_mobile"></i> Telefone</th>
+              <th><i class="icon_mail_alt"></i> Email</th>
               <th><i class="fa fa-id-card"></i> NUIT</th>
               <th><i class="fa fa-unlock-alt"></i> Activo</th>
               <th class="text-center"><i class="icon_cogs"></i> Operações</th>
             </tr>
+          </thead>
+
+          <tbody>
 
             @foreach($clientes as $cliente)
             <tr>
@@ -40,9 +43,9 @@
               <td> {{$cliente->telefone}} </td>
               <td> {{$cliente->email}}</td>
               <td> {{$cliente->nuit}}</td>
-              <td>{{Form::checkbox('activo', $cliente->activo, $cliente->activo, ['class' => 'disabled'])}}
+              <td>{{Form::checkbox('activo', $cliente->activo, $cliente->activo, ['disabled'])}}
               <td class="text-right">
-                <div class="btn-group">
+                <div class="btn-group btn-group-sm">
                   <a class="btn btn-primary" href="#"><i class="icon_plus_alt2"></i></a>
                   <a class="btn btn-success" href="{{route('cliente.edit', $cliente->id)}}"><i class="fa fa-pencil"></i></a>
                   @if($cliente->activo == true)

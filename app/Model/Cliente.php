@@ -15,7 +15,8 @@ class Cliente extends Model
 		'endereco',
 		'telefone',
 		'email',
-		'nuit'
+		'nuit',
+		'activo'
 	];
 	public $timestamps = false;
 

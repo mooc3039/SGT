@@ -186,7 +186,7 @@ class fornecedorController extends Controller
 
     }
 
-    public function storeRedirectBack(Request $request){
+    public function storeRedirectBack(FornecedorStoreUpdateFormRequest $request){
 
         $fornecedor = $this->fornecedor->all();
 
