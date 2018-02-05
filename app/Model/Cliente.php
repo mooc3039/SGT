@@ -9,7 +9,7 @@ use App\Model\Cotacao;
 class Cliente extends Model
 {
     //
-
+	protected $table = 'clientes';
     protected $fillable = [
 		'nome',
 		'endereco',
@@ -29,6 +29,6 @@ class Cliente extends Model
 	public function cotacoes(){
 
 		return $this->hasMany('App\Model\Cotacao');
-		
+
 	}
 }

@@ -4,8 +4,9 @@
 
   <meta charset="utf-8">
   <meta name="csrf-token" content="{{ csrf_token() }}">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Sistema de Gestão de Stocks>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Sistema de Gestão de Stocks">
   <meta name="author" content="M2OC -Dev. Ltd.">
   <meta name="keyword" content="Gestão, Stock, Faturação, Produtos, Encomendas">
   <link rel="shortcut icon" href="img/favicon.png">
@@ -17,7 +18,7 @@
   {!!Html::style('css/font-awesome.min.css')!!}
   {!!Html::style('assets/fullcalendar/fullcalendar/bootstrap-fullcalendar.css')!!}
   {!!Html::style('assets/fullcalendar/fullcalendar/fullcalendar.css')!!}
-  {!!Html::style('assets/jquery-easy-pie-chart/jquery.easy-pie-chart.css')!!}
+  {!!Html::style('assets/jquery-easy-pie-chart/jquery.easy-pie-chart.css')!!} 
   {!!Html::style('css/owl.carousel.css')!!}
   {!!Html::style('css/jquery-jvectormap-1.2.2.css')!!}
   {!!Html::style('css/fullcalendar.css')!!}
@@ -28,6 +29,7 @@
   {!!Html::style('css/jquery-ui-1.10.4.min.css')!!}
   {!!Html::style('css/select2.min.css')!!}
   @yield('style')
+
 </head>
 <body>
 
@@ -95,6 +97,7 @@
           }
         });
       });
+    });
 
         //knob
         $(function() {
@@ -139,139 +142,7 @@
             }
           });
         });
-      </script>
-    </body>
-    <script type="text/javascript">
 
-    //====trocar de focus para o proximo campo a preencher
-    $('tbody').delegate('.descricao','change', function(){
-      var tr = $(this).parent().parent();
-      tr.find('.quantidade').focus();
-    });
-
-    //======pegar os valores dos campos e calcular o valor de cada produto====
-    $('tbody').delegate('.quantidade,.preco_venda,.desconto','keyup',function(){
-      var tr = $(this).parent().parent();
-      var quantidade = tr.find('.quantidade').val();
-      var preco_venda = tr.find('.preco_venda').val();
-      var desconto = tr.find('.desconto').val();
-      var subtotal = (quantidade*preco_venda)-(quantidade*preco_venda*desconto)/100;
-      tr.find('.subtotal').val(subtotal);
-      total();
-    });
-
-      //==calculo do total de todas as linhas
-      function total()
-      {
-        var total =0;
-        $('.subtotal').each(function(i,e){
-          var subtotal = $(this).val()-0;
-          total +=subtotal;
-        })
-        $('.total').html(total.formatMoney(2,',','.')+ " Mtn");
-      };
-
-        // ==== formatando os numeros ====
-        Number.prototype.formatMoney = function(decPlaces, thouSeparator, decSeparator){
-          var n = this,
-          decPlaces = isNaN(decPlaces = Math.abs(decPlaces)) ? 2 : decPlaces,
-          decSeparator = decSeparator == undefined ? ".": decSeparator,
-          thouSeparator = thouSeparator == undefined ? ",": thouSeparator,
-          sign = n < 0 ? "-" : "",
-          i = parseInt(n = Math.abs(+n || 0).toFixed(decPlaces)) + "",
-          j = (j = i.length) > 3 ? j % 3 : 0;
-          return sign + (j ? i.substr(0,j) + thouSeparator : "")
-          + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thouSeparator)
-          + (decPlaces ? decSeparator + Math.abs(n-i).toFixed(decPlaces).slice(2) : "");
-        };
-//---começam aqui as funçoes que filtram somente números
-          //---find element by row--
-          function findRowNum(input){
-            $('tbody').delegate(input, 'keydown',function(){
-              var tr =$(this).parent().parent();
-              number(tr.find(input));
-            });
-          }
-
-          function findRowNumOnly(input){
-            $('tbody').delegate(input, 'keydown',function(){
-              var tr =$(this).parent().parent();
-              numberOnly(tr.find(input));
-            });
-          }
-
-      //--numeros e pontos
-      function number(input){
-        $(input).keypress(function (evt){
-          var theEvent = evt || window.event;
-          var key = theEvent.keyCode || theEvent.which;
-          key = String.fromCharCode( key );
-          var regex = /[-\d\.]/;
-          var objRegex = /^-?\d*[\.]?\d*$/;
-          var val = $(evt.target).val();
-          if(!regex.test(key) || !objRegex.test(val+key) ||
-            !theEvent.keyCode == 46 || !theEvent.keyCode == 8){
-            theEvent.returnValue = false;
-          if(theEvent.preventDefault) theEvent.preventDefault();
-        };
-      });
-      };
-      function findRowNumOnly(input){
-        $('tbody').delegate(input, 'keydown',function(){
-          var tr =$(this).parent().parent();
-          numberOnly(tr.find(input));
-        });
-      }
-        //-------------somente numeros
-        function numberOnly(input){
-          $(input).keypress(function(evt){
-            var e = event || evt;
-            var charCode = e.which || e.keyCode;
-            if (charCode > 31 && (charCode < 48 || charCode > 57))
-              return false;
-            return true;
-          });
-        }
-         //---limitando somente para entrada de números
-         findRowNum('.quantidade');
-         findRowNum('.preco_venda');
-         findRowNum('.desconto');   
-
-
-  //------devolver dados do price
-  $('tbody').delegate('.descricao','change',function(){
-    var tr= $(this).parent().parent();
-    var id = tr.find('.descricao').val();
-    var dataId={'id':id};
-    $.ajax({
-      type  : 'GET',
-      url   : '{!!URL::route('findPrice')!!}',
-      dataType: 'json',
-      data  : dataId,
-      success:function(data){
-        tr.find('.preco_venda').val(data.preco_venda);
-      }
-    });
-  });
-
-    //==========adiciona mais uma linha da usando a função addRow==
-    $('.addRow').on('click',function(){
-      addRow();
-    });
-
-    //====remove a linha adicionada, foram corrigidos muitos bugs aqui===
-
-    $('tbody').on('click','.remove',function(){
-      var l=$('tbody tr').length;
-      if (l==1) {
-        alert('Não poderá remover o ultimo campo de facturação');
-      }else{
-        $(this).parent().parent().remove(); 
-        total();
-      }
-
-    });
-
-
+      
   </script>
   </html>

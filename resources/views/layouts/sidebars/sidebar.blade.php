@@ -28,7 +28,8 @@
                       <span class="menu-arrow arrow_carrot-right"></span>
                   </a>
         <ul class="sub">
-          <li><a class="" href="{{ route('facturar' )}}">Facturar</a></li>
+
+          <li><a class="" href="{{route('facturas')}}">Facturar</a></li>
           <li><a class="" href="{{route('saida.index')}}">Saídas</a></li>
           <li><a class="" href="{{route('cotacao.index')}}">Cotações</a></li>
           <li><a class="" href="{{route('entrada.index')}}">Entradas</a></li>

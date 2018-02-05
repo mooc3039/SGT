@@ -11,11 +11,7 @@ class paginasController extends Controller
   {
     $this->middleware('web');
   }
-  //Paginas de Facturação
-    public function indexFacturacao()
-    {
-      return view('facturas.index');
-    }
+  
   //Paginas de Sock
   public function indexStock()
     {

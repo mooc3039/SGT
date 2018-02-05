@@ -3,16 +3,23 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Model\Produto;
 
 class Fornecedor extends Model
 {
     protected $fillable = [
-        'nome',
-        'endereco',
-        'email',
-        'telefone',
-        'activo'
-    ];
-    
-    public $timestamps = false;
+		'nome',
+		'telefone',
+		'endereco',
+		'email',
+		'rubrica',
+		'activo'
+	];
+	public $timestamps = false;
+
+    public function produtos(){
+
+    	return $this->hasMany('App\Model\Produto');
+    	
+    }
 }
