@@ -27,7 +27,7 @@
       {!! Form::open(['route'=>'produtos.store', 'method'=>'POST']) !!}
 
       @endif
-      
+
      <!--  <div class="panel-body">
 
      </div> -->
@@ -46,7 +46,7 @@
             <div class="input-group">
               {{Form::select('categoria_id', [''=>'Selecione Categoria',] + $categoria, null, ['class'=>'form-control select_search'] )}}
               {{Form::button('Adicionar', ['class'=>'input-group-addon', 'data-toggle'=>'modal', 'data-target'=>'#modalCategoria', 'style'=>'width:auto; font-weight:lighter'])}}
-              
+
             </div>
 
           </div>
@@ -87,7 +87,7 @@
 
           <div class="col-sm-4">
             {{Form::label('preco_aquisicao', 'Preço de Aquisição')}}
-            <div class="input-group"> 
+            <div class="input-group">
             {{Form::text('preco_aquisicao', null, ['class' => 'form-control', 'placeholder' => '0.00 - 999999.99 '])}}
             <div class="input-group-addon">Mtn</div>
           </div>
@@ -121,7 +121,7 @@
         <div class="col-md-6">
 
           @if(isset($produto))
-          
+
           {{Form::submit('Actualizar', ['class'=>'btn btn-primary'])}}
 
           @else
@@ -159,7 +159,7 @@
       <div class="modal-body">
 
         {{Form::open(['route'=>'categoria_salvar_rback', 'method'=>'POST'])}}
-        
+
         <div class="form-group">
           {{Form::label('nome', 'Nome', ['class'=>'control-lable'])}}
           {{Form::text('nome', null, ['placeholder' => 'Nome', 'class' => 'form-control'])}}
