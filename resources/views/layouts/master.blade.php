@@ -13,7 +13,7 @@
 
   <title>SG-Stock Administração</title>
   {!!Html::style('css/bootstrap.min.css')!!}
-  {!!Html::style('css/bootstrap-theme.css')!!}
+  {!!Html::style('css/bootstrap-theme.min.css')!!}
   {!!Html::style('css/elegant-icons-style.css')!!}
   {!!Html::style('css/font-awesome.min.css')!!}
   {!!Html::style('assets/fullcalendar/fullcalendar/bootstrap-fullcalendar.css')!!}
@@ -39,7 +39,7 @@
   {!!Html::script('js/jquery-ui-1.10.4.min.js')!!}
   {!!Html::script('js/jquery-3.2.1.min.js')!!}
   {!!Html::script('js/jquery-ui-1.9.2.custom.min.js')!!}
-  {!!Html::script('js/bootstrap.min.js')!!} {{--
+  {!!Html::script('js/bootstrap.min.js')!!}
   {!!Html::script('js/jquery.scrollTo.min.js')!!}
   {!!Html::script('js/jquery.nicescroll.js')!!}
   {!!Html::script('assets/jquery-knob/js/jquery.knob.js')!!}
@@ -64,7 +64,7 @@
   {!!Html::script('js/morris.min.js')!!}
   {!!Html::script('js/sparklines.js')!!}
   {!!Html::script('js/charts.js')!!}
-  {!!Html::script('js/jquery.slimscroll.min.js')!!} --}}
+  {!!Html::script('js/jquery.slimscroll.min.js')!!}
   {!!Html::script('js/select2.min.js')!!}
 
   
