@@ -45,7 +45,7 @@
             {{Form::label('categoria_id', 'Categoria')}}
             <div class="input-group">
               {{Form::select('categoria_id', [''=>'Selecione Categoria',] + $categoria, null, ['class'=>'form-control select_search'] )}}
-              {{Form::button('Adicionar', ['class'=>'input-group-addon', 'data-toggle'=>'modal', 'data-target'=>'#modalCategoria', 'style'=>'width:auto; font-weight:lighter'])}}
+              {{Form::button('<i class="fa fa-plus"></i>', ['class'=>'input-group-addon', 'data-toggle'=>'modal', 'data-target'=>'#modalCategoria', 'style'=>'width:auto; font-weight:lighter'])}}
 
             </div>
 
@@ -56,7 +56,7 @@
             {{Form::label('fornecedor_id', 'Fornecedor')}}
             <div class="input-group">
               {{Form::select('fornecedor_id', [''=>'Selecione Fornecedor',] + $fornecedor, null, ['class'=>'form-control select_search'] )}}
-              {{Form::button('Adicionar', ['class'=>'input-group-addon', 'data-toggle'=>'modal', 'data-target'=>'#modalFornecedor', 'style'=>'width:auto; font-weight:lighter'])}}
+              {{Form::button('<i class="fa fa-plus"></i>', ['class'=>'input-group-addon', 'data-toggle'=>'modal', 'data-target'=>'#modalFornecedor', 'style'=>'width:auto; font-weight:lighter'])}}
             </div>
 
           </div>
@@ -211,10 +211,10 @@
           {{Form::label('rubrica', 'Rubrica', ['class'=>'control-lable'])}}
           {{Form::text('rubrica', null, ['placeholder' => 'Rubrica', 'class' => 'form-control'])}}
         </div>
-        <div class="radio">
+        <div class="radio-inline">
           {{Form::radio('activo', '1')}} Activo
         </div>
-        <div class="radio">
+        <div class="radio-inline">
           {{Form::radio('activo', '0')}} Inactivo
         </div>
 

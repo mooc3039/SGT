@@ -39,7 +39,7 @@
   {!!Html::script('js/jquery-ui-1.10.4.min.js')!!}
   {!!Html::script('js/jquery-3.2.1.min.js')!!}
   {!!Html::script('js/jquery-ui-1.9.2.custom.min.js')!!}
-  {!!Html::script('js/bootstrap.min.js')!!}
+  {!!Html::script('js/bootstrap.min.js')!!} {{--
   {!!Html::script('js/jquery.scrollTo.min.js')!!}
   {!!Html::script('js/jquery.nicescroll.js')!!}
   {!!Html::script('assets/jquery-knob/js/jquery.knob.js')!!}
@@ -64,7 +64,7 @@
   {!!Html::script('js/morris.min.js')!!}
   {!!Html::script('js/sparklines.js')!!}
   {!!Html::script('js/charts.js')!!}
-  {!!Html::script('js/jquery.slimscroll.min.js')!!}
+  {!!Html::script('js/jquery.slimscroll.min.js')!!} --}}
   {!!Html::script('js/select2.min.js')!!}
 
   
@@ -86,7 +86,9 @@
   <script>
     
     /* SEARCH SELECT */
-    $('.select_search').select2();
+    $(document).ready( function() {
+      $('.select_search').select2();
+    });
     /* FIM SEARCH SELECT */
 
       //====
@@ -97,7 +99,6 @@
           }
         });
       });
-    });
 
         //knob
         $(function() {
@@ -145,4 +146,5 @@
 
       
   </script>
+</body>
   </html>
