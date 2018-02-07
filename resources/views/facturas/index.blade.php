@@ -36,8 +36,8 @@
 
               <div class="col-sm-3">
                {{Form::label('nome', 'Selecione Cliente')}}
-                <select name="nome" id="nome" class="form-control nome">
-                  <option selected disabled>Selecione o Cliente</option>
+                <select name="nome" class="form-control nome" id="nome" >
+                  
                 </select>
            </div>
             </div>
@@ -104,17 +104,19 @@
 @section('script')
 <script text="text/javascript">
   
-
+  //trabalhando search dentro do select
+{{--    $("#nome").select2({
+    tags: true
+  });
+  --}}
   //trabalhando na dependencia
    $(document).ready(function(){
     
     $(document).on('change','.tipo_cliente',function(){
      // console.log("xa tchintxa");
-
       var cat_id = $(this).val();
      // console.log(cat_id);
     var div = $(this).parent().parent();
-
      var op="";
      $.ajax({
       type: 'get',
@@ -123,11 +125,10 @@
       success:function(data){
        // console.log('success');
        // console.log(data);
-       op+='<option value="0" selected >Selecione Cliente</option>';
+       op+='<option value="0" selected="selected" >Selecione Cliente</option>';
        for(var i=0;i<data.length;i++){
         op+='<option value="'+data[i].id+'">'+data[i].nome+'</option>';
        }
-
        div.find('.nome').html(" ");
        div.find('.nome').append(op);
       },

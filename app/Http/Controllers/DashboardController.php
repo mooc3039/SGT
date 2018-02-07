@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Facturacao;
+use Charts;
 
 class DashboardController extends Controller
 {
@@ -13,11 +15,28 @@ class DashboardController extends Controller
 
 public function dashboard()
 {
-  
-  return view('layouts.master');
+  $data = Facturacao::all();
+  $chart = Charts::create('donut', 'highcharts')
+      ->title('Facturações')
+      ->elementLabel("Total")
+      ->dimensions(1000, 500)
+      ->responsive(false)
+      ->labels($data->pluck('produto_id'))
+      ->values($data->pluck('quantidade'));
+
+  return view('layouts.home.inicio', ['chart' => $chart]);
 }
 public function paginaInicial()
 {
-  return view('layouts.home.inicio');
+  $data = Facturacao::all();
+        $chart = Charts::create('donut', 'highcharts')
+            ->title('Facturações')
+            ->elementLabel("Total")
+            ->dimensions(1000, 500)
+            ->responsive(false)
+            ->labels($data->pluck('produto_id'))
+            ->values($data->pluck('quantidade'));
+
+  return view('layouts.home.inicio', ['chart' => $chart]);
 }
 }

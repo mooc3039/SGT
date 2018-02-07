@@ -28,6 +28,8 @@
   {!!Html::style('css/xcharts.min.css')!!}
   {!!Html::style('css/jquery-ui-1.10.4.min.css')!!}
   {!!Html::style('css/select2.min.css')!!}
+
+  {!! Charts::styles() !!}
   @yield('style')
 
 </head>
@@ -68,6 +70,9 @@
   {!!Html::script('js/select2.min.js')!!}
 
   
+  
+
+  
 
   <section id="container" class="">
     @include('layouts.header.header')
@@ -85,9 +90,9 @@
   @yield('script')
   <script>
     
-    /* SEARCH SELECT */
+    /** SEARCH SELECT 
     $('.select_search').select2();
-    /* FIM SEARCH SELECT */
+    FIM SEARCH SELECT */
 
       //====
       $(document).ready(function(){

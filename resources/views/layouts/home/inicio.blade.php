@@ -1,6 +1,6 @@
 @extends('layouts.master')
 @section('content')
-
+        <div class="row">
           <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
             <div class="info-box blue-bg">
               <i class="fa fa-user"></i>
@@ -40,6 +40,26 @@
             <!--/.info-box-->
           </div>
           <!--/.col-->
+        </div>
+
+        <div class="row">
+          <!-- Pie -->
+          <div class="col-lg-12">
+              <section class="panel">
+                  <header class="panel-heading">
+                      facturaçoes
+                  </header>
+                  <div class="panel-body text-center">
+                    {!! $chart->html() !!}
+                  </div>
+              </section>
+          </div>   
+
+      </div>
+      
 @endsection
+{!! Charts::scripts() !!}
+{!! $chart->script() !!}
+
 
         
