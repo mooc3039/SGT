@@ -18,17 +18,19 @@
     <section class="panel panel-default">
       <div class="panel-heading">
         <div class="row">
-          <div class="col-md-6">
+          <div class="col-md-4">
 
             <a href="#"><h5><b><i class="fa fa-print"></i>Imprimir </b></h5></a>
 
           </div>
 
-          <div class="col-md-6">
+          <div class="col-md-8">
 
             <a href="{{route('report_geral_produto')}}" class="btn btn-default pull-right" style="width: auto; height: 28px; margin-top: 4px; margin-left: 3px; font-size: 15px; font-weight: normal; padding: 3px 10px;"> <i class="fa fa-list"></i> Listar Todos </a>
 
+            
             <div class="btn-group pull-right" role="group" aria-label="...">
+
 
               <select class="btn btn-default select_search" id="categoria"><i class="fa fa-list"></i>
                 <option> Listar por Categoria </option>
