@@ -1,5 +1,6 @@
 @extends('layouts.master')
 @section('content')
+@include('parametrizacao.cliente.popup.cliente')
 <div class="row">
   <div class="col-lg-12">
     <h3 class="page-header"><i class="fa fa-file-text-o"></i>Facturação</h3>
@@ -36,9 +37,14 @@
 
               <div class="col-sm-3">
                {{Form::label('nome', 'Selecione Cliente')}}
+               <div class="input-group">
                 <select name="nome" class="form-control nome" id="nome" >
-                  
+                    
                 </select>
+                <div class="input-group-addon">
+                  <span class="fa fa-plus" id="add-more-cliente"></span>
+                </div>
+              </div>
            </div>
             </div>
           </div> 
@@ -67,8 +73,8 @@
               </tr>
               <tr>
                 <td>
-                  <select class="form-control descricao" name="descricao[]">
-                    <option value="0" selected="true" disabled="true">Selecione Produto</option>        
+                  <select class="form-control descricao" name="descricao[]" id="descricao">
+                            
                     @foreach($produtos as $key => $p)
                      <option value="{!!$key!!}">{!!$p->descricao!!}</option>
                     @endforeach
@@ -103,12 +109,20 @@
 @endsection
 @section('script')
 <script text="text/javascript">
-  
+  //chamando a modal cliente
+  $('#add-more-cliente').on('click',function(e){
+    $('#cliente-show').modal();
+  })
   //trabalhando search dentro do select
-{{--    $("#nome").select2({
-    tags: true
-  });
-  --}}
+   $("#nome").select2({
+    placeholder: "Selecione cliente",
+    allowClear: true
+   });
+   $("#descricao").select2({
+    placeholder: "Selecione produto",
+    allowClear: true
+   });
+
   //trabalhando na dependencia
    $(document).ready(function(){
     
@@ -125,7 +139,7 @@
       success:function(data){
        // console.log('success');
        // console.log(data);
-       op+='<option value="0" selected="selected" >Selecione Cliente</option>';
+       //op+='<option value="0" selected="selected" >Selecione Cliente</option>';
        for(var i=0;i<data.length;i++){
         op+='<option value="'+data[i].id+'">'+data[i].nome+'</option>';
        }

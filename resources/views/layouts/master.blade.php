@@ -90,9 +90,9 @@
   @yield('script')
   <script>
     
-    /** SEARCH SELECT 
+    /** SEARCH SELECT */
     $('.select_search').select2();
-    FIM SEARCH SELECT */
+    /*FIM SEARCH SELECT */
 
       //====
       $(document).ready(function(){
