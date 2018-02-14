@@ -21,12 +21,12 @@
     <div class="panel-body">
 
     	<table class="table table-striped table-advance table-hover">
-    		
+
     		<thead>
     			<tr>
     				<th><i class="icon_profile"></i>Nome da Categoria </th>
     				<th class="text-right"><i class="icon_cogs"></i> Operações</th>
-    			</tr>	
+    			</tr>
     		</thead>
 
     		<tbody>

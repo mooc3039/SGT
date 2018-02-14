@@ -37,8 +37,8 @@ Route::group(['middleware'=>['authen','roles'],'roles'=>['Administrador']],funct
   Route::get('/facturas/inicio',['as'=>'facturas','uses'=>'FacturacaoController@create']);
   Route::post('/facturas/facturar',['as'=>'facturacao','uses'=>'FacturacaoController@store']);
   Route::get('/facturas/depende','FacturacaoController@subKategori');
- 
- // 
+
+ //
 
   Route::get('/gerir/usuario',['as'=>'indexUsuario','uses'=>'paginasController@indexUsuario']);
   Route::get('/gerir/cliente',['as'=>'indexCliente','uses'=>'paginasController@indexCliente']);
@@ -67,9 +67,9 @@ Route::group(['middleware'=>['authen','roles'],'roles'=>['Administrador']],funct
 
   // CRITERIOS DOS REPORTS PARA PRODUTOS => Malache
   Route::get('/produtos/report_geral/ajax', 'produtoController@listarTodos')->name('report_geral_produto');
-  
+
   Route::get('/produtos/report_geral/listar_prod_categoria_ajax/{id}', 'produtoController@listarPorCategoria')->name('listar_prod_categoria_ajax');
-  
+
   Route::get('/produtos/report_geral/listar_prod_fornecedor_ajax/{id}', 'produtoController@listarPorFornecedor')->name('listar_prod_fornecedor_ajax');
 
   // CADSTRAR FORNECEDOR FAZENDO o redirect()->back() => Malache
@@ -77,6 +77,10 @@ Route::group(['middleware'=>['authen','roles'],'roles'=>['Administrador']],funct
 
   // CADSTRAR CATEGORIA FAZENDO o redirect()->back() => Malache
   Route::post('/categoria/categoria_salvar_rback', 'CategoriaController@storeRedirectBack')->name('categoria_salvar_rback');
+
+  // CADASTRAR A COTACAO COM ajax
+  Route::post('cotacao/cotacao_store', 'CotacaoController@store');
+  Route::get('cotacao/index', 'CotacaoController@index');
 
 
 
@@ -91,10 +95,10 @@ Route::group(['middleware'=>['authen','roles'],'roles'=>['Administrador']],funct
   Route::resource('/saida', 'SaidaController');
   Route::resource('/cotacao', 'CotacaoController');
   Route::resource('/entrada', 'EntradaController');
-  
 
-  
-/* 
+
+
+/*
   Route::group(['namespace' => 'Testes'], function(){
     Route::resource('/teste_categoria', 'CategoriaController');
     Route::resource('/teste_fornecedor', 'FornecedorController');
