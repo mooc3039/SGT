@@ -32,8 +32,11 @@
           </div><br>
           <div class="row">
             <div class="col-sm-12">
-              <select class="form-control">
+              <select class="form-control" name="tipo_cliente">
                 <option selected="true" disabled> Tipo de Cliente</option>
+                @foreach($tipo_clientes as $t)
+                    <option value="{{$t->id}}">{{$t->id}}</option>
+                @endforeach
               </select>
             </div>
           </div><br>
@@ -41,7 +44,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" data-dismiss="modal" class="btn btn-default">Fechar</button>
-        <button type="button" class="btn btn-success btn-save-program">Adicionar Cliente</button>
+        <button type="button" class="btn btn-success btn-save-cliente">Adicionar Cliente</button>
       </div>
     </div>
 </div>

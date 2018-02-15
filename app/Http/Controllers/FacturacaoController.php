@@ -21,10 +21,8 @@ class FacturacaoController extends Controller
     public function index()
     {
        
-        $produtos = Produto::all();
-        $tipo_clientes =TipoCliente::all();
-        $cliente = Cliente::all();
-        return view('facturas.index', compact('produtos','tipo_clientes','cliente'));
+        $facturas = Facturacao::orderBy('created_at','desc')->paginate(5);
+        return view('facturas.lista', compact('facturas')); 
     }
 
     /**
@@ -72,7 +70,21 @@ class FacturacaoController extends Controller
            
         
     }
-
+    //trabalhando na previsualização da factura
+    public function previsual(Request $input)
+    {
+       
+        $facturas = Facturacao::all();
+        
+        return view('facturas.factura', compact('facturas'));
+    }
+    //para inserir cliente
+    public function InsertCliente(Request $request)
+    {
+      if ($request->ajax()) {
+          return response(Cliente::create($request->all()));
+      }
+    }
     /**
      * Display the specified resource.
      *
@@ -81,7 +93,8 @@ class FacturacaoController extends Controller
      */
     public function show($id)
     {
-        //
+       // $prefact = Facturacao::find($id);
+       // return view('facturas.prefact')->with('prefact', $prefact);
     }
 
     /**

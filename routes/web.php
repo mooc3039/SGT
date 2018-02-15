@@ -38,7 +38,8 @@ Route::group(['middleware'=>['authen','roles'],'roles'=>['Administrador']],funct
   Route::get('/facturas/inicio',['as'=>'facturas','uses'=>'FacturacaoController@create']);
   Route::post('/facturas/facturar',['as'=>'facturacao','uses'=>'FacturacaoController@store']);
   Route::get('/facturas/depende','FacturacaoController@subKategori');
- 
+  Route::get('/facturas/prefactura',['as'=>'prefactura', 'uses'=>'FacturacaoController@previsual']);
+  Route::post('/facturas/inicio/insert',['as'=>'insertcliente','uses'=>'FacturacaoController@InsertCliente']);
  // 
 
   Route::get('/gerir/usuario',['as'=>'indexUsuario','uses'=>'paginasController@indexUsuario']);
@@ -86,8 +87,10 @@ Route::group(['middleware'=>['authen','roles'],'roles'=>['Administrador']],funct
   Route::resource('/produtos', 'produtoController');
   Route::resource('/categoria', 'CategoriaController');
   Route::resource('/cliente', 'ClienteController');
+  
 
- // Route::resource('/facturas', 'FacturacaoController');
+  Route::resource('/factura', 'FacturacaoController');
+  
 
   Route::resource('/saida', 'SaidaController');
   Route::resource('/cotacao', 'CotacaoController');

@@ -1,6 +1,8 @@
 @extends('layouts.master')
 @section('content')
 @include('parametrizacao.cliente.popup.cliente')
+{{--  @include('parametrizacao.cliente.popup.prefactura')  --}}
+
 <div class="row">
   <div class="col-lg-12">
     <h3 class="page-header"><i class="fa fa-file-text-o"></i>Facturação</h3>
@@ -50,6 +52,7 @@
           </div> 
          
           <div class="panel-footer">
+            <a class="btn btn-info btnPrint" href="{{ route('prefactura')}}">Pré-Visual Factura</a>&nbsp;&nbsp;           
             {{Form::submit('Facturar cliente', ['class'=>'btn btn-primary'])}}
           </div>
         
@@ -74,7 +77,7 @@
               <tr>
                 <td>
                   <select class="form-control descricao" name="descricao[]" id="descricao">
-                            
+                    <option value="0" selected="true" disabled="true">Selecione Producto</option>  
                     @foreach($produtos as $key => $p)
                      <option value="{!!$key!!}">{!!$p->descricao!!}</option>
                     @endforeach
@@ -109,10 +112,40 @@
 @endsection
 @section('script')
 <script text="text/javascript">
+  //tentando chamar a previsualizacao da factura
+ {{--   $(document).ready(function(){
+    $('.btnPrint').printPage();
+  });  --}}
   //chamando a modal cliente
   $('#add-more-cliente').on('click',function(e){
     $('#cliente-show').modal();
+  });
+  //==========tentando salvar novo cliente
+  $('.btn-save-cliente').on('click',function(){
+    var nomecli = $('#nomecli').val();
+    var endereco = $('#endereco').val();
+    var telefone = $('#telefone').val();
+    var nuit = $('#nuit').val();
+    var email = $('#email').val();
+    
+    $.post("{{ route('insertcliente') }}",{ nomecli:nome,endereco:endereco,telefone:telefone,nuit:nuit,email:email},function(data){
+      $('#nome').append($("<option/>",{
+        value : data.id,
+        text  : data.nomecli,
+      }))
+      $('#nomecli').val("");
+      $('#endereco').val("");
+      $('#telefone').val("");
+      $('#nuit').val("");
+      $('#email').val("");
+    })
   })
+
+  //chamando a modal cliente
+  $('#add-more-pref').on('click',function(e){
+    $('#pref-show').modal();
+  });
+
   //trabalhando search dentro do select
    $("#nome").select2({
     placeholder: "Selecione cliente",
@@ -139,7 +172,7 @@
       success:function(data){
        // console.log('success');
        // console.log(data);
-       //op+='<option value="0" selected="selected" >Selecione Cliente</option>';
+       op+='<option value="0" selected="selected" >Selecione Cliente</option>';
        for(var i=0;i<data.length;i++){
         op+='<option value="'+data[i].id+'">'+data[i].nome+'</option>';
        }
@@ -160,7 +193,7 @@
     {
       var tr='<tr>'+
           '<td>'+
-            '<select class="form-control descricao" name="descricao[]">'+
+            '<select class="form-control descricao" name="descricao[]" id="descricao">'+
               '<option value="0" selected="true" disabled="true">Selecione Producto</option>'+     
               '@foreach($produtos as $key => $p)'+
              ' <option value="{!!$key!!}">{!!$p->descricao!!}</option>'+
