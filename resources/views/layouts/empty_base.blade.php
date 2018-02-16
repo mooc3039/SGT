@@ -12,8 +12,7 @@
 
   <title>SG-Stock Administração</title>
   {!!Html::style('css/bootstrap.min.css')!!}
-  {!!Html::style('css/bootstrap-theme.css')!!}
-  {!!Html::style('css/sgt.css')!!}
+  {!!Html::style('css/bootstrap-theme.min.css')!!}
   {!!Html::style('css/elegant-icons-style.css')!!}
   {!!Html::style('css/font-awesome.min.css')!!}
   {!!Html::style('assets/fullcalendar/fullcalendar/bootstrap-fullcalendar.css')!!}
@@ -27,6 +26,7 @@
   {!!Html::style('css/style-responsive.css')!!}
   {!!Html::style('css/xcharts.min.css')!!}
   {!!Html::style('css/jquery-ui-1.10.4.min.css')!!}
+  {!!Html::style('css/select2.min.css')!!}
   @yield('style')
 
   {!!Html::script('js/jquery.js')!!}
@@ -59,10 +59,12 @@
   {!!Html::script('js/sparklines.js')!!}
   {!!Html::script('js/charts.js')!!}
   {!!Html::script('js/jquery.slimscroll.min.js')!!}
+  {!!Html::script('js/select2.min.js')!!}
 </head>
   <body>
 
     <section class="">
+      @include('layouts.validation.alertas')
           @yield('content')
       </section>
 
@@ -71,6 +73,13 @@
     @yield('script')
       <script>
       //====
+
+      /* SEARCH SELECT */
+      $(document).ready( function() {
+        $('.select_search').select2();
+      });
+      /* FIM SEARCH SELECT */
+      
       $(document).ready(function(){
         $.ajaxSetup({
             headers: {

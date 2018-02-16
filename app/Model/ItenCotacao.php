@@ -14,7 +14,9 @@ class ItenCotacao extends Model
     	'cotacao_id',
     	'produto_id',
     	'quantidade',
-    	'valor'
+    	'valor',
+      'desconto',
+      'subtotal'
     ];
 
     public function cotacao(){
@@ -26,6 +28,6 @@ class ItenCotacao extends Model
     public function produto(){
 
     	return $this->belongsTo('App\Model\Produto');
-    	
+
     }
 }

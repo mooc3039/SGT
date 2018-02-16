@@ -13,7 +13,7 @@ class ItenCotacaoStoreUpdateFormRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,13 +24,21 @@ class ItenCotacaoStoreUpdateFormRequest extends FormRequest
     public function rules()
     {
         return [
-          //
+          'quantidade' => 'required',
+          'valor' => 'required',
+          'produto_id' => 'required',
+          'desconto' => 'required',
+          'subtotal' => 'required',
         ];
     }
 
     public function messages(){
         return [
-            //
+            'quantidade.required' => 'A Quantidade é obrigatória!',
+            'valor.required' => 'O Valor é obrigatória!',
+            'produto_id.required' => 'É necessário especificar o Produto!',
+            'desconto.required' => 'É necessário especificar o desconto!',
+            'subtotal.required' => 'É necessário especificar o Subtotal/Valor a Pagar pela quantidade!',
         ];
     }
 }

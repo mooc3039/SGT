@@ -31,6 +31,7 @@ class ClienteStoreUpdateFormRequest extends FormRequest
             'telefone' => 'required',
             'email' => 'unique:clientes,email,'.$id.',id',
             'activo' => 'required',
+            'tipo_cliente_id' => 'required',
         ];
     }
 
@@ -40,6 +41,7 @@ class ClienteStoreUpdateFormRequest extends FormRequest
             'telefone.required' => 'O telefone é obrigatório.',
             'email.unique' => 'O email já existe!',
             'activo.required' => 'O Cliente deve ser "Activo" ou "Inactivo"',
+            'tipo_cliente_id.required' => 'O Tipo de Cliente é obrigatório',
         ];
     }
 }

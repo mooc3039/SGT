@@ -27,6 +27,7 @@ class CotacaoStoreUpdateFormRequest extends FormRequest
           'cliente_id' => 'required',
           'tipo_cotacao_id' => 'required',
           'produto_id' => 'required',
+          'desconto' => 'required',
         ];
     }
 
@@ -35,6 +36,7 @@ class CotacaoStoreUpdateFormRequest extends FormRequest
             'cliente_id.required' => 'É necessário selecionar o Cliente!',
             'tipo_cotacao_id.required' => 'É necessário selecionar o tipo da Cotação!',
             'produto_id.required' => 'É necessário selecionar o Produto!',
+            'desconto.required' => 'É necessário especificar o Desconto!',
         ];
     }
 }

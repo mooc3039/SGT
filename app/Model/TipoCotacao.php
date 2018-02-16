@@ -10,9 +10,9 @@ class TipoCotacao extends Model
     //
     protected $fillable = [
       'nome',
-      'descricao'
+      'descricao',
     ];
-    
+
     public $timestamp = false;
 
     public function cotacoes(){

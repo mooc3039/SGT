@@ -27,7 +27,7 @@ class CategoriaController extends Controller
     public function index()
     {
         //
-        $categorias = $this->categoria->all();
+        $categorias = $this->categoria->orderBy('nome', 'asc')->paginate(10);
 
         return view('parametrizacao.categoria.index_categoria', compact('categorias'));
 

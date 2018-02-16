@@ -78,6 +78,12 @@ Route::group(['middleware'=>['authen','roles'],'roles'=>['Administrador']],funct
   // CADSTRAR CATEGORIA FAZENDO o redirect()->back() => Malache
   Route::post('/categoria/categoria_salvar_rback', 'CategoriaController@storeRedirectBack')->name('categoria_salvar_rback');
 
+  // CADSTRAR TIPO DE COTACAO FAZENDO o redirect()->back() => Malache
+  Route::post('/tipo_cotacao/tipo_cotacao_salvar_rback', 'TipoCotacaoController@storeRedirectBack')->name('tipo_cotacao_salvar_rback');
+
+  // CADSTRAR CLIENTE FAZENDO o redirect()->back() => Malache
+  Route::post('/cliente/cliente_salvar_rback', 'ClienteController@storeRedirectBack')->name('cliente_salvar_rback');
+
   // CADASTRAR A COTACAO COM ajax
   Route::post('cotacao/cotacao_store', 'CotacaoController@store');
   Route::get('cotacao/index', 'CotacaoController@index');
@@ -89,11 +95,14 @@ Route::group(['middleware'=>['authen','roles'],'roles'=>['Administrador']],funct
   Route::resource('/produtos', 'produtoController');
   Route::resource('/categoria', 'CategoriaController');
   Route::resource('/cliente', 'ClienteController');
+  Route::resource('/tipo_cliente', 'TipoClienteController');
 
  // Route::resource('/facturas', 'FacturacaoController');
 
   Route::resource('/saida', 'SaidaController');
   Route::resource('/cotacao', 'CotacaoController');
+  Route::resource('/cotacao/iten_cotacao', 'ItenCotacaoController');
+  Route::resource('/tipo_cotacao', 'TipoCotacaoController');
   Route::resource('/entrada', 'EntradaController');
 
 

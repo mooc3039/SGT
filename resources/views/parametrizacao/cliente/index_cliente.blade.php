@@ -17,11 +17,18 @@
       <!-- <header class="panel-heading">
         Parametrizar Cliente
       </header> -->
-      
-      <div class="panel-body">
 
-        <table class="table table-striped table-advance table-hover">
-          
+      <div class="panel-body">
+        <div class="row" style="margin-bottom: 10px">
+          <div class="col-md-12">
+            <a href="{{ route('cliente.create') }}" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i></a>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-12">
+            <table class="table table-striped table-advance table-hover">
+
           <thead>
             <tr>
               <th><i class="icon_profile"></i>Nome do Cliente</th>
@@ -29,6 +36,7 @@
               <th><i class="icon_mobile"></i> Telefone</th>
               <th><i class="icon_mail_alt"></i> Email</th>
               <th><i class="fa fa-id-card"></i> NUIT</th>
+              <th><i class="fa fa-id-card"></i> Tipo Cliente</th>
               <th><i class="fa fa-unlock-alt"></i> Activo</th>
               <th class="text-center"><i class="icon_cogs"></i> Operações</th>
             </tr>
@@ -43,6 +51,7 @@
               <td> {{$cliente->telefone}} </td>
               <td> {{$cliente->email}}</td>
               <td> {{$cliente->nuit}}</td>
+              <td> {{$cliente->tipo_cliente->tipo_cliente}}</td>
               <td>{{Form::checkbox('activo', $cliente->activo, $cliente->activo, ['disabled'])}}
               <td class="text-right">
                 <div class="btn-group btn-group-sm">
@@ -61,17 +70,17 @@
             @endforeach
           </tbody>
         </table>
+          </div>
+        </div>
 
       </div>
 
       <div class="panel-footer">
         <div class="row">
-          <div class="col-md-6">
-
-            <a href="{{route('cliente.create')}}" class="btn btn-primary">Adicionar Cliente</a>
-
+          <div class="col-md-6 text-left">
+            {{  $clientes->links() }}
           </div>
-          <div class="col-md-6">
+          <div class="col-md-6 text-right">
 
             @if($cliente->activo == true)
 
@@ -82,12 +91,13 @@
             <a href="{{route('cliente.index')}}" class="btn btn-primary pull-right"> Activos </a>
 
             @endif
-            
-            
+
+
           </div>
+          
         </div>
-        
-        
+
+
       </div>
 
     </section>

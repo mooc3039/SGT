@@ -12,11 +12,10 @@ class Cotacao extends Model
 {
     //
     protected $fillable = [
+    	'tipo_cotacao_id',
     	'data',
     	'cliente_id',
     	'user_id',
-    	'subtotal',
-    	'desconto',
     	'valor_total'
     ];
     public $timestamps = false;

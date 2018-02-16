@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use App\Http\Requests\ClienteStoreUpdateFormRequest;
 use Illuminate\Support\Facades\DB;
@@ -11,7 +12,7 @@ class ClienteController extends Controller
 {
 
     private $cliente;
-    
+
     public function __construct(Cliente $cliente){
         $this->cliente = $cliente;
     }
@@ -24,7 +25,7 @@ class ClienteController extends Controller
     public function index()
     {
         //
-        $clientes = $this->cliente->where('activo', 1)->orderBy('nome', 'asc')->paginate(7);
+        $clientes = $this->cliente->with('tipo_cliente')->where('activo', 1)->orderBy('nome', 'asc')->paginate(7);
         return view('parametrizacao.cliente.index_cliente', compact('clientes'));
     }
 
@@ -36,7 +37,8 @@ class ClienteController extends Controller
     public function create()
     {
         //
-        return view('parametrizacao.Cliente.create_edit_cliente');
+        $tipos_cliente = DB::table('tipo_clientes')->pluck('tipo_cliente', 'id')->all();
+        return view('parametrizacao.Cliente.create_edit_cliente', compact('tipos_cliente'));
     }
 
     /**
@@ -49,18 +51,52 @@ class ClienteController extends Controller
     {
         //
         $dataForm = $request->all();
-        $cadastro = $this->cliente->create($dataForm);
 
-        if($cadastro){
+        try {
+
+          if($this->cliente->create($dataForm)){
+
+              $success = "Cliente cadastrado com sucesso.";
+              return redirect()->route('cliente.index')->with('success', $success);
+          }
+          else{
+
+              $error = "Não foi possível cadastrar o Cliente.";
+              return redirect()->route('cliente.index')->with('error', $error);
+          }
+
+        } catch (QueryException $e) {
+
+          $error = 'Erro ao cadastrar o Cliente! Erro relacionado ao DB. Necessária a intervenção do Administrador da Base de Dados.!';
+          return redirect()->route('cliente.index')->with('error', $error);
+
+        }
+
+    }
+
+    public function storeRedirectBack(ClienteStoreUpdateFormRequest $request)
+    {
+        $dataForm = $request->all();
+
+      try {
+
+        if($this->cliente->create($dataForm)){
 
             $success = "Cliente cadastrado com sucesso.";
-            return redirect()->route('cliente.index')->with('success', $success);
+            return redirect()->back()->with('success', $success);
         }
         else{
 
             $error = "Não foi possível cadastrar o Cliente.";
-            return redirect()->route('cliente.index')->with('error', $error);
+            return redirect()->back()->with('error', $error);
         }
+
+      } catch (QueryException $e) {
+
+        $error = 'Erro ao cadastrar o Cliente! Erro relacionado ao DB. Necessária a intervenção do Administrador da Base de Dados.!';
+        return redirect()->back()->with('error', $error);
+
+      }
     }
 
     /**
@@ -83,9 +119,10 @@ class ClienteController extends Controller
     public function edit($id)
     {
         //
+        $tipos_cliente = DB::table('tipo_clientes')->pluck('tipo_cliente', 'id')->all();
         $cliente = $this->cliente->find($id);
 
-        return view('parametrizacao.cliente.create_edit_cliente', compact('cliente'));
+        return view('parametrizacao.cliente.create_edit_cliente', compact('cliente', 'tipos_cliente'));
     }
 
     /**
@@ -131,7 +168,7 @@ class ClienteController extends Controller
     public function inactivos(){
 
         $clientes = $this->cliente->where('activo', 0)->orderBy('nome', 'asc')->paginate(7);
-        
+
         return view('parametrizacao.cliente.index_cliente', compact('clientes'));
     }
 
@@ -149,10 +186,10 @@ class ClienteController extends Controller
       DB::select('call SP_desactivar_cliente(?)', array($id));
 
       return redirect()->back();
-      
+
     }
 
-    
+
     public function reportGeralCliente(){
 
         $clientes = $this->cliente->orderBy('nome', 'asc')->get();

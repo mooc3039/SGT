@@ -59,6 +59,8 @@
           <li><a class="" href="{{ route('categoria.index') }}"><i class="fa fa-tag"></i>Categorias</a></li>
           <li><a class="" href="{{ route('indexUsuario') }}"><i class="fa fa-tag"></i>Usuários</a></li>
           <li><a class="" href="{{ route('cliente.index') }}"><i class="fa fa-tag"></i><span>Clientes</span></a></li>
+          <li><a class="" href="{{ route('tipo_cliente.index') }}"><i class="fa fa-tag"></i><span>Tipos de Cliente</span></a></li>
+          <li><a class="" href="{{ route('tipo_cotacao.index') }}"><i class="fa fa-tag"></i><span>Tipos de Cotação</span></a></li>
         </ul>
       </li>
 
