@@ -24,7 +24,7 @@ public function dashboard()
   $total_cliente = Cliente::count();
   $total_stock = ItenEntrada::count();
   
-  $chart = Charts::create('donut', 'highcharts')
+  $chart = Charts::create('area', 'highcharts')
       ->title('Facturações')
       ->elementLabel("Total")
       ->dimensions(1000, 500)
@@ -42,7 +42,7 @@ public function paginaInicial()
   $total_cliente = Cliente::count();
   $total_stock = ItenEntrada::count();
   
-  $chart = Charts::create('donut', 'highcharts')
+  $chart = Charts::create('area', 'highcharts')
       ->title('Facturações')
       ->elementLabel("Total")
       ->dimensions(1000, 500)

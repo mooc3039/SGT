@@ -39,7 +39,7 @@ Route::group(['middleware'=>['authen','roles'],'roles'=>['Administrador']],funct
   Route::post('/facturas/facturar',['as'=>'facturacao','uses'=>'FacturacaoController@store']);
   Route::get('/facturas/depende','FacturacaoController@subKategori');
   Route::get('/facturas/prefactura',['as'=>'prefactura', 'uses'=>'FacturacaoController@previsual']);
-  Route::post('/facturas/inicio/insert',['as'=>'insertcliente','uses'=>'FacturacaoController@InsertCliente']);
+  Route::post('/facturas/inicio/insert',['as'=>'insertcliente','uses'=>'FacturacaoController@InsertCliente']); 
  // 
 
   Route::get('/gerir/usuario',['as'=>'indexUsuario','uses'=>'paginasController@indexUsuario']);

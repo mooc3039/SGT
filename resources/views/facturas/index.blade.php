@@ -1,7 +1,5 @@
 @extends('layouts.master')
 @section('content')
-@include('parametrizacao.cliente.popup.cliente')
-{{--  @include('parametrizacao.cliente.popup.prefactura')  --}}
 
 <div class="row">
   <div class="col-lg-12">
@@ -44,7 +42,7 @@
                     
                 </select>
                 <div class="input-group-addon">
-                  <span class="fa fa-plus" id="add-more-cliente"></span>
+                  <span class="fa fa-plus create-modal"></span>
                 </div>
               </div>
            </div>
@@ -109,42 +107,134 @@
   </div>
 </div>
 
+
+{{--  inicio da modal cliente  --}}
+  <div id="create" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title"></h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" role="form">
+
+                    <div class="row">
+                        <label class="control-label col-sm-3" for="nomecli">Nome cliente :</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" id="nomecli" name="nomecli" placeholder="Nome do cliente" required>
+                            <p class="error text-center alert alert-danger hidden"></p>
+                        </div>
+                    </div><br>
+
+                    <div class="row">
+                        <label class="control-label col-sm-3" for="endereco">Endereço :</label>
+                        <div class="col-sm-9">
+                              <input type="text" class="form-control" id="endereco" name="endereco" placeholder="Endereço" required>
+                              <p class="error text-center alert alert-danger hidden"></p>
+                        </div>
+                    </div><br>
+
+                    <div class="row">
+                        <label class="control-label col-sm-3" for="telefone">Telefone :</label>
+                        <div class="col-sm-9">
+                              <input type="text" class="form-control" id="telefone" name="telefone" placeholder="Telefone" required>
+                              <p class="error text-center alert alert-danger hidden"></p>
+                        </div>
+                    </div><br>
+
+                    <div class="row">
+                        <label class="control-label col-sm-3" for="nuit">Nuit :</label>
+                        <div class="col-sm-9">
+                              <input type="text" class="form-control" id="nuit" name="nuit" placeholder="Nuit" required>
+                              <p class="error text-center alert alert-danger hidden"></p>
+                        </div>
+                    </div><br>
+
+                    <div class="row">
+                        <label class="control-label col-sm-3" for="email">Email :</label>
+                        <div class="col-sm-9">
+                              <input type="text" class="form-control" id="email" name="email" placeholder="Email" required>
+                              <p class="error text-center alert alert-danger hidden"></p>
+                        </div>
+                    </div><br>
+
+                    <div class="row">
+                        <label class="control-label col-sm-3" for="tipo_cliente">Tipo de Cliente :</label>
+                        <div class="col-sm-9">
+                           /**    <input type="text" class="form-control" id="tipo_cliente" name="tipo_cliente" placeholder="Tipo de Cliente" required> */
+                               <select class="form-control tipo_cliente" name="tipo_cliente" id="tipo_cliente">
+                                <option value="0" selected="true" disabled="true">selecione categoria</option>        
+                                @foreach($tipo_clientes as $key => $tipo_cliente)
+                                 <option value="{{$key}}">{{$tipo_cliente->id}}</option>
+                                @endforeach
+                              </select>
+                              <p class="error text-center alert alert-danger hidden"></p>  
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-warning" type="submit" id="add">
+                    <span class="glyphicon glyphicon-plus"></span>Inserir Cliente
+                </button>
+                <button class="btn btn-warning" type="button" data-dismiss="modal">
+                    <span class="glyphicon glyphicon-remove"></span>Close
+                </button>
+            </div>
+        </div>
+    </div>
+  </div>
+  {{--  fim da modal cliente  --}}
 @endsection
 @section('script')
 <script text="text/javascript">
-  //tentando chamar a previsualizacao da factura
- {{--   $(document).ready(function(){
-    $('.btnPrint').printPage();
-  });  --}}
-  //chamando a modal cliente
-  $('#add-more-cliente').on('click',function(e){
-    $('#cliente-show').modal();
-  });
-  //==========tentando salvar novo cliente
-  $('.btn-save-cliente').on('click',function(){
-    var nomecli = $('#nomecli').val();
-    var endereco = $('#endereco').val();
-    var telefone = $('#telefone').val();
-    var nuit = $('#nuit').val();
-    var email = $('#email').val();
-    
-    $.post("{{ route('insertcliente') }}",{ nomecli:nome,endereco:endereco,telefone:telefone,nuit:nuit,email:email},function(data){
-      $('#nome').append($("<option/>",{
-        value : data.id,
-        text  : data.nomecli,
-      }))
-      $('#nomecli').val("");
-      $('#endereco').val("");
-      $('#telefone').val("");
-      $('#nuit').val("");
-      $('#email').val("");
-    })
-  })
-
-  //chamando a modal cliente
-  $('#add-more-pref').on('click',function(e){
-    $('#pref-show').modal();
-  });
+  {{--modal view cliente --}}
+  $(document).on('click','.create-modal', function(){
+    $('#create').modal('show');
+    $('.form-horizontal').show();
+    $('.modal-title').text('Novo cliente');
+});
+ //function add(save)
+    $("#add").click(function(){
+      $.ajax({
+          type : 'POST',
+          url  : '/facturas/inicio/insert',
+          data : {
+              '_token': $('input[name=_token]').val(),
+              'nomecli': $('input[name=nomecli]').val(),
+              'endereco': $('input[name=endereco]').val(),
+              'telefone': $('input[name=telefone]').val(),
+              'nuit': $('input[name=nuit]').val(),
+              'email': $('input[name=email]').val(),
+              'tipo_cliente': $('#tipo_cliente option:selected').val(),
+          },
+          success: function(data){
+              if((data.errors)){
+                  $('.error').removeClass('hidden');
+                  $('.error').text(data.errors.nomecli);
+                  $('.error').text(data.errors.endereco);
+                  $('.error').text(data.errors.telefone);
+                  $('.error').text(data.errors.nuit);
+                  $('.error').text(data.errors.email);
+                  $('.error').text(data.errors.tipo_cliente);
+              } else {
+                  $('.error').remove();
+                  $('#nome').append($("<option/>",{
+                    value : data.id,
+                    text  : data.nomecli,
+                  }));
+              }
+          },
+      });
+      $('#nomecli').val('');
+      $('#endereco').val('');
+      $('#telefone').val('');
+      $('#nuit').val('');
+      $('#email').val('');
+      $('#tipo_cliente').val('');
+    });
 
   //trabalhando search dentro do select
    $("#nome").select2({

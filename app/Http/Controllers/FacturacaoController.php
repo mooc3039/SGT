@@ -10,6 +10,10 @@ use App\Model\Cliente;
 use App\TipoCliente;
 use App\User;
 use PDF;
+use Validator;
+use Response;
+use Illuminate\Support\Facades\Input;
+use App\http\Requests;
 
 class FacturacaoController extends Controller
 {
@@ -79,11 +83,31 @@ class FacturacaoController extends Controller
         return view('facturas.factura', compact('facturas'));
     }
     //para inserir cliente
-    public function InsertCliente(Request $request)
+    public function InsertCliente(Request $req)
     {
-      if ($request->ajax()) {
-          return response(Cliente::create($request->all()));
-      }
+        $rules = [
+            'nomecli' => 'required',
+            'endereco' => 'required',
+            'telefone' => 'required || numeric',
+            'nuit' => 'required || numeric',
+            'email' => 'required || email', 
+            'tipo_cliente' => 'required',
+        ];
+        $validator = Validator::make ( input::all(), $rules);
+        if ($validator->fails())
+        return response::json(array('errors'=> $validator->getMessageBag()->toarray()));
+
+        else {
+            $cliente = new cliente;
+            $cliente->nome = $req->nomecli;
+            $cliente->endereco = $req->endereco;
+            $cliente->telefone = $req->telefone;
+            $cliente->nuit = $req->nuit;
+            $cliente->email = $req->email;
+            $cliente->tipo_cliente_id = $req->tipo_cliente;
+            $cliente->save();
+            return response()->json($cliente);
+        }
     }
     /**
      * Display the specified resource.
