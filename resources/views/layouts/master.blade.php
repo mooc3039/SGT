@@ -13,7 +13,7 @@
 
   <title>SG-Stock Administração</title>
   {!!Html::style('css/bootstrap.min.css')!!}
-  {!!Html::style('css/bootstrap-theme.css')!!}
+  {!!Html::style('css/bootstrap-theme.min.css')!!}
   {!!Html::style('css/elegant-icons-style.css')!!}
   {!!Html::style('css/font-awesome.min.css')!!}
   {!!Html::style('assets/fullcalendar/fullcalendar/bootstrap-fullcalendar.css')!!}
@@ -92,8 +92,10 @@
   <script>
     
     /** SEARCH SELECT */
-    $('.select_search').select2();
-    /*FIM SEARCH SELECT */
+    $(document).ready( function() {
+      $('.select_search').select2();
+    });
+    /* FIM SEARCH SELECT */
 
       //====
       $(document).ready(function(){
@@ -103,7 +105,6 @@
           }
         });
       });
-    
 
         //knob
         $(function() {
@@ -132,7 +133,7 @@
         });
 
         /* ---------- Map ---------- */
-        $(function() {
+/*         $(function() {
           $('#map').vectorMap({
             map: 'world_mill_en',
             series: {
@@ -148,7 +149,8 @@
             }
           });
         });
-
+ */
       
   </script>
+</body>
   </html>

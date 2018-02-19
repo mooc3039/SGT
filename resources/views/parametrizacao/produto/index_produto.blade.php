@@ -2,7 +2,7 @@
 @section('content')
 <div class="row">
   <div class="col-lg-12">
-    <h3 class="page-header"><i class="fa fa-file-text-o"></i>Parametrização</h3>
+    <h3 class="page-header"><i class="fa fa-file-text-o"></i>Parametrização do Produto</h3>
     <ol class="breadcrumb">
       <li><i class="fa fa-home"></i><a href="#">Home</a></li>
       <li><i class="icon_document_alt"></i>Produto</li>
@@ -14,12 +14,19 @@
 <div class="row">
   <div class="col-lg-12">
     <section class="panel panel-default">
-      <header class="panel-heading">
+      <!-- <header class="panel-heading">
         Lista dos Produto
-      </header>
+      </header> -->
 
       <div class="panel-body">
-        <table class="table table-striped table-advance table-hover">
+        <div class="row" style="margin-bottom: 10px">
+          <div class="col-md-12">
+            <a href="{{ route('produtos.create') }}" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i></a>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <table class="table table-striped table-advance table-hover">
 
           <thead>
             <tr>
@@ -56,18 +63,22 @@
             @endif
           </tbody>
         </table>
+          </div>
+        </div>
       </div>
       
 
 
       <div class="panel-footer">
-        <a href="{{route('produtos.create')}}">
-          {{Form::label('produto', 'Novo Produto', ['class'=>'btn btn-primary'])}}
-        </a>
+        <div class="row">
+          <div class="col-md-6">
+            {{$produtos->links()}}
+          </div>
+        </div>
       </div>
 
     </section>
-    {{$produtos->links()}}
+    
   </div>
 </div>
 

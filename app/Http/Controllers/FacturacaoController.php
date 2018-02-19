@@ -7,7 +7,9 @@ use DB;
 use App\Facturacao;
 use App\Produto;
 use App\Model\Cliente;
-use App\TipoCliente;
+use App\Model\Saida;
+use App\Model\ItenSaida;
+use App\Model\TipoCliente;
 use App\User;
 use PDF;
 use Validator;
@@ -25,7 +27,7 @@ class FacturacaoController extends Controller
     public function index()
     {
        
-        $facturas = Facturacao::orderBy('created_at','desc')->paginate(5);
+        $facturas = Saida::orderBy('id','desc')->paginate(5);
         return view('facturas.lista', compact('facturas')); 
     }
 
@@ -56,7 +58,7 @@ class FacturacaoController extends Controller
         if(request()->ajax()){
             $count = count($input->subtotal);
             for($i=0; $i < $count; $i++){
-                $d = new Facturacao;
+                $d = new Saida;
  //               $d->cliente_id = $input['nome'][$i];
               //  $d->user_id = auth()->user()->id;
                 $d->produto_id = $input['descricao'][$i];
@@ -78,7 +80,7 @@ class FacturacaoController extends Controller
     public function previsual(Request $input)
     {
        
-        $facturas = Facturacao::all();
+        $facturas = Saida::all();
         
         return view('facturas.factura', compact('facturas'));
     }
@@ -157,7 +159,7 @@ class FacturacaoController extends Controller
     //devolver o preço do produto
     public function findPrice(Request $request)
     {
-      $data = Produto::select('preco_venda')->where('id',$request->id)->first();
+      $data = Produto::select('preco_venda')->where('id', $request->id)->first(0);
       return response()->json($data);
     }
     //trabalhando na dependencia dos combos

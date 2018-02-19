@@ -18,8 +18,16 @@
         Parametrizar Produtos
       </header> -->
 
-      {!! Form::open([ 'action' => 'produtoController@store','method' => 'POST', 'class' => 'form-horizontal']) !!}
-      
+      @if(isset($produto))
+
+      {{Form::model($produto, ['route'=>['produtos.update', $produto->id], 'method'=>'PUT'])}}
+
+      @else
+
+      {!! Form::open(['route'=>'produtos.store', 'method'=>'POST']) !!}
+
+      @endif
+
      <!--  <div class="panel-body">
 
      </div> -->
@@ -37,8 +45,8 @@
             {{Form::label('categoria_id', 'Categoria')}}
             <div class="input-group">
               {{Form::select('categoria_id', [''=>'Selecione Categoria',] + $categoria, null, ['class'=>'form-control select_search'] )}}
-              {{Form::button('Adicionar', ['class'=>'input-group-addon', 'data-toggle'=>'modal', 'data-target'=>'#modalCategoria', 'style'=>'width:auto; font-weight:lighter'])}}
-              
+              {{Form::button('<i class="fa fa-plus"></i>', ['class'=>'input-group-addon', 'data-toggle'=>'modal', 'data-target'=>'#modalCategoria', 'style'=>'width:auto; font-weight:lighter'])}}
+
             </div>
 
           </div>
@@ -48,7 +56,7 @@
             {{Form::label('fornecedor_id', 'Fornecedor')}}
             <div class="input-group">
               {{Form::select('fornecedor_id', [''=>'Selecione Fornecedor',] + $fornecedor, null, ['class'=>'form-control select_search'] )}}
-              {{Form::button('Adicionar', ['class'=>'input-group-addon', 'data-toggle'=>'modal', 'data-target'=>'#modalFornecedor', 'style'=>'width:auto; font-weight:lighter'])}}
+              {{Form::button('<i class="fa fa-plus"></i>', ['class'=>'input-group-addon', 'data-toggle'=>'modal', 'data-target'=>'#modalFornecedor', 'style'=>'width:auto; font-weight:lighter'])}}
             </div>
 
           </div>
@@ -66,17 +74,23 @@
 
           <div class="col-sm-4">
             {{Form::label('descricao', 'Descrição')}}
-            {{Form::text('descricao', '', ['class' => 'form-control', 'placeholder' => 'Descrição do Produto'])}}
+            {{Form::text('descricao', null, ['class' => 'form-control', 'placeholder' => 'Descrição do Produto'])}}
           </div>
 
           <div class="col-sm-4">
             {{Form::label('preco_venda', 'Preço de Venda')}}
-            {{Form::text('preco_venda', '', ['class' => 'form-control', 'placeholder' => 'Preço de Venda'])}}
+            <div class="input-group">
+              {{Form::text('preco_venda', null, ['class' => 'form-control', 'placeholder' => '0.00 - 999999.99'])}}
+              <div class="input-group-addon">Mtn</div>
+            </div>
           </div>
 
           <div class="col-sm-4">
             {{Form::label('preco_aquisicao', 'Preço de Aquisição')}}
-            {{Form::text('preco_aquisicao', '', ['class' => 'form-control', 'placeholder' => 'Preço de Aquisição '])}}
+            <div class="input-group">
+            {{Form::text('preco_aquisicao', null, ['class' => 'form-control', 'placeholder' => '0.00 - 999999.99 '])}}
+            <div class="input-group-addon">Mtn</div>
+          </div>
           </div>
 
         </div>
@@ -89,12 +103,12 @@
 
           <div class="col-sm-4">
             {{Form::label('quantidade_dispo', 'Quantidade Disponível')}}
-            {{Form::text('quantidade_dispo', '', ['class' => 'form-control', 'placeholder' => 'Quantidade Disponível'])}}
+            {{Form::text('quantidade_dispo', null, ['class' => 'form-control', 'placeholder' => 'Quantidade Disponível'])}}
           </div>
 
           <div class="col-sm-4">
             {{Form::label('quantidade_min', 'Quantidade Minima')}}
-            {{Form::text('quantidade_min', '', ['class' => 'form-control', 'placeholder' => 'Validade'])}}
+            {{Form::text('quantidade_min', null, ['class' => 'form-control', 'placeholder' => 'Quantidade Minima'])}}
           </div>
 
         </div>
@@ -106,7 +120,17 @@
       <div class="row">
         <div class="col-md-6">
 
-          {{Form::submit('Adicionar Produto', ['class'=>'btn btn-primary'])}}
+          @if(isset($produto))
+
+          {{Form::submit('Actualizar', ['class'=>'btn btn-primary'])}}
+
+          @else
+
+          {{Form::submit('Salvar', ['class'=>'btn btn-primary'])}}
+
+          @endif
+
+          {{Form::reset('Limpar', ['class'=>'btn btn-default'])}}
 
         </div>
         <div class="col-md-6 text-right">
@@ -135,7 +159,7 @@
       <div class="modal-body">
 
         {{Form::open(['route'=>'categoria_salvar_rback', 'method'=>'POST'])}}
-        
+
         <div class="form-group">
           {{Form::label('nome', 'Nome', ['class'=>'control-lable'])}}
           {{Form::text('nome', null, ['placeholder' => 'Nome', 'class' => 'form-control'])}}
@@ -143,6 +167,7 @@
 
       </div>
       <div class="modal-footer">
+
         {{Form::button('Fechar', ['class'=>'btn btn-default', 'data-dismiss'=>'modal'])}}
         {{Form::submit('Salvar', ['class'=>'btn btn-primary'])}}
 
@@ -186,10 +211,10 @@
           {{Form::label('rubrica', 'Rubrica', ['class'=>'control-lable'])}}
           {{Form::text('rubrica', null, ['placeholder' => 'Rubrica', 'class' => 'form-control'])}}
         </div>
-        <div class="radio">
+        <div class="radio-inline">
           {{Form::radio('activo', '1')}} Activo
         </div>
-        <div class="radio">
+        <div class="radio-inline">
           {{Form::radio('activo', '0')}} Inactivo
         </div>
 

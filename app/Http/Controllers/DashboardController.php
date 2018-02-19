@@ -3,7 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Facturacao;
+use App\Model\Saida;
+use App\Model\ItenSaida;
 use App\Fornecedor;
 use App\Model\Cliente;
 use App\Model\ItenEntrada;
@@ -18,8 +19,8 @@ class DashboardController extends Controller
 
 public function dashboard()
 {
-  $data = Facturacao::all();
-  $total_facturacao = Facturacao::count();
+  $data = ItenSaida::all();
+  $total_facturacao = Saida::count();
   $total_fornecedor = Fornecedor::count();
   $total_cliente = Cliente::count();
   $total_stock = ItenEntrada::count();
@@ -36,8 +37,8 @@ public function dashboard()
 }
 public function paginaInicial()
 {
-  $data = Facturacao::all();
-  $total_facturacao = Facturacao::count();
+  $data = ItenSaida::all();
+  $total_facturacao = Saida::count();
   $total_fornecedor = Fornecedor::count();
   $total_cliente = Cliente::count();
   $total_stock = ItenEntrada::count();

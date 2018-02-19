@@ -29,103 +29,86 @@
       @endif
 
       <div class="panel-body" style="border-bottom: 1px solid #ccc; ">
-        <div class="form-group">
+        <div class="row" style="margin-bottom: 15px">
 
-          <div class="row">
+          <div class="form-horizontal">
 
-            <div class="col-sm-3">
+            <div class="col-md-3">
               {{Form::label('nome', 'Nome do Fornecedor')}}
-              <div class="input-group">
-                {{Form::text('nome', null, ['placeholder' => 'Nome do Fornecedor', 'class' => 'form-control'])}}
-                <div class="input-group-addon">
-                  <span class="fa fa-plus"></span>
-                </div>
-              </div>
+              {{Form::text('nome', null, ['placeholder' => 'Nome do Fornecedor', 'class' => 'form-control'])}}
             </div>
 
-            <div class="col-sm-3">
+            <div class="col-md-3">
               {{Form::label('telefone', 'Telefone')}}
-              <div class="input-group">
-                {{Form::text('telefone', null, ['placeholder' => 'Telefone', 'class' => 'form-control'])}}
-                <div class="input-group-addon">
-                  <span class="fa fa-plus"></span>
-                </div>
-              </div>
+              {{Form::text('telefone', null, ['placeholder' => 'Telefone', 'class' => 'form-control'])}}
             </div>
 
-            <div class="col-sm-3">
+            <div class="col-md-3">
               {{Form::label('endereco', 'Endereço')}}
-              <div class="input-group">
-                {{Form::text('endereco', null, ['placeholder' => 'Endereço', 'class' => 'form-control'])}}
-                <div class="input-group-addon">
-                  <span class="fa fa-plus"></span>
-                </div>
-              </div>
+              {{Form::text('endereco', null, ['placeholder' => 'Endereço', 'class' => 'form-control'])}}
             </div>
 
-            <div class="col-sm-3">
+            <div class="col-md-3">
               {{Form::label('email', 'Email')}}
-              <div class="input-group">
-                {{Form::text('email', null, ['placeholder' => 'Email', 'class' => 'form-control'])}}
-                <div class="input-group-addon">
-                  <span class="fa fa-plus"></span>
-                </div>
-              </div>
+              {{Form::text('email', null, ['placeholder' => 'Email', 'class' => 'form-control'])}}
             </div>
 
           </div>
 
-          <div class="row">
-            <div class="col-sm-3">
+        </div>
+
+        <div class="row" style="margin-bottom: 15px">
+
+          <div class="form-horizontal">
+
+            <div class="col-md-3">
               {{Form::label('rubrica', 'Rubrica')}}
-              <div class="input-group">
-                {{Form::text('rubrica', null, ['placeholder' => 'Rubrica', 'class' => 'form-control'])}}
-                <div class="input-group-addon">
-                  <span class="fa fa-plus"></span>
-                </div>
+              {{Form::text('rubrica', null, ['placeholder' => 'Rubrica', 'class' => 'form-control'])}}
+            </div>
+
+            <div class="col-md-3" >
+              <div class="radio-inline" style="margin: 25px">
+                {{Form::radio('activo', '1', ['class' => 'form-horizontal'])}} Activo
+              </div>
+              <div class="radio-inline">
+                {{Form::radio('activo', '0', ['class' => 'form-horizontal'])}} Inactivo
               </div>
             </div>
 
-            <div class="col-sm-3">
-              <div class="input-group">
-                {{Form::label('activo', 'Activo')}}
-                {{Form::radio('activo', '1', ['class' => 'form-horizontal'])}} Sim
-                {{Form::radio('activo', '0', ['class' => 'form-horizontal'])}} Não
-              </div>
-            </div>
           </div>
-
 
         </div>
       </div>
-      <div class="panel-footer">
-        <div class="row">
-          <div class="col-md-6">
+    <div class="panel-footer">
+      <div class="row">
+        <div class="col-md-6">
 
-            @if(isset($fornecedor))
+          @if(isset($fornecedor))
 
-            {{Form::submit('Actualizar Fornecedor', ['class'=>'btn btn-primary'])}}
+          {{Form::hidden('fornecedor_id', $fornecedor->id)}}
 
-            @else
+          {{Form::submit('Actualizar', ['class'=>'btn btn-primary'])}}
 
-            {{Form::submit('Adicionar Fornecedor', ['class'=>'btn btn-primary'])}}
-            {{Form::reset('Limpar', ['class'=>'btn btn-secondary'])}}
+          @else
 
-            @endif
+          {{Form::submit('Salvar', ['class'=>'btn btn-primary'])}}
+          {{Form::reset('Limpar', ['class'=>'btn btn-default'])}}
 
-          </div>
-          <div class="col-md-6">
+          @endif
 
-            <a href="{{route('fornecedores.index')}}" class="btn btn-warning pull-right"> Cancelar</a>
+        </div>
+        <div class="col-md-6">
 
-          </div>
+          <a href="{{route('fornecedores.index')}}" class="btn btn-warning pull-right"> Cancelar</a>
+
         </div>
       </div>
+    </div>
 
-      {!! Form::close() !!}
+    {!! Form::close() !!}
 
-    </section>
-  </div>
+  </section>
+</div>
 </div>
 
 @endsection

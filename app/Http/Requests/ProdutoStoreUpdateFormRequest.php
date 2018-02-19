@@ -28,7 +28,7 @@ class ProdutoStoreUpdateFormRequest extends FormRequest
             'preco_venda' => 'required|numeric ',
             'preco_aquisicao' => 'required | numeric',
             'quantidade_dispo' => 'required|numeric',
-            'quantidade_min' => 'required|numeric', 
+            'quantidade_min' => 'numeric', 
             'fornecedor_id' => 'required',
             'categoria_id' => 'required',
         ];

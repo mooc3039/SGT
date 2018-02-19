@@ -50,7 +50,7 @@
           </div> 
          
           <div class="panel-footer">
-            <a class="btn btn-info btnPrint" href="{{ route('prefactura')}}">Pré-Visual Factura</a>&nbsp;&nbsp;           
+            <a class="btn btn-info btnPrint" href="">Pré-Visual Factura</a>&nbsp;&nbsp;           
             {{Form::submit('Facturar cliente', ['class'=>'btn btn-primary'])}}
           </div>
         
@@ -237,7 +237,7 @@
     });
 
   //trabalhando search dentro do select
-   $("#nome").select2({
+/*    $("#nome").select2({
     placeholder: "Selecione cliente",
     allowClear: true
    });
@@ -245,7 +245,7 @@
     placeholder: "Selecione produto",
     allowClear: true
    });
-
+ */
   //trabalhando na dependencia
    $(document).ready(function(){
     

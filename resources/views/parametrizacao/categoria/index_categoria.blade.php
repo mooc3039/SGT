@@ -19,46 +19,55 @@
     </header> -->
 
     <div class="panel-body">
+        <div class="row" style="margin-bottom: 10px">
+          <div class="col-md-12">
+            <a href="{{ route('categoria.create') }}" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i></a>
+          </div>
+        </div>
 
-    	<table class="table table-striped table-advance table-hover">
-    		
-    		<thead>
-    			<tr>
-    				<th><i class="icon_profile"></i>Nome da Categoria </th>
-    				<th class="text-right"><i class="icon_cogs"></i> Operações</th>
-    			</tr>	
-    		</thead>
+    	<div class="row">
+         <div class="col-md-12">
+             <table class="table table-striped table-advance table-hover">
 
-    		<tbody>
+            <thead>
+                <tr>
+                    <th><i class="icon_profile"></i>Nome da Categoria </th>
+                    <th class="text-right"><i class="icon_cogs"></i> Operações</th>
+                </tr>
+            </thead>
 
-    			@foreach($categorias as $categoria)
-    			<tr>
-    				<td> {{$categoria->nome}} </td>
-    				<td class="text-right">
-    					{{Form::open(['route'=>['categoria.destroy', $categoria->id], 'method'=>'DELETE'])}}
-    					<div class="btn-group btn-group-sm">
-    						<a class="btn btn-primary" href="#"><i class="fa fa-eye"></i></a>
-    						<a class="btn btn-success" href="{{route('categoria.edit', $categoria->id)}}"><i class="fa fa-pencil"></i></a>
-    						<!-- <a class="btn btn-danger" href="{{route('categoria.destroy', $categoria->id)}}"><i class="fa fa-pencil"></i></a> -->
-    						{{Form::button('<i class="icon_close_alt2"></i>', ['type'=>'submit', 'class'=>'btn btn-danger'])}}
+            <tbody>
 
-    					</div>
-    					{{Form::close()}}
-    				</td>
+                @foreach($categorias as $categoria)
+                <tr>
+                    <td> {{$categoria->nome}} </td>
+                    <td class="text-right">
+                        {{Form::open(['route'=>['categoria.destroy', $categoria->id], 'method'=>'DELETE'])}}
+                        <div class="btn-group btn-group-sm">
+                            <a class="btn btn-primary" href="#"><i class="fa fa-eye"></i></a>
+                            <a class="btn btn-success" href="{{route('categoria.edit', $categoria->id)}}"><i class="fa fa-pencil"></i></a>
+                            <!-- <a class="btn btn-danger" href="{{route('categoria.destroy', $categoria->id)}}"><i class="fa fa-pencil"></i></a> -->
+                            {{Form::button('<i class="icon_close_alt2"></i>', ['type'=>'submit', 'class'=>'btn btn-danger'])}}
 
-    			</tr>
-    			@endforeach
+                        </div>
+                        {{Form::close()}}
+                    </td>
 
-    		</tbody>
-    	</table>
+                </tr>
+                @endforeach
+
+            </tbody>
+        </table>
+         </div>   
+        </div>
 
     </div>
 
     <div class="panel-footer">
     	<div class="row">
-    		<div class="col-md-6">
+    		<div class="col-md-6 text-left">
 
-    			<a href="{{route('categoria.create')}}" class="btn btn-primary">Adicionar Categoria</a>
+    			{{ $categorias->links() }}
 
     		</div>
     		<div class="col-md-6">

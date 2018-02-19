@@ -15,8 +15,9 @@ class Cliente extends Model
 		'endereco',
 		'telefone',
 		'email',
-		'nuit'
-		
+		'nuit',
+		'activo',
+		'tipo_cliente_id'
 	];
 	public $timestamps = false;
 
@@ -29,6 +30,12 @@ class Cliente extends Model
 	public function cotacoes(){
 
 		return $this->hasMany('App\Model\Cotacao');
-		
+
+	}
+
+	public function tipo_cliente(){
+
+		return $this->belongsTo('App\Model\TipoCliente');
+
 	}
 }
