@@ -50,7 +50,7 @@
                       facturaçoes
                   </header>
                   <div class="panel-body text-center">
-                    {!! $chart->html() !!}
+                    {!! $chart->html() !!} 
                   </div>
               </section>
           </div>   
@@ -59,7 +59,7 @@
       
 @endsection
 {!! Charts::scripts() !!}
-{!! $chart->script() !!}
+{!! $chart->script() !!} 
 
 
         

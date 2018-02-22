@@ -24,11 +24,17 @@ class FacturacaoController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $req)
     {
-       
+        $cons = Saida::all();
         $facturas = Saida::orderBy('id','desc')->paginate(5);
-        return view('facturas.lista', compact('facturas')); 
+        return view('facturas.lista', compact('facturas','cons')); 
+    }
+    public function getSearch(Request $req){
+        if($req->ajax()){
+            $find = Saida::where('subtotal', 'like','%'.$req->search.'%')->get();
+            return response()->json($find);
+        }
     }
 
     /**

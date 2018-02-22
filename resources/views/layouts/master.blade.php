@@ -29,7 +29,7 @@
   {!!Html::style('css/jquery-ui-1.10.4.min.css')!!}
   {!!Html::style('css/select2.min.css')!!}
 
-  {!! Charts::styles() !!}
+  {!! Charts::styles() !!} 
   @yield('style')
 
 </head>

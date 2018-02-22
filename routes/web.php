@@ -39,6 +39,10 @@ Route::group(['middleware'=>['authen','roles'],'roles'=>['Administrador']],funct
   Route::post('/facturas/facturar',['as'=>'facturacao','uses'=>'FacturacaoController@store']);
   Route::get('/facturas/depende','FacturacaoController@subKategori');
 
+  Route::post('getSearch','FacturacaoController@getSearch')->name('post'); //search somente nas facturas
+  Route::resource('/profiles','ProfileController');
+  Route::post('/profiles','ProfileController@update_avatar');
+
   Route::get('/gerir/usuario',['as'=>'indexUsuario','uses'=>'paginasController@indexUsuario']);
   Route::get('/gerir/cliente',['as'=>'indexCliente','uses'=>'paginasController@indexCliente']);
 
@@ -97,7 +101,7 @@ Route::group(['middleware'=>['authen','roles'],'roles'=>['Administrador']],funct
   Route::resource('/tipo_cliente', 'TipoClienteController');
 
   Route::resource('/factura', 'FacturacaoController');
-  
+
 
   Route::resource('/saida', 'SaidaController');
   Route::resource('/cotacao', 'CotacaoController');
