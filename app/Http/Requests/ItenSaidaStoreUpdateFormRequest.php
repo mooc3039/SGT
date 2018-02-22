@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class CotacaoStoreUpdateFormRequest extends FormRequest
+class ItenSaidaStoreUpdateFormRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,19 +24,21 @@ class CotacaoStoreUpdateFormRequest extends FormRequest
     public function rules()
     {
         return [
-          'cliente_id' => 'required',
-          // 'tipo_cotacao_id' => 'required',
+          'quantidade' => 'required',
+          'valor' => 'required',
           'produto_id' => 'required',
           'desconto' => 'required',
+          'subtotal' => 'required',
         ];
     }
 
     public function messages(){
         return [
-            'cliente_id.required' => 'É necessário selecionar o Cliente!',
-            // 'tipo_cotacao_id.required' => 'É necessário selecionar o tipo da Cotação!',
-            'produto_id.required' => 'É necessário selecionar o Produto!',
-            'desconto.required' => 'É necessário especificar o Desconto!',
+            'quantidade.required' => 'A Quantidade é obrigatória!',
+            'valor.required' => 'O Valor é obrigatória!',
+            'produto_id.required' => 'É necessário especificar o Produto!',
+            'desconto.required' => 'É necessário especificar o desconto!',
+            'subtotal.required' => 'É necessário especificar o Subtotal/Valor a Pagar pela quantidade!',
         ];
     }
 }

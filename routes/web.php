@@ -84,9 +84,16 @@ Route::group(['middleware'=>['authen','roles'],'roles'=>['Administrador']],funct
   // CADSTRAR CLIENTE FAZENDO o redirect()->back() => Malache
   Route::post('/cliente/cliente_salvar_rback', 'ClienteController@storeRedirectBack')->name('cliente_salvar_rback');
 
-  // CADASTRAR A COTACAO COM ajax
+  // CADASTRAR A COTACAO COM ajax => Malache
   Route::post('cotacao/cotacao_store', 'CotacaoController@store');
   Route::get('cotacao/index', 'CotacaoController@index');
+
+  // CADASTRAR A SAIDA COM ajax => Malache
+  Route::post('saida/saida_store', 'SaidaController@store');
+  Route::get('saida/index', 'SaidaController@index');
+
+  // CRIAR GUIA DE ENTREGA => Malache
+  Route::get('/guia_entrega/create_guia/{id}', 'GuiaEntregaController@createGuia')->name('create_guia');
 
 
 
@@ -100,6 +107,9 @@ Route::group(['middleware'=>['authen','roles'],'roles'=>['Administrador']],funct
  // Route::resource('/facturas', 'FacturacaoController');
 
   Route::resource('/saida', 'SaidaController');
+  Route::resource('/iten_saida', 'ItenSaidaController');
+  Route::resource('/guia_entrega', 'GuiaEntregaController');
+  Route::resource('/iten_guia_entrega', 'ItenGuiaEntregaController');
   Route::resource('/cotacao', 'CotacaoController');
   Route::resource('/cotacao/iten_cotacao', 'ItenCotacaoController');
   Route::resource('/tipo_cotacao', 'TipoCotacaoController');

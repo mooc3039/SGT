@@ -14,9 +14,9 @@
   <div class="row">
     <div class="col-lg-12">
       <section class="panel panel-default">
-        <header class="panel-heading">
+        <!-- <header class="panel-heading">
           Gerenciamento das Cotações
-        </header>
+        </header> -->
 
 
         {{ Form::open(['route'=>'cotacao.store', 'method'=>'POST', 'id'=>'form_cotacao']) }}
@@ -25,13 +25,13 @@
           <div class="row" style="margin-bottom: 15px">
             <div class="form-horizontal">
 
-              <div class="col-sm-4">
+              <!-- <div class="col-sm-4">
                 {{Form::label('tipo_cotacao_id', 'Cotação')}}
                 <div class="input-group">
                   {{Form::select('tipo_cotacao_id', [''=>'Tipo da Cotação',] + $tipos_cotacao, null, ['class'=>'form-control select_search'] )}}
                   {{Form::button('<i class="fa fa-plus"></i>', ['class'=>'input-group-addon', 'data-toggle'=>'modal', 'data-target'=>'#modalTipoCotacao', 'style'=>'width:auto; font-weight:lighter'])}}
                 </div>
-              </div>
+              </div> -->
 
               <div class="col-sm-4">
                 {{Form::label('cliente_id', 'Cliente')}}
@@ -52,17 +52,19 @@
 
         <!-- começa a secção de cotacao na tabela-->
 
-        <section class="panel">
+        <section class="panel-default">
           <header class="panel-heading">
             Produtos / Itens
           </header>
 
-          <table class="table table-striped table-advance table-hover">
+          <div class="panel-body">
+            <table class="table table-striped table-advance table-hover">
             <tbody>
               <tr>
                 <th><i class="icon_profile"></i> Nome do Produto</th>
                 <th><i class="icon_calendar"></i> Quantidade/Unidades</th>
                 <th><i class="icon_mail_alt"></i> Preço</th>
+                <th><i class="icon_mail_alt"></i> Valor</th>
                 <th><i class="icon_pin_alt"></i> Desconto</th>
                 <th><i class="icon_mobile"></i> Subtotal</th>
                 <th><a class="btn btn-primary addRow" href="#"><i class="icon_plus_alt2"></i></a></th>
@@ -77,9 +79,10 @@
                   </select>
                 </td>
                 <td><input type="text" name="quantidade[]" class="form-control quantidade"></td>
-                <td><input type="text" name="preco_venda[]" class="form-control preco_venda"></td>
+                <td><input type="text" name="preco_venda[]" class="form-control preco_venda" readonly></td>
+                <td><input type="text" name="valor[]" class="form-control valor" readonly=""></td>
                 <td><input type="text" name="desconto[]" class="form-control desconto" value="0"></td>
-                <td><input type="text" name="subtotal[]" class="form-control subtotal" readyonly="true"></td>
+                <td><input type="text" name="subtotal[]" class="form-control subtotal" readonly></td>
                 <td><a class="btn btn-danger remove" href="#"><i class="icon_close_alt2"></i></a></td>
               </tr>
 
@@ -95,6 +98,15 @@
               </tr>
             </tfoot>
           </table>
+          </div>
+          <div class="panel-footer">
+            <div class="row">
+              <div class="col-md-6"></div>
+              <div class="col-md-6 text-right">
+                <a href="{{ route('cotacao.index')}}" class="btn btn-warning">Cancelar</a>
+              </div>
+            </div>
+          </div>
         </section>
         {{ Form::hidden('valor_total', 0, ['class'=>'valor_total']) }}
         {{ Form::hidden('user_id', Auth::user()->id) }}
@@ -242,9 +254,10 @@
       '</select>'+
       '</td>'+
       '<td><input type="text" name="quantidade[]" class="form-control quantidade"></td>'+
-      '<td><input type="text" name="preco_venda[]" class="form-control preco_venda"></td>'+
+      '<td><input type="text" name="preco_venda[]" class="form-control preco_venda" readonly></td>'+
+      '<td><input type="text" name="valor[]" class="form-control valor" readonly></td>'+
       '<td><input type="text" name="desconto[]" class="form-control desconto" value="0"></td>'+
-      '<td><input type="text" name="subtotal[]" class="form-control subtotal" readyonly="true"></td>'+
+      '<td><input type="text" name="subtotal[]" class="form-control subtotal" readonly></td>'+
       '<td><a class="btn btn-danger remove" href="#"><i class="icon_close_alt2"></i></a></td>'+
       ' </tr>';
       $('tbody').append(tr);
@@ -287,6 +300,16 @@
         data  : dataId,
         success:function(data){
           tr.find('.preco_venda').val(data.preco_venda);
+
+          // O codigo abaixo obriga o recalculo apos selecionar outro produto na mesma linha depois de preencher os restanes campos
+          var quantidade = tr.find('.quantidade').val();
+          var preco_venda = tr.find('.preco_venda').val();
+          var valor = (quantidade*preco_venda);
+          var desconto = tr.find('.desconto').val();
+          var subtotal = (quantidade*preco_venda)-(quantidade*preco_venda*desconto)/100;
+          tr.find('.valor').val(valor);
+          tr.find('.subtotal').val(subtotal);
+          total();
         }
       });
     });
@@ -296,8 +319,10 @@
       var tr = $(this).parent().parent();
       var quantidade = tr.find('.quantidade').val();
       var preco_venda = tr.find('.preco_venda').val();
+      var valor = (quantidade*preco_venda);
       var desconto = tr.find('.desconto').val();
       var subtotal = (quantidade*preco_venda)-(quantidade*preco_venda*desconto)/100;
+      tr.find('.valor').val(subtotal);
       tr.find('.subtotal').val(subtotal);
       total();
     });
@@ -394,7 +419,7 @@
         data : data,
         success : function(data){
           if(data.status == 'success'){
-            window.location.href="index";
+            window.location.href="index"; // Foi necessario definir mais uma rota para o mesmo metodo index() por forma a chama-lo daqui como nao eh possivl aceder ao index() com metodo resource. E tb nao eh possivel especificar um nome de rota para "resources"
           }else{
             window.location.href="create"; // Necessario para actualizar as mensagens do flash(success ou error nas views ou routes)
           }

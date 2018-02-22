@@ -6,7 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 use App\Model\Categoria;
 use App\Model\Fornecedor;
 use App\Model\ItenEntrada;
+use App\Model\ItenSaida;
 use App\Model\ItenCotacao;
+use App\Model\ItenGuiaentrega;
 
 class Produto extends Model
 {
@@ -43,6 +45,18 @@ class Produto extends Model
     public function ItenCotacao(){
 
         return $this->hasOne('App\Model\ItenCotacao');
+
+    }
+
+    public function ItenSaida(){
+
+        return $this->hasOne('App\Model\ItenSaida');
+
+    }
+
+    public function ItenGuiaentrega(){
+
+        return $this->hasOne('App\Model\ItenGuiaentrega');
 
     }
 

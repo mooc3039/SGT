@@ -4,21 +4,19 @@ namespace App\Model;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Model\Cliente;
+use App\Model\ItenGuiaentrega;
+use App\Model\Saida;
 use App\User;
-use App\Model\ItenSaida;
-use App\Model\GuiaEntrega;
 
-class Saida extends Model
+class GuiaEntrega extends Model
 {
     //
-
     protected $fillable = [
-    	'data',
+    	'saida_id',
     	'cliente_id',
     	'user_id',
-    	'valor_total'
+    	'valor_total',
     ];
-    public $timestamps = false;
 
     public function cliente(){
 
@@ -32,15 +30,15 @@ class Saida extends Model
         
     }
 
-    public function itensSaida(){
+    public function itensGuiantrega(){
 
-        return $this->hasMany('App\Model\ItenSaida');
+        return $this->hasMany('App\Model\ItenGuiaentrega');
         
     }
 
-    public function guiaEntrega(){
+    public function saida(){
 
-        return $this->hasMany('App\Model\GuiaEntrega');
+        return $this->belongsTo('App\Model\Saida');
         
     }
 }
