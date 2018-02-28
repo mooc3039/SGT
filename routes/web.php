@@ -40,8 +40,11 @@ Route::group(['middleware'=>['authen','roles'],'roles'=>['Administrador']],funct
   Route::get('/facturas/depende','FacturacaoController@subKategori');
 
   Route::post('getSearch','FacturacaoController@getSearch')->name('post'); //search somente nas facturas
-  Route::resource('/profiles','ProfileController');
-  Route::post('/profiles','ProfileController@update_avatar');
+  //TODO profile update data
+  Route::get('/dashboard/{name}/profile', 'ProfileController@index');
+  Route::resource('/dashboard/{name}/profile','ProfileController');
+  Route::post('/dashboard/{name}/profile_img','ProfileController@update_avatar');
+  route::post('/dashboard/{name}/profile_edit', 'ProfileController@update');
 
   Route::get('/gerir/usuario',['as'=>'indexUsuario','uses'=>'paginasController@indexUsuario']);
   Route::get('/gerir/cliente',['as'=>'indexCliente','uses'=>'paginasController@indexCliente']);

@@ -3,8 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Redirect;
 use Auth;
 use Image;
+use App\User;
+use DB;
 
 class ProfileController extends Controller
 {
@@ -38,6 +42,7 @@ class ProfileController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+     //TODO criar novo usuário e definir o role
     public function create()
     {
         //
@@ -73,7 +78,7 @@ class ProfileController extends Controller
      */
     public function edit($id)
     {
-        //
+
     }
 
     /**
@@ -83,9 +88,41 @@ class ProfileController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+
+    protected $rules=[
+        'name' => 'required|max:255',
+        'about' => 'required',
+        'endereco'=>'required',
+        'bday'=>'required',
+        'occupation'=>'required',
+        'telefone'=>'required',
+        'password'=>'required|min:6|confirmed',
+        'password_confirmation'=>'sometimes|required_with:password',
+      ];
+    public function update(Request $request, $name)
     {
-        //
+
+
+      $userid = DB::Table('users')->select('id')->where('name','=',$name)->get();
+      $this->rules['email']='required|email|unique:users,email,'.$userid[0]->id;
+      $validate = Validator::make($request->all(), $this->rules);
+      if ($validate->passes()) {
+
+        $user = \App\User::find($userid[0]->id);
+        $user->name = $request['name'];
+        $user->about = $request['about'];
+        $user->endereco = $request['endereco'];
+        $user->bday = $request['bday'];
+        $user->occupation = $request['occupation'];
+        $user->email = $request['email'];
+        $user->telefone = $request['telefone'];
+        $user->password = bcrypt($request['password']);
+        $user->save();
+        return redirect('/dashboard/'.$name.'/profile')->with('success','Perfíl Actualizado!');
+      }else{
+        return redirect('/dashboard/'.$name.'/profile')->with('error','Perfíl Não Actualizado!');
+      }
+
     }
 
     /**
