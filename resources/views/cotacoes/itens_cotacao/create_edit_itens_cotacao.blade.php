@@ -1,7 +1,7 @@
-@extends('layouts.empty_base')
+@extends('layouts.master')
 @section('content')
 
-	<div class="container">
+	<!-- <div class="container"> -->
 		<div class="row">
 			<div class="col-md-12">
 
@@ -177,7 +177,7 @@
 
 			</div>
 		</div>
-	</div>
+	<!-- </div> -->
 
 	<!-- MODAL EDITAR ITEM -->
 	<div class="modal fade" tabindex="-1" role="dialog" id="modalProdutoIten">

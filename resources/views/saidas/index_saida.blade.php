@@ -37,7 +37,7 @@
               <tbody>
                 @foreach($saidas as $saida)
                 <tr>
-                  <td> {{$saida->id}} </td>
+                  <td> <a href="{{ route('show_guia_entrega', $saida->id) }}">{{$saida->id}}</a> </td>
                   <td> {{$saida->data}} </td>
                   <td> {{$saida->cliente->nome}} </td>
                   <td> {{$saida->valor_total}} </td>

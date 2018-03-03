@@ -5,6 +5,7 @@ namespace App\Model;
 use Illuminate\Database\Eloquent\Model;
 use App\Model\Saida;
 use App\Model\Produto;
+use App\Model\ItenGuiaentrega;
 
 class ItenSaida extends Model
 {
@@ -36,6 +37,12 @@ class ItenSaida extends Model
     public function itenSaidarestante(){
 
         return $this->belongsTo('App\Model\ItenSaidarestante');
+
+    }
+
+    public function itenGuiaentrega(){
+
+        return $this->hasOne('App\Model\ItenGuiaentrega');
 
     }
 }

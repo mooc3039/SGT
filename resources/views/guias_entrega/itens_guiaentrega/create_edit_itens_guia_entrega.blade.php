@@ -1,7 +1,7 @@
-@extends('layouts.empty_base')
+@extends('layouts.master')
 @section('content')
 
-<div class="container">
+<!-- <div class="container"> -->
 	<div class="row">
 		<div class="col-md-12">
 
@@ -65,7 +65,7 @@
 										<th class="text-center"><i class="icon_profile"></i>Quantidade</th>
 										<th><i class="icon_mail_alt"></i> Preço Unitário </th>
 										<th><i class="icon_cogs"></i> Valor Total </th>
-										<th class="text-center"><i class="icon_close_alt2"></i> Remover </th>
+										<!-- <th class="text-center"><i class="icon_close_alt2"></i> Remover </th> -->
 									</tr>
 								</thead>
 								<tbody>
@@ -73,15 +73,15 @@
 									<tr>
 										<td> {{$iten_guia_entrega->produto->descricao}}</td>
 
-										<td class="text-center"> <button type="button" class="btn btn-sm" data-toggle="modal" data-target="#modalProdutoIten" data-guia_entrega_id={{ $guia_entrega->id }} data-produto_id={{ $iten_guia_entrega->produto->id }} data-descricao={{ $iten_guia_entrega->produto->descricao }} data-quantidade={{ $iten_guia_entrega->quantidade }} data-quantidade_rest_iten_saida={{ $iten_guia_entrega->quantidade_rest_iten_saida }} data-preco_venda={{ $iten_guia_entrega->produto->preco_venda }} data-valor={{$iten_guia_entrega->valor }} data-desconto={{ $iten_guia_entrega->desconto }} data-subtotal={{ $iten_guia_entrega->subtotal }} data-valor_total={{ $guia_entrega->valor_total }} data-user_id={{ Auth::user()->id }}> {{$iten_guia_entrega->quantidade}} </button> </td>
+										<td class="text-center"> <button type="button" class="btn btn-sm" data-toggle="modal" data-target="#modalProdutoIten" data-guia_entrega_id={{ $guia_entrega->id }} data-produto_id={{ $iten_guia_entrega->produto->id }} data-descricao={{ $iten_guia_entrega->produto->descricao }} data-quantidade={{ $iten_guia_entrega->quantidade }}  data-qtd_rest_iten_saida={{ $iten_guia_entrega->itenSaida->quantidade_rest}} data-preco_venda={{ $iten_guia_entrega->produto->preco_venda }} data-valor={{$iten_guia_entrega->valor }} data-desconto={{ $iten_guia_entrega->desconto }} data-subtotal={{ $iten_guia_entrega->subtotal }} data-valor_total={{ $guia_entrega->valor_total }} data-user_id={{ Auth::user()->id }}> {{$iten_guia_entrega->quantidade}} </button> </td>
 
 										<td> {{$iten_guia_entrega->produto->preco_venda}} </td>
 										<td> {{$iten_guia_entrega->valor}} </td>
-										{{ Form::open() }}
+										<!-- {{ Form::open() }}
 										<td class="text-center">
 											{{ Form::button('<i class="icon_close_alt2"></i>', ['class'=>'btn btn-danger btn-sm', 'type'=>'submit'] )}}
 										</td>
-										{{ Form::close() }}
+										{{ Form::close() }} -->
 
 									</tr>
 									@endforeach
@@ -159,7 +159,7 @@
 						<div class="col-md-6"><a href="" class="btn btn-primary">Imprimir Saída</a>
 
 						</div>
-						<div class="col-md-6 text-right"><a href="{{route('guia_entrega.index')}}" class="btn btn-warning">Cancelar</a>
+						<div class="col-md-6 text-right"><a href="{{route('show_guia_entrega', $guia_entrega->saida_id)}}" class="btn btn-warning">Cancelar</a>
 
 						</div>
 					</div>
@@ -172,111 +172,26 @@
 
 		</div>
 	</div>
-</div>
+	<!-- </div> -->
 
-<!-- MODAL EDITAR ITEM -->
-<div class="modal fade" tabindex="-1" role="dialog" id="modalProdutoIten">
-	<div class="modal-dialog modal-lg" role="document">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				<h4 class="modal-title"><b>Guia de Entrega: </b>Editar Item<span id=""><span/></h4>
-				</div>
-				<div class="modal-body">
-
-					{{Form::open(['route'=>['iten_guia_entrega.update', 'id'], 'method'=>'PUT'])}}
-
-					<div class="row">
-						<div class="col-md-3">
-							<div class="form-group">
-								{{Form::label('descricao', 'Designação', ['class'=>'control-lable'])}}
-								{{Form::text('descricao', null, ['placeholder' => 'Nome', 'class' => 'form-control', 'id'=>'descricao', 'disabled'])}}
-							</div>
-						</div>
-						<div class="col-md-3">
-							<div class="form-group">
-								{{Form::label('quantidade', 'Quantidade', ['class'=>'control-lable'])}}
-								{{Form::text('quantidade', null, ['placeholder' => 'Quantidade', 'class' => 'form-control', 'id'=>'quantidade'])}}
-							</div>
-						</div>
-						<div class="col-md-3">
-							<div class="form-group">
-								{{Form::label('quantidade', 'Quantidade-Restante', ['class'=>'control-lable'])}}
-								{{Form::text('quantidade_rest_iten_saida', null, ['class' => 'form-control', 'id'=>'quantidade_rest_iten_saida', 'readonly'])}}
-							</div>
-						</div>
-						<div class="col-md-3">
-							<div class="form-group">
-								{{Form::label('preco_venda', 'Preço Unitário', ['class'=>'control-lable'])}}
-								{{Form::text('preco_venda', null, ['placeholder' => 'Preço Unitário', 'class' => 'form-control', 'id'=>'preco_venda', 'disabled'])}}
-							</div>
-						</div>
-
-					</div>
-					<div class="row">
-						<div class="col-md-3">
-							<div class="form-group">
-								{{Form::label('valor', 'Valor', ['class'=>'control-lable'])}}
-								{{Form::text('valor', null, ['placeholder' => 'Valor', 'class' => 'form-control', 'id'=>'valor', 'readonly'])}}
-
-								{{ Form::hidden('guia_entrega_id', null, ['id'=>'guia_entrega_id']) }}
-								{{ Form::hidden('produto_id', null, ['id'=>'produto_id']) }}
-								{{ Form::hidden('user_id', null, ['id'=>'user_id']) }}
-								{{ Form::hidden('qtd_rest_original', null, ['id'=>'qtd_rest_original', 'disabled']) }}
-							</div>
-						</div>
-						<div class="col-md-3">
-							<div class="form-group">
-								{{Form::label('desconto', 'Desconto', ['class'=>'control-lable'])}}
-								{{Form::text('desconto', null, ['placeholder' => 'Desconto', 'class' => 'form-control', 'id'=>'desconto'])}}
-							</div>
-						</div>
-						<div class="col-md-3">
-							<div class="form-group">
-								{{Form::label('subtotal', 'Subtotal', ['class'=>'control-lable'])}}
-								{{Form::text('subtotal', null, ['placeholder' => 'Subtotal', 'class' => 'form-control', 'id'=>'subtotal', 'readonly'])}}
-							</div>
-						</div>
-						<div class="col-md-3">
-							<div class="form-group">
-								{{ Form::hidden('valor_total', null, ['id'=>'valor_total']) }}
-							</div>
-						</div>
-					</div>
-
-				</div>
-				<div class="modal-footer">
-					<div class="row">
-						<div class="col-md-6 text-left">
-							<h5>Montante Geral da Guia: <b><span id="val_temp"></span></b></h5>
-						</div>
-						<div class="col-md-6 text-right">
-							{{Form::button('Fechar', ['class'=>'btn btn-default', 'data-dismiss'=>'modal'])}}
-							{{Form::submit('Actualizar', ['class'=>'btn btn-primary'])}}
-						</div>
-					</div>
-
-
-
-					{{Form::close()}}
-				</div>
-			</div><!-- /.modal-content -->
-		</div><!-- /.modal-dialog -->
-	</div><!-- /.modal -->
-
+	<!-- MODAL EDITAR ITEM -->
+	@include('guias_entrega.itens_guiaentrega.modals.frm_modal_editar_iten_guia_entrega')
 	<!-- FIM MODAL EDITAR ITEM -->
+
+
 	@endsection
 
 	@section('script')
 
 	<script type="text/javascript">
+
 		$('#modalProdutoIten').on('show.bs.modal', function (event) {
 				var button = $(event.relatedTarget) // Button that triggered the modal
 				var dta_guia_entrega_id = button.data('guia_entrega_id')
 				var dta_produto_id = button.data('produto_id')
 				var dta_descricao = button.data('descricao')
 				var dta_quantidade = button.data('quantidade')
-				var dta_quantidade_rest_iten_saida = button.data('quantidade_rest_iten_saida')
+				var dta_qtd_rest_iten_saida = button.data('qtd_rest_iten_saida')
 				var dta_preco_venda = button.data('preco_venda')
 				var dta_valor = button.data('valor')
 				var dta_desconto = button.data('desconto')
@@ -290,8 +205,7 @@
 				modal.find('.modal-body #produto_id').val(dta_produto_id);
 				modal.find('.modal-body #descricao').val(dta_descricao);
 				modal.find('.modal-body #quantidade').val(dta_quantidade);
-				modal.find('.modal-body #quantidade_rest_iten_saida').val(dta_quantidade_rest_iten_saida);
-				modal.find('.modal-body #qtd_rest_original').val(dta_quantidade_rest_iten_saida);
+				modal.find('.modal-body #qtd_rest_iten_saida').val(dta_qtd_rest_iten_saida);
 				modal.find('.modal-body #preco_venda').val(dta_preco_venda);
 				modal.find('.modal-body #valor').val(dta_valor);
 				modal.find('.modal-body #desconto').val(dta_desconto);
@@ -299,36 +213,39 @@
 				modal.find('.modal-body #valor_total').val(dta_valor_total);
 				modal.find('.modal-body #user_id').val(dta_user_id);
 
+
+				// o inputs abaixo eh para efeitos de validacao da qtd no controller. Esta qtd_referencial eh o limite que o usuario pode especificar, e tendo em conta que o input tras uma qtd, esse limite sera a qtd disponivel mais a qtd que vem no input para edicao.
+				modal.find('.modal-body #qtd_referencial').val((dta_qtd_rest_iten_saida*1)+dta_quantidade);
+
 				
 
 				$('#modalProdutoIten').delegate('#quantidade','keyup',function(){
 					var quantidade = $('#quantidade').val();
-					var qtd_rest_original = $('#qtd_rest_original').val();
+					var qtd_referencial = dta_qtd_rest_iten_saida;
 
-					qtd_rest_original = (qtd_rest_original*1)+dta_quantidade;
-      				// Se a quantidade especificada for maior que a quantidade disponivel, mostra um alerta impedindo de avancar e reseta a quantidade escolhida para a quantidade disponivel no iten_saida. Neste processo actualiza o valor e o subtotal de acordoo com a quantidade, tanto ao exceder o limite como nao
-      				if(quantidade > qtd_rest_original){
+					qtd_referencial = (qtd_referencial*1)+dta_quantidade;
+      				// Se a quantidade especificada for maior que a quantidade disponivel, mostra um alerta impedindo de avancar e reseta a quantidade escolhida para a quantidade inicial a ser editada.
+      				if(quantidade > qtd_referencial){
       					alert('A quantidade especificada excedeu o limite');
-      					$('#quantidade').val(qtd_rest_original);
-        			//
+      					$('#quantidade').val(dta_quantidade);
 
-	        			var qtd_after_validation_fail = $('#quantidade').val();
-	        			var qtd_rest_after_validation_fail = qtd_rest_original-qtd_after_validation_fail;
+      					var qtd_after_validation_fail = $('#quantidade').val();
+      					var qtd_rest_after_validation_fail = qtd_referencial-qtd_after_validation_fail;
 
-        				$('#quantidade_rest_iten_saida').val(qtd_rest_after_validation_fail);
+      					$('#qtd_rest_iten_saida').val(qtd_rest_after_validation_fail);
 
-        			}else{
+      				}else{
 
-	        			$('#quantidade').val(quantidade);
-	        			var quantidade_saida_rest = (qtd_rest_original-quantidade);
-	        			$('#quantidade_rest_iten_saida').val(quantidade_saida_rest);
-        			}
-
+      					$('#quantidade').val(quantidade);
+      					var quantidade_saida_rest = (qtd_referencial-quantidade);
+      					$('#qtd_rest_iten_saida').val(quantidade_saida_rest);
+      				}
 
 
-  				});
 
-  				$('#modalProdutoIten').delegate('#quantidade,#preco_venda,#desconto','keyup',function(){
+      			});
+
+				$('#modalProdutoIten').delegate('#quantidade,#preco_venda,#desconto','keyup',function(){
 					//total();
 					var mdl_quantidade = $('#quantidade').val();
 					var mdl_preco_venda = $('#preco_venda').val();
@@ -360,6 +277,7 @@
 
 				});
 			});
+
 
 		</script>
 		@endsection

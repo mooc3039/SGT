@@ -75,27 +75,36 @@ class ItenGuiaEntregaController extends Controller
      */
     public function update(Request $request, $id)
     {
+        // dd($request->all());
         //
-       $dataForm = $request->all();
-       $guia_entrega_id = $request->guia_entrega_id;
-       $produto_id = $request->produto_id;
+     $dataForm = $request->all();
+     $guia_entrega_id = $request->guia_entrega_id;
+     $produto_id = $request->produto_id;
 
-       try {
+     try {
 
-          $iten_guia_entrega = ItenGuiaentrega::where('guia_entrega_id', $guia_entrega_id)->where('produto_id', $produto_id)->first();
+        if($request->quantidade > $request->qtd_referencial){
+            // Validar a qtd esecificada de acordo cm a max para o item.
 
-          if($iten_guia_entrega->update($dataForm)){
-
-            $sucess = 'Item actualizado com sucesso!';
-            return redirect()->back()->with('success', $sucess);
+            $error = 'A quantidade especificada excedeu o limite!';
+            return redirect()->back()->with('error', $error);
 
         }else{
 
-            $error = 'Erro ao actualizar o Item!';
-            return redirect()->back()->with('error', $error);
+            $iten_guia_entrega = ItenGuiaentrega::where('guia_entrega_id', $guia_entrega_id)->where('produto_id', $produto_id)->first();
 
+            if($iten_guia_entrega->update($dataForm)){
+
+                $sucess = 'Item actualizado com sucesso!';
+                return redirect()->back()->with('success', $sucess);
+
+            }else{
+
+                $error = 'Erro ao actualizar o Item!';
+                return redirect()->back()->with('error', $error);
+
+            }
         }
-
 
     } catch (QueryException $e) {
 

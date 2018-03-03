@@ -94,6 +94,7 @@ Route::group(['middleware'=>['authen','roles'],'roles'=>['Administrador']],funct
 
   // CRIAR GUIA DE ENTREGA => Malache
   Route::get('/guia_entrega/create_guia/{id}', 'GuiaEntregaController@createGuia')->name('create_guia');
+  Route::get('/guia_entrega/show_guia_entrega/{id}', 'GuiaEntregaController@showGuiasEntrega')->name('show_guia_entrega');
 
 
 

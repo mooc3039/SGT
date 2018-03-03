@@ -75,12 +75,19 @@
                   </td>
                   <td>
                     {{ Form::text('quantidade_rest_iten_saida[]', $iten_saida->quantidade_rest, ['class'=>'form-control', 'id'=>'quantidade_rest_iten_saida', 'readonly'])}}
+
                     {{ Form::hidden('qtd_original_saida[]', $iten_saida->quantidade_rest, ['class'=>'form-control', 'id'=>'qtd_original_saida', 'disabled'])}}
+
+
                   </td>
                   <td>{{ Form::text('preco_venda[]', $iten_saida->produto->preco_venda, ['class'=>'form-control', 'id'=>'preco_venda', 'disabled'])}}</td>
-                  <td>{{ Form::text('valor[]', $iten_saida->valor_rest, ['class'=>'form-control', 'id'=>'valor', 'readonly'])}}</td>
+                  <td>{{ Form::text('valor[]', null, ['class'=>'form-control', 'id'=>'valor', 'readonly'])}}</td>
                   <td>{{ Form::text('desconto[]', $iten_saida->desconto, ['class'=>'form-control', 'id'=>'desconto', 'readonly'])}}</td>
-                  <td>{{ Form::text('subtotal[]', $iten_saida->subtotal_rest, ['class'=>'form-control', 'id'=>'subtotal', 'readonly'])}}</td>
+                  <td>
+                    {{ Form::text('subtotal[]', null, ['class'=>'form-control', 'id'=>'subtotal', 'readonly'])}}
+
+                    {{ Form::hidden('iten_saida_id[]', $iten_saida->id, ['class'=>'form-control', 'id'=>'iten_saida_id'])}}
+                  </td>
                 </tr>
                 @endforeach
 

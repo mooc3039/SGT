@@ -54,7 +54,8 @@
         <thead>
           <tr>
             <th><i class="icon_profile"></i> Nome do Produto</th>
-            <th><i class="icon_calendar"></i> Quantidade/Unidades</th>
+            <th><i class="icon_calendar"></i> Qtd/Unidades</th>
+            <th><i class="icon_calendar"></i> Qtd-Restante</th>
             <th><i class="icon_mail_alt"></i> Preço</th>
             <th><i class="icon_mail_alt"></i> Valor</th>
             <th><i class="icon_pin_alt"></i> Desconto</th>
@@ -73,6 +74,7 @@
             </select>
           </td>
           <td><input type="text" name="quantidade[]" class="form-control quantidade"></td>
+          <td><input type="text" name="quantidade_dispo[]" class="form-control quantidade_dispo" readonly><input type="hidden" name="qtd_dispo_original" class="form-control qtd_dispo_original"></td>
           <td><input type="text" name="preco_venda[]" class="form-control preco_venda" readonly></td>
           <td><input type="text" name="valor[]" class="form-control valor" value="0" readonly></td>
           <td><input type="text" name="desconto[]" class="form-control desconto" value="0"></td>
@@ -92,6 +94,14 @@
       </tr>
     </tfoot>
   </table>
+</div>
+<div class="panel-footer">
+  <div class="row">
+    <div class="col-md-6"></div>
+    <div class="col-md-6 text-right">
+      <a href="{{ route('saida.index') }}" class="btn btn-warning">Cancelar</a>
+    </div>
+  </div>
 </div>
 </section>
 {{ Form::hidden('valor_total', 0, ['class'=>'valor_total']) }}
@@ -203,14 +213,16 @@
     	'@endforeach'+
     	'</select>'+
     	'</td>'+
-    	'<td><input type="text" name="quantidade[]" class="form-control quantidade"></td>'+
-    	'<td><input type="text" name="preco_venda[]" class="form-control preco_venda"></td>'+
-    	'<td><input type="text" name="valor[]" class="form-control valor" value="0" readonly></td>'+
-    	'<td><input type="text" name="desconto[]" class="form-control desconto" value="0"></td>'+
-    	'<td><input type="text" name="subtotal[]" class="form-control subtotal" readonly></td>'+
-    	'<td><a class="btn btn-danger remove" href="#"><i class="icon_close_alt2"></i></a></td>'+
-    	' </tr>';
-    	$('tbody').append(tr);
+      '<td><input type="text" name="quantidade[]" class="form-control quantidade"></td>'+
+      '<td><input type="text" name="quantidade_dispo[]" class="form-control quantidade_dispo" readonly>'+
+      ' <input type="hidden" name="qtd_dispo_original[]" class="form-control qtd_dispo_original"></td>'+
+      '<td><input type="text" name="preco_venda[]" class="form-control preco_venda"></td>'+
+      '<td><input type="text" name="valor[]" class="form-control valor" value="0" readonly></td>'+
+      '<td><input type="text" name="desconto[]" class="form-control desconto" value="0"></td>'+
+      '<td><input type="text" name="subtotal[]" class="form-control subtotal" readonly></td>'+
+      '<td><a class="btn btn-danger remove" href="#"><i class="icon_close_alt2"></i></a></td>'+
+      ' </tr>';
+      $('tbody').append(tr);
 
     };
 
@@ -249,13 +261,18 @@
     		dataType: 'json',
     		data  : dataId,
     		success:function(data){
-    			tr.find('.preco_venda').val(data.preco_venda);
+          var quantidade_disponivel = (data.quantidade_dispo - data.quantidade_min)
 
-          // O codigo abaixo obriga o recalculo apos selecionar outro produto na mesma linha depois de preencher os restanes campos
+          tr.find('.preco_venda').val(data.preco_venda);
+          tr.find('.quantidade_dispo').val(quantidade_disponivel); //type="text", visivel a cada mudanca.
+          tr.find('.qtd_dispo_original').val(quantidade_disponivel); // qtd total do produto necessaria para calcular o restante de acordo com a quantidade especificada no input. O restante eh total de produtos menos a quantidade minima de stock. type="hidden"
+
           var quantidade = tr.find('.quantidade').val();
           var preco_venda = tr.find('.preco_venda').val();
-          var valor = (quantidade*preco_venda);
           var desconto = tr.find('.desconto').val();
+          // O codigo abaixo obriga o recalculo apos selecionar outro produto na mesma linha depois de preencher os restanes campos
+          
+          var valor = (quantidade*preco_venda);
           var subtotal = (quantidade*preco_venda)-(quantidade*preco_venda*desconto)/100;
           tr.find('.valor').val(valor);
           tr.find('.subtotal').val(subtotal);
@@ -273,9 +290,38 @@
     	var valor = (quantidade*preco_venda);
     	var desconto = tr.find('.desconto').val();
     	var subtotal = (quantidade*preco_venda)-(quantidade*preco_venda*desconto)/100;
-    	tr.find('.valor').val(valor);
-    	tr.find('.subtotal').val(subtotal);
-    	total();
+
+
+      var qtd_dispo_original = (tr.find('.qtd_dispo_original').val()*1);
+
+
+      if(quantidade > qtd_dispo_original){
+        alert('A quantidade especificada excedeu o limite');
+        tr.find('.quantidade').val(0);
+
+        var qtd_after_validation_fail = tr.find('.quantidade').val();
+        var qtd_rest_after_validation_fail = qtd_dispo_original-qtd_after_validation_fail;
+
+
+        var valor_after_validation_fail = (qtd_after_validation_fail*preco_venda);
+        var subtotal_after_validation_fail = (qtd_after_validation_fail*preco_venda)-(qtd_after_validation_fail*preco_venda*desconto)/100;
+
+        tr.find('.quantidade_dispo').val(qtd_rest_after_validation_fail);
+        tr.find('.valor').val(valor_after_validation_fail);
+        tr.find('.subtotal').val(subtotal_after_validation_fail);
+        total();
+
+      }else{
+        tr.find('.quantidade').val(quantidade);
+        var quantidade_dispo = (qtd_dispo_original-quantidade);
+        tr.find('.quantidade_dispo').val(quantidade_dispo);
+        tr.find('.valor').val(valor);
+        tr.find('.subtotal').val(subtotal);
+        total();
+      }
+
+
+      
     });
 
     //==calculo do total de todas as linhas

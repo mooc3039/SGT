@@ -101,11 +101,11 @@ class GuiaEntregaController extends Controller
 
                 $iten_guiaentrega->produto_id = $request['produto_id'][$i];
                 $iten_guiaentrega->quantidade = $request['quantidade'][$i];
-                $iten_guiaentrega->quantidade_rest_iten_saida = $request['quantidade_rest_iten_saida'][$i];
                 $iten_guiaentrega->valor = $request['subtotal'][$i];
                 $iten_guiaentrega->desconto = $request['desconto'][$i];
                 $iten_guiaentrega->subtotal = $request['subtotal'][$i];
                 $iten_guiaentrega->guia_entrega_id = $guia_entrega_id[$i];
+                $iten_guiaentrega->iten_saida_id = $request['iten_saida_id'][$i];
 
                 $iten_guiaentrega->save();
 
@@ -157,7 +157,13 @@ class GuiaEntregaController extends Controller
             // Tras a saida. Tras os Itens da Saida e dentro da relacao ItensSaida eh possivel pegar a relacao Prodtuo atraves do dot ou ponto. NOTA: a relacao produto nao esta na saida e sim na itensSaida, mas eh possivel ter os seus dados partido da saida como se pode ver.
 
         return view('guias_entrega.show_guia_entrega', compact('guia_entrega'));
-        echo "Entrega";
+    }
+
+    public function showGuiasEntrega($saida_id){
+
+        $guias_entrega = $this->guia_entrega->where('saida_id', $saida_id)->orderBy('created_at', 'desc')->paginate(10);
+        return view('guias_entrega.index_saida_guias_entrega', compact('guias_entrega'));
+
     }
 
     /**
@@ -174,7 +180,8 @@ class GuiaEntregaController extends Controller
 
 
         $produtos = DB::table('produtos')->pluck('descricao', 'id')->all();
-        $guia_entrega = $this->guia_entrega->with('itensGuiantrega.produto', 'saida.itensSaida', 'cliente')->find($id);
+        $guia_entrega = $this->guia_entrega->with('itensGuiantrega.itenSaida.produto', 'saida.itensSaida', 'cliente')->find($id);
+        //dd($guia_entrega);
         // Tras a saida. Tras os Itens da Saida e dentro da relacao ItensSaida eh possivel pegar a relacao Prodtuo atraves do dot ou ponto. NOTA: a relacao produto nao esta na saida e sim na itensSaida, mas eh possivel ter os seus dados partido da saida como se pode ver.
 
         return view('guias_entrega.itens_guiaentrega.create_edit_itens_guia_entrega', compact('produtos', 'guia_entrega'));

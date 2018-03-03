@@ -5,6 +5,7 @@ namespace App\Model;
 use Illuminate\Database\Eloquent\Model;
 use App\Model\GuiaEntrega;
 use App\Model\Produto;
+use App\Model\ItenSaida;
 
 class ItenGuiaentrega extends Model
 {
@@ -16,7 +17,6 @@ class ItenGuiaentrega extends Model
     	'valor',
     	'desconto',
         'subtotal',
-        'quantidade_rest_iten_saida',
     ];
 
     public function guiaEntrega(){
@@ -27,5 +27,10 @@ class ItenGuiaentrega extends Model
     public function produto(){
 
     	return $this->belongsTo('App\Model\Produto');
+    }
+
+    public function itenSaida(){
+
+        return $this->belongsTo('App\Model\ItenSaida');
     }
 }

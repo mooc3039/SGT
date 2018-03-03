@@ -35,7 +35,7 @@
           <li><a class="" href="{{route('entrada.index')}}">Entradas</a></li> -->
 
           <li><a class="" href="{{route('cotacao.index')}}">Proforma</a></li>
-          <li><a class="" href="{{route('saida.index')}}">Factura</a></li>
+          <li><a class="" href="{{route('saida.index')}}">Facturar</a></li>
         </ul>
       </li>
 
@@ -53,7 +53,7 @@
       <li class="sub-menu">
         <a href="javascript:;" class="">
                       <i class="icon_table"></i>
-                      <span>Guias</span>
+                      <span>Guia</span>
                       <span class="menu-arrow arrow_carrot-right"></span>
                   </a>
         <ul class="sub">
