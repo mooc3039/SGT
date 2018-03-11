@@ -65,7 +65,7 @@
   {!!Html::script('js/gdp-data.js')!!}
   {!!Html::script('js/morris.min.js')!!}
   {!!Html::script('js/sparklines.js')!!}
-  {!!Html::script('js/charts.js')!!}
+   <!--  {!!Html::script('js/charts.js')!!} -->
   {!!Html::script('js/jquery.slimscroll.min.js')!!}
   {!!Html::script('js/select2.min.js')!!}
   {!!Html::script('js/jquery.printPage.js')!!}
@@ -92,9 +92,9 @@
   <script>
     
     /** SEARCH SELECT */
-    $(document).ready( function() {
+   /*  $(document).ready( function() {
       $('.select_search').select2();
-    });
+    }); */
     /* FIM SEARCH SELECT */
 
       //====

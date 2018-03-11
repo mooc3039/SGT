@@ -40,6 +40,7 @@ Route::group(['middleware'=>['authen','roles'],'roles'=>['Administrador']],funct
   Route::get('/facturas/depende','FacturacaoController@subKategori');
 
   Route::post('getSearch','FacturacaoController@getSearch')->name('post'); //search somente nas facturas
+  Route::get('/pdf', 'FacturacaoController@pdfTeste'); //teste de pdf
   //TODO profile update data
   Route::get('/dashboard/{name}/profile', 'ProfileController@index');
   Route::resource('/dashboard/{name}/profile','ProfileController');
