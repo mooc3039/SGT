@@ -12,6 +12,7 @@
   <link rel="shortcut icon" href="img/favicon.png">
 
   <title>SG-Stock Administração</title>
+  {!!Html::style('css/sgt.css')!!}
   {!!Html::style('css/bootstrap.min.css')!!}
   {!!Html::style('css/bootstrap-theme.min.css')!!}
   {!!Html::style('css/elegant-icons-style.css')!!}

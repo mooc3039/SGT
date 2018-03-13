@@ -71,7 +71,7 @@ class SaidaController extends Controller
     public function store(SaidaStoreUpdateFormRequest $request)
     {
         //
-      if(request()->ajax()){
+      if($request->all()){
 
 
           $saida = new Saida;
@@ -116,28 +116,30 @@ class SaidaController extends Controller
 
             DB::commit();
 
-            $sucesso = "Saída cadastrada com sucesso!";
-            Session::flash('success', $sucesso);
-            return response()->json(['status'=>'success']);
-              // return response()->json($request->all());
+            $success = "Saída cadastrada com sucesso!";
+            //Session::flash('success', $success);
+            //return response()->json(['status'=>'success']);
+            return redirect()->route('saida.index')->with('success', $success);
 
         }
         else {
 
-          $erro = "Erro ao cadastrar a Saída!";
-          Session::flash('error', $erro);
-          return response()->json(['status'=>'error']);
+          $error = "Erro ao cadastrar a Saída!";
+          //Session::flash('error', $error);
+          //return response()->json(['status'=>'error']);
+          return redirect()->back()->with('error', $error);
 
       }
 
   } catch (QueryException $e){
 
-    $erro = "Erro ao cadastrar a Cotacao! => Possível redundância de um item/produto à mesma cotação ou preenchimento incorrecto dos campos!";
-    Session::flash('error', $erro);
+    $error = "Erro ao cadastrar a Cotacao! => Possível redundância de um item/produto à mesma cotação ou preenchimento incorrecto dos campos!";
+    //Session::flash('error', $erro);
 
     DB::rollback();
 
-    return response()->json(['status'=>'error']);
+    //return response()->json(['status'=>'error']);
+    return redirect()->back()->with('error', $error);
 
 }
 

@@ -36,6 +36,7 @@
 
           <li><a class="" href="{{route('cotacao.index')}}">Proforma</a></li>
           <li><a class="" href="{{route('saida.index')}}">Facturar</a></li>
+          <li><a class="" href="{{route('venda.index')}}">Venda</a></li>
         </ul>
       </li>
 

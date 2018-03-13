@@ -96,6 +96,9 @@ Route::group(['middleware'=>['authen','roles'],'roles'=>['Administrador']],funct
   Route::get('/guia_entrega/create_guia/{id}', 'GuiaEntregaController@createGuia')->name('create_guia');
   Route::get('/guia_entrega/show_guia_entrega/{id}', 'GuiaEntregaController@showGuiasEntrega')->name('show_guia_entrega');
 
+  // GERIR PAGAMENTO DA VENDA => Malache
+  Route::post('/venda/pagamento', 'VendaController@pagamentoVenda')->name('pagamentoVenda');
+
 
 
   //Rotas de operações
@@ -111,6 +114,8 @@ Route::group(['middleware'=>['authen','roles'],'roles'=>['Administrador']],funct
   Route::resource('/iten_saida', 'ItenSaidaController');
   Route::resource('/guia_entrega', 'GuiaEntregaController');
   Route::resource('/iten_guia_entrega', 'ItenGuiaEntregaController');
+  Route::resource('/venda', 'VendaController');
+  Route::resource('/iten_venda', 'ItenVendaController');
   Route::resource('/cotacao', 'CotacaoController');
   Route::resource('/cotacao/iten_cotacao', 'ItenCotacaoController');
   Route::resource('/tipo_cotacao', 'TipoCotacaoController');

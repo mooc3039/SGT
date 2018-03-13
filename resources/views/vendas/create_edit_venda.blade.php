@@ -2,11 +2,11 @@
 @section('content')
 <div class="row">
 	<div class="col-lg-12">
-		<h3 class="page-header"><i class="fa fa-file-text-o"></i>Saídas</h3>
+		<h3 class="page-header"><i class="fa fa-file-text-o"></i>Vendas</h3>
 		<ol class="breadcrumb">
 			<li><i class="fa fa-home"></i><a href="#">Home</a></li>
-			<li><i class="icon_document_alt"></i>Saída</li>
-			<li><i class="fa fa-file-text-o"></i>Gerenciar Saída</li>
+			<li><i class="icon_document_alt"></i> Venda </li>
+			<li><i class="fa fa-file-text-o"></i>Gerenciar Venda</li>
 		</ol>
 	</div>
 </div>
@@ -15,17 +15,17 @@
 	<div class="col-lg-12">
 		<section class="panel panel-default">
         <!-- <header class="panel-heading">
-          Gerenciamento das Saídas
+          Gerenciamento das Vendas
         </header> -->
 
 
-        {{ Form::open(['route'=>'saida.store', 'method'=>'POST', 'id'=>'form_saida']) }}
+        {{ Form::open(['route'=>'venda.store', 'method'=>'POST', 'id'=>'form_venda']) }}
 
         <div class="panel-body" style="border-bottom: 1px solid #ccc; ">
          <div class="row" style="margin-bottom: 15px">
           <div class="form-horizontal">
 
-           <div class="col-sm-4">
+           <div class="col-md-4">
             {{Form::label('cliente_id', 'Cliente')}}
             <div class="input-group">
              {{Form::select('cliente_id', [''=>'Cliente',] + $clientes, null, ['class'=>'form-control select_search'] )}}
@@ -33,78 +33,127 @@
            </div>
          </div>
 
-       </div>
-     </div>
-   </div>
+         <div class="col-md-6 col-md-offset-2">
+          <legend>Pagamento: <b><span class="valor_visual pull-right" style="border:none"> </span></b></legend>
+          <div class="row" style="margin-bottom: 5px">
+           <div class="col-md-4">
+            <div class="radio-inline">
+              <!-- {{Form::radio('pago', '1', ['id'=>'pago', 'onclick'=>'javascript:pagoNaoPago();'])}} Pago -->
+              <input type="radio" onclick="javascript:pagoNaoPago();" name="pago" value="1" id="pago"> Pago
+            </div>
+            <div class="radio-inline">
+              <!-- {{Form::radio('pago', '0', ['id'=>'nao_pago', 'onclick'=>'javascript:pagoNaoPago();'])}} Não Pago -->
+              <input type="radio" onclick="javascript:pagoNaoPago();" name="pago" value="0" id="nao_pago"> Não Pago
+            </div>
 
-   <div class="panel-footer">
-     {{Form::submit('Salvar Saida', ['class'=>'btn btn-primary'])}}
-   </div>
+          </div>
+
+          <div class="col-md-8" id="div_forma_pagamento" style="display:none">
+            <div class="row">
+              <div class="col-md-6">
+                {{ Form::label('valor_pago', 'Valor Pago')}}
+                <div class="input-group">
+                  {{ Form::text('valor_pago', null, ['class'=>'form-control'])}}
+                  <div class="input-group-addon">$</div>
+                </div>            
+              </div>
+              <div class="col-md-6">
+                {{ Form::label('troco', 'Troco')}}
+                <div class="input-group">
+                  {{ Form::text('troco', null, ['class'=>'form-control', 'readonly'])}}
+                  <div class="input-group-addon">$</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6">
+                {{ Form::label('forma_pagamento_id', 'Forma Pgamento')}}
+                {{Form::select('forma_pagamento_id', [''=>'Forma Pgamento',] + $formas_pagamento, null, ['class'=>'form-control'] )}}
+              </div>
+              <div class="col-md-6">
+                {{ Form::label('nu_doc', 'Documento')}}
+                {{ Form::text('nu_doc', null, ['class'=>'form-control'])}}
+              </div>
+            </div>
+          </div>
+          
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="panel-footer">
+ {{Form::submit('Salvar venda', ['class'=>'btn btn-primary'])}}
+</div>
 
 
-   <!-- começa a secção de cotacao na tabela-->
+<!-- começa a secção de cotacao na tabela-->
 
-   <section class="panel">
-     <header class="panel-heading">
-      Produtos / Itens
-    </header>
+<section class="panel">
+ <header class="panel-heading">
+  Produtos / Itens
+</header>
 
-    <div class="panel-body">
-      <table class="table table-striped table-advance table-hover">
-        <thead>
-          <tr>
-            <th><i class="icon_profile"></i> Nome do Produto</th>
-            <th><i class="icon_calendar"></i> Qtd/Unidades</th>
-            <th><i class="icon_calendar"></i> Qtd-Restante</th>
-            <th><i class="icon_mail_alt"></i> Preço</th>
-            <th><i class="icon_mail_alt"></i> Valor</th>
-            <th><i class="icon_pin_alt"></i> Desconto</th>
-            <th><i class="icon_mobile"></i> Subtotal</th>
-            <th><a class="btn btn-primary addRow" href="#"><i class="icon_plus_alt2"></i></a></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>
-             <select class="form-control descricao" name="produto_id[]">
-              <option value="0" selected="true" disabled="true">Selecione Produto</option>
-              @foreach($produtos as $produto)
-              <option value="{!!$produto->id!!}">{!!$produto->descricao!!}</option>
-              @endforeach
-            </select>
-          </td>
-          <td><input type="text" name="quantidade[]" class="form-control quantidade"></td>
-          <td><input type="text" name="quantidade_dispo[]" class="form-control quantidade_dispo" readonly><input type="hidden" name="qtd_dispo_original" class="form-control qtd_dispo_original"></td>
-          <td><input type="text" name="preco_venda[]" class="form-control preco_venda" readonly></td>
-          <td><input type="text" name="valor[]" class="form-control valor" value="0" readonly></td>
-          <td><input type="text" name="desconto[]" class="form-control desconto" value="0"></td>
-          <td><input type="text" name="subtotal[]" class="form-control subtotal" readonly></td>
-          <td><a class="btn btn-danger remove" href="#"><i class="icon_close_alt2"></i></a></td>
-        </tr>
-
-      </tbody>
-      <tfoot>
-       <tr>
-        <td style="border:none"></td>
-        <td style="border:none"></td>
-        <td style="border:none"></td>
-        <td><b>Total</b></td>
-        <td><b><div class="valor_visual" style="border:none"> </div></b></td>
-        <td></td>
+<div class="panel-body">
+  <table class="table table-striped table-advance table-hover">
+    <thead>
+      <tr>
+        <th><i class="icon_profile"></i> Nome do Produto</th>
+        <th><i class="icon_calendar"></i> Qtd/Unidades</th>
+        <th><i class="icon_calendar"></i> Qtd-Restante</th>
+        <th><i class="icon_mail_alt"></i> Preço</th>
+        <th><i class="icon_mail_alt"></i> Valor</th>
+        <th><i class="icon_pin_alt"></i> Desconto</th>
+        <th><i class="icon_mobile"></i> Subtotal</th>
+        <th><a class="btn btn-primary addRow" href="#"><i class="icon_plus_alt2"></i></a></th>
       </tr>
-    </tfoot>
-  </table>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+         <select class="form-control descricao" name="produto_id[]">
+          <option value="0" selected="true" disabled="true">Selecione Produto</option>
+          @foreach($produtos as $produto)
+          <option value="{!!$produto->id!!}">{!!$produto->descricao!!}</option>
+          @endforeach
+        </select>
+      </td>
+      <td><input type="text" name="quantidade[]" class="form-control quantidade"></td>
+      <td><input type="text" name="quantidade_dispo[]" class="form-control quantidade_dispo" readonly><input type="hidden" name="qtd_dispo_original" class="form-control qtd_dispo_original"></td>
+      <td><input type="text" name="preco_venda[]" class="form-control preco_venda" readonly></td>
+      <td><input type="text" name="valor[]" class="form-control valor" value="0" readonly></td>
+      <td><input type="text" name="desconto[]" class="form-control desconto" value="0"></td>
+      <td><input type="text" name="subtotal[]" class="form-control subtotal" readonly></td>
+      <td><a class="btn btn-danger remove" href="#"><i class="icon_close_alt2"></i></a></td>
+    </tr>
+
+  </tbody>
+  <tfoot>
+   <tr>
+    <td style="border:none"></td>
+    <td style="border:none"></td>
+    <td style="border:none"></td>
+    <td><b>Total</b></td>
+    <td><b><div class="valor_visual" style="border:none"> </div></b></td>
+    <td></td>
+  </tr>
+</tfoot>
+</table>
 </div>
 <div class="panel-footer">
   <div class="row">
     <div class="col-md-6"></div>
     <div class="col-md-6 text-right">
-      <a href="{{ route('saida.index') }}" class="btn btn-warning">Cancelar</a>
+      <a href="{{ route('venda.index') }}" class="btn btn-warning">Cancelar</a>
     </div>
   </div>
 </div>
 </section>
-{{ Form::hidden('valor_total', 0, ['class'=>'valor_total']) }}
+{{ Form::hidden('valor_total', 0, ['id'=>'valor_total']) }}
 {{ Form::hidden('user_id', Auth::user()->id) }}
 {!!Form::hidden('_token',csrf_token())!!}
 {{ Form::close() }}
@@ -118,7 +167,7 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				<h4 class="modal-title">Cadastrar Tipo de Saida</h4>
+				<h4 class="modal-title">Cadastrar Tipo de venda</h4>
 			</div>
 			<div class="modal-body">
 
@@ -199,6 +248,30 @@
 	@section('script')
 	<script text="text/javascript">
 
+    function pagoNaoPago() {
+      if (document.getElementById('pago').checked) {
+        document.getElementById('div_forma_pagamento').style.display = 'block';
+      }
+      else document.getElementById('div_forma_pagamento').style.display = 'none';
+
+    };
+
+    $('#valor_pago').keyup(function(){
+      var valor_pago = $('#valor_pago').val();
+      var valor_total = $('#valor_total').val();
+      var troco = valor_pago - valor_total;
+
+      $('#troco').val(troco);
+
+      if( troco < 0 ){
+        document.getElementById('troco').style.backgroundColor = "red";
+        document.getElementById('troco').style.color = "white";
+      }else{
+        document.getElementById('troco').style.backgroundColor = "white";
+        document.getElementById('troco').style.color = "black";
+
+      }
+    });
 
 
     //função que adiciona a linha
@@ -236,7 +309,7 @@
     $('tbody').on('click','.remove',function(){
     	var l=$('tbody tr').length;
     	if (l==1) {
-    		alert('A Saida deve conter pelo menos um item');
+    		alert('A venda deve conter pelo menos um item');
     	}else{
     		$(this).parent().parent().remove();
     		total();
@@ -277,6 +350,21 @@
           tr.find('.valor').val(valor);
           tr.find('.subtotal').val(subtotal);
           total();
+
+          var valor_pago = $('#valor_pago').val();
+          var valor_total = $('#valor_total').val();
+          var troco = valor_pago - valor_total;
+
+          $('#troco').val(troco);
+
+          if( troco < 0 ){
+            document.getElementById('troco').style.backgroundColor = "red";
+            document.getElementById('troco').style.color = "white";
+          }else{
+            document.getElementById('troco').style.backgroundColor = "white";
+            document.getElementById('troco').style.color = "black";
+
+          }
 
         }
       });
@@ -320,7 +408,20 @@
         total();
       }
 
+      var valor_pago = $('#valor_pago').val();
+      var valor_total = $('#valor_total').val();
+      var troco = valor_pago - valor_total;
 
+      $('#troco').val(troco);
+
+      if( troco < 0 ){
+        document.getElementById('troco').style.backgroundColor = "red";
+        document.getElementById('troco').style.color = "white";
+      }else{
+        document.getElementById('troco').style.backgroundColor = "white";
+        document.getElementById('troco').style.color = "black";
+
+      }
       
     });
 
@@ -333,7 +434,7 @@
     		total +=subtotal;
     	})
     	$('.valor_visual').html(total.formatMoney(2,',','.')+ " Mtn");
-    	$('.valor_total').val(total);
+    	$('#valor_total').val(total);
     };
 
 
@@ -402,49 +503,6 @@
     findRowNum('.quantidade');
     findRowNum('.preco_venda');
     findRowNum('.desconto');
-
-
-    //pegar dados e enviar para a rota que salva
-    // $('#form_saida').submit(function(e){
-    //   e.preventDefault();
-    //   data = $(this).serialize();
-
-    //   $.ajax({
-    //     type : "POST",
-    //     url : "saida_store",
-    //     dataType : "JSON",
-    //     data : data,
-    //     success : function(data){
-    //       if(data.status == 'success'){
-    //         window.location.href="index"; // Foi necessario definir mais uma rota para o mesmo metodo index() por forma a chama-lo daqui como nao eh possivl aceder ao index() com metodo resource. E tb nao eh possivel especificar um nome de rota para "resources"
-    //       }else{
-    //         window.location.href="create"; // Necessario para actualizar as mensagens do flash(success ou error nas views ou routes)
-    //       }
-    //     },
-
-    //     error : function(data){ // Automaticamente pega os erros de validacao do Form Request e devolve um json com uma mensagem padrao e o array contendo as validacoes que nao passaram no teste. Nao ha necessidade de fazer return response explicito no Controller
-
-    //       // var errors = $.parseJSON(data.responseText);
-    //       var errors = data.responseJSON;
-    //       printErrorMsg(errors.errors);
-
-    //     }
-
-
-    //   });
-
-    //   function printErrorMsg(msg){
-    //     $(".print-error-msg").find("ul").html('');
-    //     $(".print-error-msg").css('display', 'block');
-    //     $.each(msg, function(key, value){
-    //       $(".print-error-msg").find("ul").append('<li><strong>Erro!!</strong> '+value+'</li>');
-    //     });
-    //   }
-
-    // });
-
-
-
 
   </script>
   @endsection

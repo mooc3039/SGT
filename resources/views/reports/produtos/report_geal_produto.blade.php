@@ -72,7 +72,16 @@
           <tbody id="data">
 
            @foreach($produtos as $produto)
-           <tr>
+           <tr
+            @php
+            if($produto->quantidade_dispo <= $produto->quantidade_min )
+              {
+                echo 'style="color:red"';
+              } elseif($produto->quantidade_dispo <= ($produto->quantidade_min + $produto->quantidade_min/3)){
+              echo 'style="color:blue"';
+            }
+            @endphp
+            >
             <td>{{$produto->descricao}}</td>
             <td>{{$produto->quantidade_dispo}}</td>
             <td>{{$produto->preco_venda}}</td>
@@ -89,6 +98,9 @@
         </tbody>
       </table>
 
+    </div>
+    <div class="panel-footer">
+      {{ $produtos->links() }}
     </div>
 
 
