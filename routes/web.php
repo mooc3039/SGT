@@ -33,7 +33,6 @@ Route::group(['middleware'=>['authen','roles'],'roles'=>['Administrador']],funct
 
   Route::get('/gerir/stock',['as'=>'indexStock','uses'=>'paginasController@indexStock']);
 
-<<<<<<< HEAD
  //Facturação
   Route::get('/facturas/preco', ['as'=>'findPrice','uses'=>'FacturacaoController@findPrice']);
   Route::get('/facturas/inicio',['as'=>'facturas','uses'=>'FacturacaoController@create']);
@@ -42,8 +41,7 @@ Route::group(['middleware'=>['authen','roles'],'roles'=>['Administrador']],funct
 
   Route::post('getSearch','FacturacaoController@getSearch')->name('post'); //search somente nas facturas
   Route::get('/pdf', 'FacturacaoController@pdfTeste'); //teste de pdf
-=======
->>>>>>> pdf
+
   //TODO profile update data
   Route::get('/dashboard/{name}/profile', 'ProfileController@index');
   Route::resource('/dashboard/{name}/profile','ProfileController');

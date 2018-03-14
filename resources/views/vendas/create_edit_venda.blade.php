@@ -53,14 +53,14 @@
               <div class="col-md-6">
                 {{ Form::label('valor_pago', 'Valor Pago')}}
                 <div class="input-group">
-                  {{ Form::text('valor_pago', null, ['class'=>'form-control'])}}
+                  {{ Form::text('valor_pago', 0.00, ['class'=>'form-control'])}}
                   <div class="input-group-addon">$</div>
                 </div>            
               </div>
               <div class="col-md-6">
                 {{ Form::label('troco', 'Troco')}}
                 <div class="input-group">
-                  {{ Form::text('troco', null, ['class'=>'form-control', 'readonly'])}}
+                  {{ Form::text('troco', 0.00, ['class'=>'form-control', 'readonly'])}}
                   <div class="input-group-addon">$</div>
                 </div>
               </div>
