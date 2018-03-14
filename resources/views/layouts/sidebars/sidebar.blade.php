@@ -9,18 +9,7 @@
                       <span>Administração </span>
                   </a>
       </li>
-    <!--  <li class="sub-menu">
-        <a href="javascript:;" class="">
-                      <i class="icon_document_alt"></i>
-                      <span>Produtos</span>
-                      <span class="menu-arrow arrow_carrot-right"></span>
-                  </a>
-        <ul class="sub">
-          <li><a class="" href="#">Gerenciar Produto</a></li>
-          <li><a class="" href="#">Todos Produtos</a></li>
-        </ul>
-      </li>
-    -->
+
       <li class="sub-menu">
         <a href="javascript:;" class="">
                       <i class="icon_desktop"></i>
@@ -28,15 +17,9 @@
                       <span class="menu-arrow arrow_carrot-right"></span>
                   </a>
         <ul class="sub">
-
-          <!-- <li><a class="" href="{{route('facturas')}}">Facturar</a></li> -->
-          <!-- <li><a class="" href="{{route('saida.index')}}">Facturas</a></li>
-          <li><a class="" href="{{route('cotacao.index')}}">Cotações</a></li>
-          <li><a class="" href="{{route('entrada.index')}}">Entradas</a></li> -->
-
-          <li><a class="" href="{{route('cotacao.index')}}">Proforma</a></li>
-          <li><a class="" href="{{route('saida.index')}}">Facturar</a></li>
-          <li><a class="" href="{{route('venda.index')}}">Venda</a></li>
+          <li><a class="" href="{{route('saida.index')}}"><i class="fa fa-suitcase"></i>Saídas</a></li>
+          <li><a class="" href="{{route('cotacao.index')}}"><i class="fa fa-file"></i>Cotações</a></li>
+          <li><a class="" href="{{route('entrada.index')}}"><i class="fa fa-sign-out"></i>Entradas</a></li>
         </ul>
       </li>
 
@@ -47,7 +30,7 @@
                       <span class="menu-arrow arrow_carrot-right"></span>
                   </a>
         <ul class="sub">
-          <li><a class="" href="{{ route('indexStock') }}">Todos Produtos</a></li>
+          <li><a class="" href="{{ route('indexStock') }}"><i class="fa fa-paperclip"></i>Todos Produtos</a></li>
         </ul>
       </li> -->
 
@@ -104,27 +87,6 @@
           <li><a class="" href="{{ route('rg_cotacoes') }}"><i class="fa fa-file-text"></i>Cotações</a></li>
         </ul>
       </li>
-
-<!--
-      <li>
-        <a class="" href="#">
-                      <i class="icon_genius"></i>
-                      <span>Encomendas</span>
-                  </a>
-      </li>
-
-      <li>
-        <a class="" href="#">
-                      <i class="icon_piechart"></i>
-                      <span>Relatórios</span>
-
-                  </a>
-
-      </li>
-
--->
-
-
 
     </ul>
     <!-- sidebar menu end-->

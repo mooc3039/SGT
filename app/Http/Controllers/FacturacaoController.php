@@ -7,9 +7,15 @@ use DB;
 use App\Facturacao;
 use App\Produto;
 use App\Model\Cliente;
-use App\TipoCliente;
+use App\Model\Saida;
+use App\Model\ItenSaida;
+use App\Model\TipoCliente;
 use App\User;
 use PDF;
+use Validator;
+use Response;
+use Illuminate\Support\Facades\Input;
+use App\http\Requests;
 
 class FacturacaoController extends Controller
 {
@@ -18,13 +24,24 @@ class FacturacaoController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $req)
     {
-       
-        $produtos = Produto::all();
-        $tipo_clientes =TipoCliente::all();
-        $cliente = Cliente::all();
-        return view('facturas.index', compact('produtos','tipo_clientes','cliente'));
+        $cons = Saida::all();
+        $facturas = Saida::orderBy('id','desc')->paginate(5);
+        return view('facturas.lista', compact('facturas','cons'));
+    }
+    public function getSearch(Request $req){
+        if($req->ajax()){
+            $find = Saida::where('subtotal', 'like','%'.$req->search.'%')->get();
+            return response()->json($find);
+        }
+    }
+
+    public function pdfTeste()
+    {
+        $facturas = Saida::orderBy('id','desc')->paginate(5);
+       $pdf = PDF::loadView('facturas.lista', compact('facturas'));
+       return $pdf->download('mypdf.pdf');
     }
 
     /**
@@ -48,13 +65,13 @@ class FacturacaoController extends Controller
      */
     public function store(Request $input)
     {
-     
-        
+
+
 
         if(request()->ajax()){
             $count = count($input->subtotal);
             for($i=0; $i < $count; $i++){
-                $d = new Facturacao;
+                $d = new Saida;
  //               $d->cliente_id = $input['nome'][$i];
               //  $d->user_id = auth()->user()->id;
                 $d->produto_id = $input['descricao'][$i];
@@ -69,10 +86,44 @@ class FacturacaoController extends Controller
                return response()->json($input->all());
             }
            // return response('Facturado com sucesso');
-           
-        
-    }
 
+
+    }
+    //trabalhando na previsualização da factura
+    public function previsual(Request $input)
+    {
+
+        $facturas = Saida::all();
+
+        return view('facturas.factura', compact('facturas'));
+    }
+    //para inserir cliente
+    public function InsertCliente(Request $req)
+    {
+        $rules = [
+            'nomecli' => 'required',
+            'endereco' => 'required',
+            'telefone' => 'required || numeric',
+            'nuit' => 'required || numeric',
+            'email' => 'required || email',
+            'tipo_cliente' => 'required',
+        ];
+        $validator = Validator::make ( input::all(), $rules);
+        if ($validator->fails())
+        return response::json(array('errors'=> $validator->getMessageBag()->toarray()));
+
+        else {
+            $cliente = new cliente;
+            $cliente->nome = $req->nomecli;
+            $cliente->endereco = $req->endereco;
+            $cliente->telefone = $req->telefone;
+            $cliente->nuit = $req->nuit;
+            $cliente->email = $req->email;
+            $cliente->tipo_cliente_id = $req->tipo_cliente;
+            $cliente->save();
+            return response()->json($cliente);
+        }
+    }
     /**
      * Display the specified resource.
      *
@@ -81,7 +132,8 @@ class FacturacaoController extends Controller
      */
     public function show($id)
     {
-        //
+       // $prefact = Facturacao::find($id);
+       // return view('facturas.prefact')->with('prefact', $prefact);
     }
 
     /**
@@ -128,6 +180,6 @@ class FacturacaoController extends Controller
     {
         $data = Cliente::select('nome','id')->where('tipo_cliente_id',$req->id)->take(100)->get();
         return response()->json($data);
-        
+
     }
 }

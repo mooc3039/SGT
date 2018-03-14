@@ -21,7 +21,7 @@
   {!!Html::style('assets/fullcalendar/fullcalendar/fullcalendar.css')!!}
   {!!Html::style('assets/jquery-easy-pie-chart/jquery.easy-pie-chart.css')!!} 
   {!!Html::style('css/owl.carousel.css')!!}
-  {!!Html::style('css/jquery-jvectormap-1.2.2.css')!!}
+  {!!Html::style('css/jquery-jvectormap-2.0.3.css')!!}
   {!!Html::style('css/fullcalendar.css')!!}
   {!!Html::style('css/widgets.css')!!}
   {!!Html::style('css/style.css')!!}
@@ -29,6 +29,8 @@
   {!!Html::style('css/xcharts.min.css')!!}
   {!!Html::style('css/jquery-ui-1.10.4.min.css')!!}
   {!!Html::style('css/select2.min.css')!!}
+
+  {!! Charts::styles() !!} 
   @yield('style')
 
 </head>
@@ -56,7 +58,7 @@
   {!!Html::script('js/scripts.js')!!}
   {!!Html::script('js/sparkline-chart.js')!!}
   {!!Html::script('js/easy-pie-chart.js')!!}
-  {!!Html::script('js/jquery-jvectormap-1.2.2.min.js')!!}
+  {!!Html::script('js/jquery-jvectormap-2.0.3.min.js')!!}
   {!!Html::script('js/jquery-jvectormap-world-mill-en.js')!!}
   {!!Html::script('js/xcharts.min.js')!!}
   {!!Html::script('js/jquery.autosize.min.js')!!}
@@ -64,9 +66,13 @@
   {!!Html::script('js/gdp-data.js')!!}
   {!!Html::script('js/morris.min.js')!!}
   {!!Html::script('js/sparklines.js')!!}
-  {!!Html::script('js/charts.js')!!}
+   <!--  {!!Html::script('js/charts.js')!!} -->
   {!!Html::script('js/jquery.slimscroll.min.js')!!}
   {!!Html::script('js/select2.min.js')!!}
+  {!!Html::script('js/jquery.printPage.js')!!}
+
+  
+  
 
   
 
@@ -86,10 +92,10 @@
   @yield('script')
   <script>
     
-    /* SEARCH SELECT */
-    $(document).ready( function() {
+    /** SEARCH SELECT */
+   /*  $(document).ready( function() {
       $('.select_search').select2();
-    });
+    }); */
     /* FIM SEARCH SELECT */
 
       //====
@@ -128,7 +134,7 @@
         });
 
         /* ---------- Map ---------- */
-        $(function() {
+/*         $(function() {
           $('#map').vectorMap({
             map: 'world_mill_en',
             series: {
@@ -144,7 +150,7 @@
             }
           });
         });
-
+ */
       
   </script>
 </body>
