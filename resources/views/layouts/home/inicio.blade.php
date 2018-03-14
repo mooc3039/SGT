@@ -41,9 +41,10 @@
           </div>
           <!--/.col-->
         </div>
-
+<!--parei um bocado a biblioteca de graficos porque carrega scripts directamente da net, é só ver no chart.php na pasta config-->
+<!--
         <div class="row">
-          <!-- Pie -->
+          
           <div class="col-lg-12">
               <section class="panel">
                   <header class="panel-heading">
@@ -55,11 +56,11 @@
               </section>
           </div>   
 
-      </div>
-      
+      </div> 
+      -->
 @endsection
-{!! Charts::scripts() !!}
+<!-- {!! Charts::scripts() !!}
 {!! $chart->script() !!} 
-
+ -->
 
         

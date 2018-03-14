@@ -17,8 +17,6 @@
                       <span class="menu-arrow arrow_carrot-right"></span>
                   </a>
         <ul class="sub">
-
-          <li><a class="" href="{{route('factura.index')}}"><i class="fa fa-eraser"></i>Facturar</a></li>
           <li><a class="" href="{{route('saida.index')}}"><i class="fa fa-suitcase"></i>Saídas</a></li>
           <li><a class="" href="{{route('cotacao.index')}}"><i class="fa fa-file"></i>Cotações</a></li>
           <li><a class="" href="{{route('entrada.index')}}"><i class="fa fa-sign-out"></i>Entradas</a></li>

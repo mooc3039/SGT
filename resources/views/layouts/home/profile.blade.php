@@ -27,7 +27,7 @@
                 <div class="col-lg-4 col-sm-4 follow-info">
                   <p>{{ $user->about }}</p>
                   <p>{{$user->username}}</p>
-                  <p><i class="fa fa-twitter">jenifertweet</i></p>
+                  <p><i class="fa fa-twitter"></i></p>
                   <h6>
                                     <span><i class="icon_clock_alt"></i> {{date('h:i:s A')}}</span>
                                     <span><i class="icon_calendar"></i> {{date('l jS F Y')}}</span>
