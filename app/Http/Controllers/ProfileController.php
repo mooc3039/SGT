@@ -19,7 +19,16 @@ class ProfileController extends Controller
      */
     public function index()
     {
+        
         return view('layouts.home.profile', ['user'=>Auth::user()]);
+        
+    }
+
+    public function TotalFactura($id)
+    {
+        $local = DB::select("call sgt01.SP_Tarefas_Usuario(?)",[$id]);
+        return view('layouts.home.profile', ['user'=>Auth::user()])->with('local',$local);
+        
     }
 
     public function update_avatar(Request $request)

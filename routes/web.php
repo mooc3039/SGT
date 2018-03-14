@@ -33,18 +33,13 @@ Route::group(['middleware'=>['authen','roles'],'roles'=>['Administrador']],funct
 
   Route::get('/gerir/stock',['as'=>'indexStock','uses'=>'paginasController@indexStock']);
 
- //Facturação
-  Route::get('/facturas/preco', ['as'=>'findPrice','uses'=>'FacturacaoController@findPrice']);
-  Route::get('/facturas/inicio',['as'=>'facturas','uses'=>'FacturacaoController@create']);
-  Route::post('/facturas/facturar',['as'=>'facturacao','uses'=>'FacturacaoController@store']);
-  Route::get('/facturas/depende','FacturacaoController@subKategori');
-
-  Route::post('getSearch','FacturacaoController@getSearch')->name('post'); //search somente nas facturas
   //TODO profile update data
   Route::get('/dashboard/{name}/profile', 'ProfileController@index');
   Route::resource('/dashboard/{name}/profile','ProfileController');
   Route::post('/dashboard/{name}/profile_img','ProfileController@update_avatar');
   route::post('/dashboard/{name}/profile_edit', 'ProfileController@update');
+  Route::get('/dashboard/{id}/profile', 'ProfileController@TotalFactura');//ainda a levar
+
 
   Route::get('/gerir/usuario',['as'=>'indexUsuario','uses'=>'paginasController@indexUsuario']);
   Route::get('/gerir/cliente',['as'=>'indexCliente','uses'=>'paginasController@indexCliente']);
