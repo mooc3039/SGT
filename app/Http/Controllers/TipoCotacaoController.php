@@ -149,8 +149,8 @@ class TipoCotacaoController extends Controller
 
           }else{
 
-            $sucess = 'Tipo de Cotação actualizado com sucesso!';
-            return redirect()->back()->with('success', $sucess);
+            $error = 'Erro ao actualizar o Tipo de Cotação com sucesso!';
+            return redirect()->back()->with('error', $error);
           }
 
 
@@ -182,15 +182,15 @@ class TipoCotacaoController extends Controller
 
           }else{
 
-            $sucess = 'Tipo de Cotação removido com sucesso!';
-            return redirect()->back()->with('success', $sucess);
+            $error = 'Erro ao remover o Tipo de Cotação';
+            return redirect()->back()->with('error', $error);
           }
 
 
         } catch (QueryException $e) {
 
           $error = "Erro ao remover o Tipo de Cotacao. Possivelmente <b>Registo em uso</b>. Necessária a intervenção do Administrador da Base de Dados.!";
-          return redirect()->back()->with('success', $sucess);
+          return redirect()->back()->with('error', $error);
 
         }
 

@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class CotacaoStoreUpdateFormRequest extends FormRequest
+class SaidaStoreUpdateFormRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,8 +25,8 @@ class CotacaoStoreUpdateFormRequest extends FormRequest
     {
         return [
           'cliente_id' => 'required',
-          // 'tipo_cotacao_id' => 'required',
           'produto_id' => 'required',
+          'quantidade' => 'required',
           'desconto' => 'required',
         ];
     }
@@ -34,8 +34,8 @@ class CotacaoStoreUpdateFormRequest extends FormRequest
     public function messages(){
         return [
             'cliente_id.required' => 'É necessário selecionar o Cliente!',
-            // 'tipo_cotacao_id.required' => 'É necessário selecionar o tipo da Cotação!',
             'produto_id.required' => 'É necessário selecionar o Produto!',
+            'quantidade.required' => 'É necessário especificar a quantidade!',
             'desconto.required' => 'É necessário especificar o Desconto!',
         ];
     }

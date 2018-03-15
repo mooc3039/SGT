@@ -135,7 +135,7 @@ class CotacaoController extends Controller
 
       } catch (QueryException $e){
 
-        $erro = "Erro ao cadastrar a Cotacao! => Possível redundância do item/produto à mesma cotação.";
+        $erro = "Erro ao cadastrar a Cotacao! => Possível redundância de um item/produto à mesma cotação ou preenchimento incorrecto dos campos!";
         Session::flash('error', $erro);
 
         DB::rollback();

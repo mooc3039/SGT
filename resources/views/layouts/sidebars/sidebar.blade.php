@@ -17,13 +17,15 @@
                       <span class="menu-arrow arrow_carrot-right"></span>
                   </a>
         <ul class="sub">
-          <li><a class="" href="{{route('saida.index')}}"><i class="fa fa-suitcase"></i>Saídas</a></li>
-          <li><a class="" href="{{route('cotacao.index')}}"><i class="fa fa-file"></i>Cotações</a></li>
+          <li><a class="" href="{{route('cotacao.index')}}"><i class="fa fa-file"></i>Proforma</a></li>
+          <li><a class="" href="{{route('saida.index')}}"><i class="fa fa-suitcase"></i>Facturar</a></li>
+          <li><a class="" href="{{route('venda.index')}}"><i class="fa fa-shopping-cart"></i>Vendas</a></li>
           <li><a class="" href="{{route('entrada.index')}}"><i class="fa fa-sign-out"></i>Entradas</a></li>
+          
         </ul>
       </li>
 
-      <li class="sub-menu">
+      <!-- <li class="sub-menu">
         <a href="javascript:;" class="">
                       <i class="icon_table"></i>
                       <span>Stocks</span>
@@ -31,6 +33,17 @@
                   </a>
         <ul class="sub">
           <li><a class="" href="{{ route('indexStock') }}"><i class="fa fa-paperclip"></i>Todos Produtos</a></li>
+        </ul>
+      </li> -->
+
+      <li class="sub-menu">
+        <a href="javascript:;" class="">
+                      <i class="icon_table"></i>
+                      <span>Guia</span>
+                      <span class="menu-arrow arrow_carrot-right"></span>
+                  </a>
+        <ul class="sub">
+          <li><a class="" href="{{ route('guia_entrega.index') }}">Guia de Entrega</a></li>
         </ul>
       </li>
 
@@ -50,6 +63,16 @@
           <li><a class="" href="{{ route('tipo_cotacao.index') }}"><i class="fa fa-tag"></i><span>Tipos de Cotação</span></a></li>
         </ul>
       </li>
+      <!-- <li class="sub-menu">
+        <a href="javascript:;" class="">
+                      <i class="icon_documents_alt"></i>
+                      <span>Guias</span>
+                      <span class="menu-arrow arrow_carrot-right"></span>
+                  </a>
+        <ul class="sub">
+          <li><a class="" href="{{ route('guia_entrega.index') }}"><i class="fa fa-tag"></i>Guia de Entrega</a></li>
+        </ul>
+      </li> -->
 
       <li class="sub-menu">
         <a href="javascript:;" class="">

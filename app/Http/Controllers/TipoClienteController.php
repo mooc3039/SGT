@@ -119,8 +119,8 @@ class TipoClienteController extends Controller
 
           }else{
 
-            $sucess = 'Tipo de Cliente actualizado com sucesso!';
-            return redirect()->back()->with('success', $sucess);
+            $error = 'Tipo de Cliente actualizado com sucesso!';
+            return redirect()->back()->with('error', $error);
           }
 
 
@@ -152,15 +152,15 @@ class TipoClienteController extends Controller
 
           }else{
 
-            $sucess = 'Tipo de Cliente removido com sucesso!';
-            return redirect()->back()->with('success', $sucess);
+            $error = 'Erro ao remover o Tipo de Cliente!';
+            return redirect()->back()->with('error', $error);
           }
 
 
         } catch (QueryException $e) {
 
           $error = "Erro ao remover o Tipo de Cliente. Possivelmente <b>Registo em uso</b>. Necessária a intervenção do Administrador da Base de Dados.!";
-          return redirect()->back()->with('success', $sucess);
+          return redirect()->back()->with('error', $error);
 
         }
     }

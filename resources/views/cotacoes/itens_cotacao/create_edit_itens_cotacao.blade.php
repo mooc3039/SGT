@@ -1,7 +1,7 @@
-@extends('layouts.empty_base')
+@extends('layouts.master')
 @section('content')
 
-	<div class="container">
+	<!-- <div class="container"> -->
 		<div class="row">
 			<div class="col-md-12">
 
@@ -58,7 +58,7 @@
 
 						<div class="row">
 							<div class="col-md-12">
-								<div class="row" >
+								<div class="row" style="margin-bottom: 10px">
 									<div class="col-md-12">
 										<button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modalInserirItem" data-new_valor_total={{ $cotacao->valor_total }} data-new_cotacao_id={{ $cotacao->id }}><i class="fa fa-plus"></i></button>
 									</div>
@@ -177,15 +177,15 @@
 
 			</div>
 		</div>
-	</div>
+	<!-- </div> -->
 
-	<!-- MODAL CATEGORIA -->
+	<!-- MODAL EDITAR ITEM -->
 	<div class="modal fade" tabindex="-1" role="dialog" id="modalProdutoIten">
 		<div class="modal-dialog modal-lg" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-					<h4 class="modal-title">Editar Item<span id=""><span/></h4>
+					<h4 class="modal-title"><b>Cotação: </b>Editar Item<span id=""><span/></h4>
 					</div>
 					<div class="modal-body">
 
@@ -269,7 +269,7 @@
 				<div class="modal-content">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-						<h4 class="modal-title">Novo Item<span id=""><span/></h4>
+						<h4 class="modal-title"><b>Cotação: </b>Novo Item<span id=""><span/></h4>
 						</div>
 						<div class="modal-body">
 

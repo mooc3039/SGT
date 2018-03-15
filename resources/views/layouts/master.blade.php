@@ -12,6 +12,7 @@
   <link rel="shortcut icon" href="img/favicon.png">
 
   <title>SG-Stock Administração</title>
+  {!!Html::style('css/sgt.css')!!}
   {!!Html::style('css/bootstrap.min.css')!!}
   {!!Html::style('css/bootstrap-theme.min.css')!!}
   {!!Html::style('css/elegant-icons-style.css')!!}
@@ -29,7 +30,7 @@
   {!!Html::style('css/jquery-ui-1.10.4.min.css')!!}
   {!!Html::style('css/select2.min.css')!!}
 
-  {!! Charts::styles() !!} 
+ <!--  {!! Charts::styles() !!}  -->
   @yield('style')
 
 </head>

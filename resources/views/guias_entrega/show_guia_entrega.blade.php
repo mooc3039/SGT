@@ -28,9 +28,9 @@
 							<div class="panel panel-default">
 								<div class="panel-body text-center">
 									<h2> <b> Dados do Cliente </b></h2> <hr>
-									Nome do Cliente: {{$saida->cliente->nome}}<br>
-									Endereço: {{$saida->cliente->endereco}}<br>
-									Nuit: {{$saida->cliente->nuit}}<br>
+									Nome do Cliente: {{$guia_entrega->cliente->nome}}<br>
+									Endereço: {{$guia_entrega->cliente->endereco}}<br>
+									Nuit: {{$guia_entrega->cliente->nuit}}<br>
 								</div>
 							</div>
 						</div>
@@ -39,8 +39,8 @@
 
 							<div class="panel panel-default">
 								<div class="panel-body text-center">
-									<h2> <b> Numero de Saida / Factura </b> </h2> <hr>
-									<h1>{{$saida->id}}</h1>
+									<h2> <b> Numero de guia_entrega / Factura </b> </h2> <hr>
+									<h1>{{$guia_entrega->id}}</h1>
 								</div>
 							</div>
 
@@ -49,7 +49,7 @@
 					</div>
 					<div class="row">
 						<div class="col-md-6"> MAPUTO</div>
-						<div class="col-md-6 text-right"> Data: {{$saida->data}} </div>
+						<div class="col-md-6 text-right"> Data: {{$guia_entrega->data}} </div>
 					</div>
 				</div>
 
@@ -68,12 +68,12 @@
 										<th><i class="icon_cogs"></i> Valor Total </th>
 									</tr>
 
-									@foreach($saida->itensSaida as $iten_saida)
+									@foreach($guia_entrega->itensGuiantrega as $iten_guia_entrega)
 									<tr>
-										<td> {{$iten_saida->quantidade}} </td>
-										<td> {{$iten_saida->produto->descricao}} </td>
-										<td> {{$iten_saida->produto->preco_venda}} </td>
-										<td> {{$iten_saida->valor}} </td>
+										<td> {{$iten_guia_entrega->quantidade}} </td>
+										<td> {{$iten_guia_entrega->produto->descricao}} </td>
+										<td> {{$iten_guia_entrega->produto->preco_venda}} </td>
+										<td> {{$iten_guia_entrega->valor}} </td>
 
 									</tr>
 									@endforeach
@@ -101,40 +101,24 @@
 
 							<table class="pull-right">
 								<tr>
-									<td>
-										Sub-Total:
-									</td>
-									<td>
-										{{$saida->subtotal}}
-									</td>
+									<td>Sub-Total:</td>
+									<td>{{$guia_entrega->subtotal}}</td>
 								</tr>
 
 
 								<tr>
-									<td>
-										IVA:
-									</td>
-									<td>
-										17%
-									</td>
+									<td>IVA:</td>
+									<td>17%</td>
 								</tr>
 
 								<tr>
-									<td>
-										Desconto:
-									</td>
-									<td>
-										{{$saida->desconto}}
-									</td>
+									<td>Desconto:</td>
+									<td>{{$guia_entrega->desconto}}</td>
 								</tr>
 
 								<tr>
-									<td>
-										Valor Total:
-									</td>
-									<td>
-										<b>{{$saida->valor_total}}</b>
-									</td>
+									<td>Valor Total:</td>
+									<td><b>{{$guia_entrega->valor_total}}</b></td>
 								</tr>
 							</table>
 
@@ -148,7 +132,7 @@
 
 							<div class="panel panel-info">
 								<div class="panel-heading">
-									Datos bancarios
+									Dados bancarios
 								</div>
 								<div class="panel-body">
 									Conta BCI (MZN) 54169166 10 1<br>
@@ -166,10 +150,10 @@
 
 					</div>
 					<div class="row">
-						<div class="col-md-6"><a href="{{route('saida_pdf', $saida->id)}}" class="btn btn-primary">Imprimir Saída</a>
+						<div class="col-md-6">
 
 					</div>
-					<div class="col-md-6 text-right"><a href="{{route('saida.index')}}" class="btn btn-warning">Cancelar</a>
+					<div class="col-md-6 text-right"><a href="{{route('guia_entrega.index')}}" class="btn btn-warning">Cancelar</a>
 
 					</div>
 					</div>
