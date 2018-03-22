@@ -93,10 +93,10 @@
   <script>
     
     /** SEARCH SELECT */
-   /*  $(document).ready( function() {
+     $(document).ready( function() {
       $('.select_search').select2();
-    }); */
-    /* FIM SEARCH SELECT */
+    }); /**
+    FIM SEARCH SELECT */
 
       //====
       $(document).ready(function(){
