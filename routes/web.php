@@ -96,7 +96,7 @@ Route::group(['middleware'=>['authen','roles'],'roles'=>['Administrador']],funct
   // Route::post('saida/saida_store', 'SaidaController@store');
   // Route::get('saida/index', 'SaidaController@index');
 
-  // SAIDAS, Privado, Publico, Concurso 
+  // SAIDAS, Privado, Publico, Concurso
   Route::get('/saida/saida_pubblico_create/', 'SaidaController@saidaPublicoCreate')->name('saidaPublicoCreate');
   Route::get('/saida/saida_concurso_create/', 'SaidaController@saidaConcursoCreate')->name('saidaConcursoCreate');
   Route::post('/saida/concurso/dados', 'SaidaController@findConcursoDados')->name('findConcursoDados');
@@ -104,16 +104,7 @@ Route::group(['middleware'=>['authen','roles'],'roles'=>['Administrador']],funct
   // CRIAR GUIA DE ENTREGA => Malache
   Route::get('/guia_entrega/create_guia/{id}', 'GuiaEntregaController@createGuia')->name('create_guia');
   Route::get('/guia_entrega/show_guia_entrega/{id}', 'GuiaEntregaController@showGuiasEntrega')->name('show_guia_entrega');
-<<<<<<< HEAD
-
-
-  // GERIR PAGAMENTO DA SAIDA => Malache
-  Route::post('/saida/pagamento', 'SaidaController@pagamentoSaida')->name('pagamentoSaida');
-  Route::get('/saida/create_pagamento/{id}', 'SaidaController@createPagamentoSaida')->name('createPagamentoSaida');
-
-=======
   Route::get('/guia_entrega/{id}/relatorio', ['as'=>'guiaRelatorio','uses'=>'GuiaEntregaController@showRelatorio']);//TODO --para imprimir as guias de entrega
->>>>>>> 34c6a2d985c8ecfdfb6672543921036f7023b184
   // GERIR PAGAMENTO DA VENDA => Malache
   Route::get('/venda/create_pagamento/{id}', 'VendaController@createPagamentoVenda')->name('createPagamentoVenda');
    Route::post('/venda/pagamento', 'VendaController@pagamentoVenda')->name('pagamentoVenda');
@@ -124,6 +115,10 @@ Route::group(['middleware'=>['authen','roles'],'roles'=>['Administrador']],funct
 
   // GERIR PAGAMENTO DA ENTRADA => Malache
   Route::post('/entrada/pagamento', 'EntradaController@pagamentoEntrada')->name('pagamentoEntrada');
+
+  // GERIR PAGAMENTO DA SAIDA => Malache
+  Route::post('/saida/pagamento', 'SaidaController@pagamentoSaida')->name('pagamentoSaida');
+  Route::get('/saida/create_pagamento/{id}', 'SaidaController@createPagamentoSaida')->name('createPagamentoSaida');
 
 
 

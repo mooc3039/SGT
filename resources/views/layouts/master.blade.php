@@ -19,7 +19,7 @@
   {!!Html::style('css/font-awesome.min.css')!!}
   {!!Html::style('assets/fullcalendar/fullcalendar/bootstrap-fullcalendar.css')!!}
   {!!Html::style('assets/fullcalendar/fullcalendar/fullcalendar.css')!!}
-  {!!Html::style('assets/jquery-easy-pie-chart/jquery.easy-pie-chart.css')!!} 
+  {!!Html::style('assets/jquery-easy-pie-chart/jquery.easy-pie-chart.css')!!}
   {!!Html::style('css/owl.carousel.css')!!}
   {!!Html::style('css/jquery-jvectormap-2.0.3.css')!!}
   {!!Html::style('css/fullcalendar.css')!!}
@@ -34,26 +34,26 @@
   @yield('style')
   <style type="text/css">
   .wait {
-    background-color: #ccc; 
-    text-align: center; 
-    z-index: 1; 
+    background-color: #ccc;
+    text-align: center;
+    z-index: 1;
     display:none;
     width:100%;
     height:100%;
     position:absolute;
     top:0;
     left:0;
-    padding:5px; 
+    padding:5px;
     opacity: 0.6;
   }
   .wait i{
-    position:absolute;    
+    position:absolute;
     left:50%;
     top:50%;
-    font-size: 50px; 
+    font-size: 50px;
     color: red;
   }
-  
+
 </style>
 
 </head>
@@ -95,10 +95,10 @@
   {!!Html::script('js/bootstrap-confirmation.min.js')!!}
   {!!Html::script('js/jquery.printPage.js')!!}
 
-  
-  
 
-  
+
+
+
 
   <section id="container" class="">
 
@@ -113,9 +113,9 @@
         @include('layouts.validation.alertas')
         <div class="row">
           <div class="col-md-12">
-            <div id="wait" style=" 
-            text-align: center; 
-            z-index: 1; 
+            <div id="wait" style="
+            text-align: center;
+            z-index: 1;
             display:none;
             width:100%;
             height:100%;
@@ -125,10 +125,10 @@
             padding:5px;">
 
             <div id="wait-loader" style="
-            position:absolute;    
+            position:absolute;
             left:40%;
             top:40%;
-            font-size: 50px; 
+            font-size: 50px;
             color: blue;">
             <!-- <i class="fa fa-plus text-center"> -->
               <img src="{{asset('/img/Gear-0.6s-200px.gif')}}"/>
@@ -138,7 +138,6 @@
 
         </div>
       </div>
-<<<<<<< HEAD
     </div>
     @yield('content')
 
@@ -152,21 +151,8 @@
   /** SEARCH SELECT */
   $(document).ready( function() {
     $('.select_search').select2();
-  }); 
+  });
   /* FIM SEARCH SELECT */
-=======
-    </section>
-
-  </section>
-  @yield('script')
-  <script>
-    
-    /** SEARCH SELECT */
-     $(document).ready( function() {
-      $('.select_search').select2();
-    }); /**
-    FIM SEARCH SELECT */
->>>>>>> 34c6a2d985c8ecfdfb6672543921036f7023b184
 
       //====
       $(document).ready(function(){
@@ -272,7 +258,7 @@
         };
 
 
-        
+
       </script>
     </body>
     </html>
