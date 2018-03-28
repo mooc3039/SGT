@@ -7,7 +7,7 @@
 				</div>
 				<div class="modal-body">
 
-					{{Form::open(['route'=>'iten_venda.store', 'method'=>'POST'])}}
+					{{Form::open(['route'=>'iten_venda.store', 'method'=>'POST', 'onsubmit'=>'submitFormVenda.disabled = true; return true;'])}}
 
 					<div class="row">
 						<div class="col-md-3">
@@ -70,7 +70,7 @@
 						</div>
 						<div class="col-md-6 text-right">
 							{{Form::button('Fechar', ['class'=>'btn btn-default', 'data-dismiss'=>'modal'])}}
-							{{Form::submit('Salvar', ['class'=>'btn btn-primary'])}}
+							{{Form::submit('Salvar', ['class'=>'btn btn-primary submit_iten', 'name'=>'submitFormVenda', 'id'=>'submitFormVenda'])}}
 						</div>
 					</div>
 

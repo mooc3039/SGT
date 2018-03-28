@@ -39,7 +39,7 @@
 
 							<div class="panel panel-default">
 								<div class="panel-body text-center">
-									<h2> <b> Numero de Saida / Factura </b> </h2> <hr>
+									<h2> <b> Numero Factura </b> </h2> <hr>
 									<h1>{{$saida->id}}</h1>
 								</div>
 							</div>
@@ -105,7 +105,7 @@
 										Sub-Total:
 									</td>
 									<td>
-										{{$saida->subtotal}}
+										{{$saida->valor_total}}
 									</td>
 								</tr>
 
@@ -121,19 +121,10 @@
 
 								<tr>
 									<td>
-										Desconto:
-									</td>
-									<td>
-										{{$saida->desconto}}
-									</td>
-								</tr>
-
-								<tr>
-									<td>
 										Valor Total:
 									</td>
 									<td>
-										<b>{{$saida->valor_total}}</b>
+										<b>{{$saida->valor_iva}}</b>
 									</td>
 								</tr>
 							</table>
@@ -168,10 +159,10 @@
 					<div class="row">
 						<div class="col-md-6"><a href="{{route('saida_pdf', $saida->id)}}" class="btn btn-primary">Imprimir Saída</a>
 
-					</div>
-					<div class="col-md-6 text-right"><a href="{{route('saida.index')}}" class="btn btn-warning">Cancelar</a>
+						</div>
+						<div class="col-md-6 text-right"><a href="{{route('saida.index')}}" class="btn btn-warning">Cancelar</a>
 
-					</div>
+						</div>
 					</div>
 				</div>
 
@@ -182,8 +173,8 @@
 
 		</div>
 	</div>
-<!-- </div> -->
-@endsection
+	<!-- </div> -->
+	@endsection
 
 
 

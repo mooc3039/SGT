@@ -1,29 +1,79 @@
 @extends('layouts.master')
+@section('style')
+<style type="text/css">
+#eu{
+  background-color: red;
+}
+.wait {
+  background-color: #ccc; 
+  text-align: center; 
+  z-index: 1; 
+  display:none;
+  width:100%;
+  height:100%;
+  position:absolute;
+  top:0;
+  left:0;
+  padding:5px; 
+  opacity: 0.6;
+}
+.wait i{
+  position:absolute;    
+  left:50%;
+  top:50%;
+  font-size: 50px; 
+  color: red;
+}
+</style>
+@endsection
 @section('content')
-  <div class="row">
-    <div class="col-lg-12">
-      <h3 class="page-header"><i class="fa fa-file-text-o"></i>Cotações</h3>
-      <ol class="breadcrumb">
-        <li><i class="fa fa-home"></i><a href="#">Home</a></li>
-        <li><i class="icon_document_alt"></i>Cotação</li>
-        <li><i class="fa fa-file-text-o"></i>Gerenciar Cotação</li>
-      </ol>
-    </div>
+
+<div class="row">
+
+  <div class="col-lg-12">
+    <h3 class="page-header"><i class="fa fa-file-text-o"></i>Cotações</h3>
+    <ol class="breadcrumb">
+      <li><i class="fa fa-home"></i><a href="#">Home</a></li>
+      <li><i class="icon_document_alt"></i>Cotação</li>
+      <li><i class="fa fa-file-text-o"></i>Gerenciar Cotação</li>
+    </ol>
   </div>
+</div>
 
-  <div class="row">
-    <div class="col-lg-12">
-      <section class="panel panel-default">
-        <!-- <header class="panel-heading">
-          Gerenciamento das Cotações
-        </header> -->
+<div class="row">
+  <div class="col-lg-12">
 
+    <div id="wait" style=" 
+    text-align: center; 
+    z-index: 1; 
+    display:none;
+    width:100%;
+    height:100%;
+    position:absolute;
+    top:0;
+    left:0;
+    padding:5px;">
 
-        {{ Form::open(['route'=>'cotacao.store', 'method'=>'POST', 'id'=>'form_cotacao']) }}
+    <div id="wait-loader" style="
+    position:absolute;    
+    left:40%;
+    top:40%;
+    font-size: 50px; 
+    color: blue;">
+      <!-- <i class="fa fa-plus text-center"> -->
+        <img src="{{asset('/img/Gear-0.6s-200px.gif')}}"/>
+      </i>
+      <!-- <h2>Aguarde...</h2> -->
+    </div>
+    
+  </div>
+  <section class="panel panel-default">
 
-        <div class="panel-body" style="border-bottom: 1px solid #ccc; ">
-          <div class="row" style="margin-bottom: 15px">
-            <div class="form-horizontal">
+    {{ Form::open(['route'=>'cotacao.store', 'method'=>'POST', 'id'=>'form_cotacao', 'onsubmit'=>'submitFormCotacao.disabled = true; return true;']) }}
+
+    <div class="panel-body" style="border-bottom: 1px solid #ccc; ">
+      <div class="row" style="margin-bottom: 15px">
+        <div class="form-horizontal">
 
               <!-- <div class="col-sm-4">
                 {{Form::label('tipo_cotacao_id', 'Cotação')}}
@@ -36,7 +86,7 @@
               <div class="col-sm-4">
                 {{Form::label('cliente_id', 'Cliente')}}
                 <div class="input-group">
-                  {{Form::select('cliente_id', [''=>'Cliente',] + $clientes, null, ['class'=>'form-control select_search'] )}}
+                  {{Form::select('cliente_id', [''=>'Cliente',] + $clientes, null, ['class'=>'form-control select_search', 'id'=>'cliente_id'] )}}
                   {{Form::button('<i class="fa fa-plus"></i>', ['class'=>'input-group-addon', 'data-toggle'=>'modal', 'data-target'=>'#modalCliente', 'style'=>'width:auto; font-weight:lighter'])}}
                 </div>
               </div>
@@ -46,7 +96,7 @@
         </div>
 
         <div class="panel-footer">
-          {{Form::submit('Salvar Cotação', ['class'=>'btn btn-primary'])}}
+          {{Form::submit('Salvar Cotação', ['class'=>'btn btn-primary', 'name'=>'submitFormCotacao', 'id'=>'submitFormCotacao'])}}
         </div>
 
 
@@ -59,45 +109,45 @@
 
           <div class="panel-body">
             <table class="table table-striped table-advance table-hover">
-            <tbody>
-              <tr>
-                <th><i class="icon_profile"></i> Nome do Produto</th>
-                <th><i class="icon_calendar"></i> Quantidade/Unidades</th>
-                <th><i class="icon_mail_alt"></i> Preço</th>
-                <th><i class="icon_mail_alt"></i> Valor</th>
-                <th><i class="icon_pin_alt"></i> Desconto</th>
-                <th><i class="icon_mobile"></i> Subtotal</th>
-                <th><a class="btn btn-primary addRow" href="#"><i class="icon_plus_alt2"></i></a></th>
-              </tr>
-              <tr>
-                <td>
-                  <select class="form-control descricao" name="produto_id[]">
-                    <option value="0" selected="true" disabled="true">Selecione Produto</option>
-                    @foreach($produtos as $produto)
+              <tbody>
+                <tr>
+                  <th><i class="icon_profile"></i> Nome do Produto</th>
+                  <th><i class="icon_calendar"></i> Quantidade/Unidades</th>
+                  <th><i class="icon_mail_alt"></i> Preço</th>
+                  <th><i class="icon_mail_alt"></i> Valor</th>
+                  <th><i class="icon_pin_alt"></i> Desconto</th>
+                  <th><i class="icon_mobile"></i> Subtotal</th>
+                  <th><a class="btn btn-primary addRow" href="#"><i class="icon_plus_alt2"></i></a></th>
+                </tr>
+                <tr>
+                  <td>
+                    <select class="form-control descricao" name="produto_id[]">
+                      <option value="0" selected="true" disabled="true">Selecione Produto</option>
+                      @foreach($produtos as $produto)
                       <option value="{!!$produto->id!!}">{!!$produto->descricao!!}</option>
-                    @endforeach
-                  </select>
-                </td>
-                <td><input type="text" name="quantidade[]" class="form-control quantidade"></td>
-                <td><input type="text" name="preco_venda[]" class="form-control preco_venda" readonly></td>
-                <td><input type="text" name="valor[]" class="form-control valor" readonly=""></td>
-                <td><input type="text" name="desconto[]" class="form-control desconto" value="0"></td>
-                <td><input type="text" name="subtotal[]" class="form-control subtotal" readonly></td>
-                <td><a class="btn btn-danger remove" href="#"><i class="icon_close_alt2"></i></a></td>
-              </tr>
+                      @endforeach
+                    </select>
+                  </td>
+                  <td><input type="text" name="quantidade[]" class="form-control quantidade"></td>
+                  <td><input type="text" name="preco_venda[]" class="form-control preco_venda" readonly></td>
+                  <td><input type="text" name="valor[]" class="form-control valor" readonly=""></td>
+                  <td><input type="text" name="desconto[]" class="form-control desconto" value="0"></td>
+                  <td><input type="text" name="subtotal[]" class="form-control subtotal" readonly></td>
+                  <td><a class="btn btn-danger remove" href="#"><i class="icon_close_alt2"></i></a></td>
+                </tr>
 
-            </tbody>
-            <tfoot>
-              <tr>
-                <td style="border:none"></td>
-                <td style="border:none"></td>
-                <td style="border:none"></td>
-                <td><b>Total</b></td>
-                <td><b><div class="valor_visual" style="border:none"> </div></b></td>
-                <td></td>
-              </tr>
-            </tfoot>
-          </table>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td style="border:none"></td>
+                  <td style="border:none"></td>
+                  <td style="border:none"></td>
+                  <td><b>Total</b></td>
+                  <td><b><div class="valor_visual" style="border:none"> </div></b></td>
+                  <td></td>
+                </tr>
+              </tfoot>
+            </table>
           </div>
           <div class="panel-footer">
             <div class="row">
@@ -235,8 +285,8 @@
 
     <!-- FIM MODAL CLIENTE -->
 
-  @endsection
-  @section('script')
+    @endsection
+    @section('script')
     <script text="text/javascript">
 
 
@@ -269,6 +319,19 @@
       addRow();
     });
 
+    $('#cliente_id').on('change', function(){
+      document.getElementById("submitFormCotacao").disabled = false;
+    });
+
+    $(document).ready(function(){
+      $(document).ajaxStart(function(){
+        $("#wait").css("display", "block");
+      });
+      $(document).ajaxComplete(function(){
+        $("#wait").css("display", "none");
+      });
+    });
+
     //====remove a linha adicionada, foram corrigidos muitos bugs aqui===
 
     $('tbody').on('click','.remove',function(){
@@ -284,7 +347,6 @@
     //====trocar de focus para o proximo campo a preencher
     $('tbody').delegate('.descricao','change', function(){
       var tr = $(this).parent().parent();
-      tr.find('.quantidade').focus();
     });
 
 
@@ -310,22 +372,28 @@
           tr.find('.valor').val(valor);
           tr.find('.subtotal').val(subtotal);
           total();
+          
+        },
+        complete:function(data){
+          tr.find('.quantidade').focus();
         }
       });
+      
     });
 
     //======pegar os valores dos campos e calcular o valor de cada produto====
     $('tbody').delegate('.quantidade,.preco_venda,.desconto','keyup',function(){
-      var tr = $(this).parent().parent();
-      var quantidade = tr.find('.quantidade').val();
-      var preco_venda = tr.find('.preco_venda').val();
-      var valor = (quantidade*preco_venda);
-      var desconto = tr.find('.desconto').val();
-      var subtotal = (quantidade*preco_venda)-(quantidade*preco_venda*desconto)/100;
-      tr.find('.valor').val(subtotal);
-      tr.find('.subtotal').val(subtotal);
-      total();
-    });
+     document.getElementById("submitFormCotacao").disabled = false;
+     var tr = $(this).parent().parent();
+     var quantidade = tr.find('.quantidade').val();
+     var preco_venda = tr.find('.preco_venda').val();
+     var valor = (quantidade*preco_venda);
+     var desconto = tr.find('.desconto').val();
+     var subtotal = (quantidade*preco_venda)-(quantidade*preco_venda*desconto)/100;
+     tr.find('.valor').val(subtotal);
+     tr.find('.subtotal').val(subtotal);
+     total();
+   });
 
     //==calculo do total de todas as linhas
     function total()
@@ -379,11 +447,11 @@
         var objRegex = /^-?\d*[\.]?\d*$/;
         var val = $(evt.target).val();
         if(!regex.test(key) || !objRegex.test(val+key) ||
-        !theEvent.keyCode == 46 || !theEvent.keyCode == 8){
+          !theEvent.keyCode == 46 || !theEvent.keyCode == 8){
           theEvent.returnValue = false;
-          if(theEvent.preventDefault) theEvent.preventDefault();
-        };
-      });
+        if(theEvent.preventDefault) theEvent.preventDefault();
+      };
+    });
     };
     function findRowNumOnly(input){
       $('tbody').delegate(input, 'keydown',function(){
@@ -397,7 +465,7 @@
         var e = event || evt;
         var charCode = e.which || e.keyCode;
         if (charCode > 31 && (charCode < 48 || charCode > 57))
-        return false;
+          return false;
         return true;
       });
     }
@@ -442,11 +510,15 @@
         $.each(msg, function(key, value){
           $(".print-error-msg").find("ul").append('<li><strong>Erro!!</strong> '+value+'</li>');
         });
-      }
+      };
+
+      function habilitarSubmit(){
+        document.getElementById("#submitFormCotacao").disabled = false;
+      };
 
     });
 
 
 
-    </script>
+  </script>
   @endsection

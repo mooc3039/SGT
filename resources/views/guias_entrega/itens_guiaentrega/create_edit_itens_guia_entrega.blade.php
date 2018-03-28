@@ -4,6 +4,32 @@
 <!-- <div class="container"> -->
 	<div class="row">
 		<div class="col-md-12">
+			<div id="wait" style=" 
+			text-align: center; 
+			z-index: 1; 
+			display:none;
+			width:100%;
+			height:100%;
+			position:absolute;
+			top:0;
+			left:0;
+			padding:5px;">
+
+			<div id="wait-loader" style="
+			position:absolute;    
+			left:40%;
+			top:40%;
+			font-size: 50px; 
+			color: blue;">
+			<!-- <i class="fa fa-plus text-center"> -->
+				<img src="{{asset('/img/Gear-0.6s-200px.gif')}}"/>
+			</i>
+			<!-- <h2>Aguarde...</h2> -->
+		</div>
+
+	</div>
+	<div class="row">
+		<div class="col-md-12">
 
 			<div class="panel panel-default">
 				<div class="panel-heading">
@@ -185,6 +211,12 @@
 
 	<script type="text/javascript">
 
+		$(document).ready(function(){
+				$('.submit_iten').on('click',function(){
+					$("#wait").css("display", "block");
+				});
+			});
+
 		$('#modalProdutoIten').on('show.bs.modal', function (event) {
 				var button = $(event.relatedTarget) // Button that triggered the modal
 				var dta_guia_entrega_id = button.data('guia_entrega_id')
@@ -220,6 +252,21 @@
 				
 
 				$('#modalProdutoIten').delegate('#quantidade','keyup',function(){
+					
+					EditValidarQuantidadeEspecificada();
+
+				});
+
+				$('#modalProdutoIten').delegate('#quantidade,#preco_venda,#desconto','keyup',function(){
+					
+					numberOnly('#quantidade');
+					number('#desconto');
+					EditCalcularValores();
+
+				});
+
+				function EditValidarQuantidadeEspecificada(){
+
 					var quantidade = $('#quantidade').val();
 					var qtd_referencial = dta_qtd_rest_iten_saida;
 
@@ -240,44 +287,39 @@
       					var quantidade_saida_rest = (qtd_referencial-quantidade);
       					$('#qtd_rest_iten_saida').val(quantidade_saida_rest);
       				}
+      			}
+
+      			function EditCalcularValores(){
+
+      				var mdl_quantidade = $('#quantidade').val();
+      				var mdl_preco_venda = $('#preco_venda').val();
+      				var mdl_desconto = $('#desconto').val();
+      				var mdl_subtotal = ((mdl_quantidade*mdl_preco_venda)-(mdl_quantidade*mdl_preco_venda*mdl_desconto)/100);
+      				var mdl_valor = (mdl_quantidade*mdl_preco_venda);
+
+      				var mdl_valor_total = (dta_valor_total*1);
+
+      				var valor_incre_decre = 0;
+
+      				if(mdl_subtotal > dta_subtotal){
+
+      					valor_incre_decre = (mdl_subtotal - dta_subtotal);
+      					mdl_valor_total = (mdl_valor_total + valor_incre_decre);
+
+      				}else if(mdl_subtotal <= dta_subtotal){
+
+      					valor_incre_decre = (dta_subtotal - mdl_subtotal);
+      					mdl_valor_total = (mdl_valor_total - valor_incre_decre);
+
+      				}
+
+      				$('#subtotal').val(mdl_subtotal);
+      				$('#valor').val(mdl_valor);
+      				$('#valor_total').val(mdl_valor_total);
+      				$('#val_temp').html(mdl_valor_total.formatMoney(2,',','.')+ " Mtn");
+      			}
+      		});
 
 
-
-      			});
-
-				$('#modalProdutoIten').delegate('#quantidade,#preco_venda,#desconto','keyup',function(){
-					//total();
-					var mdl_quantidade = $('#quantidade').val();
-					var mdl_preco_venda = $('#preco_venda').val();
-					var mdl_desconto = $('#desconto').val();
-					var mdl_subtotal = ((mdl_quantidade*mdl_preco_venda)-(mdl_quantidade*mdl_preco_venda*mdl_desconto)/100);
-					var mdl_valor = (mdl_quantidade*mdl_preco_venda);
-
-					var mdl_valor_total = (dta_valor_total*1);
-
-					var valor_incre_decre = 0;
-
-					if(mdl_subtotal > dta_subtotal){
-
-						valor_incre_decre = (mdl_subtotal - dta_subtotal);
-						mdl_valor_total = (mdl_valor_total + valor_incre_decre);
-
-					}else if(mdl_subtotal <= dta_subtotal){
-
-						valor_incre_decre = (dta_subtotal - mdl_subtotal);
-						mdl_valor_total = (mdl_valor_total - valor_incre_decre);
-
-					}
-
-					$('#subtotal').val(mdl_subtotal);
-					$('#valor').val(mdl_valor);
-					$('#valor_total').val(mdl_valor_total);
-					$('#val_temp').html(mdl_valor_total.formatMoney(2,',','.')+ " Mtn");
-
-
-				});
-			});
-
-
-		</script>
-		@endsection
+      	</script>
+      	@endsection

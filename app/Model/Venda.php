@@ -12,10 +12,11 @@ class Venda extends Model
     	'updated_at',
     	'cliente_id',
     	'user_id',
-    	'valor_total',
+        'valor_total',
+    	'valor_iva',
         'pago',
         'valor_pago',
-        'troco',
+        'remanescente',
         'forma_pagamento_id',
     	'nr_documento_forma_pagamento',
     ];
@@ -36,6 +37,12 @@ class Venda extends Model
 
         return $this->hasMany('App\Model\ItenVenda');
         
+    }
+
+    public function pagamentosVenda(){
+
+        return $this->hasMany('App\Model\PagamentoVenda');
+
     }
     public function formaPagamento(){
 

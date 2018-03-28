@@ -172,7 +172,7 @@ class FacturacaoController extends Controller
     //devolver o preço do produto
     public function findPrice(Request $request)
     {
-      $data = Produto::select('preco_venda', 'quantidade_dispo', 'quantidade_min')->where('id',$request->id)->first();
+      $data = Produto::select('preco_venda', 'preco_aquisicao', 'quantidade_dispo', 'quantidade_min')->where('id',$request->id)->first();
       return response()->json($data);
     }
     //trabalhando na dependencia dos combos

@@ -14,7 +14,9 @@ class ItenEntrada extends Model
     	'entrada_id',
     	'produto_id',
     	'quantidade',
-    	'valor'
+    	'valor',
+        'desconto',
+        'subtotal',
     ];
 
     public function entrada(){

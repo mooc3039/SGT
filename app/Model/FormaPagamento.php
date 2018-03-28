@@ -17,4 +17,10 @@ class FormaPagamento extends Model
       return $this->hasMany('App\Model\Venda');
 
     }
+
+    public function pagamentosSaida(){
+
+      return $this->hasMany('App\Model\PagamentoSaida');
+
+    }
 }

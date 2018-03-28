@@ -99,15 +99,34 @@ Route::group(['middleware'=>['authen','roles'],'roles'=>['Administrador']],funct
   Route::get('cotacao/index', 'CotacaoController@index');
 
   // CADASTRAR A SAIDA COM ajax => Malache
-  Route::post('saida/saida_store', 'SaidaController@store');
-  Route::get('saida/index', 'SaidaController@index');
+  // Route::post('saida/saida_store', 'SaidaController@store');
+  // Route::get('saida/index', 'SaidaController@index');
+
+  // SAIDAS, Privado, Publico, Concurso 
+  Route::get('/saida/saida_pubblico_create/', 'SaidaController@saidaPublicoCreate')->name('saidaPublicoCreate');
+  Route::get('/saida/saida_concurso_create/', 'SaidaController@saidaConcursoCreate')->name('saidaConcursoCreate');
+  Route::post('/saida/concurso/dados', 'SaidaController@findConcursoDados')->name('findConcursoDados');
 
   // CRIAR GUIA DE ENTREGA => Malache
   Route::get('/guia_entrega/create_guia/{id}', 'GuiaEntregaController@createGuia')->name('create_guia');
   Route::get('/guia_entrega/show_guia_entrega/{id}', 'GuiaEntregaController@showGuiasEntrega')->name('show_guia_entrega');
 
+
+  // GERIR PAGAMENTO DA SAIDA => Malache
+  Route::post('/saida/pagamento', 'SaidaController@pagamentoSaida')->name('pagamentoSaida');
+  Route::get('/saida/create_pagamento/{id}', 'SaidaController@createPagamentoSaida')->name('createPagamentoSaida');
+
   // GERIR PAGAMENTO DA VENDA => Malache
-  Route::post('/venda/pagamento', 'VendaController@pagamentoVenda')->name('pagamentoVenda');
+  Route::get('/venda/create_pagamento/{id}', 'VendaController@createPagamentoVenda')->name('createPagamentoVenda');
+   Route::post('/venda/pagamento', 'VendaController@pagamentoVenda')->name('pagamentoVenda');
+
+  // GERIR PAGAMENTO DO CONCURSO => Malache
+  Route::get('/concurso/create_pagamento/{id}', 'ConcursoController@createPagamentoConcurso')->name('createPagamentoConcurso');
+  Route::post('/concurso/pagamento', 'ConcursoController@pagamentoConcurso')->name('pagamentoConcurso');
+
+  // GERIR PAGAMENTO DA ENTRADA => Malache
+  Route::post('/entrada/pagamento', 'EntradaController@pagamentoEntrada')->name('pagamentoEntrada');
+
 
 
 
@@ -131,6 +150,9 @@ Route::group(['middleware'=>['authen','roles'],'roles'=>['Administrador']],funct
   Route::resource('/cotacao/iten_cotacao', 'ItenCotacaoController');
   Route::resource('/tipo_cotacao', 'TipoCotacaoController');
   Route::resource('/entrada', 'EntradaController');
+  Route::resource('/entrada/iten_entrada', 'ItenEntradaController');
+  Route::resource('/concurso', 'ConcursoController');
+  Route::resource('/iten_concurso', 'ItenConcursoController');
 
 
 

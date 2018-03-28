@@ -7,7 +7,7 @@
 				</div>
 				<div class="modal-body">
 
-					{{Form::open(['route'=>['iten_guia_entrega.update', 'id'], 'method'=>'PUT'])}}
+					{{Form::open(['route'=>['iten_guia_entrega.update', 'id'], 'method'=>'PUT', 'onsubmit'=>'submitFormGuiaEntrega.disabled = true; return true;'])}}
 
 					<div class="row">
 						<div class="col-md-3">
@@ -72,12 +72,11 @@
 				<div class="modal-footer">
 					<div class="row">
 						<div class="col-md-6 text-left">
-							<!-- <h5>Montante Geral da Guia: <b><span id="val_temp"></span></b></h5> -->
-							<input type="text" name="" id="val_temp" disabled>
+							<h5>Montante Geral da Guia: <b><span id="val_temp"></span></b></h5>
 						</div>
 						<div class="col-md-6 text-right">
 							{{Form::button('Fechar', ['class'=>'btn btn-default', 'data-dismiss'=>'modal'])}}
-							{{Form::submit('Actualizar', ['class'=>'btn btn-primary'])}}
+							{{Form::submit('Actualizar', ['class'=>'btn btn-primary submit_iten', 'name'=>'submitFormGuiaEntrega', 'id'=>'submitFormGuiaEntrega'])}}
 						</div>
 					</div>
 

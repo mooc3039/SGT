@@ -11,16 +11,33 @@ class Entrada extends Model
     //
 
     protected $fillable = [
-    	'data',
-    	'valor',
-    	'user_id'
+    	'fornecedor_id',
+        'user_id',
+    	'valor_total',
+        'pago',
+        'valor_pago',
+        'troco',
+        'forma_pagamento_id',
+        'nr_documento_forma_pagamento',
+    	
     ];
-    public $timestamps = false;
+
+    public function fornecedor(){
+
+        return $this->belongsTo('App\Model\Fornecedor');
+        
+    }
 
     public function itensEntrada(){
 
     	return $this->hasMany('App\Model\ItenEntrada');
 
+    }
+
+    public function formaPagamento(){
+
+        return $this->belongsTo('App\Model\FormaPagamento');
+        
     }
 
     public function user(){

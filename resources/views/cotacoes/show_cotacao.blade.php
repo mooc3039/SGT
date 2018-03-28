@@ -105,7 +105,7 @@
 											Sub-Total:
 										</td>
 										<td>
-											{{$cotacao->subtotal}}
+											{{$cotacao->valor_total}}
 										</td>
 									</tr>
 
@@ -121,19 +121,10 @@
 
 									<tr>
 										<td>
-											Desconto:
-										</td>
-										<td>
-											{{$cotacao->desconto}}
-										</td>
-									</tr>
-
-									<tr>
-										<td>
 											Valor Total:
 										</td>
 										<td>
-											<b>{{$cotacao->valor_total}}</b>
+											<b>{{$cotacao->valor_iva}}</b>
 										</td>
 									</tr>
 								</table>

@@ -29,6 +29,7 @@ class ClienteStoreUpdateFormRequest extends FormRequest
             //
             'nome' => 'required',
             'telefone' => 'required',
+            'nuit' => 'unique:clientes,nuit,'.$id.',id',
             'email' => 'unique:clientes,email,'.$id.',id',
             'activo' => 'required',
             'tipo_cliente_id' => 'required',
@@ -39,6 +40,7 @@ class ClienteStoreUpdateFormRequest extends FormRequest
         return [
             'nome.required' => 'O nome do cliente é obrigatório.',
             'telefone.required' => 'O telefone é obrigatório.',
+            'nuit.unique' => 'O NUIT informado já existe!',
             'email.unique' => 'O email já existe!',
             'activo.required' => 'O Cliente deve ser "Activo" ou "Inactivo"',
             'tipo_cliente_id.required' => 'O Tipo de Cliente é obrigatório',

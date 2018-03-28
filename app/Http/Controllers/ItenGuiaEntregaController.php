@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use App\Http\Requests\ItenGuiaEntregaStoreUpdateFormRequest;
 use App\Model\ItenGuiaentrega;
 
 class ItenGuiaEntregaController extends Controller
@@ -73,7 +74,7 @@ class ItenGuiaEntregaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(ItenGuiaEntregaStoreUpdateFormRequest $request, $id)
     {
         // dd($request->all());
         //

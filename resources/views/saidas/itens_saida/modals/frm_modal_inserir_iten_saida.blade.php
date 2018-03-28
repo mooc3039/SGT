@@ -3,11 +3,11 @@
 				<div class="modal-content">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-						<h4 class="modal-title"><b>Saída: </b>Novo Item<span id=""><span/></h4>
+						<h4 class="modal-title"><b>Factura: </b>Novo Item<span id=""><span/></h4>
 						</div>
 						<div class="modal-body">
 
-							{{Form::open(['route'=>'iten_saida.store', 'method'=>'POST'])}}
+							{{Form::open(['route'=>'iten_saida.store', 'method'=>'POST', 'onsubmit'=>'submitFormSaida.disabled = true; return true;'])}}
 
 							<div class="row">
 								<div class="col-md-3">
@@ -28,7 +28,7 @@
 
 										{{Form::text('quantidade_dispo', null, ['class' => 'form-control', 'id'=>'new_quantidade_dispo', 'readonly'])}}
 
-										{{Form::hidden('qtd_rest_orgl', null, ['class' => 'form-control', 'id'=>'new_qtd_referencial', 'readonly'])}}
+										{{Form::hidden('new_qtd_referencial', null, ['class' => 'form-control', 'id'=>'new_qtd_referencial', 'readonly'])}}
 
 										{{ Form::hidden('saida_id', null, ['id'=>'new_saida_id']) }}
 									</div>
@@ -68,11 +68,11 @@
 						<div class="modal-footer">
 							<div class="row">
 								<div class="col-md-6 text-left">
-									<h5>Montante Geral da Cotação: <b><span id="new_val_temp"></span></b></h5>
+									<h5>Montante Geral da Factura: <b><span id="new_val_temp"></span></b></h5>
 								</div>
 								<div class="col-md-6 text-right">
 									{{Form::button('Fechar', ['class'=>'btn btn-default', 'data-dismiss'=>'modal'])}}
-									{{Form::submit('Salvar', ['class'=>'btn btn-primary'])}}
+									{{Form::submit('Salvar', ['class'=>'btn btn-primary submit_iten', 'name'=>'submitFormSaida', 'id'=>'submitFormSaida'])}}
 								</div>
 							</div>
 

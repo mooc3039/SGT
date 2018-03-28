@@ -13,7 +13,31 @@
 
 <div class="row">
 	<div class="col-lg-12">
-		<section class="panel panel-default">
+    <div id="wait" style=" 
+    text-align: center; 
+    z-index: 1; 
+    display:none;
+    width:100%;
+    height:100%;
+    position:absolute;
+    top:0;
+    left:0;
+    padding:5px;">
+
+    <div id="wait-loader" style="
+    position:absolute;    
+    left:40%;
+    top:40%;
+    font-size: 50px; 
+    color: blue;">
+    <!-- <i class="fa fa-plus text-center"> -->
+      <img src="{{asset('/img/Gear-0.6s-200px.gif')}}"/>
+    </i>
+    <!-- <h2>Aguarde...</h2> -->
+  </div>
+  
+</div>
+<section class="panel panel-default">
         <!-- <header class="panel-heading">
           Gerenciamento das Vendas
         </header> -->
@@ -34,114 +58,142 @@
          </div>
 
          <div class="col-md-6 col-md-offset-2">
-          <legend>Pagamento: <b><span class="valor_visual pull-right" style="border:none"> </span></b></legend>
+          <legend>Pagamento: <b><span class="valor_total_iva_visual pull-right" style="border:none"> </span></b></legend>
           <div class="row" style="margin-bottom: 5px">
-           <div class="col-md-4">
-            <div class="radio-inline">
-              <!-- {{Form::radio('pago', '1', ['id'=>'pago', 'onclick'=>'javascript:pagoNaoPago();'])}} Pago -->
-              <input type="radio" onclick="javascript:pagoNaoPago();" name="pago" value="1" id="pago"> Pago
-            </div>
-            <div class="radio-inline">
-              <!-- {{Form::radio('pago', '0', ['id'=>'nao_pago', 'onclick'=>'javascript:pagoNaoPago();'])}} Não Pago -->
-              <input type="radio" onclick="javascript:pagoNaoPago();" name="pago" value="0" id="nao_pago"> Não Pago
-            </div>
-
-          </div>
-
-          <div class="col-md-8" id="div_forma_pagamento" style="display:none">
-            <div class="row">
-              <div class="col-md-6">
-                {{ Form::label('valor_pago', 'Valor Pago')}}
-                <div class="input-group">
-                  {{ Form::text('valor_pago', 0.00, ['class'=>'form-control'])}}
-                  <div class="input-group-addon">$</div>
-                </div>            
+            <div class="col-md-3">
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="radio-inline">
+                    <!-- {{Form::radio('pago', '1', ['id'=>'pago', 'onclick'=>'javascript:pagoNaoPago();'])}} Pago -->
+                    <input type="radio" onclick="javascript:pagoNaoPago();" name="pago" value="1" id="pago" checked="true"> <label for="pago">Pago</label>
+                  </div>
+                </div>
+                <div class="col-md-12">
+                  <div class="radio-inline">
+                    <!-- {{Form::radio('pago', '0', ['id'=>'nao_pago', 'onclick'=>'javascript:pagoNaoPago();'])}} Não Pago -->
+                    <input type="radio" onclick="javascript:pagoNaoPago();" name="pago" value="0" id="nao_pago"> <label for="nao_pago">Não pago</label>
+                  </div>
+                </div>
               </div>
-              <div class="col-md-6">
-                {{ Form::label('troco', 'Troco')}}
-                <div class="input-group">
-                  {{ Form::text('troco', 0.00, ['class'=>'form-control', 'readonly'])}}
-                  <div class="input-group-addon">$</div>
+
+
+
+            </div>
+
+            <div class="col-md-9" id="div_forma_pagamento" style="display:block">
+              <div class="row" style="display: block">
+                <div class="col-md-6">
+                  {{ Form::label('valor_pago', 'Valor Pago')}}
+                  <div class="input-group">
+                    {{ Form::text('valor_pago', null, ['class'=>'form-control'])}}
+                    <div class="input-group-addon">Mtn</div>
+                  </div>            
+                </div>
+                <div class="col-md-6">
+                  {{ Form::label('remanescente', 'remanescente')}}
+                  <div class="input-group">
+                    {{ Form::text('remanescente', null, ['class'=>'form-control', 'readonly'])}}
+                    <div class="input-group-addon">Mtn</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-6">
+                  {{ Form::label('forma_pagamento_id', 'Forma Pgamento')}}
+                  {{Form::select('forma_pagamento_id', [''=>'Forma Pgamento',] + $formas_pagamento, null, ['class'=>'form-control', 'id'=>'forma_pagamento_id'] )}}
+                </div>
+                <div class="col-md-6">
+                  {{ Form::label('nr_documento_forma_pagamento', 'Documento')}}
+                  {{ Form::text('nr_documento_forma_pagamento', null, ['class'=>'form-control'])}}
                 </div>
               </div>
             </div>
 
-            <div class="row">
-              <div class="col-md-6">
-                {{ Form::label('forma_pagamento_id', 'Forma Pgamento')}}
-                {{Form::select('forma_pagamento_id', [''=>'Forma Pgamento',] + $formas_pagamento, null, ['class'=>'form-control'] )}}
-              </div>
-              <div class="col-md-6">
-                {{ Form::label('nu_doc', 'Documento')}}
-                {{ Form::text('nu_doc', null, ['class'=>'form-control'])}}
-              </div>
-            </div>
           </div>
-          
+
         </div>
 
       </div>
-
     </div>
   </div>
-</div>
 
-<div class="panel-footer">
- {{Form::submit('Salvar venda', ['class'=>'btn btn-primary'])}}
-</div>
+  <div class="panel-footer">
+   {{Form::submit('Salvar venda', ['class'=>'btn btn-primary', 'id'=>'salvar_venda'])}}
+ </div>
 
 
-<!-- começa a secção de cotacao na tabela-->
+ <!-- começa a secção de cotacao na tabela-->
 
-<section class="panel">
- <header class="panel-heading">
-  Produtos / Itens
-</header>
+ <section class="panel">
+   <header class="panel-heading">
+    Produtos / Itens
+  </header>
 
-<div class="panel-body">
-  <table class="table table-striped table-advance table-hover">
-    <thead>
-      <tr>
-        <th><i class="icon_profile"></i> Nome do Produto</th>
-        <th><i class="icon_calendar"></i> Qtd/Unidades</th>
-        <th><i class="icon_calendar"></i> Qtd-Restante</th>
-        <th><i class="icon_mail_alt"></i> Preço</th>
-        <th><i class="icon_mail_alt"></i> Valor</th>
-        <th><i class="icon_pin_alt"></i> Desconto</th>
-        <th><i class="icon_mobile"></i> Subtotal</th>
-        <th><a class="btn btn-primary addRow" href="#"><i class="icon_plus_alt2"></i></a></th>
+  <div class="panel-body">
+    <table class="table table-striped table-advance table-hover">
+      <thead>
+        <tr>
+          <th><i class="icon_profile"></i> Nome do Produto</th>
+          <th><i class="icon_calendar"></i> Qtd/Unidades</th>
+          <th><i class="icon_calendar"></i> Qtd-Restante</th>
+          <th><i class="icon_mail_alt"></i> Preço</th>
+          <th><i class="icon_mail_alt"></i> Valor</th>
+          <th><i class="icon_pin_alt"></i> Desconto</th>
+          <th><i class="icon_mobile"></i> Subtotal</th>
+          <th><a class="btn btn-primary addRow" href="#"><i class="icon_plus_alt2"></i></a></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+           <select class="form-control descricao" name="produto_id[]">
+            <option value="0" selected="true" disabled="true">Selecione Produto</option>
+            @foreach($produtos as $produto)
+            <option value="{!!$produto->id!!}">{!!$produto->descricao!!}</option>
+            @endforeach
+          </select>
+        </td>
+        <td><input type="text" name="quantidade[]" class="form-control quantidade"></td>
+        <td><input type="text" name="quantidade_dispo[]" class="form-control quantidade_dispo" readonly><input type="hidden" name="qtd_dispo_original" class="form-control qtd_dispo_original"></td>
+        <td><input type="text" name="preco_venda[]" class="form-control preco_venda" readonly></td>
+        <td><input type="text" name="valor[]" class="form-control valor" value="0" readonly></td>
+        <td><input type="text" name="desconto[]" class="form-control desconto" value="0"></td>
+        <td><input type="text" name="subtotal[]" class="form-control subtotal" readonly></td>
+        <td><a class="btn btn-danger remove" href="#"><i class="icon_close_alt2"></i></a></td>
       </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>
-         <select class="form-control descricao" name="produto_id[]">
-          <option value="0" selected="true" disabled="true">Selecione Produto</option>
-          @foreach($produtos as $produto)
-          <option value="{!!$produto->id!!}">{!!$produto->descricao!!}</option>
-          @endforeach
-        </select>
-      </td>
-      <td><input type="text" name="quantidade[]" class="form-control quantidade"></td>
-      <td><input type="text" name="quantidade_dispo[]" class="form-control quantidade_dispo" readonly><input type="hidden" name="qtd_dispo_original" class="form-control qtd_dispo_original"></td>
-      <td><input type="text" name="preco_venda[]" class="form-control preco_venda" readonly></td>
-      <td><input type="text" name="valor[]" class="form-control valor" value="0" readonly></td>
-      <td><input type="text" name="desconto[]" class="form-control desconto" value="0"></td>
-      <td><input type="text" name="subtotal[]" class="form-control subtotal" readonly></td>
-      <td><a class="btn btn-danger remove" href="#"><i class="icon_close_alt2"></i></a></td>
-    </tr>
 
-  </tbody>
-  <tfoot>
-   <tr>
-    <td style="border:none"></td>
-    <td style="border:none"></td>
-    <td style="border:none"></td>
-    <td><b>Total</b></td>
-    <td><b><div class="valor_visual" style="border:none"> </div></b></td>
-    <td></td>
-  </tr>
-</tfoot>
+    </tbody>
+    <tfoot>
+    <tr>
+        <td style="border:none"></td>
+        <td style="border:none"></td>
+        <td style="border:none"></td>
+        <td></td>
+        <td></td>
+        <td><b>Subtotal</b></td>
+        <td><b><div class="valor_total" style="border:none"> </div></b></td>
+        <td></td>
+      </tr><tr>
+        <td style="border:none"></td>
+        <td style="border:none"></td>
+        <td style="border:none"></td>
+        <td></td>
+        <td></td>
+        <td><b>IVA(17%)</b></td>
+        <td><b><div class="iva" style="border:none"> </div></b></td>
+        <td></td>
+      </tr><tr>
+        <td style="border:none"></td>
+        <td style="border:none"></td>
+        <td style="border:none"></td>
+        <td></td>
+        <td></td>
+        <td><b>Total</b></td>
+        <td><b><div class="valor_total_iva_visual" style="border:none"> </div></b></td>
+        <td></td>
+      </tr>
+  </tfoot>
 </table>
 </div>
 <div class="panel-footer">
@@ -153,7 +205,7 @@
   </div>
 </div>
 </section>
-{{ Form::hidden('valor_total', 0, ['id'=>'valor_total']) }}
+{{ Form::hidden('valor_total_iva', 0, ['id'=>'valor_total_iva']) }}
 {{ Form::hidden('user_id', Auth::user()->id) }}
 {!!Form::hidden('_token',csrf_token())!!}
 {{ Form::close() }}
@@ -248,31 +300,120 @@
 	@section('script')
 	<script text="text/javascript">
 
-    function pagoNaoPago() {
-      if (document.getElementById('pago').checked) {
-        document.getElementById('div_forma_pagamento').style.display = 'block';
-      }
-      else document.getElementById('div_forma_pagamento').style.display = 'none';
+    $(document).ready(function(){
+      $(document).ajaxStart(function(){
+        $("#wait").css("display", "block");
+      });
+      $(document).ajaxComplete(function(){
+        $("#wait").css("display", "none");
+      });
+    });
 
+    $(document).ready(function(){
+      $('#salvar_venda').on('click',function(){
+        $("#wait").css("display", "block");
+
+        if (document.getElementById('pago').checked) {
+          if($('#valor_pago').val() === "" || $('#valor_pago').val() === null){
+            alert('Informe o Valor a Pagar');
+            $("#wait").css("display", "none");
+            $('#valor_pago').focus();
+            return false;
+          }
+        }
+
+        if($('#forma_pagamento_id').val() === "" || $('#forma_pagamento_id').val() === null){
+          alert('Selecione a Forma de Pagamento');
+          $("#wait").css("display", "none");
+          $('#forma_pagamento_id').focus();
+          return false;
+        }
+
+        if($('#nr_documento_forma_pagamento').val() === "" || $('#nr_documento_forma_pagamento').val() === null){
+          alert('Informe o Número do Documento para o Pagamento da Factura, ou o valor padrao (Não Aplicavel)');
+          $("#wait").css("display", "none");
+          $('#nr_documento_forma_pagamento').focus();
+          return false;
+        }
+      });
+
+      remanescenteRed();
+    });
+
+      // Pagamento da Venda
+      function pagoNaoPago() {
+        if (document.getElementById('pago').checked) {
+          document.getElementById('div_forma_pagamento').style.display = 'block';
+          $('#valor_pago').val(0);
+          $('#forma_pagamento_id').val('');
+          $('#nr_documento_forma_pagamento').val('');
+          remanescenteRed();
+        }
+        else {
+          document.getElementById('div_forma_pagamento').style.display = 'none';
+          $('#valor_pago').val(0);
+          $('#remanescente').val($('#valor_total_iva').val()*1);
+        $('#forma_pagamento_id').val(1); // codigo da forma de pagamento (Nao Aplicavel=>DB)
+        $('#nr_documento_forma_pagamento').val('Nao Aplicavel');
+
+      }
     };
 
     $('#valor_pago').keyup(function(){
-      var valor_pago = $('#valor_pago').val();
-      var valor_total = $('#valor_total').val();
-      var troco = valor_pago - valor_total;
-
-      $('#troco').val(troco);
-
-      if( troco < 0 ){
-        document.getElementById('troco').style.backgroundColor = "red";
-        document.getElementById('troco').style.color = "white";
-      }else{
-        document.getElementById('troco').style.backgroundColor = "white";
-        document.getElementById('troco').style.color = "black";
-
-      }
+      alertaremanescentePagamento();
     });
 
+    $('#forma_pagamento_id').change(function(){
+      var frm_pagamento = document.getElementById('forma_pagamento_id').options[document.getElementById('forma_pagamento_id').selectedIndex].text;
+      var resul_frm_pagamento = frm_pagamento.toLowerCase();
+
+      if(resul_frm_pagamento == "dinheiro"){
+        $('#nr_documento_forma_pagamento').val('Nao Aplicavel');
+      }else{
+        $('#nr_documento_forma_pagamento').focus();
+        $('#nr_documento_forma_pagamento').val('');
+      }
+      
+    });
+
+    function alertaremanescentePagamento(){
+      var valor_pago = $('#valor_pago').val()*1;
+      var valor_total_iva = $('#valor_total_iva').val()*1;
+      var remanescente = valor_total_iva - valor_pago;
+
+      if(remanescente >= 0){
+       $('#remanescente').val(remanescente);
+     }else{
+      if(valor_pago > valor_total_iva){ 
+          // ou remanscente < 0, significa q o valor pago eh maior q o remanescente_ref
+          alert('O Valor a Pagar informado e maior do que o Valor Total da Saida)');
+          $('#valor_pago').val(0);
+          $('#remanescente').val(valor_total_iva);
+        }
+      }
+    }
+
+    function remanescenteRed(){
+      document.getElementById('remanescente').style.backgroundColor = "red";
+      document.getElementById('remanescente').style.color = "white";
+    }
+
+      // $('#valor_pago').keyup(function(){
+      //   var valor_pago = $('#valor_pago').val();
+      //   var valor_total_iva = $('#valor_total_iva').val();
+      //   var remanescente = valor_pago - valor_total_iva;
+
+      //   $('#remanescente').val(remanescente);
+
+      //   if( remanescente < 0 ){
+      //     document.getElementById('remanescente').style.backgroundColor = "red";
+      //     document.getElementById('remanescente').style.color = "white";
+      //   }else{
+      //     document.getElementById('remanescente').style.backgroundColor = "white";
+      //     document.getElementById('remanescente').style.color = "black";
+
+      //   }
+      // });
 
     //função que adiciona a linha
     function addRow()
@@ -316,11 +457,6 @@
     	}
 
     });
-    //====trocar de focus para o proximo campo a preencher
-    $('tbody').delegate('.descricao','change', function(){
-    	var tr = $(this).parent().parent();
-    	tr.find('.quantidade').focus();
-    });
 
 
     //------devolver dados do price
@@ -351,21 +487,25 @@
           tr.find('.subtotal').val(subtotal);
           total();
 
-          var valor_pago = $('#valor_pago').val();
-          var valor_total = $('#valor_total').val();
-          var troco = valor_pago - valor_total;
+          // var valor_pago = $('#valor_pago').val();
+          // var valor_total_iva = $('#valor_total_iva').val();
+          // var remanescente = valor_pago - valor_total_iva;
 
-          $('#troco').val(troco);
+          // $('#remanescente').val(remanescente);
 
-          if( troco < 0 ){
-            document.getElementById('troco').style.backgroundColor = "red";
-            document.getElementById('troco').style.color = "white";
-          }else{
-            document.getElementById('troco').style.backgroundColor = "white";
-            document.getElementById('troco').style.color = "black";
+          // if( remanescente < 0 ){
+          //   document.getElementById('remanescente').style.backgroundColor = "red";
+          //   document.getElementById('remanescente').style.color = "white";
+          // }else{
+          //   document.getElementById('remanescente').style.backgroundColor = "white";
+          //   document.getElementById('remanescente').style.color = "black";
 
-          }
+          // }
+          alertaremanescentePagamento();
 
+        },
+        complete(data){
+          tr.find('.quantidade').focus();
         }
       });
     });
@@ -408,20 +548,21 @@
         total();
       }
 
-      var valor_pago = $('#valor_pago').val();
-      var valor_total = $('#valor_total').val();
-      var troco = valor_pago - valor_total;
+      // var valor_pago = $('#valor_pago').val();
+      // var valor_total_iva = $('#valor_total_iva').val();
+      // var remanescente = valor_pago - valor_total_iva;
 
-      $('#troco').val(troco);
+      // $('#remanescente').val(remanescente);
 
-      if( troco < 0 ){
-        document.getElementById('troco').style.backgroundColor = "red";
-        document.getElementById('troco').style.color = "white";
-      }else{
-        document.getElementById('troco').style.backgroundColor = "white";
-        document.getElementById('troco').style.color = "black";
+      // if( remanescente < 0 ){
+      //   document.getElementById('remanescente').style.backgroundColor = "red";
+      //   document.getElementById('remanescente').style.color = "white";
+      // }else{
+      //   document.getElementById('remanescente').style.backgroundColor = "white";
+      //   document.getElementById('remanescente').style.color = "black";
 
-      }
+      // }
+      alertaremanescentePagamento();
       
     });
 
@@ -429,12 +570,17 @@
     function total()
     {
     	var total =0;
-    	$('.subtotal').each(function(i,e){
-    		var subtotal = $(this).val()-0;
-    		total +=subtotal;
-    	})
-    	$('.valor_visual').html(total.formatMoney(2,',','.')+ " Mtn");
-    	$('#valor_total').val(total);
+      var total_iva = 0;
+      $('.subtotal').each(function(i,e){
+        var subtotal = $(this).val()-0;
+        total +=subtotal;
+        iva = (total*17)/100;
+        total_iva = total + (total*17)/100;
+      })
+      $('.valor_total').html(total.formatMoney(2,',','.')+ " Mtn");
+      $('.iva').html(iva.formatMoney(2,',','.')+ " Mtn");
+      $('.valor_total_iva_visual').html(total_iva.formatMoney(2,',','.')+ " Mtn");
+      $('#valor_total_iva').val(total_iva); //cuidado, input importante para calculos
     };
 
 
@@ -503,6 +649,7 @@
     findRowNum('.quantidade');
     findRowNum('.preco_venda');
     findRowNum('.desconto');
+    number('#valor_pago');
 
   </script>
   @endsection
