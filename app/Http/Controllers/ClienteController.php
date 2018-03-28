@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\ClienteStoreUpdateFormRequest;
 use Illuminate\Support\Facades\DB;
 use App\Model\Cliente;
+use PDF;
 
 class ClienteController extends Controller
 {
@@ -196,5 +197,11 @@ class ClienteController extends Controller
 
         return view('reports.clientes.report_geral_clientes', compact('clientes'));
 
+    }
+
+    public function pdf(){
+        // $clientes = $this->cliente->orderBy('nome', 'asc')->get();
+        // $pdf = PDF::loadView('reports.clientes.report_geral_clientes',compact('clientes'));
+        // return $pdf->download('cliente.pdf');
     }
 }

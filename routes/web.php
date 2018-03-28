@@ -33,21 +33,12 @@ Route::group(['middleware'=>['authen','roles'],'roles'=>['Administrador']],funct
 
   Route::get('/gerir/stock',['as'=>'indexStock','uses'=>'paginasController@indexStock']);
 
- //Facturação
-  Route::get('/facturas/preco', ['as'=>'findPrice','uses'=>'FacturacaoController@findPrice']);
-  Route::get('/facturas/inicio',['as'=>'facturas','uses'=>'FacturacaoController@create']);
-  Route::post('/facturas/facturar',['as'=>'facturacao','uses'=>'FacturacaoController@store']);
-  Route::get('/facturas/depende','FacturacaoController@subKategori');
-
-  Route::post('getSearch','FacturacaoController@getSearch')->name('post'); //search somente nas facturas
-  Route::get('/pdf', 'FacturacaoController@pdfTeste'); //teste de pdf
-
   //TODO profile update data
   Route::get('/dashboard/{name}/profile', 'ProfileController@index');
   Route::resource('/dashboard/{name}/profile','ProfileController');
   Route::post('/dashboard/{name}/profile_img','ProfileController@update_avatar');
   route::post('/dashboard/{name}/profile_edit', 'ProfileController@update');
-  Route::get('/dashboard/{id}/profile', 'ProfileController@TotalFactura');//ainda a levar
+  Route::get('/dashboard/{id}/profile', 'ProfileController@TotalFactura');//
 
 
   Route::get('/gerir/usuario',['as'=>'indexUsuario','uses'=>'paginasController@indexUsuario']);
@@ -71,6 +62,9 @@ Route::group(['middleware'=>['authen','roles'],'roles'=>['Administrador']],funct
   Route::get('/entradas/report_geral_entradas/teste{id}', ['as'=>'entrada_teste', 'uses'=>'EntradaController@entradaTeste']);
   Route::get('/fornecedores/report_geral_fornecedores', ['as'=>'rg_fornecedores', 'uses'=>'fornecedorController@reportGeralFornecedores']);
   Route::get('/clientes/report_geral_clientes', ['as'=>'rg_clientes', 'uses'=>'ClienteController@reportGeralCliente']);
+
+  Route::get('/clientes/report_geral_clientes/pdf', ['as'=>'pdf_clientes', 'uses'=>'ClienteController@pdf']);// TODO --
+
   Route::get('/saidas/report_geral_saidas', ['as'=>'rg_saidas', 'uses'=>'SaidaController@reportGeralSaidas']);
   /*Route::get('/produtos/report_geral_produtos', ['as'=>'rg_produtos', 'uses'=>'produtoController@reportGeralProdutos']);*/
   Route::get('/cotacoes/report_geral_cotacoes', ['as'=>'rg_cotacoes', 'uses'=>'CotacaoController@reportGeralCotacoes']);
@@ -110,12 +104,16 @@ Route::group(['middleware'=>['authen','roles'],'roles'=>['Administrador']],funct
   // CRIAR GUIA DE ENTREGA => Malache
   Route::get('/guia_entrega/create_guia/{id}', 'GuiaEntregaController@createGuia')->name('create_guia');
   Route::get('/guia_entrega/show_guia_entrega/{id}', 'GuiaEntregaController@showGuiasEntrega')->name('show_guia_entrega');
+<<<<<<< HEAD
 
 
   // GERIR PAGAMENTO DA SAIDA => Malache
   Route::post('/saida/pagamento', 'SaidaController@pagamentoSaida')->name('pagamentoSaida');
   Route::get('/saida/create_pagamento/{id}', 'SaidaController@createPagamentoSaida')->name('createPagamentoSaida');
 
+=======
+  Route::get('/guia_entrega/{id}/relatorio', ['as'=>'guiaRelatorio','uses'=>'GuiaEntregaController@showRelatorio']);//TODO --para imprimir as guias de entrega
+>>>>>>> 34c6a2d985c8ecfdfb6672543921036f7023b184
   // GERIR PAGAMENTO DA VENDA => Malache
   Route::get('/venda/create_pagamento/{id}', 'VendaController@createPagamentoVenda')->name('createPagamentoVenda');
    Route::post('/venda/pagamento', 'VendaController@pagamentoVenda')->name('pagamentoVenda');

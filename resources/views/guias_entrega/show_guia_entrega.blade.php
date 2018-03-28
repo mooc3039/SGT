@@ -1,10 +1,10 @@
 @extends('layouts.master')
 @section('content')
 
-<!-- <div class="container"> -->
+<!-- <div class="container"> -->	
 	<div class="row">
+		
 		<div class="col-md-12">
-			
 			<div class="panel panel-default">
 				<div class="panel-heading">
 					<div class="row">
@@ -150,9 +150,7 @@
 
 					</div>
 					<div class="row">
-						<div class="col-md-6">
-
-					</div>
+						<div class="col-md-6"><a href="{{route('guia_entrega.show', $guia_entrega->id)}}/relatorio" class="btn btn-primary">Imprimir</a></div>
 					<div class="col-md-6 text-right"><a href="{{route('guia_entrega.index')}}" class="btn btn-warning">Cancelar</a>
 
 					</div>

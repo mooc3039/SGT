@@ -48,7 +48,7 @@
               <td> {{$cliente->telefone}} </td>
               <td> {{$cliente->nuit}} </td>
               <td> @if($cliente->activo == true) Sim @else Não @endif </td>
-
+ 
             </tr>
 
             @endforeach

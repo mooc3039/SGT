@@ -30,7 +30,7 @@
   {!!Html::style('css/jquery-ui-1.10.4.min.css')!!}
   {!!Html::style('css/select2.min.css')!!}
 
-  {!! Charts::styles() !!} 
+ <!--  {!! Charts::styles() !!}  -->
   @yield('style')
   <style type="text/css">
   .wait {
@@ -138,6 +138,7 @@
 
         </div>
       </div>
+<<<<<<< HEAD
     </div>
     @yield('content')
 
@@ -153,6 +154,19 @@
     $('.select_search').select2();
   }); 
   /* FIM SEARCH SELECT */
+=======
+    </section>
+
+  </section>
+  @yield('script')
+  <script>
+    
+    /** SEARCH SELECT */
+     $(document).ready( function() {
+      $('.select_search').select2();
+    }); /**
+    FIM SEARCH SELECT */
+>>>>>>> 34c6a2d985c8ecfdfb6672543921036f7023b184
 
       //====
       $(document).ready(function(){

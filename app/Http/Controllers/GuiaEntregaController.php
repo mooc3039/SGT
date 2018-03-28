@@ -14,6 +14,7 @@ use App\Model\Cliente;
 use App\User;
 use DB;
 use Session;
+use PDF;
 
 class GuiaEntregaController extends Controller
 {
@@ -155,8 +156,19 @@ class GuiaEntregaController extends Controller
         //
         $guia_entrega = $this->guia_entrega->with('itensGuiantrega.produto', 'cliente')->find($id); 
             // Tras a saida. Tras os Itens da Saida e dentro da relacao ItensSaida eh possivel pegar a relacao Prodtuo atraves do dot ou ponto. NOTA: a relacao produto nao esta na saida e sim na itensSaida, mas eh possivel ter os seus dados partido da saida como se pode ver.
-
+        
         return view('guias_entrega.show_guia_entrega', compact('guia_entrega'));
+    }
+
+    public function showRelatorio($id)
+    {
+        //
+        $guia_entrega = $this->guia_entrega->with('itensGuiantrega.produto', 'cliente')->find($id); 
+            // Tras a saida. Tras os Itens da Saida e dentro da relacao ItensSaida eh possivel pegar a relacao Prodtuo atraves do dot ou ponto. NOTA: a relacao produto nao esta na saida e sim na itensSaida, mas eh possivel ter os seus dados partido da saida como se pode ver.
+         $pdf = PDF::loadView('guias_entrega.relatorio', compact('guia_entrega'));
+         return $pdf->download('guia_entrega.pdf');
+        // return view('guias_entrega.relatorio', compact('guia_entrega'));
+        
     }
 
     public function showGuiasEntrega($saida_id){
