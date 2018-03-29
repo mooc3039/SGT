@@ -13,6 +13,7 @@ use App\User;
 use App\Model\Cotacao;
 use App\Model\TipoCotacao;
 use App\Model\ItenCotacao;
+use PDF;
 
 class CotacaoController extends Controller
 {
@@ -163,6 +164,17 @@ class CotacaoController extends Controller
 
     return view('cotacoes.show_cotacao', compact('cotacao'));
   }
+
+  public function showRelatorio($id)
+    {
+        //
+        $cotacao = $this->cotacao->with('itensCotacao.produto', 'cliente')->find($id); 
+            // Tras a saida. Tras os Itens da Saida e dentro da relacao ItensSaida eh possivel pegar a relacao Prodtuo atraves do dot ou ponto. NOTA: a relacao produto nao esta na saida e sim na itensSaida, mas eh possivel ter os seus dados partido da saida como se pode ver.
+         $pdf = PDF::loadView('cotacoes.relatorio', compact('cotacao'));
+         return $pdf->download('cotacao.pdf');
+        // return view('guias_entrega.relatorio', compact('guia_entrega'));
+        
+    }
 
   /**
   * Show the form for editing the specified resource.

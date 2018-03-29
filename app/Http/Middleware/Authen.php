@@ -22,3 +22,4 @@ class Authen
         return $next($request);
     }
 }
+ 

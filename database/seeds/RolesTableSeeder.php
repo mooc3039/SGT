@@ -14,10 +14,7 @@ class RolesTableSeeder extends Seeder
     {
       Role::insert([
         ['nome'=>'Administrador'],
-        ['nome'=>'Receiptionist'],
-        ['nome'=>'Manager'],
-        ['nome'=>'CEO']
-
+        ['nome'=>'Usuario_comum'],
       ]);
     }
 }

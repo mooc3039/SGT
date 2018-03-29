@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Model\Produto;
 use App\Model\Entrada;
 use App\User;
+use PDF;
 
 class EntradaController extends Controller
 {
@@ -68,7 +69,15 @@ class EntradaController extends Controller
         
         return view('entradas.show_entrada', compact('entrada'));
     }
-
+    public function showRelatorio($id)
+    {
+        //
+        $entrada = $this->entrada->with('itensEntrada.produto', 'user')->find($id); 
+            // Tras a saida. Tras os Itens da Saida e dentro da relacao ItensSaida eh possivel pegar a relacao Prodtuo atraves do dot ou ponto. NOTA: a relacao produto nao esta na saida e sim na itensSaida, mas eh possivel ter os seus dados partido da saida como se pode ver.
+         $pdf = PDF::loadView('entradas.relatorio', compact('entrada'));
+         return $pdf->download('entrada.pdf');
+        
+    }
     /**
      * Show the form for editing the specified resource.
      *

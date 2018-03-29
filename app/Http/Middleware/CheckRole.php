@@ -28,3 +28,4 @@ class CheckRole
       return isset($actions['roles']) ? $actions['roles'] : null;
     }
 }
+ 

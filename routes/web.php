@@ -24,13 +24,6 @@ Route::group(['middleware'=>['authen']],function(){
   Route::get('/dashboard',['as'=>'dashboard','uses'=>'DashboardController@dashboard']);
   Route::get('/dashboard/inicio',['as'=>'paginainicial','uses'=>'DashboardController@paginaInicial']);
 
-});
-
-Route::group(['middleware'=>['authen','roles'],'roles'=>['Administrador']],function(){
-
-  //para administrador
-
-
   Route::get('/gerir/stock',['as'=>'indexStock','uses'=>'paginasController@indexStock']);
 
   //TODO profile update data
@@ -44,8 +37,50 @@ Route::group(['middleware'=>['authen','roles'],'roles'=>['Administrador']],funct
   Route::get('/gerir/usuario',['as'=>'indexUsuario','uses'=>'paginasController@indexUsuario']);
   Route::get('/gerir/cliente',['as'=>'indexCliente','uses'=>'paginasController@indexCliente']);
 
-  //Rotas get para gerar impressao em formato pdf => Malache
-  Route::get('/saida/pdf/{id}', ['as'=>'saida_pdf', 'uses'=>'SaidaController@report']);
+  //cotações
+  Route::resource('/cotacao', 'CotacaoController');
+  Route::resource('/cotacao/iten_cotacao', 'ItenCotacaoController');
+  // CADASTRAR A COTACAO COM ajax => Malache
+  Route::post('cotacao/cotacao_store', 'CotacaoController@store');
+  Route::get('cotacao/index', 'CotacaoController@index');
+  Route::get('/facturas/preco', ['as'=>'findPrice','uses'=>'FacturacaoController@findPrice']);
+
+  //Saídas
+  Route::resource('/saida', 'SaidaController');
+  Route::resource('/iten_saida', 'ItenSaidaController');
+  // CADASTRAR A SAIDA COM ajax => Malache
+  Route::post('saida/saida_store', 'SaidaController@store');
+  Route::get('saida/index', 'SaidaController@index');
+
+   //Rotas get para gerar impressao em formato pdf => Malache
+   Route::get('/saida/pdf/{id}', ['as'=>'saida_pdf', 'uses'=>'SaidaController@report']);
+
+   Route::resource('/guia_entrega', 'GuiaEntregaController');
+   Route::resource('/iten_guia_entrega', 'ItenGuiaEntregaController');
+
+   // CRIAR GUIA DE ENTREGA => Malache
+  Route::get('/guia_entrega/create_guia/{id}', 'GuiaEntregaController@createGuia')->name('create_guia');
+  Route::get('/guia_entrega/show_guia_entrega/{id}', 'GuiaEntregaController@showGuiasEntrega')->name('show_guia_entrega');
+
+  //relatorios
+  Route::get('/guia_entrega/{id}/relatorio', ['as'=>'guiaRelatorio','uses'=>'GuiaEntregaController@showRelatorio']);//TODO --para imprimir as guias de entrega
+  Route::get('/cotacao/{id}/relatorio', ['as'=>'cotacaoRelatorio','uses'=>'CotacaoController@showRelatorio']);
+  Route::get('/saida/{id}/relatorio', ['as'=>'saidaRelatorio','uses'=>'SaidaController@showRelatorio']);
+  Route::get('/entrada/{id}/relatorio', ['as'=>'entradaRelatorio','uses'=>'EntradaController@showRelatorio']);
+
+  Route::resource('/venda', 'VendaController');
+  Route::resource('/iten_venda', 'ItenVendaController');
+
+  // GERIR PAGAMENTO DA VENDA => Malache
+  Route::post('/venda/pagamento', 'VendaController@pagamentoVenda')->name('pagamentoVenda');
+
+  Route::resource('/entrada', 'EntradaController');
+});
+
+Route::group(['middleware'=>['authen','roles'],'roles'=>['Administrador']],function(){
+
+  //para administrador 
+ 
   Route::get('/fornecedores/inactivos', ['as'=>'fornecedores_inactivos', 'uses'=>'fornecedorController@inactivos']);
 
   // Rotas para ACTIVAR e DESACTIVAR o Fornecedor => Malache
@@ -88,23 +123,7 @@ Route::group(['middleware'=>['authen','roles'],'roles'=>['Administrador']],funct
   // CADSTRAR CLIENTE FAZENDO o redirect()->back() => Malache
   Route::post('/cliente/cliente_salvar_rback', 'ClienteController@storeRedirectBack')->name('cliente_salvar_rback');
 
-  // CADASTRAR A COTACAO COM ajax => Malache
-  Route::post('cotacao/cotacao_store', 'CotacaoController@store');
-  Route::get('cotacao/index', 'CotacaoController@index');
-
-  // CADASTRAR A SAIDA COM ajax => Malache
-  Route::post('saida/saida_store', 'SaidaController@store');
-  Route::get('saida/index', 'SaidaController@index');
-
-  // CRIAR GUIA DE ENTREGA => Malache
-  Route::get('/guia_entrega/create_guia/{id}', 'GuiaEntregaController@createGuia')->name('create_guia');
-  Route::get('/guia_entrega/show_guia_entrega/{id}', 'GuiaEntregaController@showGuiasEntrega')->name('show_guia_entrega');
-  Route::get('/guia_entrega/{id}/relatorio', ['as'=>'guiaRelatorio','uses'=>'GuiaEntregaController@showRelatorio']);//TODO --para imprimir as guias de entrega
-  // GERIR PAGAMENTO DA VENDA => Malache
-  Route::post('/venda/pagamento', 'VendaController@pagamentoVenda')->name('pagamentoVenda');
-
-
-
+ 
   //Rotas de operações
   Route::resource('/fornecedores', 'fornecedorController');
   Route::resource('/produtos', 'produtoController');
@@ -112,19 +131,9 @@ Route::group(['middleware'=>['authen','roles'],'roles'=>['Administrador']],funct
   Route::resource('/cliente', 'ClienteController');
   Route::resource('/tipo_cliente', 'TipoClienteController');
 
-  Route::resource('/factura', 'FacturacaoController');
-
-
-  Route::resource('/saida', 'SaidaController');
-  Route::resource('/iten_saida', 'ItenSaidaController');
-  Route::resource('/guia_entrega', 'GuiaEntregaController');
-  Route::resource('/iten_guia_entrega', 'ItenGuiaEntregaController');
-  Route::resource('/venda', 'VendaController');
-  Route::resource('/iten_venda', 'ItenVendaController');
-  Route::resource('/cotacao', 'CotacaoController');
-  Route::resource('/cotacao/iten_cotacao', 'ItenCotacaoController');
+ 
   Route::resource('/tipo_cotacao', 'TipoCotacaoController');
-  Route::resource('/entrada', 'EntradaController');
+ 
 
 
 
