@@ -12,7 +12,30 @@
 
 <div class="row">
   <div class="col-lg-12">
-    <section class="panel panel-default">
+    <div id="wait" style=" 
+    text-align: center; 
+    z-index: 1; 
+    display:none;
+    width:100%;
+    height:100%;
+    position:absolute;
+    top:0;
+    left:0;
+    padding:5px;">
+
+    <div id="wait-loader" style="
+    position:absolute;    
+    left:40%;
+    top:40%;
+    font-size: 50px; 
+    color: blue;">
+    <!-- <i class="fa fa-plus text-center"> -->
+      <img src="{{asset('/img/Gear-0.6s-200px.gif')}}"/>
+    </i>
+    <!-- <h2>Aguarde...</h2> -->
+  </div>
+</div>
+<section class="panel panel-default">
       <!-- <header class="panel-heading">
         Vendas
       </header> -->
@@ -41,48 +64,65 @@
                   <td> <a href="{{ route('show_guia_entrega', $venda->id) }}">{{$venda->id}}</a> </td>
                   <td> {{$venda->created_at}} </td>
                   <td> {{$venda->cliente->nome}} </td>
-                  <td> {{$venda->valor_total}} </td>
+                  <td> {{$venda->valor_iva}} </td>
+                  {{ Form::open(['route'=>['venda.destroy', $venda->id], 'method'=>'DELETE']) }}
                   <td> 
-                    <button type="button" data-toggle="modal" data-target="#modalPagamentoVenda" data-venda_id={{ $venda->id }} data-valor_total={{ $venda->valor_total }} data-valor_pago={{ $venda->valor_pago }} data-troco={{ $venda->troco }} data-forma_pagamento_id={{ $venda->forma_pagamento_id }} data-nr_documento_forma_pagamento={{ $venda->nr_documento_forma_pagamento }}
+                    <!-- <button type="button" data-toggle="modal" data-target="#modalPagamentoVenda" data-venda_id={{ $venda->id }} data-valor_total={{ $venda->valor_total }} data-valor_pago={{ $venda->valor_pago }} data-troco={{ $venda->troco }} data-forma_pagamento_id={{ $venda->forma_pagamento_id }} data-nr_documento_forma_pagamento={{ $venda->nr_documento_forma_pagamento }} -->
+                      <a href="{{route('createPagamentoVenda', $venda->id)}}"
 
                       <?php
+                        $valor_pago_soma = 0;
+                        $arry_valor_pago_soma[] = 0;
 
-                      if($venda->valor_pago >= $venda->valor_total ){
-                        echo 'class="btn btn-success btn-sm"';
-                      }else{
-                        echo 'class="btn btn-danger btn-sm"';
-                      }
+                        foreach($venda->pagamentosVenda as $pagamento){
+                          $arry_valor_pago_soma[] = $pagamento->valor_pago;
+                        }
 
-                      ?>
+                        if(sizeof($arry_valor_pago_soma)<0){
+                          $valor_pago_soma = 0;
+                        }else{
+                          $valor_pago_soma = array_sum($arry_valor_pago_soma);
+                        }
 
+
+
+                        if(($venda->pago==1 && ($valor_pago_soma >= $venda->valor_iva))){ 
+                          echo 'class="btn btn-success btn-sm"';
+                        }else{
+                          echo 'class="btn btn-danger btn-sm"';
+                        }
+
+                        ?>
                       >
+
+                      <!-- > -->
                       Pagamento
 
                       <?php
 
-                      if($venda->valor_pago >= $venda->valor_total ){
+                      if(($venda->pago==1) && ($valor_pago_soma >= $venda->valor_iva) ){
                         echo '<i class="fa fa-check"></i>';
                       }else{
                         echo '<i class="icon_close_alt2"></i>';
                       }
 
                       ?>
-
-                    </button>
+                    </a>
+                    <!-- </button> -->
 
                   </a> 
                 </td>
                 <td class="text-right">
-                  {{ Form::open(['route'=>['venda.destroy', $venda->id], 'method'=>'DELETE']) }}
+
                   <div class="btn-group btn-group-sm">
                     <a class="btn btn-primary" href="{{route('venda.show', $venda->id)}}"><i class="fa fa-eye"></i></a>
                     <a class="btn btn-success" href="{{route('venda.edit', $venda->id)}}"><i class="fa fa-pencil"></i></a>
-                    {{ Form::button('<i class="icon_close_alt2"></i>', ['type'=>'submit', 'class'=>'btn btn-danger']) }}
+                    {{ Form::button('<i class="icon_close_alt2"></i>', ['type'=>'submit', 'class'=>'btn btn-danger submit_iten']) }}
 
                   </div>
-                  {{ Form::close() }}
+                  
                 </td>
-
+                {{ Form::close() }}
               </tr>
               @endforeach
             </tbody>
@@ -112,7 +152,7 @@
       </div>
       <div class="modal-body">
 
-        {{Form::open(['route'=>['pagamentoVenda'], 'method'=>'POST'])}}
+        {{Form::open(['route'=>['pagamentoVenda'], 'method'=>'POST', 'onsubmit'=>'submitFormPagamentoVenda.disabled = true; return true;'])}}
 
         <div class="row">
           <div class="col-md-12">
@@ -177,7 +217,7 @@
           </div>
           <div class="col-md-6 text-right">
             {{Form::button('Fechar', ['class'=>'btn btn-default', 'data-dismiss'=>'modal'])}}
-            {{Form::submit('Actualizar', ['class'=>'btn btn-primary'])}}
+            {{Form::submit('Actualizar', ['class'=>'btn btn-primary submit_iten', 'name'=>'submitFormPagamentoVenda', 'id'=>'submitFormPagamentoVenda'])}}
           </div>
         </div>
 
@@ -194,6 +234,12 @@
 @section('script')
 
 <script type="text/javascript">
+  $(document).ready(function(){
+    $('.submit_iten').on('click',function(){
+      $("#wait").css("display", "block");
+    });
+  });
+
   $('#modalPagamentoVenda').on('show.bs.modal', function (event) {
     var button = $(event.relatedTarget); 
     var dta_venda_id = button.data('venda_id');
@@ -253,19 +299,19 @@
   }
 
   // ==== formatando os numeros ====
-    Number.prototype.formatMoney = function(decPlaces, thouSeparator, decSeparator){
-      var n = this,
-      decPlaces = isNaN(decPlaces = Math.abs(decPlaces)) ? 2 : decPlaces,
-      decSeparator = decSeparator == undefined ? ".": decSeparator,
-      thouSeparator = thouSeparator == undefined ? ",": thouSeparator,
-      sign = n < 0 ? "-" : "",
-      i = parseInt(n = Math.abs(+n || 0).toFixed(decPlaces)) + "",
-      j = (j = i.length) > 3 ? j % 3 : 0;
-      return sign + (j ? i.substr(0,j) + thouSeparator : "")
-      + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thouSeparator)
-      + (decPlaces ? decSeparator + Math.abs(n-i).toFixed(decPlaces).slice(2) : "");
-    };
-    
+  Number.prototype.formatMoney = function(decPlaces, thouSeparator, decSeparator){
+    var n = this,
+    decPlaces = isNaN(decPlaces = Math.abs(decPlaces)) ? 2 : decPlaces,
+    decSeparator = decSeparator == undefined ? ".": decSeparator,
+    thouSeparator = thouSeparator == undefined ? ",": thouSeparator,
+    sign = n < 0 ? "-" : "",
+    i = parseInt(n = Math.abs(+n || 0).toFixed(decPlaces)) + "",
+    j = (j = i.length) > 3 ? j % 3 : 0;
+    return sign + (j ? i.substr(0,j) + thouSeparator : "")
+    + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thouSeparator)
+    + (decPlaces ? decSeparator + Math.abs(n-i).toFixed(decPlaces).slice(2) : "");
+  };
+
 
 </script>
 

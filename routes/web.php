@@ -40,6 +40,7 @@ Route::group(['middleware'=>['authen']],function(){
   //cotações
   Route::resource('/cotacao', 'CotacaoController');
   Route::resource('/cotacao/iten_cotacao', 'ItenCotacaoController');
+
   // CADASTRAR A COTACAO COM ajax => Malache
   Route::post('cotacao/cotacao_store', 'CotacaoController@store');
   Route::get('cotacao/index', 'CotacaoController@index');
@@ -51,6 +52,11 @@ Route::group(['middleware'=>['authen']],function(){
   // CADASTRAR A SAIDA COM ajax => Malache
   Route::post('saida/saida_store', 'SaidaController@store');
   Route::get('saida/index', 'SaidaController@index');
+
+   // SAIDAS, Privado, Publico, Concurso
+   Route::get('/saida/saida_pubblico_create/', 'SaidaController@saidaPublicoCreate')->name('saidaPublicoCreate');
+   Route::get('/saida/saida_concurso_create/', 'SaidaController@saidaConcursoCreate')->name('saidaConcursoCreate');
+   Route::post('/saida/concurso/dados', 'SaidaController@findConcursoDados')->name('findConcursoDados');
 
    //Rotas get para gerar impressao em formato pdf => Malache
    Route::get('/saida/pdf/{id}', ['as'=>'saida_pdf', 'uses'=>'SaidaController@report']);
@@ -73,8 +79,27 @@ Route::group(['middleware'=>['authen']],function(){
 
   // GERIR PAGAMENTO DA VENDA => Malache
   Route::post('/venda/pagamento', 'VendaController@pagamentoVenda')->name('pagamentoVenda');
+  Route::resource('/entrada', 'EntradaController');
+  Route::get('/venda/create_pagamento/{id}', 'VendaController@createPagamentoVenda')->name('createPagamentoVenda');
+ 
+
+  // GERIR PAGAMENTO DO CONCURSO => Malache
+  Route::get('/concurso/create_pagamento/{id}', 'ConcursoController@createPagamentoConcurso')->name('createPagamentoConcurso');
+  Route::post('/concurso/pagamento', 'ConcursoController@pagamentoConcurso')->name('pagamentoConcurso');
+
+  // GERIR PAGAMENTO DA ENTRADA => Malache
+  Route::post('/entrada/pagamento', 'EntradaController@pagamentoEntrada')->name('pagamentoEntrada');
+
+  // GERIR PAGAMENTO DA SAIDA => Malache
+  Route::post('/saida/pagamento', 'SaidaController@pagamentoSaida')->name('pagamentoSaida');
+  Route::get('/saida/create_pagamento/{id}', 'SaidaController@createPagamentoSaida')->name('createPagamentoSaida');
 
   Route::resource('/entrada', 'EntradaController');
+  Route::resource('/entrada/iten_entrada', 'ItenEntradaController');
+  Route::resource('/concurso', 'ConcursoController');
+  Route::resource('/iten_concurso', 'ItenConcursoController');
+
+   
 });
 
 Route::group(['middleware'=>['authen','roles'],'roles'=>['Administrador']],function(){
@@ -123,7 +148,12 @@ Route::group(['middleware'=>['authen','roles'],'roles'=>['Administrador']],funct
   // CADSTRAR CLIENTE FAZENDO o redirect()->back() => Malache
   Route::post('/cliente/cliente_salvar_rback', 'ClienteController@storeRedirectBack')->name('cliente_salvar_rback');
 
- 
+
+
+
+  
+
+
   //Rotas de operações
   Route::resource('/fornecedores', 'fornecedorController');
   Route::resource('/produtos', 'produtoController');
@@ -133,21 +163,6 @@ Route::group(['middleware'=>['authen','roles'],'roles'=>['Administrador']],funct
 
  
   Route::resource('/tipo_cotacao', 'TipoCotacaoController');
- 
-
-
-
-/*
-  Route::group(['namespace' => 'Testes'], function(){
-    Route::resource('/teste_categoria', 'CategoriaController');
-    Route::resource('/teste_fornecedor', 'FornecedorController');
-    Route::resource('/teste_cliente', 'ClienteController');
-    Route::resource('/teste_role', 'RoleController');
-    Route::resource('/teste_permissao', 'PermissaoController');
-    Route::resource('/teste_saida', 'SaidaController');
-    Route::resource('/teste_iten_saida', 'ItenSaidaController');
-
-  });
- */
+  
 
 });

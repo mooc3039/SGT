@@ -62,27 +62,36 @@ class ItenSaidaController extends Controller
             'subtotal_rest' => $request->subtotal,
         ];
 
-        try {
+        if($request->quantidade > $request->new_qtd_referencial){
 
-          if($this->iten_saida->create($dataForm)){
-
-            $sucess = 'Item inserido com sucesso!';
-            return redirect()->back()->with('success', $sucess);
+            $error = "Excedeu a quantidade! Quantidade disponivel para este item = ".$request->new_qtd_referencial;
+            return redirect()->back()->with('error', $error);
 
         }else{
 
-            $error = 'Erro ao inserir o Item!';
+            try {
+
+              if($this->iten_saida->create($dataForm)){
+
+                $sucess = 'Item inserido com sucesso!';
+                return redirect()->back()->with('success', $sucess);
+
+            }else{
+
+                $error = 'Erro ao inserir o Item!';
+                return redirect()->back()->with('error', $error);
+
+            }
+
+
+        } catch (QueryException $e) {
+
+            $error = "Erro ao inserir o Item! => Possível redundância do item/produto à mesma cotação ($request->saida_id).";
             return redirect()->back()->with('error', $error);
 
         }
-
-
-    } catch (QueryException $e) {
-
-        $error = "Erro ao inserir o Item! => Possível redundância do item/produto à mesma cotação ($request->saida_id).";
-        return redirect()->back()->with('error', $error);
-
     }
+
 }
 
     /**
@@ -114,7 +123,7 @@ class ItenSaidaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(ItenSaidaStoreUpdateFormRequest $request, $id)
     {//dd($request->all());
         $new_quantidade = $request->quantidade;
         $old_quantidade = $request->old_quantidade;
@@ -143,55 +152,55 @@ class ItenSaidaController extends Controller
             if($request->quantidade > $request->qtd_referencial || $request->quantidade < $request->qtd_referencial_min_iten_saida){
                 // Validar a qtd esecificada de acordo cm a min e max para o item.
 
-            DB::rollback();
-            $error = 'Quantidade Minima para este item: '.$request->qtd_referencial_min_iten_saida.' Quantidade Maxima para este item: '.$request->qtd_referencial;
-            return redirect()->back()->with('error', $error);
+                DB::rollback();
+                $error = 'Quantidade Minima para este item: '.$request->qtd_referencial_min_iten_saida.' Quantidade Maxima para este item: '.$request->qtd_referencial;
+                return redirect()->back()->with('error', $error);
 
-        }else{
-            $iten_saida = ItenSaida::where('saida_id', $saida_id)->where('produto_id', $produto_id)->first();
+            }else{
+                $iten_saida = ItenSaida::where('saida_id', $saida_id)->where('produto_id', $produto_id)->first();
 
-            if($iten_saida->update($dataForm)){
+                if($iten_saida->update($dataForm)){
 
-                if($new_quantidade > $old_quantidade)
-                {
-                    $qtd_mais = $new_quantidade - $old_quantidade;
-                    DB::select('call SP_incrementar_rest_iten_saidas(?, ?, ?)', array($qtd_mais, $saida_id, $produto_id));
+                    if($new_quantidade > $old_quantidade)
+                    {
+                        $qtd_mais = $new_quantidade - $old_quantidade;
+                        DB::select('call SP_incrementar_rest_iten_saidas(?, ?, ?)', array($qtd_mais, $saida_id, $produto_id));
 
-                    DB::commit();
-                    $sucess = 'Item actualizado com sucesso!';
-                    return redirect()->back()->with('success', $sucess);
+                        DB::commit();
+                        $sucess = 'Item actualizado com sucesso!';
+                        return redirect()->back()->with('success', $sucess);
 
-                }elseif($new_quantidade <= $old_quantidade)
-                {
+                    }elseif($new_quantidade <= $old_quantidade)
+                    {
 
-                    $qtd_menos = $old_quantidade - $new_quantidade;
-                    DB::select('call SP_decrementar_rest_iten_saidas(?, ?, ?)', array($qtd_menos, $saida_id, $produto_id));
+                        $qtd_menos = $old_quantidade - $new_quantidade;
+                        DB::select('call SP_decrementar_rest_iten_saidas(?, ?, ?)', array($qtd_menos, $saida_id, $produto_id));
 
-                    DB::commit();
-                    $sucess = 'Item actualizado com sucesso!';
-                    return redirect()->back()->with('success', $sucess);
+                        DB::commit();
+                        $sucess = 'Item actualizado com sucesso!';
+                        return redirect()->back()->with('success', $sucess);
+
+                    }
+
+
+
+                }else{
+                    DB::rollback();
+                    $error = 'Erro ao actualizar o Item!';
+                    return redirect()->back()->with('error', $error);
+
 
                 }
 
-
-
-            }else{
-                DB::rollback();
-                $error = 'Erro ao actualizar o Item!';
-                return redirect()->back()->with('error', $error);
-
-
             }
+        } catch (QueryException $e) {
+            DB::rollback();
+        //echo $e;
+            $error = 'Erro ao actualizar o Item! Erro relacionado ao DB. Necessária a intervenção do Administrador da Base de Dados.!';
+            return redirect()->back()->with('error', $error);
 
         }
-    } catch (QueryException $e) {
-        DB::rollback();
-        //echo $e;
-        $error = 'Erro ao actualizar o Item! Erro relacionado ao DB. Necessária a intervenção do Administrador da Base de Dados.!';
-        return redirect()->back()->with('error', $error);
-
     }
-}
 
     /**
      * Remove the specified resource from storage.

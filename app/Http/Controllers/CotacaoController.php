@@ -85,7 +85,9 @@ class CotacaoController extends Controller
       $cotacao->cliente_id = $request['cliente_id'];
       $cotacao->tipo_cotacao_id = $request['tipo_cotacao_id'];
       $cotacao->user_id = $request['user_id'];
-      $cotacao->valor_total = 0; // Eh necessario que o valor total seja zero, uma vez que este campo na tabela cotacaos eh actualizado pelo trigger apos o "insert" bem como o "update" na tabela itens_cotacaos de acordo com o codigo da cotacao. Nao pode ser o valor_total vindo do formulario, pois este valor sera acrescido a cada insercao abaixo quando executar o iten_cotacao->save().
+      $cotacao->valor_total = 0; 
+      $cotacao->valor_iva = 0; 
+      // Eh necessario que o valor total seja zero, uma vez que este campo na tabela cotacaos eh actualizado pelo trigger apos o "insert" bem como o "update" na tabela itens_cotacaos de acordo com o codigo da cotacao. Nao pode ser o valor_total vindo do formulario, pois este valor sera acrescido a cada insercao abaixo quando executar o iten_cotacao->save().
 
       // $salvar =1;
 
@@ -160,7 +162,7 @@ class CotacaoController extends Controller
   public function show($id)
   {
     //
-    $cotacao = $this->cotacao->with('itensCotacao.produto', 'cliente')->find($id); // Tras a saida. Tras os Itens da Saida e dentro da relacao ItensSaida eh possivel pegar a relacao Prodtuo atraves do dot ou ponto. NOTA: a relacao produto nao esta na saida e sim na itensSaida, mas eh possivel ter os seus dados partido da saida como se pode ver.
+    $cotacao = $this->cotacao->with('itensCotacao.produto', 'cliente')->find($id); // Tras a cotacao. Tras os Itens da cotacao e dentro da relacao Itenscotacao eh possivel pegar a relacao Prodtuo atraves do dot ou ponto. NOTA: a relacao produto nao esta na cotacao e sim na itenscotacao, mas eh possivel ter os seus dados partido da cotacao como se pode ver.
 
     return view('cotacoes.show_cotacao', compact('cotacao'));
   }
@@ -172,7 +174,6 @@ class CotacaoController extends Controller
             // Tras a saida. Tras os Itens da Saida e dentro da relacao ItensSaida eh possivel pegar a relacao Prodtuo atraves do dot ou ponto. NOTA: a relacao produto nao esta na saida e sim na itensSaida, mas eh possivel ter os seus dados partido da saida como se pode ver.
          $pdf = PDF::loadView('cotacoes.relatorio', compact('cotacao'));
          return $pdf->download('cotacao.pdf');
-        // return view('guias_entrega.relatorio', compact('guia_entrega'));
         
     }
 
@@ -186,7 +187,7 @@ class CotacaoController extends Controller
   {
     //
     $produtos = DB::table('produtos')->pluck('descricao', 'id')->all();
-    $cotacao = $this->cotacao->with('itensCotacao.produto', 'cliente')->find($id); // Tras a saida. Tras os Itens da Saida e dentro da relacao ItensSaida eh possivel pegar a relacao Prodtuo atraves do dot ou ponto. NOTA: a relacao produto nao esta na saida e sim na itensSaida, mas eh possivel ter os seus dados partido da saida como se pode ver.
+    $cotacao = $this->cotacao->with('itensCotacao.produto', 'cliente')->find($id); // Tras a cotacao. Tras os Itens da cotacao e dentro da relacao Itenscotacao eh possivel pegar a relacao Prodtuo atraves do dot ou ponto. NOTA: a relacao produto nao esta na cotacao e sim na itenscotacao, mas eh possivel ter os seus dados partido da cotacao como se pode ver.
 
     return view('cotacoes.itens_cotacao.create_edit_itens_cotacao', compact('cotacao', 'produtos'));
 
@@ -202,48 +203,6 @@ class CotacaoController extends Controller
   public function update(Request $request, $id)
   {
 
-    dd($request->all());
-    $cotacao_id = $request->cotacao_id;
-    $produto_id = $request->produto_id;
-
-    $cotacao = $this->cotacao->find($cotacao_id);
-    $cotacao->user_id = $request->user_id;
-    $cotacao->valor_total = $request->valor_total;
-    //dd($iten_cotacao);
-
-    // DB::beginTransaction();
-    //
-    // try {
-    //
-    //   if($cotacao->update()){
-    //
-    //     $iten_cotacao = ItenCotacao::where('cotacao_id', $cotacao_id)->where('produto_id', $produto_id)->first();
-    //
-    //     //$iten_array_update = ['quantidade'=>'10', 'valor'=>$request->valor];
-    //      $iten_cotacao->quantidade = $request->quantidade;
-    //      $iten_cotacao->valor = $request->valor;
-    //      $iten_cotacao->valor = $request->desconto;
-    //      $iten_cotacao->valor = $request->subtotal;
-    //
-    //     $iten_cotacao->update();
-    //
-    //
-    //     DB::commit();
-    //     return redirect()->back()->with('success', 'Actualizado com sucesso');
-    //
-    //   }else {
-    //
-    //     DB::rollback();
-    //     return redirect()->back()->with('error', 'Erro ao Alterar o Item!');
-    //
-    //   }
-    //
-    // } catch (QueryException $e) {
-    //
-    //   //DB::rollback();
-    //   //return redirect()->back()->with('error', 'Erro de QueryException');
-    //   echo $e;
-    //
     // }
 
   }
@@ -257,13 +216,35 @@ class CotacaoController extends Controller
   public function destroy($id)
   {
     //
+    $cotacao = $this->cotacao->find($id);
+
+        try {
+
+          if($cotacao->delete()){
+
+            $sucess = 'Cotação removida com sucesso!';
+            return redirect()->route('cotacao.index')->with('success', $sucess);
+
+          }else{
+
+            $error = 'Erro ao remover a Cotação!';
+            return redirect()->back()->with('error', $error);
+          }
+
+
+        } catch (QueryException $e) {
+
+          $error = "Erro ao remover Cotação. Possivelmente Registo em uso. Necessária a intervenção do Administrador da Base de Dados.!";
+          return redirect()->back()->with('error', $error);
+
+        }
   }
 
   public function reportGeralCotacoes(){
 
     $cotacoes = $this->cotacao->with('cliente')->orderBy('id', 'asc')->get();
 
-    return view('reports.cotacoes.report_geral_cotacoes', compact('cotacoes', 'valor_total_saidas'));
+    return view('reports.cotacoes.report_geral_cotacoes', compact('cotacoes', 'valor_total_cotacaos'));
 
   }
 

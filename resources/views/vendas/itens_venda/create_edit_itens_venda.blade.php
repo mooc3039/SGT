@@ -4,6 +4,29 @@
 <!-- <div class="container"> -->
   <div class="row">
     <div class="col-md-12">
+      <div id="wait" style=" 
+      text-align: center; 
+      z-index: 1; 
+      display:none;
+      width:100%;
+      height:100%;
+      position:absolute;
+      top:0;
+      left:0;
+      padding:5px;">
+
+      <div id="wait-loader" style="
+      position:absolute;    
+      left:40%;
+      top:40%;
+      font-size: 50px; 
+      color: blue;">
+      <!-- <i class="fa fa-plus text-center"> -->
+        <img src="{{asset('/img/Gear-0.6s-200px.gif')}}"/>
+      </i>
+      <!-- <h2>Aguarde...</h2> -->
+    </div>
+  </div>
 
       <div class="panel panel-default">
         <div class="panel-heading">
@@ -84,7 +107,7 @@
                     <td> {{$iten_venda->valor}} </td>
                     {{ Form::open(['route'=>['iten_venda.destroy', $iten_venda->id], 'method'=>'DELETE']) }}
                     <td class="text-center">
-                      {{ Form::button('<i class="icon_close_alt2"></i>', ['class'=>'btn btn-danger btn-sm', 'type'=>'submit'] )}}
+                      {{ Form::button('<i class="icon_close_alt2"></i>', ['class'=>'btn btn-danger btn-sm submit_iten', 'type'=>'submit'] )}}
                     </td>
                     {{ Form::close() }}
 
@@ -115,21 +138,15 @@
               <table class="pull-right">
                 <tr>
                   <td>Sub-Total:</td>
-                  <td>{{$venda->subtotal}}</td>
+                  <td>{{$venda->valor_total}}</td>
                 </tr>
 
                 <tr>
                   <td>IVA:</td>
                   <td>17%</td>
                 </tr>
-
-                <tr>
-                  <td>Desconto:</td>
-                  <td>{{$venda->desconto}}</td>
-                </tr>
-
                 <tr><td> Valor Total:</td>
-                  <td><b>{{$venda->valor_total}}</b></td>
+                  <td><b>{{$venda->valor_iva}}</b></td>
                 </tr>
               </table>
 
@@ -164,7 +181,7 @@
             <div class="col-md-6"><a href="" class="btn btn-primary">Imprimir Venda</a>
 
             </div>
-            <div class="col-md-6 text-right"><a href="{{route('venda.index')}}" class="btn btn-warning">Cancelar</a>
+            <div class="col-md-6 text-right"><a href="{{route('venda.index')}}" class="btn btn-warning">Voltar</a>
 
             </div>
           </div>
@@ -192,6 +209,24 @@
 
   @section('script')
   <script>
+    $(document).ready(function(){
+    $('.submit_iten').on('click',function(){
+      $("#wait").css("display", "block");
+    });
+  });
+
+    $(document).ready(function(){
+    $(document).ajaxStart(function(){
+      $("#wait").css("display", "block");
+      document.getElementById("new_quantidade").disabled = true;
+    });
+    $(document).ajaxComplete(function(){
+      $("#wait").css("display", "none");
+      document.getElementById("new_quantidade").disabled = false;
+      $('#new_quantidade').focus(); // Nao esta no find price por tratar-se de modal aqui.
+    });
+  });
+
 
     //JAVASCRIPT MODAL NOVO ITEM
 
@@ -205,8 +240,7 @@
 
 
         $('#modalInserirItem').delegate('#new_produto_id','change',function(){
-          // Achar o preco e as quantidades do produto selecionado
-          $('#new_quantidade').focus();
+          // Achar o preco e as quantidades do produto selecionado\
 
           var id = $('#new_produto_id').val();
           var dataId={'id':id};
@@ -219,12 +253,34 @@
               $('#new_preco_venda').val(data.preco_venda);
               $('#new_quantidade_dispo').val(data.quantidade_dispo - data.quantidade_min);
               $('#new_qtd_dispo_referencial').val(data.quantidade_dispo - data.quantidade_min);
+              newValidarQuantidadeEspecificada();
+              newCalcularValores();
+            },
+            complete:function(data){
+              $('#new_quantidade').focus();
             }
           });
         });
 
         $('#modalInserirItem').delegate('#new_quantidade','keyup',function(){
           // validar a qtd actual/especificada de acordo com os limites, qtd existente no stock
+          newValidarQuantidadeEspecificada();
+
+        });
+
+
+        $('#modalInserirItem').delegate('#new_quantidade,#new_preco_venda,#new_desconto','keyup',function(){
+
+          numberOnly('#new_quantidade');
+          numberOnly('#new_desconto');
+
+          //calcular os valores de acordo com a qtd e o preco para o NovoItem antes e apos as validacoes acima feitas;
+          newCalcularValores();         
+
+        });
+
+        function newValidarQuantidadeEspecificada(){
+
           var new_quantidade = $('#new_quantidade').val();
           var new_qtd_dispo_referencial = $('#new_qtd_dispo_referencial').val();
 
@@ -245,32 +301,28 @@
                 var new_quantidade_venda_rest = (new_qtd_dispo_referencial-new_quantidade);
                 $('#new_quantidade_dispo').val(new_quantidade_venda_rest);
               }
+            }
 
-            });
+            function newCalcularValores(){
 
+              var new_quantidade = $('#new_quantidade').val();
+              var new_preco_venda = $('#new_preco_venda').val();
+              var new_desconto = $('#new_desconto').val();
+              var new_subtotal = ((new_quantidade*new_preco_venda)-(new_quantidade*new_preco_venda*new_desconto)/100);
+              var new_valor = (new_quantidade*new_preco_venda);
 
-        $('#modalInserirItem').delegate('#new_quantidade,#new_preco_venda,#new_desconto','keyup',function(){
-          //calcular os valores de acordo com a qtd e o preco para o NovoItem antes e apos as validacoes acima feitas;
-          var new_quantidade = $('#new_quantidade').val();
-          var new_preco_venda = $('#new_preco_venda').val();
-          var new_desconto = $('#new_desconto').val();
-          var new_subtotal = ((new_quantidade*new_preco_venda)-(new_quantidade*new_preco_venda*new_desconto)/100);
-          var new_valor = (new_quantidade*new_preco_venda);
+              var new_valor_total = (new_dta_valor_total*1);
 
-          var new_valor_total = (new_dta_valor_total*1);
-
-          new_valor_total = new_valor_total + new_subtotal;
+              new_valor_total = new_valor_total + new_subtotal;
 
 
-          $('#new_subtotal').val(new_subtotal);
-          $('#new_valor').val(new_valor);
-          $('#new_valor_total').val(new_valor_total);
-          $('#new_val_temp').html(new_valor_total.formatMoney(2,',','.')+ " Mtn");
+              $('#new_subtotal').val(new_subtotal);
+              $('#new_valor').val(new_valor);
+              $('#new_valor_total').val(new_valor_total);
+              $('#new_val_temp').html(new_valor_total.formatMoney(2,',','.')+ " Mtn");
+            }
 
-
-        });
-
-      });
+          });
       // JAVASCRIPT FIM MODAL NOVO ITEM
 
       // JAVASCRIPT MODAL EDITAR ITEM
@@ -310,6 +362,24 @@
 
         $('#modalProdutoIten').delegate('#quantidade','keyup',function(){
           // validar a qtd actual/especificada de acordo com os limites, qtd existente no stock
+          editValidarQuantidadeEspecificada();
+
+        });
+
+
+
+
+        $('#modalProdutoIten').delegate('#quantidade,#preco_venda,#desconto','keyup',function(){
+          
+          numberOnly('#quantidade');
+          numberOnly('#desconto');
+          
+          editCalcularValores();
+          
+        });
+
+        function editValidarQuantidadeEspecificada(){
+
           var quantidade = $('#quantidade').val();
           var qtd_dispo_referencial = ((dta_quantidade_dispo*1)+dta_quantidade);
 
@@ -328,44 +398,39 @@
                 $('#quantidade').val(quantidade);
                 $('#quantidade_dispo').val(qtd_dispo_referencial-quantidade);
               }
+            };
 
-            });
+            function editCalcularValores(){
 
+              var mdl_quantidade = $('#quantidade').val();
+              var mdl_preco_venda = $('#preco_venda').val();
+              var mdl_desconto = $('#desconto').val();
+              var mdl_subtotal = ((mdl_quantidade*mdl_preco_venda)-(mdl_quantidade*mdl_preco_venda*mdl_desconto)/100);
+              var mdl_valor = (mdl_quantidade*mdl_preco_venda);
 
+              var mdl_valor_total = (dta_valor_total*1);
 
+              var valor_incre_decre = 0;
 
-        $('#modalProdutoIten').delegate('#quantidade,#preco_venda,#desconto','keyup',function(){
-          //total();
-          var mdl_quantidade = $('#quantidade').val();
-          var mdl_preco_venda = $('#preco_venda').val();
-          var mdl_desconto = $('#desconto').val();
-          var mdl_subtotal = ((mdl_quantidade*mdl_preco_venda)-(mdl_quantidade*mdl_preco_venda*mdl_desconto)/100);
-          var mdl_valor = (mdl_quantidade*mdl_preco_venda);
+              if(mdl_subtotal > dta_subtotal){
 
-          var mdl_valor_total = (dta_valor_total*1);
+                valor_incre_decre = (mdl_subtotal - dta_subtotal);
+                mdl_valor_total = (mdl_valor_total + valor_incre_decre);
 
-          var valor_incre_decre = 0;
-          
-          if(mdl_subtotal > dta_subtotal){
+              }else if(mdl_subtotal <= dta_subtotal){
 
-            valor_incre_decre = (mdl_subtotal - dta_subtotal);
-            mdl_valor_total = (mdl_valor_total + valor_incre_decre);
+                valor_incre_decre = (dta_subtotal - mdl_subtotal);
+                mdl_valor_total = (mdl_valor_total - valor_incre_decre);
 
-          }else if(mdl_subtotal <= dta_subtotal){
+              }
 
-            valor_incre_decre = (dta_subtotal - mdl_subtotal);
-            mdl_valor_total = (mdl_valor_total - valor_incre_decre);
+              $('#subtotal').val(mdl_subtotal);
+              $('#valor').val(mdl_valor);
+              $('#valor_total').val(mdl_valor_total);
+              $('#val_temp').html(mdl_valor_total.formatMoney(2,',','.')+ " Mtn");
+            };
 
-          }
-
-          $('#subtotal').val(mdl_subtotal);
-          $('#valor').val(mdl_valor);
-          $('#valor_total').val(mdl_valor_total);
-          $('#val_temp').html(mdl_valor_total.formatMoney(2,',','.')+ " Mtn");
-          
-        });
-
-      });
+          });
 
 
     // JAVASCRIPT FIM MODAL EDITAR ITEM

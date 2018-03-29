@@ -25,7 +25,6 @@ class VendaStoreUpdateFormRequest extends FormRequest
     {
       return [
         'cliente_id' => 'required',
-        'user_id' => 'required',
         'produto_id' => 'required',
         'quantidade' => 'required',
         'desconto' => 'required',

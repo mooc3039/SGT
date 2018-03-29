@@ -12,15 +12,26 @@
 
       <li class="sub-menu">
         <a href="javascript:;" class="">
-                      <i class="icon_desktop"></i>
+                      <i class="fa fa-shopping-cart"></i>
                       <span>Facturação</span>
                       <span class="menu-arrow arrow_carrot-right"></span>
                   </a>
         <ul class="sub">
           <li><a class="" href="{{route('cotacao.index')}}"><i class="fa fa-file"></i>Proforma</a></li>
-          <li><a class="" href="{{route('saida.index')}}"><i class="fa fa-suitcase"></i>Facturar</a></li>
+          <li><a class="" href="{{route('saida.index')}}"><i class="fa fa-shopping-cart"></i>Facturar</a></li>
           <li><a class="" href="{{route('venda.index')}}"><i class="fa fa-shopping-cart"></i>Vendas</a></li>
           <li><a class="" href="{{route('entrada.index')}}"><i class="fa fa-sign-out"></i>Entradas</a></li>
+          
+        </ul>
+      </li>
+      <li class="sub-menu">
+        <a href="javascript:;" class="">
+                      <i class="fa fa-folder"></i>
+                      <span>Concursos</span>
+                      <span class="menu-arrow arrow_carrot-right"></span>
+                  </a>
+        <ul class="sub">
+          <li><a class="" href="{{route('concurso.index')}}"><i class="fa fa-sign-out"></i>Concurso</a></li>
           
         </ul>
       </li>

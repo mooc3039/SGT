@@ -7,7 +7,7 @@
 			</div>
 			<div class="modal-body">
 
-				{{Form::open(['route'=>['iten_venda.update', 'id'], 'method'=>'PUT'])}}
+				{{Form::open(['route'=>['iten_venda.update', 'id'], 'method'=>'PUT', 'onsubmit'=>'submitFormVenda.disabled = true; return true;'])}}
 
 				<div class="row">
 					<div class="col-md-3">
@@ -77,7 +77,7 @@
 					</div>
 					<div class="col-md-6 text-right">
 						{{Form::button('Fechar', ['class'=>'btn btn-default', 'data-dismiss'=>'modal'])}}
-						{{Form::submit('Actualizar', ['class'=>'btn btn-primary'])}}
+						{{Form::submit('Actualizar', ['class'=>'btn btn-primary submit_iten', 'name'=>'submitFormVenda', 'id'=>'submitFormVenda'])}}
 					</div>
 				</div>
 

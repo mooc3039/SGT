@@ -2,11 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Database\QueryException;
+// use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use App\Http\Requests\SaidaStoreUpdateFormRequest;
+use App\Http\Requests\PagamentoSaidaStoreUpdateFormRequest;
 use App\Model\Saida;
+use App\Model\Concurso;
+use App\Model\ItenConcurso;
+use App\Model\TipoCliente;
 use App\Model\ItenSaida;
+use App\Model\PagamentoSaida;
+use App\Model\FormaPagamento;
 use App\Model\Produto;
 use App\Model\Cliente;
 use App\User;
@@ -17,19 +23,26 @@ use PDF;
 class SaidaController extends Controller
 {
 
-    private $saida;
-    private $iten_saida;
-    private $produto;
-    private $cliente;
-    private $user;
+  private $saida;
+  private $pagamento_saida;
+  private $iten_saida;
+  private $concurso;
+  private $iten_concurso;
+  private $produto;
+  private $cliente;
+  private $tipo_cliente;
+  private $user;
 
-    public function __construct(Saida $saida, Produto $produto, Cliente $cliente, User $user){
+  public function __construct(Saida $saida, Concurso $concurso, ItenConcurso $iten_concurso, Produto $produto, Cliente $cliente, TipoCliente $tipo_cliente, User $user){
 
-        $this->saida = $saida;
-        $this->produto = $produto;
-        $this->cliente = $cliente;
-        $this->user = $user;
-    }
+    $this->saida = $saida;
+    $this->concurso = $concurso;
+    $this->iten_concurso = $iten_concurso;
+    $this->produto = $produto;
+    $this->cliente = $cliente;
+    $this->tipo_cliente = $tipo_cliente;
+    $this->user = $user;
+  }
 
 
     /**
@@ -41,9 +54,10 @@ class SaidaController extends Controller
     {
         //
 
-        $saidas = $this->saida->with('itensSaida')->orderBy('data', 'desc')->paginate(10);
+      $saidas = $this->saida->with('itensSaida', 'pagamentosSaida')->orderBy('data', 'desc')->paginate(10);
+      $formas_pagamento = DB::table('forma_pagamentos')->pluck('descricao', 'id')->all();
 
-        return view('saidas.index_saida', compact('saidas'));
+      return view('saidas.index_saida', compact('saidas', 'formas_pagamento'));
 
     }
 
@@ -55,11 +69,46 @@ class SaidaController extends Controller
     public function create()
     {
         //
-        $clientes = DB::table('clientes')->pluck('nome', 'id')->all();
-        $tipos_cliente = DB::table('tipo_clientes')->pluck('tipo_cliente', 'id')->all();
-        $produtos = $this->produto->select('id', 'descricao')->get();
+      $acronimo = TipoCliente::select('id')->where('acronimo', 'publico')->first();
+      $acronimo_id = $acronimo->id;
 
-        return view('saidas.create_edit_saida', compact('clientes', 'tipos_cliente' , 'produtos'));
+      $clientes = DB::table('clientes')->whereNotIn('tipo_cliente_id', [$acronimo_id])->pluck('nome', 'id')->all();
+      $tipos_cliente = DB::table('tipo_clientes')->pluck('tipo_cliente', 'id')->all();
+      $formas_pagamento = DB::table('forma_pagamentos')->pluck('descricao', 'id')->all();
+      $produtos = $this->produto->select('id', 'descricao')->get();
+
+      return view('saidas.create_edit_saida', compact('clientes', 'tipos_cliente', 'formas_pagamento' , 'produtos'));
+    }
+
+    public function saidaPublicoCreate(){
+      $acronimo = TipoCliente::select('id')->where('acronimo', 'publico')->first();
+      $acronimo_id = $acronimo->id;
+
+      $clientes = DB::table('clientes')->where('tipo_cliente_id', $acronimo_id)->pluck('nome', 'id')->all();
+      $tipos_cliente = DB::table('tipo_clientes')->pluck('tipo_cliente', 'id')->all();
+      $formas_pagamento = DB::table('forma_pagamentos')->pluck('descricao', 'id')->all();
+      $produtos = $this->produto->select('id', 'descricao')->get();
+
+      return view('saidas.publicos.create_edit_saida_publico', compact('clientes', 'tipos_cliente', 'formas_pagamento' , 'produtos'));
+    }
+
+    public function saidaConcursoCreate(){
+      // $concurso_valor_zero_id = Concurso::select('id')->where('valor_total', 0)->get();
+      $concurso_id_qtd_rest_zero = ItenConcurso::select('concurso_id')->where('quantidade_rest','>', 0)->distinct()->get();
+      $array_concurso_id = array();
+
+      if(sizeof($concurso_id_qtd_rest_zero)>0){
+        for($i=0;$i<sizeof($concurso_id_qtd_rest_zero); $i++){
+          $array_concurso_id[] = $concurso_id_qtd_rest_zero[$i]->concurso_id;
+        }
+      }
+            
+      $clientes = DB::table('clientes')->pluck('nome', 'id')->all();
+      $concursos = DB::table('concursos')->whereIn('id', $array_concurso_id)->pluck('codigo_concurso', 'id')->all();
+      $formas_pagamento = DB::table('forma_pagamentos')->pluck('descricao', 'id')->all();
+      // $concurso = $this->concurso->with('itensConcurso.produto', 'cliente')->find($id);
+
+      return view('saidas.concursos.create_edit_saida_concurso', compact('concursos', 'clientes', 'formas_pagamento'));
     }
 
     /**
@@ -70,33 +119,98 @@ class SaidaController extends Controller
      */
     public function store(SaidaStoreUpdateFormRequest $request)
     {
+      // dd($request->all());
         //
+      $acronimo_forma_pagamento_naoaplicavel = FormaPagamento::select('id')->where('acronimo', 'naoaplicavel')->first();
+      $acronimo_forma_pagamento_naoaplicavel_id = $acronimo_forma_pagamento_naoaplicavel->id;
+
       if($request->all()){
 
+
+        $pago = 0;
+        $valor_pago = 0.00;
+        $remanescente = 0.00;
+        $forma_pagamento_id = $acronimo_forma_pagamento_naoaplicavel_id;
+        $nr_documento_forma_pagamento = "Nao Aplicavel";
+        $nr_referencia = "Nao Aplivael";
+        $concurso_id = 0;
+
+
+        if($request['pago'] == 0){
+
+          $pago = $pago;
+          $valor_pago = $valor_pago;
+          $remanescente = $request['valor_total_iva'];
+          $forma_pagamento_id = $forma_pagamento_id;
+          $nr_documento_forma_pagamento = $nr_documento_forma_pagamento;
+
+        }else{
+
+          $pago = $request['pago'];
+
+          if(!empty($request['valor_pago'])){
+            $valor_pago = $request['valor_pago'];
+          }
+
+          if(!empty($request['remanescente'])){
+            $remanescente = $request['remanescente'];
+          }
+
+          if(!empty($request['forma_pagamento_id'])){
+            $forma_pagamento_id = $request['forma_pagamento_id'];
+          }
+
+          if(!empty($request['nr_documento_forma_pagamento'])){
+            $nr_documento_forma_pagamento = $request['nr_documento_forma_pagamento'];
+          }
+
+        }
+
+          // Referencia e Concurso
+        if(!empty($request['nr_referencia'])){
+          $nr_referencia = $request['nr_referencia'];
+        }
+
+        if(!empty($request['concurso_id'])){
+          $concurso_id = $request['concurso_id'];
+        }
+
+
+
+        DB::beginTransaction();
+
+        try {
 
           $saida = new Saida;
 
           $saida->cliente_id = $request['cliente_id'];
           $saida->user_id = $request['user_id'];
-          $saida->valor_total = 0; // Eh necessario que o valor total seja zero, uma vez que este campo na tabela cotacaos eh actualizado pelo trigger apos o "insert" bem como o "update" na tabela itens_cotacaos de acordo com o codigo da cotacao. Nao pode ser o valor_total vindo do formulario, pois este valor sera acrescido a cada insercao abaixo quando executar o iten_cotacao->save().
+          $saida->valor_total = 0; 
+          $saida->valor_iva = 0; 
+          // Eh necessario que o valor total seja zero, uma vez que este campo na tabela cotacaos eh actualizado pelo trigger apos o "insert" bem como o "update" na tabela itens_cotacaos de acordo com o codigo da cotacao. Nao pode ser o valor_total vindo do formulario, pois este valor sera acrescido a cada insercao abaixo quando executar o iten_cotacao->save().
 
-          // $salvar =1;
+          $saida->pago = $pago;
+          $saida->valor_pago = $valor_pago;
+          $saida->remanescente = $remanescente;
+          $saida->forma_pagamento_id = $forma_pagamento_id;
+          $saida->nr_documento_forma_pagamento = $nr_documento_forma_pagamento;
+          $saida->nr_referencia = $nr_referencia;
+          $saida->concurso_id = $concurso_id;
 
-          DB::beginTransaction();
 
-          try {
+          if($saida->save()){
 
+            if(isset($request->salvar_saida_concurso)){
+              $concu_id = array('0' => $request->concurso_id);
+            }
 
-            if($saida->save()){
-
-              $count = count($request->produto_id);
+            $count = count($request->produto_id);
 
               $sai_id = array('0' => $saida->id); // Para inserir o cotacao_id no iten_cotacaos eh necessario converter este unico valor em array, o qual ira assumir o mesmo valor no loop da insercao como eh o mesmo id da cotacao para varios itens;
-              //$cot_id = array('0' => '20');
 
               for($i=0; $i<$count; $i++){
 
-                $saida_id[$i] = $sai_id[0]; // A cada iteracao o a variavel cotacao_id recebe o mesmo id transformado em array com um unico valor na posicao zero;
+                $array_saida_id[$i] = $sai_id[0]; // A cada iteracao o a variavel cotacao_id recebe o mesmo id transformado em array com um unico valor na posicao zero;
 
                 $iten_saida =  new ItenSaida;
 
@@ -108,46 +222,58 @@ class SaidaController extends Controller
                 $iten_saida->desconto = $request['desconto'][$i];
                 $iten_saida->subtotal = $request['subtotal'][$i];
                 $iten_saida->subtotal_rest = $request['subtotal'][$i];
-                $iten_saida->saida_id = $saida_id[$i];
+                $iten_saida->saida_id = $array_saida_id[$i];
 
                 $iten_saida->save();
 
+                if(isset($request->salvar_saida_concurso)){
+                  $array_concurso_id[$i] = $concu_id[0];
+
+                  DB::select('call SP_decrementar_rest_iten_concursos(?,?,?)', array(
+                    $request['quantidade'][$i],
+                    $array_concurso_id[$i],
+                    $request['produto_id'][$i]
+                  )
+                );
+                }
+
+              }
+
+              $pagamento_saida = new PagamentoSaida;
+              $pagamento_saida->saida_id = $saida->id;
+              $pagamento_saida->valor_pago = $valor_pago;
+              $pagamento_saida->forma_pagamento_id = $forma_pagamento_id;
+              $pagamento_saida->nr_documento_forma_pagamento = $nr_documento_forma_pagamento;
+              $pagamento_saida->remanescente = $remanescente;
+              $pagamento_saida->save();
+
+
+              DB::commit();
+
+              $success = "Saída cadastrada com sucesso!";
+              return redirect()->route('saida.index')->with('success', $success);
+
+            }
+            else {
+              DB::rollback();
+              $error = "Erro ao cadastrar a Saída!";
+              return redirect()->back()->with('error', $error);
+
             }
 
-            DB::commit();
+          } catch (QueryException $e){
 
-            $success = "Saída cadastrada com sucesso!";
-            //Session::flash('success', $success);
-            //return response()->json(['status'=>'success']);
-            return redirect()->route('saida.index')->with('success', $success);
+            $error = "Erro ao cadastrar a Cotacao! => Possível redundância de um item/produto à mesma cotação ou preenchimento incorrecto dos campos!";
+            DB::rollback();
+            return redirect()->back()->with('error', $error);
+
+          }
+
+
+
 
         }
-        else {
-
-          $error = "Erro ao cadastrar a Saída!";
-          //Session::flash('error', $error);
-          //return response()->json(['status'=>'error']);
-          return redirect()->back()->with('error', $error);
-
       }
-
-  } catch (QueryException $e){
-
-    $error = "Erro ao cadastrar a Cotacao! => Possível redundância de um item/produto à mesma cotação ou preenchimento incorrecto dos campos!";
-    //Session::flash('error', $erro);
-
-    DB::rollback();
-
-    //return response()->json(['status'=>'error']);
-    return redirect()->back()->with('error', $error);
-
-}
-
-
-
-
-}
-}
 
     /**
      * Display the specified resource.
@@ -163,7 +289,7 @@ class SaidaController extends Controller
         
         return view('saidas.show_saida', compact('saida'));
 
-    }
+      }
 
     public function showRelatorio($id)
     {
@@ -184,11 +310,11 @@ class SaidaController extends Controller
     public function edit($id)
     {
         //
-        $produtos = DB::table('produtos')->pluck('descricao', 'id')->all();
-        $saida = $this->saida->with('itensSaida.produto', 'cliente')->find($id); 
+      $produtos = DB::table('produtos')->pluck('descricao', 'id')->all();
+      $saida = $this->saida->with('itensSaida.produto', 'cliente')->find($id); 
         // Tras a saida. Tras os Itens da Saida e dentro da relacao ItensSaida eh possivel pegar a relacao Prodtuo atraves do dot ou ponto. NOTA: a relacao produto nao esta na saida e sim na itensSaida, mas eh possivel ter os seus dados partido da saida como se pode ver.
 
-        return view('saidas.itens_saida.create_edit_itens_saida', compact('produtos', 'saida'));
+      return view('saidas.itens_saida.create_edit_itens_saida', compact('produtos', 'saida'));
     }
 
     /**
@@ -212,53 +338,176 @@ class SaidaController extends Controller
     public function destroy($id)
     {
         //
-        $saida = $this->saida->find($id);
+      $saida = $this->saida->find($id);
 
-        try {
+      try {
 
-          if($saida->delete()){
+        if($saida->delete()){
 
-            $sucess = 'Saída removida com sucesso!';
-            return redirect()->route('saida.index')->with('success', $sucess);
+          $sucess = 'Saída removida com sucesso!';
+          return redirect()->route('saida.index')->with('success', $sucess);
+
+        }else{
+
+          $error = 'Erro ao remover a Saída!';
+          return redirect()->back()->with('error', $error);
+        }
+
+
+      } catch (QueryException $e) {
+
+        $error = "Erro ao remover Saída. Possivelmente Registo em uso. Necessária a intervenção do Administrador da Base de Dados.!";
+        return redirect()->back()->with('error', $error);
+
+      }
+    }
+
+    public function pagamentoSaida(PagamentoSaidaStoreUpdateFormRequest $request){
+        // dd($request->all());
+      $acronimo_forma_pagamento_naoaplicavel = FormaPagamento::select('id')->where('acronimo', 'naoaplicavel')->first();
+      $acronimo_forma_pagamento_naoaplicavel_id = $acronimo_forma_pagamento_naoaplicavel->id;
+
+      $saida_id = $request->saida_id;
+
+      $pago = 0;
+      $valor_pago = 0.00;
+      $remanescente = 0.00;
+      $forma_pagamento_id = $acronimo_forma_pagamento_naoaplicavel_id;
+      $nr_documento_forma_pagamento = "Nao Aplicavel";
+
+      
+
+      $saida = $this->saida->find($saida_id);
+
+      if($request['pago'] == 0){
+// dd($request->all());
+        $pago = $pago;
+        $valor_pago = $valor_pago;
+        $remanescente = $request['valor_iva'];
+        $forma_pagamento_id = $forma_pagamento_id;
+        $nr_documento_forma_pagamento = $nr_documento_forma_pagamento;
+
+      }else{
+
+        $pago = $request['pago'];
+
+        if(!empty($request['valor_pago'])){
+          $valor_pago = $request['valor_pago'];
+        }
+
+        if(!empty($request['remanescente'])){
+          $remanescente = $request['remanescente'];
+        }
+
+        if(!empty($request['forma_pagamento_id'])){
+          $forma_pagamento_id = $request['forma_pagamento_id'];
+        }
+
+        if(!empty($request['nr_documento_forma_pagamento'])){
+          $nr_documento_forma_pagamento = $request['nr_documento_forma_pagamento'];
+        }
+
+      }
+
+      DB::beginTransaction();
+
+      try {
+
+        $saida->pago = $pago;
+        $saida->valor_pago = $valor_pago;
+        $saida->remanescente = $remanescente;
+        $saida->forma_pagamento_id = $forma_pagamento_id;
+        $saida->nr_documento_forma_pagamento = $nr_documento_forma_pagamento;
+
+
+        if($saida->update()){
+
+          if($pago == 0){
+
+            $pagamento_saida_ids = PagamentoSaida::select('id')->where('saida_id', $saida->id)->get();
+
+            if(sizeof($pagamento_saida_ids)>0){
+
+              for($i = 0; $i < sizeof($pagamento_saida_ids); $i++){
+
+                $pagamento_saida = PagamentoSaida::find($pagamento_saida_ids[$i]->id);
+                $pagamento_saida->valor_pago = $valor_pago;
+                $pagamento_saida->forma_pagamento_id = $forma_pagamento_id;
+                $pagamento_saida->nr_documento_forma_pagamento = $nr_documento_forma_pagamento;
+                $pagamento_saida->remanescente = $remanescente;
+                $pagamento_saida->update();
+
+              }
+
+            }else{
+              DB::rollback();
+              $error = "Nao existem Pagamentos para esta Factura!";
+              return redirect()->back()->with('error', $error);
+            }
+            
 
           }else{
-
-            $error = 'Erro ao remover a Saída!';
-            return redirect()->back()->with('error', $error);
+            $pagamento_saida = new PagamentoSaida;
+            $pagamento_saida->saida_id = $saida->id;
+            $pagamento_saida->valor_pago = $valor_pago;
+            $pagamento_saida->forma_pagamento_id = $forma_pagamento_id;
+            $pagamento_saida->nr_documento_forma_pagamento = $nr_documento_forma_pagamento;
+            $pagamento_saida->remanescente = $remanescente;
+            $pagamento_saida->save();
           }
 
+          DB::commit();
+          $success = "Pagamento efectuado com sucesso!";
+          return redirect()->route('saida.index')->with('success', $success);
 
-        } catch (QueryException $e) {
+        }else{
 
-          $error = "Erro ao remover Saída. Possivelmente Registo em uso. Necessária a intervenção do Administrador da Base de Dados.!";
+          DB::rollback();
+          $error = "Pagamento nao efectuado!!";
           return redirect()->back()->with('error', $error);
 
         }
+
+      } catch (QueryException $e) {
+        DB::rollback();
+        $error = 'Erro ao efectuar o pagamento! Erro relacionado ao DB. Necessária a intervenção do Administrador da Base de Dados.!';
+        return redirect()->back()->with('error', $error);
+
+      }
+    }
+
+    public function createPagamentoSaida($id){
+      // dd($id);
+      $formas_pagamento = DB::table('forma_pagamentos')->pluck('descricao', 'id')->all();
+      $saida = $this->saida->with('pagamentosSaida.formaPagamento')->where('id', $id)->first();
+      // dd($saida);
+
+      return view('saidas.pagamentos.index_pagamentos_saida', compact('formas_pagamento', 'saida'));
     }
 
     public function report($id){
 
         // Relatorio em pdf
-        $saida = $this->saida->with('itensSaida.produto', 'cliente')->find($id);
+      $saida = $this->saida->with('itensSaida.produto', 'cliente')->find($id);
 
-        /*$view = view('reports.saidas.report_saida', compact('saida'));
-        $pdf = \App::make('dompdf.wrapper');
-        $pdf->loadHTML($view);
+      $view = view('reports.saidas.report_saida', compact('saida'));
+      $pdf = \App::make('dompdf.wrapper');
+      $pdf->loadHTML($view);
 
-        return $pdf->stream('saida');*/
+      return $pdf->stream('saida');
 
         //$products = Product::all();
 
-        return \PDF::loadView('reports.saidas.report_saida', compact('saida'))
-                // Se quiser que fique no formato a4 retrato: ->setPaper('a4', 'landscape')
-        ->stream();
+        // return \PDF::loadView('reports.saidas.report_saida', compact('saida'))
+        //         // Se quiser que fique no formato a4 retrato: ->setPaper('a4', 'landscape')
+        // ->stream();
 
         /*$pdf = PDF::loadView('reports.saidas.report_saida', compact('saida'));
         return $pdf->download('mypdf.pdf');
 */
-    }
+      }
 
-    public function reportGeralSaidas(){
+      public function reportGeralSaidas(){
 
         $saidas = $this->saida->orderBy('id', 'asc')->get();
 
@@ -266,11 +515,17 @@ class SaidaController extends Controller
 
         foreach ($saidas as $saida) {
 
-            $valor_total_saidas = $valor_total_saidas + $saida->valor_total;
+          $valor_total_saidas = $valor_total_saidas + $saida->valor_total;
 
         }
 
         return view('reports.saidas.report_geral_saidas', compact('saidas', 'valor_total_saidas'));
 
+      }
+
+      public function findConcursoDados(Request $request)
+      {
+        $concurso = $this->concurso->with('itensConcurso.produto', 'pagamentosConcurso.formaPagamento', 'cliente', 'formaPagamento')->find($request->id);
+        return response()->json($concurso);
+      }
     }
-}

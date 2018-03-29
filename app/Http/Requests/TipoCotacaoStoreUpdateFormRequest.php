@@ -33,7 +33,7 @@ class TipoCotacaoStoreUpdateFormRequest extends FormRequest
     public function messages(){
         return [
             'nome.required' => 'O nome do Tipo de Cotação é obrigatório!',
-            'nome.unique' => 'O nome do Tipo de Cotação já existe!',
+            'nome.unique' => 'O nome do Tipo de Cotação informado já existe!',
         ];
     }
 }

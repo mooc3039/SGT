@@ -16,7 +16,15 @@ class Saida extends Model
     	'data',
     	'cliente_id',
     	'user_id',
-    	'valor_total'
+        'valor_total',
+    	'valor_iva',
+        'pago',
+        'valor_pago',
+        'remanescente',
+        'forma_pagamento_id',
+        'nr_documento_forma_pagamento',
+        'nr_referencia',
+        'concurso_id',
     ];
     public $timestamps = false;
 
@@ -42,5 +50,11 @@ class Saida extends Model
 
         return $this->hasMany('App\Model\GuiaEntrega');
         
+    }
+
+    public function pagamentosSaida(){
+
+        return $this->hasMany('App\Model\PagamentoSaida');
+
     }
 }

@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Http\Requests\ItenVendaStoreUpdateFormRequest;
 use Illuminate\Http\Request;
 use App\Model\ItenVenda;
 use DB;
@@ -40,7 +40,7 @@ class ItenVendaController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ItenVendaStoreUpdateFormRequest $request)
     {
         //
         //dd($request->all());
@@ -51,10 +51,6 @@ class ItenVendaController extends Controller
             'valor' => $request->valor,
             'desconto' => $request->desconto,
             'subtotal' => $request->subtotal,
-            'saida_id' => $request->saida_id,
-            'quantidade_rest' => $request->quantidade,
-            'valor_rest' => $request->valor,
-            'subtotal_rest' => $request->subtotal,
         ];
 
         if($request->quantidade > $request->new_qtd_dispo_referencial){
@@ -117,7 +113,7 @@ class ItenVendaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(ItenVendaStoreUpdateFormRequest $request, $id)
     {
         //dd($request->all());
         
