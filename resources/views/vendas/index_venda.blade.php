@@ -72,7 +72,7 @@
 
                       <?php
                         $valor_pago_soma = 0;
-                        $arry_valor_pago_soma[] = 0;
+                        $arry_valor_pago_soma = array();
 
                         foreach($venda->pagamentosVenda as $pagamento){
                           $arry_valor_pago_soma[] = $pagamento->valor_pago;

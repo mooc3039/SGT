@@ -332,10 +332,12 @@
 
       				new_valor_total = new_valor_total + new_subtotal;
 
+      				var new_valor_total_iva = (new_valor_total + (new_valor_total*17)/100);
 
       				$('#new_subtotal').val(new_subtotal);
       				$('#new_valor').val(new_valor);
       				$('#new_valor_total').val(new_valor_total);
+      				$('.new_valor_total_iva').html(new_valor_total_iva.formatMoney(2,',','.')+ " Mtn");
       				$('#new_val_temp').html(new_valor_total.formatMoney(2,',','.')+ " Mtn");
 
       			}

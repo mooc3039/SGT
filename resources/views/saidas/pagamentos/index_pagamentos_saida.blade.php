@@ -10,8 +10,9 @@
   </div>
   <div class="col-lg-4 text-right">
     <h3>Factura: <b>{{ $saida->id }}</b></h3>
-    <h4><b>Montante Geral da Factura: <span class="valor_total_visual" style="color: blue"></span></b></h4>
-    <h4 style="color: red"><b>Remanescente: <span class="remanescente_visual"></span></b></h4>
+    <h4>Status: <b><span class="info_pagamento"></span></b></h4>
+    <h4>Montante Geral da Factura: <b><span class="valor_total_visual" style="color: blue"></span></b></h4>
+    <h4>Remanescente: <b><span class="remanescente_visual" style="color: red"></span></b></h4>
   </div>
 </div>
 
@@ -22,7 +23,26 @@
       <div class="panel-body">
 
         {{Form::model($saida, ['route'=>['pagamentoSaida'], 'method'=>'POST', 'onsubmit'=>'submitFormPagamentoSaida.disabled = true; return true;'])}}
+        <?php
 
+        $valor_pago_soma = 0;
+        $remanescente = 0;
+        $arry_valor_pago_soma = array();
+
+        foreach($saida->pagamentosSaida as $pagamento){
+          $arry_valor_pago_soma[] = $pagamento->valor_pago;
+        }
+
+        if(sizeof($arry_valor_pago_soma)<=0){
+          $valor_pago_soma = 0;
+          $remanescente = $saida->valor_iva - $valor_pago_soma;
+        }else{
+          $valor_pago_soma = array_sum($arry_valor_pago_soma);
+          $remanescente = $saida->valor_iva - $valor_pago_soma;
+        }
+
+
+        ?>
         <div class="row">
           <div class="col-md-12">
             <legend>Valor a Pagar: <span class="valor_remanescente_visual pull-right" style="color: blue"></span></legend>
@@ -46,7 +66,7 @@
                     <div class="input-group">
                       {{ Form::text('valor_pago', null, ['class'=>'form-control', 'id'=>'valor_pago'])}}
 
-                      {{ Form::hidden('valor_remanescente_ref', $saida->remanescente, ['class'=>'form-control', 'id'=>'valor_remanescente_ref'])}}
+                      {{ Form::hidden('valor_remanescente_ref', $remanescente, ['class'=>'form-control', 'id'=>'valor_remanescente_ref'])}}
                       <div class="input-group-addon">Mtn</div>
                     </div>            
                   </div>
@@ -70,6 +90,12 @@
 
                     {{ Form::hidden('saida_id', $saida->id, ['class'=>'form-control', 'id'=>'saida_id'])}}
                     {{ Form::hidden('valor_iva', null, ['class'=>'form-control', 'id'=>'valor_total_iva'])}}
+
+                    {{ Form::hidden('pago', $saida->pago, ['class'=>'form-control', 'id'=>'pago', 'disabled'])}}
+
+                    {{ Form::hidden('pago_total_iva_info', $saida->valor_iva, ['class'=>'form-control', 'id'=>'pago_total_iva_info', 'disabled'])}}
+
+                    {{ Form::hidden('valor_pago_soma', $valor_pago_soma, ['class'=>'form-control', 'id'=>'valor_pago_soma', 'disabled'])}}
                   </div>
                 </div>
               </div>
@@ -188,6 +214,24 @@
     resetPagamento(); // Faz o reset dos campos "pagamento" ao carregar a pagina para permitir o alertaremanescentePagamento()...correcto
     alertaremanescentePagamento();
     remanescenteRed();
+
+    var pago = $('#pago').val();
+    var pago_total_iva_info = $('#pago_total_iva_info').val()*1;
+    var valor_pago_soma = $('#valor_pago_soma').val()*1;
+
+    if(pago==1){
+      if(valor_pago_soma >= pago_total_iva_info){
+        $('.info_pagamento').css("color", "green");
+        $('.info_pagamento').html('Paga na Totalidade');
+      }else{
+        $('.info_pagamento').css("color", "red");
+        $('.info_pagamento').html('Paga Parcialmente');
+      }
+    }else{
+      $('.info_pagamento').css("color", "red");
+      $('.info_pagamento').html('Nao Paga');
+    }
+    console.log(valor_pago_soma);
   });
 
 

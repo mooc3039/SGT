@@ -112,7 +112,7 @@ class VendaController extends Controller
 
         }else{
 
-          $venda->pago = $request['pago'];
+          $pago = $request['pago'];
 
           if(!empty($request['valor_pago'])){
             $valor_pago = $request['valor_pago'];
@@ -139,10 +139,6 @@ class VendaController extends Controller
         try {
 
           $venda->pago = $pago;
-          $venda->valor_pago = $valor_pago;
-          $venda->remanescente = $remanescente;
-          $venda->forma_pagamento_id = $forma_pagamento_id;
-          $venda->nr_documento_forma_pagamento = $nr_documento_forma_pagamento;
 
 
           if($venda->save()){
@@ -298,10 +294,6 @@ class VendaController extends Controller
     try{
 
       $venda->pago = $pago;
-      $venda->valor_pago = $valor_pago;
-      $venda->remanescente = $remanescente;
-      $venda->forma_pagamento_id = $forma_pagamento_id;
-      $venda->nr_documento_forma_pagamento = $nr_documento_forma_pagamento;
 
       if($venda->update()){
 
@@ -318,7 +310,7 @@ class VendaController extends Controller
               $pagamento_venda->forma_pagamento_id = $forma_pagamento_id;
               $pagamento_venda->nr_documento_forma_pagamento = $nr_documento_forma_pagamento;
               $pagamento_venda->remanescente = $remanescente;
-              $pagamento_venda->update();
+              $pagamento_venda->delete();
 
             }
 

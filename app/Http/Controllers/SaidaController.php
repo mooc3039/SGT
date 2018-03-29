@@ -190,10 +190,10 @@ class SaidaController extends Controller
           // Eh necessario que o valor total seja zero, uma vez que este campo na tabela cotacaos eh actualizado pelo trigger apos o "insert" bem como o "update" na tabela itens_cotacaos de acordo com o codigo da cotacao. Nao pode ser o valor_total vindo do formulario, pois este valor sera acrescido a cada insercao abaixo quando executar o iten_cotacao->save().
 
           $saida->pago = $pago;
-          $saida->valor_pago = $valor_pago;
-          $saida->remanescente = $remanescente;
-          $saida->forma_pagamento_id = $forma_pagamento_id;
-          $saida->nr_documento_forma_pagamento = $nr_documento_forma_pagamento;
+          // $saida->valor_pago = $valor_pago;
+          // $saida->remanescente = $remanescente;
+          // $saida->forma_pagamento_id = $forma_pagamento_id;
+          // $saida->nr_documento_forma_pagamento = $nr_documento_forma_pagamento;
           $saida->nr_referencia = $nr_referencia;
           $saida->concurso_id = $concurso_id;
 
@@ -404,10 +404,10 @@ class SaidaController extends Controller
       try {
 
         $saida->pago = $pago;
-        $saida->valor_pago = $valor_pago;
-        $saida->remanescente = $remanescente;
-        $saida->forma_pagamento_id = $forma_pagamento_id;
-        $saida->nr_documento_forma_pagamento = $nr_documento_forma_pagamento;
+        // $saida->valor_pago = $valor_pago;
+        // $saida->remanescente = $remanescente;
+        // $saida->forma_pagamento_id = $forma_pagamento_id;
+        // $saida->nr_documento_forma_pagamento = $nr_documento_forma_pagamento;
 
 
         if($saida->update()){
@@ -425,7 +425,7 @@ class SaidaController extends Controller
                 $pagamento_saida->forma_pagamento_id = $forma_pagamento_id;
                 $pagamento_saida->nr_documento_forma_pagamento = $nr_documento_forma_pagamento;
                 $pagamento_saida->remanescente = $remanescente;
-                $pagamento_saida->update();
+                $pagamento_saida->delete();
 
               }
 

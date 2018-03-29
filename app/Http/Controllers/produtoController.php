@@ -172,5 +172,11 @@ class produtoController extends Controller
 
     }
 
+    public function findPrice(Request $request)
+    {
+      $data = Produto::select('preco_venda', 'quantidade_dispo', 'quantidade_min')->where('id',$request->id)->first();
+      return response()->json($data);
+    }
+
 
 }

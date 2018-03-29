@@ -101,7 +101,7 @@
                   <tr>
                     <td> {{$iten_venda->produto->descricao}} </td>
 
-                    <td class="text-center"> <button type="button" class="btn btn-sm" data-toggle="modal" data-target="#modalProdutoIten" data-venda_id={{ $venda->id }} data-produto_id={{ $iten_venda->produto->id }} data-descricao={{ $iten_venda->produto->descricao }} data-quantidade={{ $iten_venda->quantidade }} data-qtd_dispo={{ $iten_venda->produto->quantidade_dispo }} data-qtd_min={{ $iten_venda->produto->quantidade_min }} data-preco_venda={{ $iten_venda->produto->preco_venda }} data-valor={{$iten_venda->valor }} data-desconto={{ $iten_venda->desconto }} data-subtotal={{ $iten_venda->subtotal }} data-valor_total={{ $venda->valor_total }} data-valor_pago={{ $venda->valor_pago }} data-troco={{ $venda->troco }} data-frm_pagmto_id={{ $venda->formaPagamento->id }} data-nr_doc_frm_pagmto={{ $venda->nr_documento_forma_pagamento }} data-user_id={{ Auth::user()->id }}> {{$iten_venda->quantidade}} </button> </td>
+                    <td class="text-center"> <button type="button" class="btn btn-sm" data-toggle="modal" data-target="#modalProdutoIten" data-venda_id={{ $venda->id }} data-produto_id={{ $iten_venda->produto->id }} data-descricao={{ $iten_venda->produto->descricao }} data-quantidade={{ $iten_venda->quantidade }} data-qtd_dispo={{ $iten_venda->produto->quantidade_dispo }} data-qtd_min={{ $iten_venda->produto->quantidade_min }} data-preco_venda={{ $iten_venda->produto->preco_venda }} data-valor={{$iten_venda->valor }} data-desconto={{ $iten_venda->desconto }} data-subtotal={{ $iten_venda->subtotal }} data-valor_total={{ $venda->valor_total }} data-user_id={{ Auth::user()->id }}> {{$iten_venda->quantidade}} </button> </td>
 
                     <td> {{$iten_venda->produto->preco_venda}} </td>
                     <td> {{$iten_venda->valor}} </td>
@@ -315,10 +315,12 @@
 
               new_valor_total = new_valor_total + new_subtotal;
 
+              var new_valor_total_iva = (new_valor_total + (new_valor_total*17)/100);
 
               $('#new_subtotal').val(new_subtotal);
               $('#new_valor').val(new_valor);
               $('#new_valor_total').val(new_valor_total);
+              $('.new_valor_total_iva').html(new_valor_total_iva.formatMoney(2,',','.')+ " Mtn");
               $('#new_val_temp').html(new_valor_total.formatMoney(2,',','.')+ " Mtn");
             }
 
@@ -423,10 +425,12 @@
                 mdl_valor_total = (mdl_valor_total - valor_incre_decre);
 
               }
+              var valor_total_iva = (mdl_valor_total + (mdl_valor_total*17)/100);
 
               $('#subtotal').val(mdl_subtotal);
               $('#valor').val(mdl_valor);
               $('#valor_total').val(mdl_valor_total);
+              $('.valor_total_iva').html(valor_total_iva.formatMoney(2,',','.')+ " Mtn");
               $('#val_temp').html(mdl_valor_total.formatMoney(2,',','.')+ " Mtn");
             };
 

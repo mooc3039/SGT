@@ -54,7 +54,7 @@
 
                           <?php
                           $valor_pago_soma = 0;
-                          $arry_valor_pago_soma[] = 0;
+                          $arry_valor_pago_soma = array();
 
                           foreach($saida->pagamentosSaida as $pagamento){
                             $arry_valor_pago_soma[] = $pagamento->valor_pago;
@@ -129,8 +129,21 @@
                         <a class="btn btn-success" href="{{route('saida.edit', $saida->id)}}"
                           @if($saida->concurso_id != 0)
                           {{ 'disabled' }}
-                          @endif><i class="fa fa-pencil"></i></a>
-                          {{ Form::button('<i class="icon_close_alt2"></i>', ['type'=>'submit', 'class'=>'btn btn-danger submit_iten']) }}
+                          @endif
+                          @if($saida->pago==1)
+                          {{ 'disabled' }}
+                          @endif
+                          >
+                          <i class="fa fa-pencil"></i>
+                        </a>
+
+                          <button type="submit" class="btn btn-danger submit_iten"
+                          @if($saida->concurso_id != 0)
+                          {{ 'disabled' }}
+                          @endif
+                          >
+                            <i class="icon_close_alt2"></i>
+                          </button>
 
                         </div>
 

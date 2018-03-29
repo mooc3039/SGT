@@ -9,9 +9,10 @@
     </ol>
   </div>
   <div class="col-lg-4 text-right">
-    <h3>Factura: <b>{{ $concurso->id }}</b></h3>
+    <h3>Concurso: <b>{{ $concurso->codigo_concurso }}</b></h3>
+    <h4>Status: <b><span class="info_pagamento"></span></b></h4>
     <h4>Montante Geral do Concurso: <b><span class="valor_total_iva_visual" style="color: blue"></span></b></h4>
-    <h4 style="color: red"><b>Remanescente: <span class="remanescente_visual"></span></b></h4>
+    <h4>Remanescente: <b><span class="remanescente_visual" style="color: red"></span></b></h4>
   </div>
 </div>
 
@@ -22,6 +23,27 @@
       <div class="panel-body">
 
         {{Form::model($concurso, ['route'=>['pagamentoConcurso'], 'method'=>'POST', 'onsubmit'=>'submitFormPagamentoConcurso.disabled = true; return true;'])}}
+
+        <?php
+
+        $valor_pago_soma = 0;
+        $remanescente = 0;
+        $arry_valor_pago_soma = array();
+
+        foreach($concurso->pagamentosConcurso as $pagamento){
+          $arry_valor_pago_soma[] = $pagamento->valor_pago;
+        }
+
+        if(sizeof($arry_valor_pago_soma)<=0){
+          $valor_pago_soma = 0;
+          $remanescente = $concurso->valor_iva - $valor_pago_soma;
+        }else{
+          $valor_pago_soma = array_sum($arry_valor_pago_soma);
+          $remanescente = $concurso->valor_iva - $valor_pago_soma;
+        }
+
+
+        ?>
 
         <div class="row">
           <div class="col-md-12">
@@ -46,7 +68,7 @@
                     <div class="input-group">
                       {{ Form::text('valor_pago', null, ['class'=>'form-control', 'id'=>'valor_pago'])}}
 
-                      {{ Form::hidden('valor_remanescente_ref', $concurso->remanescente, ['class'=>'form-control', 'id'=>'valor_remanescente_ref'])}}
+                      {{ Form::hidden('valor_remanescente_ref', $remanescente, ['class'=>'form-control', 'id'=>'valor_remanescente_ref'])}}
                       <div class="input-group-addon">Mtn</div>
                     </div>            
                   </div>
@@ -70,6 +92,12 @@
 
                     {{ Form::hidden('concurso_id', $concurso->id, ['class'=>'form-control', 'id'=>'concurso_id'])}}
                     {{ Form::hidden('valor_iva', null, ['class'=>'form-control', 'id'=>'valor_iva'])}}
+
+                    {{ Form::hidden('pago', $concurso->pago, ['class'=>'form-control', 'id'=>'pago', 'disabled'])}}
+
+                    {{ Form::hidden('pago_total_iva_info', $concurso->valor_iva, ['class'=>'form-control', 'id'=>'pago_total_iva_info', 'disabled'])}}
+
+                    {{ Form::hidden('valor_pago_soma', $valor_pago_soma, ['class'=>'form-control', 'id'=>'valor_pago_soma', 'disabled'])}}
                   </div>
                 </div>
               </div>
@@ -189,6 +217,23 @@
     resetPagamento(); // Faz o reset dos campos "pagamento" ao carregar a pagina para permitir o alertaremanescentePagamento()...correcto
     alertaremanescentePagamento();
     remanescenteRed();
+
+    var pago = $('#pago').val();
+    var pago_total_iva_info = $('#pago_total_iva_info').val()*1;
+    var valor_pago_soma = $('#valor_pago_soma').val()*1;
+
+    if(pago==1){
+      if(valor_pago_soma >= pago_total_iva_info){
+        $('.info_pagamento').css("color", "green");
+        $('.info_pagamento').html('Pago na Totalidade');
+      }else{
+        $('.info_pagamento').css("color", "red");
+        $('.info_pagamento').html('Pago Parcialmente');
+      }
+    }else{
+      $('.info_pagamento').css("color", "red");
+      $('.info_pagamento').html('Nao Pago');
+    }
   });
 
 
@@ -200,7 +245,7 @@
     }
     else if(document.getElementById('nao_pago').checked){
       document.getElementById('div_forma_pagamento').style.display = 'none';
-       resetPagamento();
+      resetPagamento();
     }
   }
 
@@ -217,18 +262,18 @@
      $('#valor_pago').val(0);
    }
 
-  $('#valor_pago').keyup(function(){
+   $('#valor_pago').keyup(function(){
     alertaremanescentePagamento();
   });
 
-  function alertaremanescentePagamento(){
+   function alertaremanescentePagamento(){
     var valor_remanescente_ref = ($('#valor_remanescente_ref').val()*1);
     var valor_pago = $('#valor_pago').val()*1;
     var remanescente = valor_remanescente_ref - valor_pago;
 
     if(remanescente >= 0){
      $('#remanescente').val(remanescente);
-      $('.remanescente_visual').html(remanescente*(1).formatMoney(2,',','.')+ " Mtn");
+     $('.remanescente_visual').html(remanescente*(1).formatMoney(2,',','.')+ " Mtn");
    }else{
     if(valor_pago > valor_remanescente_ref){ 
       // ou remanscente < 0, significa q o valor pago eh maior q o remanescente_ref

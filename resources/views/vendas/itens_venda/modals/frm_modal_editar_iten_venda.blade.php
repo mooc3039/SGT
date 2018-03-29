@@ -73,7 +73,8 @@
 			<div class="modal-footer">
 				<div class="row">
 					<div class="col-md-6 text-left">
-						<h5>Montante Geral da Cotação: <b><span id="val_temp"></span></b></h5>
+						<h5>Subtotal Geral da Venda: <b><span id="val_temp"></span></b></h5>
+						<h5>Montante Geral da Venda: <b><span class="valor_total_iva"></span></b></h5>
 					</div>
 					<div class="col-md-6 text-right">
 						{{Form::button('Fechar', ['class'=>'btn btn-default', 'data-dismiss'=>'modal'])}}

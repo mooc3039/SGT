@@ -121,6 +121,9 @@ Route::group(['middleware'=>['authen','roles'],'roles'=>['Administrador']],funct
   Route::get('/saida/create_pagamento/{id}', 'SaidaController@createPagamentoSaida')->name('createPagamentoSaida');
 
 
+  Route::get('/produto/find', ['as'=>'findPrice','uses'=>'ProdutoController@findPrice']);
+
+
 
 
   //Rotas de operações

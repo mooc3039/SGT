@@ -142,10 +142,6 @@ class ConcursoController extends Controller
           $concurso->valor_iva = 0; 
 
           $concurso->pago = $pago;
-          $concurso->valor_pago = $valor_pago;
-          $concurso->remanescente = $remanescente;
-          $concurso->forma_pagamento_id = $forma_pagamento_id;
-          $concurso->nr_documento_forma_pagamento = $nr_documento_forma_pagamento;
           $concurso->codigo_concurso = $codigo_concurso;
 
 
@@ -343,10 +339,6 @@ class ConcursoController extends Controller
       try {
 
         $concurso->pago = $pago;
-        $concurso->valor_pago = $valor_pago;
-        $concurso->remanescente = $remanescente;
-        $concurso->forma_pagamento_id = $forma_pagamento_id;
-        $concurso->nr_documento_forma_pagamento = $nr_documento_forma_pagamento;
 
         if($concurso->update()){
 
@@ -363,7 +355,7 @@ class ConcursoController extends Controller
                 $pagamento_concurso->forma_pagamento_id = $forma_pagamento_id;
                 $pagamento_concurso->nr_documento_forma_pagamento = $nr_documento_forma_pagamento;
                 $pagamento_concurso->remanescente = $remanescente;
-                $pagamento_concurso->update();
+                $pagamento_concurso->delete();
 
               }
 

@@ -45,7 +45,7 @@
 
                     <?php
                     $valor_pago_soma = 0;
-                    $arry_valor_pago_soma[] = 0;
+                    $arry_valor_pago_soma = array();
 
                     foreach($concurso->pagamentosConcurso as $pagamento){
                       $arry_valor_pago_soma[] = $pagamento->valor_pago;
@@ -59,7 +59,7 @@
 
 
 
-                    if(($concurso->pago==1 && ($valor_pago_soma >= $concurso->valor_total))){ 
+                    if(($concurso->pago==1 && ($valor_pago_soma >= $concurso->valor_iva))){ 
                       echo 'class="btn btn-success btn-sm"';
                     }else{
                       echo 'class="btn btn-danger btn-sm"';
@@ -76,7 +76,7 @@
 
                     <?php
 
-                    if(($concurso->pago==1 && ($valor_pago_soma >= $concurso->valor_total))){
+                    if(($concurso->pago==1 && ($valor_pago_soma >= $concurso->valor_iva))){
 
                       echo '<i class="fa fa-check"></i>';
                     }else{

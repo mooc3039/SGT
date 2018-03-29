@@ -56,7 +56,7 @@
 
                    {{Form::hidden('pago', null, ['class'=>'form-control', 'id'=>'pago', 'readonly'] )}}
                  </div>
-                 <div class="col-md-5">
+                 <!-- <div class="col-md-5">
                   {{ Form::label('forma_pagamento_descricao', 'Forma Pgamento')}}
 
                   {{ Form::text('forma_pagamento_descricao', null, ['class'=>'form-control', 'id'=>'forma_pagamento_descricao', 'disabled'])}}
@@ -66,7 +66,7 @@
                 <div class="col-md-5">
                   {{ Form::label('nr_documento_forma_pagamento', 'Documento')}}
                   {{ Form::text('nr_documento_forma_pagamento', null, ['class'=>'form-control', 'id'=>'nr_documento_forma_pagamento', 'readonly'])}}
-                </div>
+                </div> -->
               </div>
             </div>
           </div>
@@ -247,7 +247,7 @@
         dataType: 'json',
         data  : dataId,
         success:function(data){
-          // console.log(data);
+          console.log(data);
           $('#cliente_id').val(data.cliente.id);
           $('#cliente_nome').val(data.cliente.nome);
           $('#codigo_concurso').val(data.codigo_concurso);
@@ -263,9 +263,9 @@
 
           
 
-          $('#forma_pagamento_descricao').val(data.forma_pagamento.descricao);
-          $('#forma_pagamento_id').val(data.forma_pagamento_id);
-          $('#nr_documento_forma_pagamento').val(data.nr_documento_forma_pagamento);
+          // $('#forma_pagamento_descricao').val(data.forma_pagamento.descricao);
+          // $('#forma_pagamento_id').val(data.forma_pagamento_id);
+          // $('#nr_documento_forma_pagamento').val(data.nr_documento_forma_pagamento);
           
 
           if(data.pago === 1){
