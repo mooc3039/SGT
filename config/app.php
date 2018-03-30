@@ -180,6 +180,7 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         Intervention\Image\ImageServiceProvider::class,
+        Yajra\DataTables\DataTablesServiceProvider::class,
 
     ],
 
@@ -234,6 +235,7 @@ return [
         'PDF' => Barryvdh\DomPDF\Facade::class,
         'Charts' => ConsoleTVs\Charts\Facades\Charts::class,
         'Image' => Intervention\Image\Facades\Image::class,
+        'DataTables' => Yajra\DataTables\Facades\DataTables::class,
 
     ],
 

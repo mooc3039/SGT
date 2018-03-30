@@ -99,6 +99,9 @@ Route::group(['middleware'=>['authen']],function(){
   Route::resource('/concurso', 'ConcursoController');
   Route::resource('/iten_concurso', 'ItenConcursoController');
 
+  //testando datatable
+  Route::get('/table', 'DatableController@index');
+  Route::get('/table/dados', 'DatableController@get_datatable');
    
 });
 
