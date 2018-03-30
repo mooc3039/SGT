@@ -2,9 +2,15 @@
 @section('content')
     
     
-        <table id="users-table" class="table">
-            
-        </table>
+<table id="users-table" class="table">
+    <thead>
+        <th>#</th>
+        <th>Descrição</th>
+        <th>Preço de Venda</th>
+        <th>Preço de Aquisição</th>
+        <th>Quantidade Disponivel</th>
+    </thead>
+</table>       
 
 
 

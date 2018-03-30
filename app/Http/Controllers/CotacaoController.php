@@ -14,6 +14,7 @@ use App\Model\Cotacao;
 use App\Model\TipoCotacao;
 use App\Model\ItenCotacao;
 use PDF;
+use Yajra\Datatables\Datatables;//yajira
 
 class CotacaoController extends Controller
 {
