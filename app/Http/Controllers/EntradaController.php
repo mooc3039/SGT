@@ -9,6 +9,8 @@ use App\Http\Requests\EntradaStoreUpdateFormRequest;
 use App\Model\Produto;
 use App\Model\Entrada;
 use App\Model\ItenEntrada;
+use App\Model\Pagamentoentrada;
+use App\Model\FormaPagamento;
 use App\User;
 use DB;
 use Session;
@@ -16,18 +18,18 @@ use Session;
 class EntradaController extends Controller
 {
 
-    private $entrada;
-    private $iten_entrada;
-    private $produto;
-    private $user;
+  private $entrada;
+  private $iten_entrada;
+  private $produto;
+  private $user;
 
-    public function __construct(Entrada $entrada, ItenEntrada $iten_entrada,  Produto $produto, User $user){
+  public function __construct(Entrada $entrada, ItenEntrada $iten_entrada,  Produto $produto, User $user){
 
-        $this->entrada = $entrada;
-        $this->iten_entrada = $iten_entrada;
-        $this->produto = $produto;
-        $this->user = $user;
-    }
+    $this->entrada = $entrada;
+    $this->iten_entrada = $iten_entrada;
+    $this->produto = $produto;
+    $this->user = $user;
+  }
 
     /**
      * Display a listing of the resource.
@@ -37,10 +39,10 @@ class EntradaController extends Controller
     public function index()
     {
         //
-        $entradas = $this->entrada->orderBy('created_at', 'asc')->paginate(10);
-        $formas_pagamento = DB::table('forma_pagamentos')->pluck('descricao', 'id')->all();
-        
-        return view('entradas.index_entrada', compact('entradas', 'formas_pagamento'));
+      $entradas = $this->entrada->orderBy('created_at', 'asc')->paginate(10);
+      $formas_pagamento = DB::table('forma_pagamentos')->pluck('descricao', 'id')->all();
+
+      return view('entradas.index_entrada', compact('entradas', 'formas_pagamento'));
     }
 
     /**
@@ -51,12 +53,20 @@ class EntradaController extends Controller
     public function create()
     {
         //
-        $fornecedor =DB::table('fornecedors')->pluck('nome','id')->all();
-        $formas_pagamento = DB::table('forma_pagamentos')->pluck('descricao', 'id')->all();
-        $produtos = $this->produto->select('id', 'descricao')->get();
+      $fornecedor =DB::table('fornecedors')->pluck('nome','id')->all();
+      $formas_pagamento = DB::table('forma_pagamentos')->pluck('descricao', 'id')->all();
+      $produtos = $this->produto->select('id', 'descricao')->get();
 
-        return view('entradas.create_edit_entrada', compact('fornecedor', 'formas_pagamento' , 'produtos'));
+      return view('entradas.create_edit_entrada', compact('fornecedor', 'formas_pagamento' , 'produtos'));
     }
+
+    public function createPagamentoEntrada($id){
+     $formas_pagamento = DB::table('forma_pagamentos')->pluck('descricao', 'id')->all();
+     $entrada = $this->entrada->with('pagamentosEntrada.formaPagamento')->where('id', $id)->first();
+      // dd($entrada);
+
+     return view('entradas.pagamentos.index_pagamentos_entrada', compact('formas_pagamento', 'entrada'));
+   }
 
     /**
      * Store a newly created resource in storage.
@@ -67,72 +77,78 @@ class EntradaController extends Controller
     public function store(EntradaStoreUpdateFormRequest $request)
     {
         //
+        // dd($request->all());
+      $acronimo_forma_pagamento_naoaplicavel = FormaPagamento::select('id')->where('acronimo', 'naoaplicavel')->first();
+      $acronimo_forma_pagamento_naoaplicavel_id = $acronimo_forma_pagamento_naoaplicavel->id;
         //dd($request->all());
 
-        if($request->all()){
+      if($request->all()){
 
 
-          $entrada = new Entrada;
+        $entrada = new entrada;
 
-          $entrada->fornecedor_id = $request['fornecedor_id'];
-          $entrada->user_id = $request['user_id'];
-          $entrada->valor_total = 0; // Eh necessario que o valor total seja zero, uma vez que este campo na tabela cotacaos eh actualizado pelo trigger apos o "insert" bem como o "update" na tabela itens_cotacaos de acordo com o codigo da cotacao. Nao pode ser o valor_total vindo do formulario, pois este valor sera acrescido a cada insercao abaixo quando executar o iten_cotacao->save().
+        $entrada->fornecedor_id = $request['fornecedor_id'];
+        $entrada->user_id = $request['user_id'];
+        $entrada->valor_total = 0;  
+          // Eh necessario que o valor total seja zero, uma vez que este campo na tabela cotacaos eh actualizado pelo trigger apos o "insert" bem como o "update" na tabela itens_cotacaos de acordo com o codigo da cotacao. Nao pode ser o valor_total vindo do formulario, pois este valor sera acrescido a cada insercao abaixo quando executar o iten_cotacao->save().
 
-          if($request['pago'] == 0){
+        $pago = 0;
+        $valor_pago = 0.00;
+        $remanescente = 0.00;
+        $forma_pagamento_id = $acronimo_forma_pagamento_naoaplicavel_id;
+        $nr_documento_forma_pagamento = "Nao Aplicavel";
 
-            $entrada->pago = $request['pago'];
-            $entrada->valor_pago = 0.00;
-            $entrada->troco = 0.00;
-            $entrada->forma_pagamento_id = 1;
-            $entrada->nr_documento_forma_pagamento = 'Nao Aplicavel';
+        if($request['pago'] == 0){
 
-          }else{
+          $pago = $request['pago'];
+          $valor_pago = 0.00;
+          $remanescente = $request['valor_total'];
+          $forma_pagamento_id = $acronimo_forma_pagamento_naoaplicavel_id;
+          $nr_documento_forma_pagamento = 'Nao Aplicavel';
 
-            $entrada->pago = $request['pago'];
+        }else{
 
-            if(empty($request['valor_pago'])){
-              $entrada->valor_pago = 0.00;
-            }else{
-              $entrada->valor_pago = $request['valor_pago'];
-            }
+          $pago = $request['pago'];
 
-            if(empty($request['troco'])){
-              $entrada->troco = 0.00;
-            }else{
-              $entrada->troco = $request['troco'];
-            }
-
-            if(empty($request['forma_pagamento_id'])){
-              $entrada->forma_pagamento_id = 1;
-            }else{
-              $entrada->forma_pagamento_id = $request['forma_pagamento_id'];
-            }
-
-            if(empty($request['nr_documento_forma_pagamento'])){
-              $entrada->nr_documento_forma_pagamento = 'Nao Aplicavel';
-            }else{
-              $entrada->nr_documento_forma_pagamento = $request['nr_documento_forma_pagamento'];
-            }
-
+          if(!empty($request['valor_pago'])){
+            $valor_pago = $request['valor_pago'];
           }
+
+          if(!empty($request['remanescente'])){
+            $remanescente = $request['remanescente'];
+          }
+
+          if(!empty($request['forma_pagamento_id'])){
+            $forma_pagamento_id = $request['forma_pagamento_id'];
+          }
+
+          if(!empty($request['nr_documento_forma_pagamento'])){
+            $nr_documento_forma_pagamento = $request['nr_documento_forma_pagamento'];
+          }
+
+        }
 
           // $salvar =1;
 
-          DB::beginTransaction();
+        DB::beginTransaction();
 
-          try {
+        try {
+
+          $entrada->pago = $pago;
 
 
-            if($entrada->save()){
+          if($entrada->save()){
 
-              $count = count($request->produto_id);
+            $count = count($request->produto_id);
 
-              $entr_id = array('0' => $entrada->id); // Para inserir o cotacao_id no iten_cotacaos eh necessario converter este unico valor em array, o qual ira assumir o mesmo valor no loop da insercao como eh o mesmo id da cotacao para varios itens;
+            $entr = array('0' => $entrada->id); 
+
+              // Para inserir o cotacao_id no iten_cotacaos eh necessario converter este unico valor em array, o qual ira assumir o mesmo valor no loop da insercao como eh o mesmo id da cotacao para varios itens;
               //$cot_id = array('0' => '20');
 
-              for($i=0; $i<$count; $i++){
+            for($i=0; $i<$count; $i++){
 
-                $entrada_id[$i] = $entr_id[0]; // A cada iteracao o a variavel cotacao_id recebe o mesmo id transformado em array com um unico valor na posicao zero;
+                $entrada_id[$i] = $entr[0]; // A cada iteracao o a variavel cotacao_id recebe o mesmo id transformado em array com um unico valor na posicao zero;
 
                 $iten_entrada =  new ItenEntrada;
 
@@ -145,38 +161,40 @@ class EntradaController extends Controller
 
                 $iten_entrada->save();
 
+              }
+
+              $pagamento_entrada = new PagamentoEntrada;
+              $pagamento_entrada->entrada_id = $entrada->id;
+              $pagamento_entrada->valor_pago = $valor_pago;
+              $pagamento_entrada->forma_pagamento_id = $forma_pagamento_id;
+              $pagamento_entrada->nr_documento_forma_pagamento = $nr_documento_forma_pagamento;
+              $pagamento_entrada->remanescente = $remanescente;
+              $pagamento_entrada->save();
+
+              DB::commit();
+
+              $success = "Entrada cadastrada com sucesso!";
+              return redirect()->route('entrada.index')->with('success', $success);
+
+            }
+            else {
+
+              DB::rollback();
+              $error = "Erro ao cadastrar a Entrada!";
+              return redirect()->back()->with('error', $error);
+
             }
 
-            DB::commit();
+          } catch (QueryException $e){
 
-            $success = "Entrada cadastrada com sucesso!";
-            return redirect()->route('entrada.index')->with('success', $success);
+            DB::rollback();
+            $error = "Erro ao cadastrar a Entrada! => Possível redundância de um item/produto à mesma Entrada ou preenchimento incorrecto dos campos!";
+            return redirect()->back()->with('error', $error);
+
+          }
 
         }
-        else {
-
-          $error = "Erro ao cadastrar a entrada!";
-          return redirect()->back()->with('error', $error);
-
       }
-
-  } catch (QueryException $e){
-
-    $error = "Erro ao cadastrar a Entrada! => Possível redundância de um item/produto à mesma entrada ou preenchimento incorrecto dos campos!";
-    //Session::flash('error', $erro);
-
-    DB::rollback();
-
-    //return response()->json(['status'=>'error']);
-    return redirect()->back()->with('error', $error);
-
-}
-
-
-
-
-}
-}
 
     /**
      * Display the specified resource.
@@ -187,9 +205,9 @@ class EntradaController extends Controller
     public function show($id)
     {
         //
-        $entrada = $this->entrada->with('itensEntrada.produto', 'user')->find($id); 
-        
-        return view('entradas.show_entrada', compact('entrada'));
+      $entrada = $this->entrada->with('itensEntrada.produto', 'user')->find($id); 
+
+      return view('entradas.show_entrada', compact('entrada'));
     }
 
     /**
@@ -230,107 +248,150 @@ class EntradaController extends Controller
     public function destroy($id)
     {
         //
-        $entrada = $this->entrada->find($id);
+      $entrada = $this->entrada->find($id);
 
-        try {
+      try {
 
-          if($entrada->delete()){
+        if($entrada->delete()){
 
-            $sucess = 'Entrada removida com sucesso!';
-            return redirect()->route('entrada.index')->with('success', $sucess);
+          $sucess = 'Entrada removida com sucesso!';
+          return redirect()->route('entrada.index')->with('success', $sucess);
 
-          }else{
+        }else{
 
-            $error = 'Erro ao remover a Entrada!';
-            return redirect()->back()->with('error', $error);
-          }
-
-
-        } catch (QueryException $e) {
-
-          $error = "Erro ao remover Entrada. Possivelmente Registo em uso. Necessária a intervenção do Administrador da Base de Dados.!";
+          $error = 'Erro ao remover a Entrada!';
           return redirect()->back()->with('error', $error);
-
         }
+
+
+      } catch (QueryException $e) {
+
+        $error = "Erro ao remover Entrada. Possivelmente Registo em uso. Necessária a intervenção do Administrador da Base de Dados.!";
+        return redirect()->back()->with('error', $error);
+
+      }
     }
 
     public function pagamentoEntrada(PagamentoEntradaStoreUpdateFormRequest $request){
         //dd($request->all());
 
-        $entrada_id = $request->entrada_id;
+      $acronimo_forma_pagamento_naoaplicavel = FormaPagamento::select('id')->where('acronimo', 'naoaplicavel')->first();
+      $acronimo_forma_pagamento_naoaplicavel_id = $acronimo_forma_pagamento_naoaplicavel->id;
 
 
-        try {
+      $entrada_id = $request->entrada_id;
 
-            $entrada = $this->entrada->find($entrada_id);
+      $pago = 0;
+      $valor_pago = 0.00;
+      $remanescente = 0.00;
+      $forma_pagamento_id = $acronimo_forma_pagamento_naoaplicavel_id;
+      $nr_documento_forma_pagamento = "Nao Aplicavel";
 
-            if($request['pago'] == 0){
 
-            $entrada->pago = $request['pago'];
-            $entrada->valor_pago = 0.00;
-            $entrada->troco = 0.00;
-            $entrada->forma_pagamento_id = 1;
-            $entrada->nr_documento_forma_pagamento = 'Nao Aplicavel';
+
+
+      $entrada = $this->entrada->find($entrada_id);
+
+      if($request['pago'] == 0){
+
+        $pago = $pago;
+        $valor_pago = $valor_pago;
+        $remanescente = $request['valor_iva'];
+        $forma_pagamento_id = $forma_pagamento_id;
+        $nr_documento_forma_pagamento = $nr_documento_forma_pagamento;
+
+      }else{
+
+        $pago = $request['pago'];
+
+        if(!empty($request['valor_pago'])){
+          $valor_pago = $request['valor_pago'];
+        }
+
+        if(!empty($request['remanescente'])){
+          $remanescente = $request['remanescente'];
+        }
+
+        if(!empty($request['forma_pagamento_id'])){
+          $forma_pagamento_id = $request['forma_pagamento_id'];
+        }
+
+        if(!empty($request['nr_documento_forma_pagamento'])){
+          $nr_documento_forma_pagamento = $request['nr_documento_forma_pagamento'];
+        }
+
+      }
+
+      DB::beginTransaction();
+
+      try{
+
+        $entrada->pago = $pago;
+
+        if($entrada->update()){
+
+          if($pago == 0){
+
+            $pagamento_entrada_ids = Pagamentoentrada::select('id')->where('entrada_id', $entrada->id)->get();
+
+            if(sizeof($pagamento_entrada_ids)>0){
+
+              for($i = 0; $i < sizeof($pagamento_entrada_ids); $i++){
+
+                $pagamento_entrada = Pagamentoentrada::find($pagamento_entrada_ids[$i]->id);
+                $pagamento_entrada->valor_pago = $valor_pago;
+                $pagamento_entrada->forma_pagamento_id = $forma_pagamento_id;
+                $pagamento_entrada->nr_documento_forma_pagamento = $nr_documento_forma_pagamento;
+                $pagamento_entrada->remanescente = $remanescente;
+                $pagamento_entrada->delete();
+
+              }
+
+            }else{
+              DB::rollback();
+              $error = "Nao existem Pagamentos para esta Entrada!";
+              return redirect()->back()->with('error', $error);
+            }
+
 
           }else{
-
-            $entrada->pago = $request['pago'];
-
-            if(empty($request['valor_pago'])){
-              $entrada->valor_pago = 0.00;
-            }else{
-              $entrada->valor_pago = $request['valor_pago'];
-            }
-
-            if(empty($request['troco'])){
-              $entrada->troco = 0.00;
-            }else{
-              $entrada->troco = $request['troco'];
-            }
-
-            if(empty($request['forma_pagamento_id'])){
-              $entrada->forma_pagamento_id = 1;
-            }else{
-              $entrada->forma_pagamento_id = $request['forma_pagamento_id'];
-            }
-
-            if(empty($request['nr_documento_forma_pagamento'])){
-              $entrada->nr_documento_forma_pagamento = 'Nao Aplicavel';
-            }else{
-              $entrada->nr_documento_forma_pagamento = $request['nr_documento_forma_pagamento'];
-            }
-
+            $pagamento_entrada = new Pagamentoentrada;
+            $pagamento_entrada->entrada_id = $entrada->id;
+            $pagamento_entrada->valor_pago = $valor_pago;
+            $pagamento_entrada->forma_pagamento_id = $forma_pagamento_id;
+            $pagamento_entrada->nr_documento_forma_pagamento = $nr_documento_forma_pagamento;
+            $pagamento_entrada->remanescente = $remanescente;
+            $pagamento_entrada->save();
           }
-            
-            if($entrada->update()){
 
-                $success = "Pagamento efectuado com sucesso!";
-                return redirect()->back()->with('success', $success);
+          DB::commit();
+          $success = "Pagamento efectuado com sucesso!";
+          return redirect()->route('entrada.index')->with('success', $success);
 
-            }else{
+        }else{
 
-                $error = "Pagamento nao efectuado!!";
-                return redirect()->back()->with('error', $error);
-
-            }
-
-        } catch (QueryException $e) {
-        //echo $e;
-            $error = 'Erro ao efectuar o pagamento! Erro relacionado ao DB. Necessária a intervenção do Administrador da Base de Dados.!';
-            return redirect()->back()->with('error', $error);
+          DB::rollback();
+          $error = "Pagamento nao efectuado!!";
+          return redirect()->back()->with('error', $error);
 
         }
+
+      }catch(QueryException $e){
+        DB::rollback();
+        $error = 'Erro ao efectuar o pagamento! Erro relacionado ao DB. Necessária a intervenção do Administrador da Base de Dados.!';
+        return redirect()->back()->with('error', $error);
+      }
     }
 
     public function reportGeralEntradas(){
 
-        $entradas = $this->entrada->with('user')->orderBy('id', 'asc')->get();
+      $entradas = $this->entrada->with('user')->orderBy('id', 'asc')->get();
 
-        return view('reports.entradas.report_geral_entradas', compact('entradas'));
+      return view('reports.entradas.report_geral_entradas', compact('entradas'));
 
     }
 
     public function entradaTeste($id){
-        echo "Teste";
+      echo "Teste";
     }
-}
+  }

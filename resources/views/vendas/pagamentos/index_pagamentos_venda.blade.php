@@ -18,6 +18,7 @@
 
 <div class="row">
   <div class="col-lg-12">
+    
     <section class="panel panel-default">
 
       <div class="panel-body">
@@ -63,9 +64,9 @@
               <div class="col-md-8" id="div_forma_pagamento" style="display:none">
                 <div class="row">
                   <div class="col-md-6">
-                    {{ Form::label('valor_pago', 'Valor a Pago')}}
+                    {{ Form::label('valor_pago', 'Valor a Pagor')}}
                     <div class="input-group">
-                      {{ Form::text('valor_pago', null, ['class'=>'form-control', 'id'=>'valor_pago'])}}
+                      {{ Form::text('valor_pago', null, ['class'=>'form-control', 'id'=>'valor_pago', 'readonly'])}}
 
                       {{ Form::hidden('valor_remanescente_ref', $remanescente, ['class'=>'form-control', 'id'=>'valor_remanescente_ref'])}}
                       <div class="input-group-addon">Mtn</div>
@@ -183,28 +184,28 @@
 <script type="text/javascript">
   $(document).ready(function(){
     $('.submit_iten').on('click',function(){
-      $("#wait").css("display", "block");
+      $(".wait").css("display", "block");
+
 
       if (document.getElementById('pago').checked) {
-        if($('#valor_pago').val() === "" || $('#valor_pago').val() === null){
+        if($('#pago').val() === "" || $('#valor_pago').val() === null){
           alert('Informe o Valor a Pagar');
-          $("#wait").css("display", "none");
+          $(".wait").css("display", "none");
           $('#valor_pago').focus();
           return false;
         }
       }
 
-
       if($('#forma_pagamento_id').val() === "" || $('#forma_pagamento_id').val() === null){
         alert('Selecione a Forma de Pagamento');
-        $("#wait").css("display", "none");
+        $(".wait").css("display", "none");
         $('#forma_pagamento_id').focus();
         return false;
       }
 
       if($('#nr_documento_forma_pagamento').val() === "" || $('#nr_documento_forma_pagamento').val() === null){
         alert('Informe o Número do Documento para o Pagamento da Factura, ou o valor padrao (Não Aplicavel)');
-        $("#wait").css("display", "none");
+        $(".wait").css("display", "none");
         $('#nr_documento_forma_pagamento').focus();
         return false;
       }
@@ -212,9 +213,8 @@
 
     var valor_total_visual = ($('#valor_total_iva').val()*1);
     $('.valor_total_visual').html(valor_total_visual.formatMoney(2,',','.')+ " Mtn");
-    console.log($('#valor_pago').val());
-    resetPagamento(); // Faz o reset dos campos "pagamento" ao carregar a pagina para permitir o alertaremanescentePagamento()...correcto
-    alertaremanescentePagamento();
+    $('.remanescente_visual').html(($('#valor_remanescente_ref').val()*1).formatMoney(2,',','.')+ " Mtn");
+    
     remanescenteRed();
 
     var pago = $('#pago').val();
@@ -233,6 +233,7 @@
       $('.info_pagamento').css("color", "red");
       $('.info_pagamento').html('Nao Paga');
     }
+    console.log(pago);
   });
 
 
@@ -240,60 +241,81 @@
   function pagoNaoPago() {
     if (document.getElementById('pago').checked) {
       document.getElementById('div_forma_pagamento').style.display = 'block';
-      resetPagoChecked();
+      // resetPagoChecked();
+      pagamentoTotal();
     }
     else if(document.getElementById('nao_pago').checked){
       document.getElementById('div_forma_pagamento').style.display = 'none';
-      resetPagamento();
+      // resetPagamento();
+      resetPagamentoTotal();
     }
   }
 
-  function resetPagoChecked(){
-    $('#valor_pago').val(0);
+  function pagamentoTotal(){
     $('#forma_pagamento_id').val('');
     $('#nr_documento_forma_pagamento').val('');
+
+    var valor_total_iva = ($('#valor_total_iva').val()*1);
+    var remanescente = 0;
+    $('#valor_pago').val(valor_total_iva);
+    $('#remanescente').val(remanescente);
   }
 
-  function resetPagamento(){
-     $('#forma_pagamento_id').val(1); // codigo da forma de pagamento (Nao Aplicavel=>DB)
-     $('#nr_documento_forma_pagamento').val('Nao Aplicavel');
-     $('#remanescente').val($('#valor_remanescente_ref').val()*1);
-     $('#valor_pago').val(0);
-   }
-
-   $('#valor_pago').keyup(function(){
-    alertaremanescentePagamento();
-  });
-
-   function alertaremanescentePagamento(){
-    var valor_remanescente_ref = ($('#valor_remanescente_ref').val()*1);
-    var valor_pago = $('#valor_pago').val()*1;
-    var remanescente = valor_remanescente_ref - valor_pago;
-
-    if(remanescente >= 0){
-     $('#remanescente').val(remanescente);
-     $('.remanescente_visual').html(remanescente*(1).formatMoney(2,',','.')+ " Mtn");
-   }else{
-    if(valor_pago > valor_remanescente_ref){ 
-      // ou remanscente < 0, significa q o valor pago eh maior q o remanescente_ref
-      alert('O Valor informado e maior do que o valor remanescente(Divida)');
-      $('#valor_pago').val(0);
-      $('#remanescente').val(valor_remanescente_ref);
-      $('.remanescente_visual').html(valor_remanescente_ref*(1).formatMoney(2,',','.')+ " Mtn");
-
-    }
+  function resetPagamentoTotal(){
+    var valor_total_iva = 0;
+    var remanescente = ($('#valor_total_iva').val()*1);
+    $('#valor_pago').val(0);
+    $('#remanescente').val(remanescente);
+    $('#forma_pagamento_id').val(1); // codigo da forma de pagamento (Nao Aplicavel=>DB)
+    $('#nr_documento_forma_pagamento').val('Nao Aplicavel');
   }
-}
+
+  // function resetPagoChecked(){
+  //   $('#valor_pago').val(0);
+  //   $('#forma_pagamento_id').val('');
+  //   $('#nr_documento_forma_pagamento').val('');
+  // }
+
+  // function resetPagamento(){
+  //    $('#forma_pagamento_id').val(1); // codigo da forma de pagamento (Nao Aplicavel=>DB)
+  //    $('#nr_documento_forma_pagamento').val('Nao Aplicavel');
+  //    $('#remanescente').val($('#valor_remanescente_ref').val()*1);
+  //    $('#valor_pago').val(0);
+  //  }
+
+  // $('#valor_pago').keyup(function(){
+  //   alertaremanescentePagamento();
+  // });
+
+//   function alertaremanescentePagamento(){
+//     var valor_remanescente_ref = ($('#valor_remanescente_ref').val()*1);
+//     var valor_pago = $('#valor_pago').val()*1;
+//     var remanescente = valor_remanescente_ref - valor_pago;
+
+//     if(remanescente >= 0){
+//      $('#remanescente').val(remanescente);
+//      $('.remanescente_visual').html(remanescente*(1).formatMoney(2,',','.')+ " Mtn");
+//    }else{
+//     if(valor_pago > valor_remanescente_ref){ 
+//       // ou remanscente < 0, significa q o valor pago eh maior q o remanescente_ref
+//       alert('O Valor informado e maior do que o valor remanescente(Divida)');
+//       $('#valor_pago').val(0);
+//       $('#remanescente').val(valor_remanescente_ref);
+//       $('.remanescente_visual').html(valor_remanescente_ref*(1).formatMoney(2,',','.')+ " Mtn");
+
+//     }
+//   }
+// }
 
 function remanescenteRed(){
   document.getElementById('remanescente').style.backgroundColor = "red";
   document.getElementById('remanescente').style.color = "white";
 }
 
-function remanescenteWhite(){
-  document.getElementById('remanescente').style.backgroundColor = "white";
-  document.getElementById('remanescente').style.color = "black";
-}
+// function remanescenteWhite(){
+//   document.getElementById('remanescente').style.backgroundColor = "white";
+//   document.getElementById('remanescente').style.color = "black";
+// }
 
 $('#forma_pagamento_id').change(function(){
   var frm_pagamento = document.getElementById('forma_pagamento_id').options[document.getElementById('forma_pagamento_id').selectedIndex].text;

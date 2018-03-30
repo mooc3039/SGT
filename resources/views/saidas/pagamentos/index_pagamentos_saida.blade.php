@@ -18,6 +18,7 @@
 
 <div class="row">
   <div class="col-lg-12">
+
     <section class="panel panel-default">
 
       <div class="panel-body">
@@ -182,12 +183,12 @@
 <script type="text/javascript">
   $(document).ready(function(){
     $('.submit_iten').on('click',function(){
-      $("#wait").css("display", "block");
+      $(".wait").css("display", "block");
 
       if (document.getElementById('pago').checked) {
         if($('#valor_pago').val() === "" || $('#valor_pago').val() === null){
           alert('Informe o Valor a Pagar');
-          $("#wait").css("display", "none");
+          $(".wait").css("display", "none");
           $('#valor_pago').focus();
           return false;
         }
@@ -196,14 +197,14 @@
 
       if($('#forma_pagamento_id').val() === "" || $('#forma_pagamento_id').val() === null){
         alert('Selecione a Forma de Pagamento');
-        $("#wait").css("display", "none");
+        $(".wait").css("display", "none");
         $('#forma_pagamento_id').focus();
         return false;
       }
 
       if($('#nr_documento_forma_pagamento').val() === "" || $('#nr_documento_forma_pagamento').val() === null){
         alert('Informe o Número do Documento para o Pagamento da Factura, ou o valor padrao (Não Aplicavel)');
-        $("#wait").css("display", "none");
+        $(".wait").css("display", "none");
         $('#nr_documento_forma_pagamento').focus();
         return false;
       }
@@ -272,14 +273,14 @@
 
     if(remanescente >= 0){
      $('#remanescente').val(remanescente);
-     $('.remanescente_visual').html(remanescente*(1).formatMoney(2,',','.')+ " Mtn");
+     $('.remanescente_visual').html(remanescente.formatMoney(2,',','.')+ " Mtn");
    }else{
     if(valor_pago > valor_remanescente_ref){ 
       // ou remanscente < 0, significa q o valor pago eh maior q o remanescente_ref
       alert('O Valor informado e maior do que o valor remanescente(Divida)');
       $('#valor_pago').val(0);
       $('#remanescente').val(valor_remanescente_ref);
-      $('.remanescente_visual').html(valor_remanescente_ref*(1).formatMoney(2,',','.')+ " Mtn");
+      $('.remanescente_visual').html(valor_remanescente_ref.formatMoney(2,',','.')+ " Mtn");
     }
   }
 }

@@ -12,29 +12,7 @@
 
 <div class="row">
   <div class="col-lg-12">
-    <div id="wait" style=" 
-    text-align: center; 
-    z-index: 1; 
-    display:none;
-    width:100%;
-    height:100%;
-    position:absolute;
-    top:0;
-    left:0;
-    padding:5px;">
-
-    <div id="wait-loader" style="
-    position:absolute;    
-    left:40%;
-    top:40%;
-    font-size: 50px; 
-    color: blue;">
-    <!-- <i class="fa fa-plus text-center"> -->
-      <img src="{{asset('/img/Gear-0.6s-200px.gif')}}"/>
-    </i>
-    <!-- <h2>Aguarde...</h2> -->
-  </div>
-</div>
+    
 <section class="panel panel-default">
       <!-- <header class="panel-heading">
         Vendas
@@ -61,7 +39,7 @@
               <tbody>
                 @foreach($vendas as $venda)
                 <tr>
-                  <td> <a href="{{ route('show_guia_entrega', $venda->id) }}">{{$venda->id}}</a> </td>
+                  <td> {{$venda->id}} </td>
                   <td> {{$venda->created_at}} </td>
                   <td> {{$venda->cliente->nome}} </td>
                   <td> {{$venda->valor_iva}} </td>
@@ -70,7 +48,7 @@
                     <!-- <button type="button" data-toggle="modal" data-target="#modalPagamentoVenda" data-venda_id={{ $venda->id }} data-valor_total={{ $venda->valor_total }} data-valor_pago={{ $venda->valor_pago }} data-troco={{ $venda->troco }} data-forma_pagamento_id={{ $venda->forma_pagamento_id }} data-nr_documento_forma_pagamento={{ $venda->nr_documento_forma_pagamento }} -->
                       <a href="{{route('createPagamentoVenda', $venda->id)}}"
 
-                      <?php
+                        <?php
                         $valor_pago_soma = 0;
                         $arry_valor_pago_soma = array();
 
@@ -93,53 +71,59 @@
                         }
 
                         ?>
-                      >
+                        >
 
-                      <!-- > -->
-                      Pagamento
+                        <!-- > -->
+                        Pagamento
 
-                      <?php
+                        <?php
 
-                      if(($venda->pago==1) && ($valor_pago_soma >= $venda->valor_iva) ){
-                        echo '<i class="fa fa-check"></i>';
-                      }else{
-                        echo '<i class="icon_close_alt2"></i>';
-                      }
+                        if(($venda->pago==1) && ($valor_pago_soma >= $venda->valor_iva) ){
+                          echo '<i class="fa fa-check"></i>';
+                        }else{
+                          echo '<i class="icon_close_alt2"></i>';
+                        }
 
-                      ?>
-                    </a>
-                    <!-- </button> -->
+                        ?>
+                      </a>
+                      <!-- </button> -->
 
-                  </a> 
-                </td>
-                <td class="text-right">
+                    </a> 
+                  </td>
+                  <td class="text-right">
 
-                  <div class="btn-group btn-group-sm">
-                    <a class="btn btn-primary" href="{{route('venda.show', $venda->id)}}"><i class="fa fa-eye"></i></a>
-                    <a class="btn btn-success" href="{{route('venda.edit', $venda->id)}}"><i class="fa fa-pencil"></i></a>
-                    {{ Form::button('<i class="icon_close_alt2"></i>', ['type'=>'submit', 'class'=>'btn btn-danger submit_iten']) }}
+                    <div class="btn-group btn-group-sm">
+                      <a class="btn btn-primary" href="{{route('venda.show', $venda->id)}}"><i class="fa fa-eye"></i></a>
+                      <a class="btn btn-success" href="{{route('venda.edit', $venda->id)}}"
+                        @if($venda->pago==1)
+                        {{ 'disabled' }}
+                        @endif
+                        >
+                        <i class="fa fa-pencil"></i>
+                      </a>
+                      {{ Form::button('<i class="icon_close_alt2"></i>', ['type'=>'submit', 'class'=>'btn btn-danger submit_iten']) }}
 
-                  </div>
-                  
-                </td>
-                {{ Form::close() }}
-              </tr>
-              @endforeach
-            </tbody>
-          </table>
+                    </div>
+
+                  </td>
+                  {{ Form::close() }}
+                </tr>
+                @endforeach
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="panel-footer">
-      <div class="row">
-        <div class="col-md-6">
-          {{ $vendas->links() }}
+      <div class="panel-footer">
+        <div class="row">
+          <div class="col-md-6">
+            {{ $vendas->links() }}
+          </div>
         </div>
       </div>
-    </div>
 
-  </section>
-</div>
+    </section>
+  </div>
 </div>
 
 
@@ -236,7 +220,7 @@
 <script type="text/javascript">
   $(document).ready(function(){
     $('.submit_iten').on('click',function(){
-      $("#wait").css("display", "block");
+      $(".wait").css("display", "block");
     });
   });
 

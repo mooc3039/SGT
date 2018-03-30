@@ -2,28 +2,27 @@
 @section('content')
 <div class="row">
   <div class="col-lg-8">
-    <h3 class="page-header"><i class="fa fa-file-text-o"></i>Pagamentos do Concurso</h3>
+    <h3 class="page-header"><i class="fa fa-file-text-o"></i>Pagamentos da Entrada</h3>
     <ol class="breadcrumb">
       <li><i class="fa fa-home"></i><a href="#">Home</a></li>
-      <li><i class="fa fa-file-text-o"></i>Pagamentos do Concurso</li>
+      <li><i class="fa fa-file-text-o"></i>Pagamentos da Entrada</li>
     </ol>
   </div>
   <div class="col-lg-4 text-right">
-    <h3>Concurso: <b>{{ $concurso->codigo_concurso }}</b></h3>
+    <h3>Entrada: <b>{{ $entrada->id }}</b></h3>
     <h4>Status: <b><span class="info_pagamento"></span></b></h4>
-    <h4>Montante Geral do Concurso: <b><span class="valor_total_iva_visual" style="color: blue"></span></b></h4>
+    <h4>Montante Geral da entrada: <b><span class="valor_total_iva_visual" style="color: blue"></span></b></h4>
     <h4>Remanescente: <b><span class="remanescente_visual" style="color: red"></span></b></h4>
   </div>
 </div>
 
 <div class="row">
   <div class="col-lg-12">
-    
     <section class="panel panel-default">
 
       <div class="panel-body">
 
-        {{Form::model($concurso, ['route'=>['pagamentoConcurso'], 'method'=>'POST', 'onsubmit'=>'submitFormPagamentoConcurso.disabled = true; return true;'])}}
+        {{Form::model($entrada, ['route'=>['pagamentoEntrada'], 'method'=>'POST', 'onsubmit'=>'submitFormPagamentoEntrada.disabled = true; return true;'])}}
 
         <?php
 
@@ -31,16 +30,16 @@
         $remanescente = 0;
         $arry_valor_pago_soma = array();
 
-        foreach($concurso->pagamentosConcurso as $pagamento){
+        foreach($entrada->pagamentosEntrada as $pagamento){
           $arry_valor_pago_soma[] = $pagamento->valor_pago;
         }
 
         if(sizeof($arry_valor_pago_soma)<=0){
           $valor_pago_soma = 0;
-          $remanescente = $concurso->valor_iva - $valor_pago_soma;
+          $remanescente = $entrada->valor_total - $valor_pago_soma;
         }else{
           $valor_pago_soma = array_sum($arry_valor_pago_soma);
-          $remanescente = $concurso->valor_iva - $valor_pago_soma;
+          $remanescente = $entrada->valor_total - $valor_pago_soma;
         }
 
 
@@ -91,12 +90,12 @@
                     {{ Form::label('nr_documento_forma_pagamento', 'Documento')}}
                     {{ Form::text('nr_documento_forma_pagamento', null, ['class'=>'form-control', 'id'=>'nr_documento_forma_pagamento'])}}
 
-                    {{ Form::hidden('concurso_id', $concurso->id, ['class'=>'form-control', 'id'=>'concurso_id'])}}
-                    {{ Form::hidden('valor_iva', null, ['class'=>'form-control', 'id'=>'valor_iva'])}}
+                    {{ Form::hidden('entrada_id', $entrada->id, ['class'=>'form-control', 'id'=>'entrada_id'])}}
+                    {{ Form::hidden('valor_total', null, ['class'=>'form-control', 'id'=>'valor_total'])}}
 
-                    {{ Form::hidden('pago', $concurso->pago, ['class'=>'form-control', 'id'=>'pago', 'disabled'])}}
+                    {{ Form::hidden('pago', $entrada->pago, ['class'=>'form-control', 'id'=>'pago', 'disabled'])}}
 
-                    {{ Form::hidden('pago_total_iva_info', $concurso->valor_iva, ['class'=>'form-control', 'id'=>'pago_total_iva_info', 'disabled'])}}
+                    {{ Form::hidden('pago_total_iva_info', $entrada->valor_total, ['class'=>'form-control', 'id'=>'pago_total_iva_info', 'disabled'])}}
 
                     {{ Form::hidden('valor_pago_soma', $valor_pago_soma, ['class'=>'form-control', 'id'=>'valor_pago_soma', 'disabled'])}}
                   </div>
@@ -110,7 +109,7 @@
 
         <div class="row">
           <div class="col-md-6">
-            {{Form::submit('Actualizar', ['class'=>'btn btn-primary submit_iten', 'name'=>'submitFormPagamentoConcurso', 'id'=>'submitFormPagamentoConcurso'])}}
+            {{Form::submit('Actualizar', ['class'=>'btn btn-primary submit_iten', 'name'=>'submitFormPagamentoEntrada', 'id'=>'submitFormPagamentoEntrada'])}}
           </div>
         </div>
         {{Form::close()}}
@@ -133,23 +132,23 @@
 
               <tbody>
 
-                @foreach($concurso->pagamentosconcurso as $pagamento_concurso)
-                @if($pagamento_concurso->valor_pago > 0)
+                @foreach($entrada->pagamentosentrada as $pagamento_entrada)
+                @if($pagamento_entrada->valor_pago > 0)
                 <tr>
                   <td>
-                    {{ $pagamento_concurso->formaPagamento->descricao}}
+                    {{ $pagamento_entrada->formaPagamento->descricao}}
                   </td>
                   <td>
-                    {{ $pagamento_concurso->nr_documento_forma_pagamento}}
+                    {{ $pagamento_entrada->nr_documento_forma_pagamento}}
                   </td>
                   <td>
-                    {{ $pagamento_concurso->valor_pago}}
+                    {{ $pagamento_entrada->valor_pago}}
                   </td>
                   <td>
-                    {{ $pagamento_concurso->created_at}}
+                    {{ $pagamento_entrada->created_at}}
                   </td>
                   <td>
-                    {{ $pagamento_concurso->updated_at}}
+                    {{ $pagamento_entrada->updated_at}}
                   </td>
                 </tr>
                 @endif
@@ -168,7 +167,7 @@
 
           </div>
           <div class="col-md-6 text-right">
-            <a href="{{ route('concurso.index')}}" class="btn btn-warning">Voltar</a>
+            <a href="{{ route('entrada.index')}}" class="btn btn-warning">Voltar</a>
           </div>
         </div>
 
@@ -212,8 +211,8 @@
       }
     });
 
-    var valor_total_iva_visual = ($('#valor_iva').val()*1);
-    console.log($('#valor_iva').val());
+    var valor_total_iva_visual = ($('#valor_total').val()*1);
+    console.log($('#valor_total').val());
     $('.valor_total_iva_visual').html(valor_total_iva_visual.formatMoney(2,',','.')+ " Mtn");
     resetPagamento(); // Faz o reset dos campos "pagamento" ao carregar a pagina para permitir o alertaremanescentePagamento()...correcto
     alertaremanescentePagamento();
@@ -226,14 +225,14 @@
     if(pago==1){
       if(valor_pago_soma >= pago_total_iva_info){
         $('.info_pagamento').css("color", "green");
-        $('.info_pagamento').html('Pago na Totalidade');
+        $('.info_pagamento').html('Paga na Totalidade');
       }else{
         $('.info_pagamento').css("color", "red");
-        $('.info_pagamento').html('Pago Parcialmente');
+        $('.info_pagamento').html('Paga Parcialmente');
       }
     }else{
       $('.info_pagamento').css("color", "red");
-      $('.info_pagamento').html('Nao Pago');
+      $('.info_pagamento').html('Nao Paga');
     }
   });
 

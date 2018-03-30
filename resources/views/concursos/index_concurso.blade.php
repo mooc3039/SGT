@@ -12,6 +12,15 @@
 
 <div class="row">
   <div class="col-lg-12">
+
+    <!-- Processing -->    
+    <div class="wait">
+      <div class="wait-loader">
+        <img src="{{asset('/img/Gear-0.6s-200px.gif')}}"/>
+      </div>
+    </div>
+    <!-- Processing -->
+    
     <section class="panel panel-default">
       <div class="panel-body">
         <div class="row" style="margin-bottom: 10px">
@@ -183,7 +192,7 @@
   <script type="text/javascript">
     $(document).ready(function(){
       $('.submit_iten').on('click',function(){
-        $("#wait").css("display", "block");
+        $(".wait").css("display", "block");
       });
     });
 

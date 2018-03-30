@@ -4,335 +4,229 @@
 <!-- <div class="container"> -->
 	<div class="row">
 		<div class="col-md-12">
-			<div id="wait" style=" 
-			text-align: center; 
-			z-index: 1; 
-			display:none;
-			width:100%;
-			height:100%;
-			position:absolute;
-			top:0;
-			left:0;
-			padding:5px;">
 
-			<div id="wait-loader" style="
-			position:absolute;    
-			left:40%;
-			top:40%;
-			font-size: 50px; 
-			color: blue;">
-			<!-- <i class="fa fa-plus text-center"> -->
-				<img src="{{asset('/img/Gear-0.6s-200px.gif')}}"/>
-			</i>
-			<!-- <h2>Aguarde...</h2> -->
-		</div>
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<div class="row">
+						<div class="col-md-5 border">
+							<div class="panel panel-default">
 
-	</div>
+								<div class="panel-body">
+									Papelaria e Serviços Agenda<hr>
+									Emal: papelaria@gmail.com<br>
+									Telefone: +218293503 / +258840294826<br>
+									Endereco: Av. 24 de Julho<br>
+								</div>
+							</div>
 
-	<div class="panel panel-default">
-		<div class="panel-heading">
-			<div class="row">
-				<div class="col-md-5 border">
-					<div class="panel panel-default">
 
-						<div class="panel-body">
-							Papelaria e Serviços Agenda<hr>
-							Emal: papelaria@gmail.com<br>
-							Telefone: +218293503 / +258840294826<br>
-							Endereco: Av. 24 de Julho<br>
+
+						</div>
+
+						<div class="col-md-4">
+
+							<div class="panel panel-default">
+								<div class="panel-body text-center">
+									<h2> <b> Dados do Cliente </b></h2> <hr>
+									Nome do Cliente: {{$cotacao->cliente->nome}}<br>
+									Endereço: {{$cotacao->cliente->endereco}}<br>
+									Nuit: {{$cotacao->cliente->nuit}}<br>
+								</div>
+							</div>
+						</div>
+
+						<div class="col-md-3">
+
+							<div class="panel panel-default">
+								<div class="panel-body text-center">
+									<h2> <b> Numero de Cotação / Factura </b> </h2> <hr>
+									<h1>{{$cotacao->id}}</h1>
+								</div>
+							</div>
+
+
 						</div>
 					</div>
-
-
-
-				</div>
-
-				<div class="col-md-4">
-
-					<div class="panel panel-default">
-						<div class="panel-body text-center">
-							<h2> <b> Dados do Cliente </b></h2> <hr>
-							Nome do Cliente: {{$cotacao->cliente->nome}}<br>
-							Endereço: {{$cotacao->cliente->endereco}}<br>
-							Nuit: {{$cotacao->cliente->nuit}}<br>
-						</div>
+					<div class="row">
+						<div class="col-md-6"> MAPUTO</div>
+						<div class="col-md-6 text-right"> Data: {{$cotacao->data}} </div>
 					</div>
 				</div>
 
-				<div class="col-md-3">
 
-					<div class="panel panel-default">
-						<div class="panel-body text-center">
-							<h2> <b> Numero de Cotação / Factura </b> </h2> <hr>
-							<h1>{{$cotacao->id}}</h1>
-						</div>
-					</div>
+				<div class="panel-body">
 
-
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-md-6"> MAPUTO</div>
-				<div class="col-md-6 text-right"> Data: {{$cotacao->data}} </div>
-			</div>
-		</div>
-
-
-		<div class="panel-body">
-
-			<div class="row">
-				<div class="col-md-12">
-					<div class="row" style="margin-bottom: 10px">
+					<div class="row">
 						<div class="col-md-12">
-							<button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modalInserirItem" data-new_valor_total={{ $cotacao->valor_total }} data-new_cotacao_id={{ $cotacao->id }}><i class="fa fa-plus"></i></button>
+							<div class="row" style="margin-bottom: 10px">
+								<div class="col-md-12">
+									<button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modalInserirItem" data-new_valor_total={{ $cotacao->valor_total }} data-new_cotacao_id={{ $cotacao->id }}><i class="fa fa-plus"></i></button>
+								</div>
+							</div>
+							<table class="table table-striped table-advance table-hover">
+								<thead>
+									<tr>
+										<th><i class="icon_mobile"></i> Designação </th>
+										<th class="text-center"><i class="icon_profile"></i>Quantidade</th>
+										<th><i class="icon_mail_alt"></i> Preço Unitário </th>
+										<th><i class="icon_cogs"></i> Valor Total </th>
+										<th class="text-center"><i class="icon_close_alt2"></i> Remover </th>
+									</tr>
+								</thead>
+								<tbody>
+									@foreach($cotacao->itensCotacao as $iten_cotacao)
+									<tr>
+										<td> {{$iten_cotacao->produto->descricao}} </td>
+
+										<td class="text-center"> <button type="button" class="btn btn-sm" data-toggle="modal" data-target="#modalProdutoIten" data-cotacao_id={{ $cotacao->id }} data-produto_id={{ $iten_cotacao->produto->id }} data-descricao={{ $iten_cotacao->produto->descricao }} data-quantidade={{ $iten_cotacao->quantidade }} data-preco_venda={{ $iten_cotacao->produto->preco_venda }} data-valor={{$iten_cotacao->valor }} data-desconto={{ $iten_cotacao->desconto }} data-subtotal={{ $iten_cotacao->subtotal }} data-valor_total={{ $cotacao->valor_total }} data-user_id={{ Auth::user()->id }}> {{$iten_cotacao->quantidade}} </button> </td>
+
+										<td> {{$iten_cotacao->produto->preco_venda}} </td>
+										<td> {{$iten_cotacao->valor}} </td>
+										{{ Form::open(['route'=>['iten_cotacao.destroy', $iten_cotacao->id], 'method'=>'DELETE']) }}
+										<td class="text-center">
+											{{ Form::button('<i class="icon_close_alt2"></i>', ['class'=>'btn btn-danger btn-sm submit_iten', 'type'=>'submit'] )}}
+										</td>
+										{{ Form::close() }}
+
+									</tr>
+									@endforeach
+								</tbody>
+							</table>
 						</div>
 					</div>
-					<table class="table table-striped table-advance table-hover">
-						<thead>
-							<tr>
-								<th><i class="icon_mobile"></i> Designação </th>
-								<th class="text-center"><i class="icon_profile"></i>Quantidade</th>
-								<th><i class="icon_mail_alt"></i> Preço Unitário </th>
-								<th><i class="icon_cogs"></i> Valor Total </th>
-								<th class="text-center"><i class="icon_close_alt2"></i> Remover </th>
-							</tr>
-						</thead>
-						<tbody>
-							@foreach($cotacao->itensCotacao as $iten_cotacao)
-							<tr>
-								<td> {{$iten_cotacao->produto->descricao}} </td>
-
-								<td class="text-center"> <button type="button" class="btn btn-sm" data-toggle="modal" data-target="#modalProdutoIten" data-cotacao_id={{ $cotacao->id }} data-produto_id={{ $iten_cotacao->produto->id }} data-descricao={{ $iten_cotacao->produto->descricao }} data-quantidade={{ $iten_cotacao->quantidade }} data-preco_venda={{ $iten_cotacao->produto->preco_venda }} data-valor={{$iten_cotacao->valor }} data-desconto={{ $iten_cotacao->desconto }} data-subtotal={{ $iten_cotacao->subtotal }} data-valor_total={{ $cotacao->valor_total }} data-user_id={{ Auth::user()->id }}> {{$iten_cotacao->quantidade}} </button> </td>
-
-								<td> {{$iten_cotacao->produto->preco_venda}} </td>
-								<td> {{$iten_cotacao->valor}} </td>
-								{{ Form::open(['route'=>['iten_cotacao.destroy', $iten_cotacao->id], 'method'=>'DELETE']) }}
-								<td class="text-center">
-									{{ Form::button('<i class="icon_close_alt2"></i>', ['class'=>'btn btn-danger btn-sm submit_iten', 'type'=>'submit'] )}}
-								</td>
-								{{ Form::close() }}
-
-							</tr>
-							@endforeach
-						</tbody>
-					</table>
-				</div>
-			</div>
-		</div>
-
-		<div class="panel-footer">
-			<div class="row">
-
-				<div class="col-md-6 border">
-
-
-					<div class="panel panel-default">
-						<div class="panel-body">
-							Motivo Justificativo da não aplicação de imposto:
-						</div>
-					</div>
-
 				</div>
 
-				<div class="col-md-6 text-right">
-
-					<table class="pull-right">
-						<tr>
-							<td>
-								Sub-Total:
-							</td>
-							<td>
-								{{$cotacao->valor_total}}
-							</td>
-						</tr>
-
-
-						<tr>
-							<td>
-								IVA:
-							</td>
-							<td>
-								17%
-							</td>
-						</tr>
-
-						<tr>
-							<td>
-								Valor Total:
-							</td>
-							<td>
-								<b>{{$cotacao->valor_iva}}</b>
-							</td>
-						</tr>
-					</table>
-
-				</div>
-
-			</div>
-			<br><br>
-			<div class="row">
-
-				<div class="col-md-6">
-
-					<div class="panel panel-info">
-						<div class="panel-heading">
-							Datos bancarios
-						</div>
-						<div class="panel-body">
-							Conta BCI (MZN) 54169166 10 1<br>
-							Conta BIM (MZN) 5299/07<br>
-						</div>
-					</div>
-
-				</div>
-
-				<div class="col-md-6">
-
-
-
-				</div>
-
-			</div>
-			<div class="row">
-				<div class="col-md-6"><a href="" class="btn btn-primary">Imprimir Saída</a>
-
-				</div>
-				<div class="col-md-6 text-right"><a href="{{route('cotacao.index')}}" class="btn btn-warning">Voltar</a>
-
-				</div>
-			</div>
-		</div>
-
-
-	</div>
-
-
-
-</div>
-</div>
-<!-- </div> -->
-
-<!-- MODAL EDITAR ITEM -->
-<div class="modal fade" tabindex="-1" role="dialog" id="modalProdutoIten">
-	<div class="modal-dialog modal-lg" role="document">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				<h4 class="modal-title"><b>Cotação: </b>Editar Item<span id=""><span/></h4>
-				</div>
-				<div class="modal-body">
-
-					{{Form::open(['route'=>['iten_cotacao.update', 'id'], 'method'=>'PUT', 'onsubmit'=>'submitFormCotacao.disabled = true; return true;'])}}
-
+				<div class="panel-footer">
 					<div class="row">
-						<div class="col-md-3">
-							<div class="form-group">
-								{{Form::label('descricao', 'Designação', ['class'=>'control-lable'])}}
-								{{Form::text('descricao', null, ['placeholder' => 'Nome', 'class' => 'form-control', 'id'=>'descricao', 'disabled'])}}
-							</div>
-						</div>
-						<div class="col-md-3">
-							<div class="form-group">
-								{{Form::label('quantidade', 'Quantidade', ['class'=>'control-lable'])}}
-								{{Form::text('quantidade', null, ['placeholder' => 'Quantidade', 'class' => 'form-control', 'id'=>'quantidade'])}}
-							</div>
-						</div>
-						<div class="col-md-3">
-							<div class="form-group">
-								{{Form::label('preco_venda', 'Preço Unitário', ['class'=>'control-lable'])}}
-								{{Form::text('preco_venda', null, ['placeholder' => 'Preço Unitário', 'class' => 'form-control', 'id'=>'preco_venda', 'disabled'])}}
-							</div>
-						</div>
-						<div class="col-md-3">
-							<div class="form-group">
-								{{Form::label('valor', 'Valor', ['class'=>'control-lable'])}}
-								{{Form::text('valor', null, ['placeholder' => 'Valor', 'class' => 'form-control', 'id'=>'valor', 'readonly'])}}
 
-								{{ Form::hidden('cotacao_id', null, ['id'=>'cotacao_id']) }}
-								{{ Form::hidden('produto_id', null, ['id'=>'produto_id']) }}
-								{{ Form::hidden('user_id', null, ['id'=>'user_id']) }}
-							</div>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-md-3">
-							<div class="form-group">
-								{{Form::label('desconto', 'Desconto', ['class'=>'control-lable'])}}
-								{{Form::text('desconto', null, ['placeholder' => 'Desconto', 'class' => 'form-control', 'id'=>'desconto'])}}
-							</div>
-						</div>
-						<div class="col-md-3">
-							<div class="form-group">
-								{{Form::label('subtotal', 'Subtotal', ['class'=>'control-lable'])}}
-								{{Form::text('subtotal', null, ['placeholder' => 'Subtotal', 'class' => 'form-control', 'id'=>'subtotal', 'readonly'])}}
-							</div>
-						</div>
-						<div class="col-md-3">
-							<div class="form-group">
-								{{ Form::hidden('valor_total', null, ['id'=>'valor_total']) }}
-							</div>
-						</div>
-					</div>
+						<div class="col-md-6 border">
 
-				</div>
-				<div class="modal-footer">
-					<div class="row">
-						<div class="col-md-6 text-left">
-							<h5>Montante Geral da Cotação: <b><span id="val_temp"></span></b></h5>
+
+							<div class="panel panel-default">
+								<div class="panel-body">
+									Motivo Justificativo da não aplicação de imposto:
+								</div>
+							</div>
+
 						</div>
+
 						<div class="col-md-6 text-right">
-							{{Form::button('Fechar', ['class'=>'btn btn-default', 'data-dismiss'=>'modal'])}}
-							{{Form::submit('Actualizar', ['class'=>'btn btn-primary submit_iten', 'name'=>'submitFormCotacao'])}}
+
+							<table class="pull-right">
+								<tr>
+									<td>
+										Sub-Total:
+									</td>
+									<td>
+										{{$cotacao->valor_total}}
+									</td>
+								</tr>
+
+
+								<tr>
+									<td>
+										IVA:
+									</td>
+									<td>
+										17%
+									</td>
+								</tr>
+
+								<tr>
+									<td>
+										Valor Total:
+									</td>
+									<td>
+										<b>{{$cotacao->valor_iva}}</b>
+									</td>
+								</tr>
+							</table>
+
+						</div>
+
+					</div>
+					<br><br>
+					<div class="row">
+
+						<div class="col-md-6">
+
+							<div class="panel panel-info">
+								<div class="panel-heading">
+									Datos bancarios
+								</div>
+								<div class="panel-body">
+									Conta BCI (MZN) 54169166 10 1<br>
+									Conta BIM (MZN) 5299/07<br>
+								</div>
+							</div>
+
+						</div>
+
+						<div class="col-md-6">
+
+
+
+						</div>
+
+					</div>
+					<div class="row">
+						<div class="col-md-6"><a href="" class="btn btn-primary">Imprimir Saída</a>
+
+						</div>
+						<div class="col-md-6 text-right"><a href="{{route('cotacao.index')}}" class="btn btn-warning">Voltar</a>
+
 						</div>
 					</div>
-
-
-
-					{{Form::close()}}
 				</div>
-			</div><!-- /.modal-content -->
-		</div><!-- /.modal-dialog -->
-	</div><!-- /.modal -->
 
-	<!-- FIM MODAL EDITAR ITEM -->
 
-	<!-- MODAL INSERIR ITEM -->
-	<div class="modal fade" tabindex="-1" role="dialog" id="modalInserirItem">
+			</div>
+
+
+
+		</div>
+	</div>
+	<!-- </div> -->
+
+	<!-- MODAL EDITAR ITEM -->
+	<div class="modal fade" tabindex="-1" role="dialog" id="modalProdutoIten">
 		<div class="modal-dialog modal-lg" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-					<h4 class="modal-title"><b>Cotação: </b>Novo Item<span id=""><span/></h4>
+					<h4 class="modal-title"><b>Cotação: </b>Editar Item<span id=""><span/></h4>
 					</div>
 					<div class="modal-body">
 
-						{{Form::open(['route'=>'iten_cotacao.store', 'method'=>'POST', 'onsubmit'=>'submitFormCotacao.disabled = true; return true;'])}}
+						{{Form::open(['route'=>['iten_cotacao.update', 'id'], 'method'=>'PUT', 'onsubmit'=>'submitFormCotacao.disabled = true; return true;'])}}
 
 						<div class="row">
 							<div class="col-md-3">
 								<div class="form-group">
 									{{Form::label('descricao', 'Designação', ['class'=>'control-lable'])}}
-									{{ Form::select('produto_id', [''=>'Produto',] + $produtos, null, ['class'=>'form-control', 'id'=>'new_produto_id']) }}
+									{{Form::text('descricao', null, ['placeholder' => 'Nome', 'class' => 'form-control', 'id'=>'descricao', 'disabled'])}}
 								</div>
 							</div>
 							<div class="col-md-3">
 								<div class="form-group">
 									{{Form::label('quantidade', 'Quantidade', ['class'=>'control-lable'])}}
-									{{Form::text('quantidade', null, ['placeholder' => 'Quantidade', 'class' => 'form-control', 'id'=>'new_quantidade'])}}
+									{{Form::text('quantidade', null, ['placeholder' => 'Quantidade', 'class' => 'form-control', 'id'=>'quantidade'])}}
 								</div>
 							</div>
 							<div class="col-md-3">
 								<div class="form-group">
 									{{Form::label('preco_venda', 'Preço Unitário', ['class'=>'control-lable'])}}
-									{{Form::text('preco_venda', null, ['placeholder' => 'Preço Unitário', 'class' => 'form-control', 'id'=>'new_preco_venda', 'disabled'])}}
+									{{Form::text('preco_venda', null, ['placeholder' => 'Preço Unitário', 'class' => 'form-control', 'id'=>'preco_venda', 'disabled'])}}
 								</div>
 							</div>
 							<div class="col-md-3">
 								<div class="form-group">
 									{{Form::label('valor', 'Valor', ['class'=>'control-lable'])}}
-									{{Form::text('valor', null, ['placeholder' => 'Valor', 'class' => 'form-control', 'id'=>'new_valor', 'readonly'])}}
+									{{Form::text('valor', null, ['placeholder' => 'Valor', 'class' => 'form-control', 'id'=>'valor', 'readonly'])}}
 
-									{{ Form::hidden('cotacao_id', null, ['id'=>'new_cotacao_id']) }}
+									{{ Form::hidden('cotacao_id', null, ['id'=>'cotacao_id']) }}
+									{{ Form::hidden('produto_id', null, ['id'=>'produto_id']) }}
+									{{ Form::hidden('user_id', null, ['id'=>'user_id']) }}
 								</div>
 							</div>
 						</div>
@@ -340,13 +234,18 @@
 							<div class="col-md-3">
 								<div class="form-group">
 									{{Form::label('desconto', 'Desconto', ['class'=>'control-lable'])}}
-									{{Form::text('desconto', 0, ['placeholder' => 'Desconto', 'class' => 'form-control', 'id'=>'new_desconto'])}}
+									{{Form::text('desconto', null, ['placeholder' => 'Desconto', 'class' => 'form-control', 'id'=>'desconto'])}}
 								</div>
 							</div>
 							<div class="col-md-3">
 								<div class="form-group">
 									{{Form::label('subtotal', 'Subtotal', ['class'=>'control-lable'])}}
-									{{Form::text('subtotal', null, ['placeholder' => 'Subtotal', 'class' => 'form-control', 'id'=>'new_subtotal', 'readonly'])}}
+									{{Form::text('subtotal', null, ['placeholder' => 'Subtotal', 'class' => 'form-control', 'id'=>'subtotal', 'readonly'])}}
+								</div>
+							</div>
+							<div class="col-md-3">
+								<div class="form-group">
+									{{ Form::hidden('valor_total', null, ['id'=>'valor_total']) }}
 								</div>
 							</div>
 						</div>
@@ -355,11 +254,12 @@
 					<div class="modal-footer">
 						<div class="row">
 							<div class="col-md-6 text-left">
-								<h5>Montante Geral da Cotação: <b><span id="new_val_temp"></span></b></h5>
+								<h5>Montante Geral da Cotação: <b><span id="val_temp"></span></b></h5>
+								<h5>Montante Geral da Cotação: <b><span class="valor_total_iva"></span></b></h5>
 							</div>
 							<div class="col-md-6 text-right">
 								{{Form::button('Fechar', ['class'=>'btn btn-default', 'data-dismiss'=>'modal'])}}
-								{{Form::submit('Salvar', ['class'=>'btn btn-primary submit_iten', 'name'=>'submitFormCotacao'])}}
+								{{Form::submit('Actualizar', ['class'=>'btn btn-primary submit_iten', 'name'=>'submitFormCotacao'])}}
 							</div>
 						</div>
 
@@ -371,31 +271,109 @@
 			</div><!-- /.modal-dialog -->
 		</div><!-- /.modal -->
 
-		<!-- FIM MODAL INSERIR ITEM -->
-		@endsection
+		<!-- FIM MODAL EDITAR ITEM -->
 
-		@section('script')
-		<script>
+		<!-- MODAL INSERIR ITEM -->
+		<div class="modal fade" tabindex="-1" role="dialog" id="modalInserirItem">
+			<div class="modal-dialog modal-lg" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						<h4 class="modal-title"><b>Cotação: </b>Novo Item<span id=""><span/></h4>
+						</div>
+						<div class="modal-body">
 
-			$(document).ready(function(){
-				$('.submit_iten').on('click',function(){
-					$("#wait").css("display", "block");
+							{{Form::open(['route'=>'iten_cotacao.store', 'method'=>'POST', 'onsubmit'=>'submitFormCotacao.disabled = true; return true;'])}}
+
+							<div class="row">
+								<div class="col-md-3">
+									<div class="form-group">
+										{{Form::label('descricao', 'Designação', ['class'=>'control-lable'])}}
+										{{ Form::select('produto_id', [''=>'Produto',] + $produtos, null, ['class'=>'form-control', 'id'=>'new_produto_id']) }}
+									</div>
+								</div>
+								<div class="col-md-3">
+									<div class="form-group">
+										{{Form::label('quantidade', 'Quantidade', ['class'=>'control-lable'])}}
+										{{Form::text('quantidade', null, ['placeholder' => 'Quantidade', 'class' => 'form-control', 'id'=>'new_quantidade'])}}
+									</div>
+								</div>
+								<div class="col-md-3">
+									<div class="form-group">
+										{{Form::label('preco_venda', 'Preço Unitário', ['class'=>'control-lable'])}}
+										{{Form::text('preco_venda', null, ['placeholder' => 'Preço Unitário', 'class' => 'form-control', 'id'=>'new_preco_venda', 'disabled'])}}
+									</div>
+								</div>
+								<div class="col-md-3">
+									<div class="form-group">
+										{{Form::label('valor', 'Valor', ['class'=>'control-lable'])}}
+										{{Form::text('valor', null, ['placeholder' => 'Valor', 'class' => 'form-control', 'id'=>'new_valor', 'readonly'])}}
+
+										{{ Form::hidden('cotacao_id', null, ['id'=>'new_cotacao_id']) }}
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-md-3">
+									<div class="form-group">
+										{{Form::label('desconto', 'Desconto', ['class'=>'control-lable'])}}
+										{{Form::text('desconto', 0, ['placeholder' => 'Desconto', 'class' => 'form-control', 'id'=>'new_desconto'])}}
+									</div>
+								</div>
+								<div class="col-md-3">
+									<div class="form-group">
+										{{Form::label('subtotal', 'Subtotal', ['class'=>'control-lable'])}}
+										{{Form::text('subtotal', null, ['placeholder' => 'Subtotal', 'class' => 'form-control', 'id'=>'new_subtotal', 'readonly'])}}
+									</div>
+								</div>
+							</div>
+
+						</div>
+						<div class="modal-footer">
+							<div class="row">
+								<div class="col-md-6 text-left">
+									<h5>Montante Geral da Cotação: <b><span id="new_val_temp"></span></b></h5>
+									<h5>Montante Geral da Cotação: <b><span class="new_valor_total_iva"></span></b></h5>
+								</div>
+								<div class="col-md-6 text-right">
+									{{Form::button('Fechar', ['class'=>'btn btn-default', 'data-dismiss'=>'modal'])}}
+									{{Form::submit('Salvar', ['class'=>'btn btn-primary submit_iten', 'name'=>'submitFormCotacao'])}}
+								</div>
+							</div>
+
+
+
+							{{Form::close()}}
+						</div>
+					</div><!-- /.modal-content -->
+				</div><!-- /.modal-dialog -->
+			</div><!-- /.modal -->
+
+			<!-- FIM MODAL INSERIR ITEM -->
+			@endsection
+
+			@section('script')
+			<script>
+
+				$(document).ready(function(){
+					$('.submit_iten').on('click',function(){
+						$(".wait").css("display", "block");
+					});
 				});
-			});
 
-			$(document).ready(function(){
-				$(document).ajaxStart(function(){
-					$("#wait").css("display", "block");
-					document.getElementById("new_quantidade").disabled = true;
+				$(document).ready(function(){
+					$(document).ajaxStart(function(){
+						$(".wait").css("display", "block");
+						document.getElementById("new_quantidade").disabled = true;
+					});
+					$(document).ajaxComplete(function(){
+						$(".wait").css("display", "none");
+						document.getElementById("new_quantidade").disabled = false;
+						$('#new_quantidade').focus();
+					});
 				});
-				$(document).ajaxComplete(function(){
-					$("#wait").css("display", "none");
-					document.getElementById("new_quantidade").disabled = false;
-					$('#new_quantidade').focus();
-				});
-			});
 
-			$('#modalProdutoIten').on('show.bs.modal', function (event) {
+				$('#modalProdutoIten').on('show.bs.modal', function (event) {
 				var button = $(event.relatedTarget) // Button that triggered the modal
 				var dta_cotacao_id = button.data('cotacao_id')
 				var dta_produto_id = button.data('produto_id')
@@ -447,9 +425,12 @@
 
 					}
 
+					var valor_total_iva = (mdl_valor_total + (mdl_valor_total*17)/100);
+
 					$('#subtotal').val(mdl_subtotal);
 					$('#valor').val(mdl_valor);
 					$('#valor_total').val(mdl_valor_total);
+					$('.valor_total_iva').html(valor_total_iva.formatMoney(2,',','.')+ " Mtn");
 					$('#val_temp').html(mdl_valor_total.formatMoney(2,',','.')+ " Mtn");
 
 
@@ -506,10 +487,12 @@
 
 					new_valor_total = new_valor_total + new_subtotal;
 
+					var new_valor_total_iva = (new_valor_total + (new_valor_total*17)/100);
 
 					$('#new_subtotal').val(new_subtotal);
 					$('#new_valor').val(new_valor);
 					$('#new_valor_total').val(new_valor_total);
+					$('.new_valor_total_iva').html(new_valor_total_iva.formatMoney(2,',','.')+ " Mtn");
 					$('#new_val_temp').html(new_valor_total.formatMoney(2,',','.')+ " Mtn");
 				}
 

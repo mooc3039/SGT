@@ -4,105 +4,82 @@
 <!-- <div class="container"> -->
 	<div class="row">
 		<div class="col-md-12">
-			<div id="wait" style=" 
-			text-align: center; 
-			z-index: 1; 
-			display:none;
-			width:100%;
-			height:100%;
-			position:absolute;
-			top:0;
-			left:0;
-			padding:5px;">
+			
+			<div class="row">
+				<div class="col-md-12">
 
-			<div id="wait-loader" style="
-			position:absolute;    
-			left:40%;
-			top:40%;
-			font-size: 50px; 
-			color: blue;">
-			<!-- <i class="fa fa-plus text-center"> -->
-				<img src="{{asset('/img/Gear-0.6s-200px.gif')}}"/>
-			</i>
-			<!-- <h2>Aguarde...</h2> -->
-		</div>
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<div class="row">
+								<div class="col-md-5 border">
+									<div class="panel panel-default">
 
-	</div>
-	<div class="row">
-		<div class="col-md-12">
+										<div class="panel-body">
+											Papelaria e Serviços Agenda<hr>
+											Emal: papelaria@gmail.com<br>
+											Telefone: +218293503 / +258840294826<br>
+											Endereco: Av. 24 de Julho<br>
+										</div>
+									</div>
 
-			<div class="panel panel-default">
-				<div class="panel-heading">
-					<div class="row">
-						<div class="col-md-5 border">
-							<div class="panel panel-default">
 
-								<div class="panel-body">
-									Papelaria e Serviços Agenda<hr>
-									Emal: papelaria@gmail.com<br>
-									Telefone: +218293503 / +258840294826<br>
-									Endereco: Av. 24 de Julho<br>
+
+								</div>
+
+								<div class="col-md-4">
+
+									<div class="panel panel-default">
+										<div class="panel-body text-center">
+											<h2> <b> Dados do Cliente </b></h2> <hr>
+											Nome do Cliente: {{$guia_entrega->cliente->nome}}<br>
+											Endereço: {{$guia_entrega->cliente->endereco}}<br>
+											Nuit: {{$guia_entrega->cliente->nuit}}<br>
+										</div>
+									</div>
+								</div>
+
+								<div class="col-md-3">
+
+									<div class="panel panel-default">
+										<div class="panel-body text-center">
+											<h2> <b> Numero da Guia de Entrega / Factura </b> </h2> <hr>
+											<h1>{{$guia_entrega->id}}</h1>
+										</div>
+									</div>
+
+
 								</div>
 							</div>
-
-
-
-						</div>
-
-						<div class="col-md-4">
-
-							<div class="panel panel-default">
-								<div class="panel-body text-center">
-									<h2> <b> Dados do Cliente </b></h2> <hr>
-									Nome do Cliente: {{$guia_entrega->cliente->nome}}<br>
-									Endereço: {{$guia_entrega->cliente->endereco}}<br>
-									Nuit: {{$guia_entrega->cliente->nuit}}<br>
-								</div>
+							<div class="row">
+								<div class="col-md-6"> MAPUTO</div>
+								<div class="col-md-6 text-right"> Data: {{$guia_entrega->created_at}} </div>
 							</div>
 						</div>
 
-						<div class="col-md-3">
 
-							<div class="panel panel-default">
-								<div class="panel-body text-center">
-									<h2> <b> Numero da Guia de Entrega / Factura </b> </h2> <hr>
-									<h1>{{$guia_entrega->id}}</h1>
-								</div>
-							</div>
+						<div class="panel-body">
 
+							<div class="row">
+								<div class="col-md-12">
+									<table class="table table-striped table-advance table-hover">
+										<thead>
+											<tr>
+												<th><i class="icon_mobile"></i> Designação </th>
+												<th class="text-center"><i class="icon_profile"></i>Quantidade</th>
+												<th><i class="icon_mail_alt"></i> Preço Unitário </th>
+												<th><i class="icon_cogs"></i> Valor Total </th>
+												<!-- <th class="text-center"><i class="icon_close_alt2"></i> Remover </th> -->
+											</tr>
+										</thead>
+										<tbody>
+											@foreach($guia_entrega->itensGuiantrega as $iten_guia_entrega)
+											<tr>
+												<td> {{$iten_guia_entrega->produto->descricao}}</td>
 
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-md-6"> MAPUTO</div>
-						<div class="col-md-6 text-right"> Data: {{$guia_entrega->created_at}} </div>
-					</div>
-				</div>
+												<td class="text-center"> <button type="button" class="btn btn-sm" data-toggle="modal" data-target="#modalProdutoIten" data-guia_entrega_id={{ $guia_entrega->id }} data-produto_id={{ $iten_guia_entrega->produto->id }} data-descricao={{ $iten_guia_entrega->produto->descricao }} data-quantidade={{ $iten_guia_entrega->quantidade }}  data-qtd_rest_iten_saida={{ $iten_guia_entrega->itenSaida->quantidade_rest}} data-preco_venda={{ $iten_guia_entrega->produto->preco_venda }} data-valor={{$iten_guia_entrega->valor }} data-desconto={{ $iten_guia_entrega->desconto }} data-subtotal={{ $iten_guia_entrega->subtotal }} data-valor_total={{ $guia_entrega->valor_total }} data-user_id={{ Auth::user()->id }}> {{$iten_guia_entrega->quantidade}} </button> </td>
 
-
-				<div class="panel-body">
-
-					<div class="row">
-						<div class="col-md-12">
-							<table class="table table-striped table-advance table-hover">
-								<thead>
-									<tr>
-										<th><i class="icon_mobile"></i> Designação </th>
-										<th class="text-center"><i class="icon_profile"></i>Quantidade</th>
-										<th><i class="icon_mail_alt"></i> Preço Unitário </th>
-										<th><i class="icon_cogs"></i> Valor Total </th>
-										<!-- <th class="text-center"><i class="icon_close_alt2"></i> Remover </th> -->
-									</tr>
-								</thead>
-								<tbody>
-									@foreach($guia_entrega->itensGuiantrega as $iten_guia_entrega)
-									<tr>
-										<td> {{$iten_guia_entrega->produto->descricao}}</td>
-
-										<td class="text-center"> <button type="button" class="btn btn-sm" data-toggle="modal" data-target="#modalProdutoIten" data-guia_entrega_id={{ $guia_entrega->id }} data-produto_id={{ $iten_guia_entrega->produto->id }} data-descricao={{ $iten_guia_entrega->produto->descricao }} data-quantidade={{ $iten_guia_entrega->quantidade }}  data-qtd_rest_iten_saida={{ $iten_guia_entrega->itenSaida->quantidade_rest}} data-preco_venda={{ $iten_guia_entrega->produto->preco_venda }} data-valor={{$iten_guia_entrega->valor }} data-desconto={{ $iten_guia_entrega->desconto }} data-subtotal={{ $iten_guia_entrega->subtotal }} data-valor_total={{ $guia_entrega->valor_total }} data-user_id={{ Auth::user()->id }}> {{$iten_guia_entrega->quantidade}} </button> </td>
-
-										<td> {{$iten_guia_entrega->produto->preco_venda}} </td>
-										<td> {{$iten_guia_entrega->valor}} </td>
+												<td> {{$iten_guia_entrega->produto->preco_venda}} </td>
+												<td> {{$iten_guia_entrega->valor}} </td>
 										<!-- {{ Form::open() }}
 										<td class="text-center">
 											{{ Form::button('<i class="icon_close_alt2"></i>', ['class'=>'btn btn-danger btn-sm', 'type'=>'submit'] )}}
@@ -212,10 +189,10 @@
 	<script type="text/javascript">
 
 		$(document).ready(function(){
-				$('.submit_iten').on('click',function(){
-					$("#wait").css("display", "block");
-				});
+			$('.submit_iten').on('click',function(){
+				$("#wait").css("display", "block");
 			});
+		});
 
 		$('#modalProdutoIten').on('show.bs.modal', function (event) {
 				var button = $(event.relatedTarget) // Button that triggered the modal

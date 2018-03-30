@@ -34,7 +34,7 @@ class EntradaStoreUpdateFormRequest extends FormRequest
 
     public function messages(){
       return [
-        'cliente_id.required' => 'É necessário selecionar o Cliente!',
+        'fornecedor_id.required' => 'É necessário selecionar o Fornecedor!',
         'produto_id.required' => 'É necessário selecionar o Produto!',
         'quantidade.required' => 'É necessário especificar a quantidade!',
         'desconto.required' => 'É necessário especificar o Desconto!',

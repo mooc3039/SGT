@@ -14,30 +14,6 @@
 <div class="row">
 	<div class="col-lg-12">
 
-    <div id="wait" style=" 
-    text-align: center; 
-    z-index: 1; 
-    display:none;
-    width:100%;
-    height:100%;
-    position:absolute;
-    top:0;
-    left:0;
-    padding:5px;">
-
-    <div id="wait-loader" style="
-    position:absolute;    
-    left:40%;
-    top:40%;
-    font-size: 50px; 
-    color: blue;">
-    <!-- <i class="fa fa-plus text-center"> -->
-      <img src="{{asset('/img/Gear-0.6s-200px.gif')}}"/>
-    </i>
-    <!-- <h2>Aguarde...</h2> -->
-  </div>
-</div>
-
 <section class="panel panel-default">
 
   {{ Form::open(['route'=>'saida.store', 'method'=>'POST', 'id'=>'form_saida']) }}
@@ -317,27 +293,27 @@
 
     $(document).ready(function(){
       $(document).ajaxStart(function(){
-        $("#wait").css("display", "block");
+        $(".wait").css("display", "block");
       });
       $(document).ajaxComplete(function(){
-        $("#wait").css("display", "none");
+        $(".wait").css("display", "none");
       });
     });
 
     $(document).ready(function(){
       $('.submit_iten').on('click',function(){
-        $("#wait").css("display", "block");
+        $(".wait").css("display", "block");
 
         // if($('#nr_referencia').val() === "" || $('#nr_referencia').val() === null){
         //   alert('Informe o Número de Referência para a Factura, ou o valor padrao (Não Aplicavel)');
-        //   $("#wait").css("display", "none");
+        //   $(".wait").css("display", "none");
         //   $('#nr_referencia').focus();
         //   return false;
         // }
 
         // if($('#confirmar_nr_referencia').val() != $('#nr_referencia').val()){
         //   alert('As Referências não são compatíveis');
-        //   $("#wait").css("display", "none");
+        //   $(".wait").css("display", "none");
         //   $('#nr_referencia').focus();
         //   return false;
         // }
@@ -345,7 +321,7 @@
         if (document.getElementById('pago').checked) {
           if($('#valor_pago').val() === "" || $('#valor_pago').val() === null){
             alert('Informe o Valor a Pagar');
-            $("#wait").css("display", "none");
+            $(".wait").css("display", "none");
             $('#valor_pago').focus();
             return false;
           }
@@ -353,14 +329,14 @@
 
         if($('#forma_pagamento_id').val() === "" || $('#forma_pagamento_id').val() === null){
           alert('Selecione a Forma de Pagamento');
-          $("#wait").css("display", "none");
+          $(".wait").css("display", "none");
           $('#forma_pagamento_id').focus();
           return false;
         }
 
         if($('#nr_documento_forma_pagamento').val() === "" || $('#nr_documento_forma_pagamento').val() === null){
           alert('Informe o Número do Documento para o Pagamento da Factura, ou o valor padrao (Não Aplicavel)');
-          $("#wait").css("display", "none");
+          $(".wait").css("display", "none");
           $('#nr_documento_forma_pagamento').focus();
           return false;
         }

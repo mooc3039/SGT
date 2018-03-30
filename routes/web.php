@@ -115,6 +115,7 @@ Route::group(['middleware'=>['authen','roles'],'roles'=>['Administrador']],funct
 
   // GERIR PAGAMENTO DA ENTRADA => Malache
   Route::post('/entrada/pagamento', 'EntradaController@pagamentoEntrada')->name('pagamentoEntrada');
+  Route::get('/entrada/create_pagamento/{id}', 'EntradaController@createPagamentoEntrada')->name('createPagamentoEntrada');
 
   // GERIR PAGAMENTO DA SAIDA => Malache
   Route::post('/saida/pagamento', 'SaidaController@pagamentoSaida')->name('pagamentoSaida');

@@ -13,31 +13,8 @@
 
 <div class="row">
 	<div class="col-lg-12">
-    <div id="wait" style=" 
-    text-align: center; 
-    z-index: 1; 
-    display:none;
-    width:100%;
-    height:100%;
-    position:absolute;
-    top:0;
-    left:0;
-    padding:5px;">
-
-    <div id="wait-loader" style="
-    position:absolute;    
-    left:40%;
-    top:40%;
-    font-size: 50px; 
-    color: blue;">
-    <!-- <i class="fa fa-plus text-center"> -->
-      <img src="{{asset('/img/Gear-0.6s-200px.gif')}}"/>
-    </i>
-    <!-- <h2>Aguarde...</h2> -->
-  </div>
-
-</div>
-<section class="panel panel-default">
+    
+    <section class="panel panel-default">
         <!-- <header class="panel-heading">
           Gerenciamento das Entradas
         </header> -->
@@ -57,17 +34,17 @@
             </div>
           </div>
 
-          <div class="col-md-6 col-md-offset-2">
+          <div class="col-md-8">
             <legend>Pagamento: <b><span class="valor_visual pull-right" style="border:none"> </span></b></legend>
             <div class="row" style="margin-bottom: 5px">
              <div class="col-md-4">
               <div class="radio-inline">
                 <!-- {{Form::radio('pago', '1', ['id'=>'pago', 'onclick'=>'javascript:pagoNaoPago();'])}} Pago -->
-                <input type="radio" onclick="javascript:pagoNaoPago();" name="pago" value="1" id="pago"> Pago
+                <input type="radio" onclick="javascript:pagoNaoPago();" name="pago" value="1" id="pago"> <label for="pago">Pago</label>
               </div>
               <div class="radio-inline">
                 <!-- {{Form::radio('pago', '0', ['id'=>'nao_pago', 'onclick'=>'javascript:pagoNaoPago();'])}} Não Pago -->
-                <input type="radio" onclick="javascript:pagoNaoPago();" name="pago" value="0" id="nao_pago"> Não Pago
+                <input type="radio" onclick="javascript:pagoNaoPago();" name="pago" value="0" id="nao_pago"> <label for="nao_pago">Não Pago</label>
               </div>
 
             </div>
@@ -77,15 +54,15 @@
                 <div class="col-md-6">
                   {{ Form::label('valor_pago', 'Valor Pago')}}
                   <div class="input-group">
-                    {{ Form::text('valor_pago', 0.00, ['class'=>'form-control'])}}
-                    <div class="input-group-addon">$</div>
+                    {{ Form::text('valor_pago', null, ['class'=>'form-control'])}}
+                    <div class="input-group-addon">Mtn</div>
                   </div>            
                 </div>
                 <div class="col-md-6">
-                  {{ Form::label('troco', 'Troco')}}
+                  {{ Form::label('remanescente', 'Remanescente')}}
                   <div class="input-group">
-                    {{ Form::text('troco', 0.00, ['class'=>'form-control', 'readonly'])}}
-                    <div class="input-group-addon">$</div>
+                    {{ Form::text('remanescente', null, ['class'=>'form-control', 'readonly'])}}
+                    <div class="input-group-addon">Mtn</div>
                   </div>
                 </div>
               </div>
@@ -147,7 +124,7 @@
           </select>
         </td>
         <td><input type="text" name="quantidade[]" class="form-control quantidade"></td>
-        <td><input type="text" name="quantidade_dispo[]" class="form-control quantidade_dispo" readonly><input type="hidden" name="qtd_dispo_original" class="form-control qtd_dispo_original"></td>
+        <td><input type="text" name="quantidade_dispo[]" class="form-control quantidade_dispo" readonly><input type="hidden" name="qtd_dispo_original[]" class="form-control qtd_dispo_original"></td>
         <td><input type="text" name="preco_aquisicao[]" class="form-control preco_aquisicao" readonly></td>
         <td><input type="text" name="valor[]" class="form-control valor" value="0" readonly></td>
         <td><input type="text" name="desconto[]" class="form-control desconto" value="0"></td>
@@ -161,8 +138,28 @@
       <td style="border:none"></td>
       <td style="border:none"></td>
       <td style="border:none"></td>
+      <td></td>
+      <td></td>
+      <td><b>Subtotal</b></td>
+      <td><b><div class="valor_total" style="border:none"> </div></b></td>
+      <td></td>
+    </tr><tr>
+      <td style="border:none"></td>
+      <td style="border:none"></td>
+      <td style="border:none"></td>
+      <td></td>
+      <td></td>
+      <td><b>IVA(17%)</b></td>
+      <td><b><div class="iva" style="border:none"> </div></b></td>
+      <td></td>
+    </tr><tr>
+      <td style="border:none"></td>
+      <td style="border:none"></td>
+      <td style="border:none"></td>
+      <td></td>
+      <td></td>
       <td><b>Total</b></td>
-      <td><b><div class="valor_visual" style="border:none"> </div></b></td>
+      <td><b><div class="valor_total_visual" style="border:none"> </div></b></td>
       <td></td>
     </tr>
   </tfoot>
@@ -241,45 +238,76 @@
   <script text="text/javascript">
 
     $('#salvar_entrada').on('click',function(){
-      $("#wait").css("display", "block");
+      $(".wait").css("display", "block");
     });
 
     $(document).ready(function(){
       $(document).ajaxStart(function(){
-        $("#wait").css("display", "block");
+        $(".wait").css("display", "block");
       });
       $(document).ajaxComplete(function(){
-        $("#wait").css("display", "none");
+        $(".wait").css("display", "none");
       });
     });
 
 
-    function pagoNaoPago() {
+     // Pagamento da Entrada
+     function pagoNaoPago() {
       if (document.getElementById('pago').checked) {
         document.getElementById('div_forma_pagamento').style.display = 'block';
+        $('#valor_pago').val(0);
+        $('#forma_pagamento_id').val('');
+        $('#nr_documento_forma_pagamento').val('');
+        remanescenteRed();
       }
       else {
         document.getElementById('div_forma_pagamento').style.display = 'none';
-      }
+        $('#valor_pago').val(0);
+        $('#remanescente').val($('#valor_total').val()*1);
+        $('#forma_pagamento_id').val(1); // codigo da forma de pagamento (Nao Aplicavel=>DB)
+        $('#nr_documento_forma_pagamento').val('Nao Aplicavel');
 
+      }
     };
 
     $('#valor_pago').keyup(function(){
-      var valor_pago = $('#valor_pago').val();
-      var valor_total = $('#valor_total').val();
-      var troco = valor_pago - valor_total;
-
-      $('#troco').val(troco);
-
-      if( troco < 0 ){
-        document.getElementById('troco').style.backgroundColor = "red";
-        document.getElementById('troco').style.color = "white";
-      }else{
-        document.getElementById('troco').style.backgroundColor = "white";
-        document.getElementById('troco').style.color = "black";
-
-      }
+      alertaremanescentePagamento();
     });
+
+    $('#forma_pagamento_id').change(function(){
+      var frm_pagamento = document.getElementById('forma_pagamento_id').options[document.getElementById('forma_pagamento_id').selectedIndex].text;
+      var resul_frm_pagamento = frm_pagamento.toLowerCase();
+
+      if(resul_frm_pagamento == "dinheiro"){
+        $('#nr_documento_forma_pagamento').val('Nao Aplicavel');
+      }else{
+        $('#nr_documento_forma_pagamento').focus();
+        $('#nr_documento_forma_pagamento').val('');
+      }
+      
+    });
+
+    function alertaremanescentePagamento(){
+      var valor_pago = $('#valor_pago').val()*1;
+      var valor_total = $('#valor_total').val()*1;
+      var remanescente = valor_total - valor_pago;
+
+      if(remanescente >= 0){
+       $('#remanescente').val(remanescente);
+     }else{
+      if(valor_pago > valor_total){ 
+          // ou remanscente < 0, significa q o valor pago eh maior q o remanescente_ref
+          alert('O Valor a Pagar informado e maior do que o Valor Total da Saida)');
+          $('#valor_pago').val(0);
+          $('#remanescente').val(valor_total);
+        }
+      }
+    }
+
+    function remanescenteRed(){
+      document.getElementById('remanescente').style.backgroundColor = "red";
+      document.getElementById('remanescente').style.color = "white";
+    }
 
     
 
@@ -338,6 +366,7 @@
     		dataType: 'json',
     		data  : dataId,
     		success:function(data){
+
           var quantidade_disponivel = (data.quantidade_dispo - data.quantidade_min)
 
           tr.find('.preco_aquisicao').val(data.preco_aquisicao);
@@ -355,24 +384,12 @@
           tr.find('.subtotal').val(subtotal);
           total();
 
-          var valor_pago = $('#valor_pago').val();
-          var valor_total = $('#valor_total').val();
-          var troco = valor_pago - valor_total;
-
-          $('#troco').val(troco);
-
-          if( troco < 0 ){
-            document.getElementById('troco').style.backgroundColor = "red";
-            document.getElementById('troco').style.color = "white";
-          }else{
-            document.getElementById('troco').style.backgroundColor = "white";
-            document.getElementById('troco').style.color = "black";
-
-          }
+          alertaremanescentePagamento();
 
         },
         complete(data){
           tr.find('.quantidade').focus();
+          // console.log(data);
         }
       });
     });
@@ -396,20 +413,7 @@
       tr.find('.subtotal').val(subtotal);
       total();
 
-      var valor_pago = $('#valor_pago').val();
-      var valor_total = $('#valor_total').val();
-      var troco = valor_pago - valor_total;
-
-      $('#troco').val(troco);
-
-      if( troco < 0 ){
-        document.getElementById('troco').style.backgroundColor = "red";
-        document.getElementById('troco').style.color = "white";
-      }else{
-        document.getElementById('troco').style.backgroundColor = "white";
-        document.getElementById('troco').style.color = "black";
-
-      }
+      alertaremanescentePagamento();
       
     });
 
@@ -491,7 +495,7 @@
     findRowNum('.quantidade');
     findRowNum('.preco_aquisicao');
     findRowNum('.desconto');
-    numberOnly('#valor_pago');
+    number('#valor_pago');
 
   </script>
   @endsection

@@ -15,10 +15,6 @@ class Entrada extends Model
         'user_id',
     	'valor_total',
         'pago',
-        'valor_pago',
-        'troco',
-        'forma_pagamento_id',
-        'nr_documento_forma_pagamento',
     	
     ];
 
@@ -31,6 +27,12 @@ class Entrada extends Model
     public function itensEntrada(){
 
     	return $this->hasMany('App\Model\ItenEntrada');
+
+    }
+
+    public function pagamentosEntrada(){
+
+        return $this->hasMany('App\Model\PagamentoEntrada');
 
     }
 

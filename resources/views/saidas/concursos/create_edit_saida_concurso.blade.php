@@ -13,6 +13,7 @@
 
 <div class="row">
   <div class="col-lg-12">
+    
     <section class="panel panel-default">
       <div class="panel-body" style="border-bottom: 1px solid #ccc; ">
 
@@ -153,32 +154,32 @@
 
   $(document).ready(function(){
     $('.submit_iten').on('click',function(){
-      $("#wait").css("display", "block");
+      $(".wait").css("display", "block");
 
       // if($('#codigo_concurso').val() === "" || $('#codigo_concurso').val() === null){
       //   alert('Informe o Código do Concurso.');
-      //   $("#wait").css("display", "none");
+      //   $(".wait").css("display", "none");
       //   $('#codigo_concurso').focus();
       //   return false;
       // }
 
       // if($('#confirmar_codigo_concurso').val() != $('#codigo_concurso').val()){
       //   alert('Os Códigos do Concurso não são compatíveis');
-      //   $("#wait").css("display", "none");
+      //   $(".wait").css("display", "none");
       //   $('#codigo_concurso').focus();
       //   return false;
       // }
 
       // if($('#forma_pagamento_id').val() === "" || $('#forma_pagamento_id').val() === null){
       //   alert('Selecione a Forma de Pagamento');
-      //   $("#wait").css("display", "none");
+      //   $(".wait").css("display", "none");
       //   $('#forma_pagamento_id').focus();
       //   return false;
       // }
 
       // if($('#nr_documento_forma_pagamento').val() === "" || $('#nr_documento_forma_pagamento').val() === null){
       //   alert('Informe o Número do Documento para o Pagamento do Concurso');
-      //   $("#wait").css("display", "none");
+      //   $(".wait").css("display", "none");
       //   $('#nr_documento_forma_pagamento').focus();
       //   return false;
       // }
@@ -200,10 +201,10 @@
 
   $(document).ready(function(){
     $(document).ajaxStart(function(){
-      $("#wait").css("display", "block");
+      $(".wait").css("display", "block");
     });
     $(document).ajaxComplete(function(){
-      $("#wait").css("display", "none");
+      $(".wait").css("display", "none");
     });
   });
 

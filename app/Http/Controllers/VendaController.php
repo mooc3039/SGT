@@ -339,7 +339,7 @@ class VendaController extends Controller
 
         DB::rollback();
         $error = "Pagamento nao efectuado!!";
-        return redirect()->route('venda.index')->with('error', $error);
+        return redirect()->back()->with('error', $error);
 
       }
 

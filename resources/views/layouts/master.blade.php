@@ -30,13 +30,13 @@
   {!!Html::style('css/jquery-ui-1.10.4.min.css')!!}
   {!!Html::style('css/select2.min.css')!!}
 
- <!--  {!! Charts::styles() !!}  -->
+  <!--  {!! Charts::styles() !!}  -->
   @yield('style')
   <style type="text/css">
   .wait {
     background-color: #ccc;
     text-align: center;
-    z-index: 1;
+    z-index: 100;
     display:none;
     width:100%;
     height:100%;
@@ -46,7 +46,7 @@
     padding:5px;
     opacity: 0.6;
   }
-  .wait i{
+  .wait-loader{
     position:absolute;
     left:50%;
     top:50%;
@@ -102,8 +102,7 @@
 
   <section id="container" class="">
 
-
-
+    @include('layouts.processing.processing')
     @include('layouts.header.header')
     @include('layouts.sidebars.sidebar')
 
@@ -111,48 +110,20 @@
       <div class="wrapper">
 
         @include('layouts.validation.alertas')
-        <div class="row">
-          <div class="col-md-12">
-            <div id="wait" style="
-            text-align: center;
-            z-index: 1;
-            display:none;
-            width:100%;
-            height:100%;
-            position:absolute;
-            top:0;
-            left:0;
-            padding:5px;">
+        @yield('content')
 
-            <div id="wait-loader" style="
-            position:absolute;
-            left:40%;
-            top:40%;
-            font-size: 50px;
-            color: blue;">
-            <!-- <i class="fa fa-plus text-center"> -->
-              <img src="{{asset('/img/Gear-0.6s-200px.gif')}}"/>
-            </i>
-            <!-- <h2>Aguarde...</h2> -->
-          </div>
-
-        </div>
       </div>
-    </div>
-    @yield('content')
+    </section>
 
-  </div>
-</section>
+  </section>
+  @yield('script')
+  <script>
 
-</section>
-@yield('script')
-<script>
-
-  /** SEARCH SELECT */
-  $(document).ready( function() {
-    $('.select_search').select2();
-  });
-  /* FIM SEARCH SELECT */
+    /** SEARCH SELECT */
+    $(document).ready( function() {
+      $('.select_search').select2();
+    });
+    /* FIM SEARCH SELECT */
 
       //====
       $(document).ready(function(){

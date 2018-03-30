@@ -1,30 +1,6 @@
 @extends('layouts.master')
 @section('style')
-<style type="text/css">
-#eu{
-  background-color: red;
-}
-.wait {
-  background-color: #ccc; 
-  text-align: center; 
-  z-index: 1; 
-  display:none;
-  width:100%;
-  height:100%;
-  position:absolute;
-  top:0;
-  left:0;
-  padding:5px; 
-  opacity: 0.6;
-}
-.wait i{
-  position:absolute;    
-  left:50%;
-  top:50%;
-  font-size: 50px; 
-  color: red;
-}
-</style>
+
 @endsection
 @section('content')
 
@@ -43,37 +19,13 @@
 <div class="row">
   <div class="col-lg-12">
 
-    <div id="wait" style=" 
-    text-align: center; 
-    z-index: 1; 
-    display:none;
-    width:100%;
-    height:100%;
-    position:absolute;
-    top:0;
-    left:0;
-    padding:5px;">
+    <section class="panel panel-default">
 
-    <div id="wait-loader" style="
-    position:absolute;    
-    left:40%;
-    top:40%;
-    font-size: 50px; 
-    color: blue;">
-      <!-- <i class="fa fa-plus text-center"> -->
-        <img src="{{asset('/img/Gear-0.6s-200px.gif')}}"/>
-      </i>
-      <!-- <h2>Aguarde...</h2> -->
-    </div>
-    
-  </div>
-  <section class="panel panel-default">
+      {{ Form::open(['route'=>'cotacao.store', 'method'=>'POST', 'id'=>'form_cotacao', 'onsubmit'=>'submitFormCotacao.disabled = true; return true;']) }}
 
-    {{ Form::open(['route'=>'cotacao.store', 'method'=>'POST', 'id'=>'form_cotacao', 'onsubmit'=>'submitFormCotacao.disabled = true; return true;']) }}
-
-    <div class="panel-body" style="border-bottom: 1px solid #ccc; ">
-      <div class="row" style="margin-bottom: 15px">
-        <div class="form-horizontal">
+      <div class="panel-body" style="border-bottom: 1px solid #ccc; ">
+        <div class="row" style="margin-bottom: 15px">
+          <div class="form-horizontal">
 
               <!-- <div class="col-sm-4">
                 {{Form::label('tipo_cotacao_id', 'Cotação')}}
@@ -215,7 +167,7 @@
           <div class="row">
             <div class="col-md-12">
               <div class="panel-body">
-                {{ Form::open(['route'=>'cliente_salvar_rback', 'method'=>'POST']) }}
+                {{ Form::open(['route'=>'cliente_salvar_rback', 'method'=>'POST', 'onsubmit'=>'submitFormCliente.disabled = true; return true;']) }}
                 <div class="row">
                   <div class="col-md-12">
                     <div class="form-horizontal">
@@ -272,7 +224,7 @@
               </div>
               <div class="modal-footer">
                 {{Form::button('Fechar', ['class'=>'btn btn-default', 'data-dismiss'=>'modal'])}}
-                {{Form::submit('Salvar', ['class'=>'btn btn-primary'])}}
+                {{Form::submit('Salvar', ['class'=>'btn btn-primary', 'name'=>'submitFormCliente', 'id'=>'submitFormCliente'])}}
 
                 {{Form::close()}}
               </div>
@@ -325,10 +277,10 @@
 
     $(document).ready(function(){
       $(document).ajaxStart(function(){
-        $("#wait").css("display", "block");
+        $(".wait").css("display", "block");
       });
       $(document).ajaxComplete(function(){
-        $("#wait").css("display", "none");
+        $(".wait").css("display", "none");
       });
     });
 

@@ -12,31 +12,8 @@
 
 <div class="row">
   <div class="col-lg-12">
-    <div id="wait" style=" 
-    text-align: center; 
-    z-index: 1; 
-    display:none;
-    width:100%;
-    height:100%;
-    position:absolute;
-    top:0;
-    left:0;
-    padding:5px;">
-
-    <div id="wait-loader" style="
-    position:absolute;    
-    left:40%;
-    top:40%;
-    font-size: 50px; 
-    color: blue;">
-    <!-- <i class="fa fa-plus text-center"> -->
-      <img src="{{asset('/img/Gear-0.6s-200px.gif')}}"/>
-    </i>
-    <!-- <h2>Aguarde...</h2> -->
-  </div>
-
-</div>
-<section class="panel panel-default">
+  
+  <section class="panel panel-default">
       <!-- <header class="panel-heading">
         Guias de Entrega
       </header> -->
@@ -100,7 +77,7 @@
 <script type="text/javascript">
   $(document).ready(function(){
     $('.submit_iten').on('click',function(){
-      $("#wait").css("display", "block");
+      $(".wait").css("display", "block");
     });
   });
 </script>

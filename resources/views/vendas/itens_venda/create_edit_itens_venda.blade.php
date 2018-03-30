@@ -4,29 +4,6 @@
 <!-- <div class="container"> -->
   <div class="row">
     <div class="col-md-12">
-      <div id="wait" style=" 
-      text-align: center; 
-      z-index: 1; 
-      display:none;
-      width:100%;
-      height:100%;
-      position:absolute;
-      top:0;
-      left:0;
-      padding:5px;">
-
-      <div id="wait-loader" style="
-      position:absolute;    
-      left:40%;
-      top:40%;
-      font-size: 50px; 
-      color: blue;">
-      <!-- <i class="fa fa-plus text-center"> -->
-        <img src="{{asset('/img/Gear-0.6s-200px.gif')}}"/>
-      </i>
-      <!-- <h2>Aguarde...</h2> -->
-    </div>
-  </div>
 
       <div class="panel panel-default">
         <div class="panel-heading">
@@ -210,22 +187,22 @@
   @section('script')
   <script>
     $(document).ready(function(){
-    $('.submit_iten').on('click',function(){
-      $("#wait").css("display", "block");
+      $('.submit_iten').on('click',function(){
+        $(".wait").css("display", "block");
+      });
     });
-  });
 
     $(document).ready(function(){
-    $(document).ajaxStart(function(){
-      $("#wait").css("display", "block");
-      document.getElementById("new_quantidade").disabled = true;
-    });
-    $(document).ajaxComplete(function(){
-      $("#wait").css("display", "none");
-      document.getElementById("new_quantidade").disabled = false;
+      $(document).ajaxStart(function(){
+        $(".wait").css("display", "block");
+        document.getElementById("new_quantidade").disabled = true;
+      });
+      $(document).ajaxComplete(function(){
+        $(".wait").css("display", "none");
+        document.getElementById("new_quantidade").disabled = false;
       $('#new_quantidade').focus(); // Nao esta no find price por tratar-se de modal aqui.
     });
-  });
+    });
 
 
     //JAVASCRIPT MODAL NOVO ITEM
