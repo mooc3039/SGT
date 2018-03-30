@@ -28,20 +28,13 @@ class FacturacaoController extends Controller
     {
         $cons = Saida::all();
         $facturas = Saida::orderBy('id','desc')->paginate(5);
-        return view('facturas.lista', compact('facturas','cons'));
+        return view('facturas.lista', compact('facturas','cons')); 
     }
     public function getSearch(Request $req){
         if($req->ajax()){
             $find = Saida::where('subtotal', 'like','%'.$req->search.'%')->get();
             return response()->json($find);
         }
-    }
-
-    public function pdfTeste()
-    {
-        $facturas = Saida::orderBy('id','desc')->paginate(5);
-       $pdf = PDF::loadView('facturas.lista', compact('facturas'));
-       return $pdf->download('mypdf.pdf');
     }
 
     /**
@@ -65,8 +58,8 @@ class FacturacaoController extends Controller
      */
     public function store(Request $input)
     {
-
-
+     
+        
 
         if(request()->ajax()){
             $count = count($input->subtotal);
@@ -86,15 +79,15 @@ class FacturacaoController extends Controller
                return response()->json($input->all());
             }
            // return response('Facturado com sucesso');
-
-
+           
+        
     }
     //trabalhando na previsualização da factura
     public function previsual(Request $input)
     {
-
+       
         $facturas = Saida::all();
-
+        
         return view('facturas.factura', compact('facturas'));
     }
     //para inserir cliente
@@ -105,7 +98,7 @@ class FacturacaoController extends Controller
             'endereco' => 'required',
             'telefone' => 'required || numeric',
             'nuit' => 'required || numeric',
-            'email' => 'required || email',
+            'email' => 'required || email', 
             'tipo_cliente' => 'required',
         ];
         $validator = Validator::make ( input::all(), $rules);
@@ -172,7 +165,7 @@ class FacturacaoController extends Controller
     //devolver o preço do produto
     public function findPrice(Request $request)
     {
-      $data = Produto::select('preco_venda', 'preco_aquisicao', 'quantidade_dispo', 'quantidade_min')->where('id',$request->id)->first();
+      $data = Produto::select('preco_venda')->where('id', $request->id)->first(0);
       return response()->json($data);
     }
     //trabalhando na dependencia dos combos
@@ -180,6 +173,13 @@ class FacturacaoController extends Controller
     {
         $data = Cliente::select('nome','id')->where('tipo_cliente_id',$req->id)->take(100)->get();
         return response()->json($data);
+        
+    }
+
+    public function TotalFact($id)
+    {
+        $total = DB::select('call sgt01.SP_Tarefas_Usuario(?)',[$id]);
+        dump($total);
 
     }
 }

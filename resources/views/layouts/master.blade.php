@@ -12,8 +12,14 @@
   <link rel="shortcut icon" href="img/favicon.png">
 
   <title>SG-Stock Administração</title>
+
+
+
   {!!Html::style('css/sgt.css')!!}
-  {!!Html::style('css/bootstrap.min.css')!!}
+ 
+  {!!Html::style('/datatable/datatables.bootstrap.css')!!}
+  <!-- {!!Html::style('/datatable/bootstrap.min.css')!!} -->
+  {!!Html::style('css/bootstrap.min.css')!!}<!-- versão 3.3.7 -->
   {!!Html::style('css/bootstrap-theme.min.css')!!}
   {!!Html::style('css/elegant-icons-style.css')!!}
   {!!Html::style('css/font-awesome.min.css')!!}
@@ -61,11 +67,21 @@
 
 
 
+
   {!!Html::script('js/jquery.js')!!}
   {!!Html::script('js/jquery-ui-1.10.4.min.js')!!}
-  {!!Html::script('js/jquery-3.2.1.min.js')!!}
+  
+  {!!Html::script('/datatable/jquery.min.js')!!}  <!--jQuery v2.1.3 -->
+ <!--  {!!Html::script('js/jquery-3.2.1.min.js')!!} -->
   {!!Html::script('js/jquery-ui-1.9.2.custom.min.js')!!}
-  {!!Html::script('js/bootstrap.min.js')!!}
+  {!!Html::script('js/bootstrap.min.js')!!} <!-- versão 3.3.7  -->
+
+    
+ <!--    {!!Html::script('/datatable/bootstrap.min.js')!!}  --> <!-- Bootstrap v3.3.4 -->
+
+  {!!Html::script('/datatable/jquery.dataTables.min.js')!!}<!-- DataTables 1.10.9 -->
+  {!!Html::script('/datatable/datatables.bootstrap.js')!!} <!-- DataTables 1.10  -->
+
   {!!Html::script('js/jquery.scrollTo.min.js')!!}
   {!!Html::script('js/jquery.nicescroll.js')!!}
   {!!Html::script('assets/jquery-knob/js/jquery.knob.js')!!}
@@ -94,6 +110,7 @@
   {!!Html::script('js/select2.min.js')!!}
   {!!Html::script('js/bootstrap-confirmation.min.js')!!}
   {!!Html::script('js/jquery.printPage.js')!!}
+
 
 
 

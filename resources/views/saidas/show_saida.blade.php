@@ -157,7 +157,7 @@
 
 					</div>
 					<div class="row">
-						<div class="col-md-6"><a href="{{route('saida_pdf', $saida->id)}}" class="btn btn-primary">Imprimir Saída</a>
+						<div class="col-md-6"><a href="{{route('saida.show', $saida->id)}}/relatorio" class="btn btn-primary">Imprimir Saída</a>
 
 						</div>
 						<div class="col-md-6 text-right"><a href="{{route('saida.index')}}" class="btn btn-warning">Cancelar</a>

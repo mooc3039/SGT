@@ -61,3 +61,4 @@ class Kernel extends HttpKernel
         'authen'=>\App\Http\Middleware\Authen::class,
     ];
 }
+ 

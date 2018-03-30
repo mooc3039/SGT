@@ -24,13 +24,6 @@ Route::group(['middleware'=>['authen']],function(){
   Route::get('/dashboard',['as'=>'dashboard','uses'=>'DashboardController@dashboard']);
   Route::get('/dashboard/inicio',['as'=>'paginainicial','uses'=>'DashboardController@paginaInicial']);
 
-});
-
-Route::group(['middleware'=>['authen','roles'],'roles'=>['Administrador']],function(){
-
-  //para administrador
-
-
   Route::get('/gerir/stock',['as'=>'indexStock','uses'=>'paginasController@indexStock']);
 
   //TODO profile update data
@@ -44,8 +37,78 @@ Route::group(['middleware'=>['authen','roles'],'roles'=>['Administrador']],funct
   Route::get('/gerir/usuario',['as'=>'indexUsuario','uses'=>'paginasController@indexUsuario']);
   Route::get('/gerir/cliente',['as'=>'indexCliente','uses'=>'paginasController@indexCliente']);
 
-  //Rotas get para gerar impressao em formato pdf => Malache
-  Route::get('/saida/pdf/{id}', ['as'=>'saida_pdf', 'uses'=>'SaidaController@report']);
+  //cotações
+  Route::resource('/cotacao', 'CotacaoController');
+  Route::resource('/cotacao/iten_cotacao', 'ItenCotacaoController');
+
+  // CADASTRAR A COTACAO COM ajax => Malache
+  Route::post('cotacao/cotacao_store', 'CotacaoController@store');
+  Route::get('cotacao/index', 'CotacaoController@index');
+  Route::get('/facturas/preco', ['as'=>'findPrice','uses'=>'FacturacaoController@findPrice']);
+
+  //Saídas
+  Route::resource('/saida', 'SaidaController');
+  Route::resource('/iten_saida', 'ItenSaidaController');
+  // CADASTRAR A SAIDA COM ajax => Malache
+  Route::post('saida/saida_store', 'SaidaController@store');
+  Route::get('saida/index', 'SaidaController@index');
+
+   // SAIDAS, Privado, Publico, Concurso
+   Route::get('/saida/saida_pubblico_create/', 'SaidaController@saidaPublicoCreate')->name('saidaPublicoCreate');
+   Route::get('/saida/saida_concurso_create/', 'SaidaController@saidaConcursoCreate')->name('saidaConcursoCreate');
+   Route::post('/saida/concurso/dados', 'SaidaController@findConcursoDados')->name('findConcursoDados');
+
+   //Rotas get para gerar impressao em formato pdf => Malache
+   Route::get('/saida/pdf/{id}', ['as'=>'saida_pdf', 'uses'=>'SaidaController@report']);
+
+   Route::resource('/guia_entrega', 'GuiaEntregaController');
+   Route::resource('/iten_guia_entrega', 'ItenGuiaEntregaController');
+
+   // CRIAR GUIA DE ENTREGA => Malache
+  Route::get('/guia_entrega/create_guia/{id}', 'GuiaEntregaController@createGuia')->name('create_guia');
+  Route::get('/guia_entrega/show_guia_entrega/{id}', 'GuiaEntregaController@showGuiasEntrega')->name('show_guia_entrega');
+
+  //relatorios
+  Route::get('/guia_entrega/{id}/relatorio', ['as'=>'guiaRelatorio','uses'=>'GuiaEntregaController@showRelatorio']);//TODO --para imprimir as guias de entrega
+  Route::get('/cotacao/{id}/relatorio', ['as'=>'cotacaoRelatorio','uses'=>'CotacaoController@showRelatorio']);
+  Route::get('/saida/{id}/relatorio', ['as'=>'saidaRelatorio','uses'=>'SaidaController@showRelatorio']);
+  Route::get('/entrada/{id}/relatorio', ['as'=>'entradaRelatorio','uses'=>'EntradaController@showRelatorio']);
+
+  Route::resource('/venda', 'VendaController');
+  Route::resource('/iten_venda', 'ItenVendaController');
+
+  // GERIR PAGAMENTO DA VENDA => Malache
+  Route::post('/venda/pagamento', 'VendaController@pagamentoVenda')->name('pagamentoVenda');
+  Route::resource('/entrada', 'EntradaController');
+  Route::get('/venda/create_pagamento/{id}', 'VendaController@createPagamentoVenda')->name('createPagamentoVenda');
+ 
+
+  // GERIR PAGAMENTO DO CONCURSO => Malache
+  Route::get('/concurso/create_pagamento/{id}', 'ConcursoController@createPagamentoConcurso')->name('createPagamentoConcurso');
+  Route::post('/concurso/pagamento', 'ConcursoController@pagamentoConcurso')->name('pagamentoConcurso');
+
+  // GERIR PAGAMENTO DA ENTRADA => Malache
+  Route::post('/entrada/pagamento', 'EntradaController@pagamentoEntrada')->name('pagamentoEntrada');
+
+  // GERIR PAGAMENTO DA SAIDA => Malache
+  Route::post('/saida/pagamento', 'SaidaController@pagamentoSaida')->name('pagamentoSaida');
+  Route::get('/saida/create_pagamento/{id}', 'SaidaController@createPagamentoSaida')->name('createPagamentoSaida');
+
+  Route::resource('/entrada', 'EntradaController');
+  Route::resource('/entrada/iten_entrada', 'ItenEntradaController');
+  Route::resource('/concurso', 'ConcursoController');
+  Route::resource('/iten_concurso', 'ItenConcursoController');
+
+  //testando datatable
+  Route::get('/table', 'DatableController@index');
+  Route::get('/table/dados', 'DatableController@get_datatable');
+   
+});
+
+Route::group(['middleware'=>['authen','roles'],'roles'=>['Administrador']],function(){
+
+  //para administrador 
+ 
   Route::get('/fornecedores/inactivos', ['as'=>'fornecedores_inactivos', 'uses'=>'fornecedorController@inactivos']);
 
   // Rotas para ACTIVAR e DESACTIVAR o Fornecedor => Malache
@@ -88,10 +151,8 @@ Route::group(['middleware'=>['authen','roles'],'roles'=>['Administrador']],funct
   // CADSTRAR CLIENTE FAZENDO o redirect()->back() => Malache
   Route::post('/cliente/cliente_salvar_rback', 'ClienteController@storeRedirectBack')->name('cliente_salvar_rback');
 
-  // CADASTRAR A COTACAO COM ajax => Malache
-  Route::post('cotacao/cotacao_store', 'CotacaoController@store');
-  Route::get('cotacao/index', 'CotacaoController@index');
 
+<<<<<<< HEAD
   // CADASTRAR A SAIDA COM ajax => Malache
   // Route::post('saida/saida_store', 'SaidaController@store');
   // Route::get('saida/index', 'SaidaController@index');
@@ -125,6 +186,11 @@ Route::group(['middleware'=>['authen','roles'],'roles'=>['Administrador']],funct
   Route::get('/produto/find', ['as'=>'findPrice','uses'=>'ProdutoController@findPrice']);
 
 
+=======
+
+
+  
+>>>>>>> baf42987163344fb9a4b377e0f284afed29c1efb
 
 
   //Rotas de operações
@@ -134,36 +200,8 @@ Route::group(['middleware'=>['authen','roles'],'roles'=>['Administrador']],funct
   Route::resource('/cliente', 'ClienteController');
   Route::resource('/tipo_cliente', 'TipoClienteController');
 
-  Route::resource('/factura', 'FacturacaoController');
-
-
-  Route::resource('/saida', 'SaidaController');
-  Route::resource('/iten_saida', 'ItenSaidaController');
-  Route::resource('/guia_entrega', 'GuiaEntregaController');
-  Route::resource('/iten_guia_entrega', 'ItenGuiaEntregaController');
-  Route::resource('/venda', 'VendaController');
-  Route::resource('/iten_venda', 'ItenVendaController');
-  Route::resource('/cotacao', 'CotacaoController');
-  Route::resource('/cotacao/iten_cotacao', 'ItenCotacaoController');
+ 
   Route::resource('/tipo_cotacao', 'TipoCotacaoController');
-  Route::resource('/entrada', 'EntradaController');
-  Route::resource('/entrada/iten_entrada', 'ItenEntradaController');
-  Route::resource('/concurso', 'ConcursoController');
-  Route::resource('/iten_concurso', 'ItenConcursoController');
-
-
-
-/*
-  Route::group(['namespace' => 'Testes'], function(){
-    Route::resource('/teste_categoria', 'CategoriaController');
-    Route::resource('/teste_fornecedor', 'FornecedorController');
-    Route::resource('/teste_cliente', 'ClienteController');
-    Route::resource('/teste_role', 'RoleController');
-    Route::resource('/teste_permissao', 'PermissaoController');
-    Route::resource('/teste_saida', 'SaidaController');
-    Route::resource('/teste_iten_saida', 'ItenSaidaController');
-
-  });
- */
+  
 
 });

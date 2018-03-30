@@ -152,7 +152,7 @@
 					<div class="row">
 						<div class="col-md-6"><a href="{{route('guia_entrega.show', $guia_entrega->id)}}/relatorio" class="btn btn-primary">Imprimir</a></div>
 					<div class="col-md-6 text-right"><a href="{{route('guia_entrega.index')}}" class="btn btn-warning">Cancelar</a>
-
+ 
 					</div>
 					</div>
 				</div>

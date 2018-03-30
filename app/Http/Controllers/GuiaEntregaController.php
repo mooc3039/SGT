@@ -15,7 +15,7 @@ use App\User;
 use DB;
 use Session;
 use PDF;
-
+ 
 class GuiaEntregaController extends Controller
 {
     private $guia_entrega;
