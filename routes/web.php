@@ -152,7 +152,6 @@ Route::group(['middleware'=>['authen','roles'],'roles'=>['Administrador']],funct
   Route::post('/cliente/cliente_salvar_rback', 'ClienteController@storeRedirectBack')->name('cliente_salvar_rback');
 
 
-<<<<<<< HEAD
   // CADASTRAR A SAIDA COM ajax => Malache
   // Route::post('saida/saida_store', 'SaidaController@store');
   // Route::get('saida/index', 'SaidaController@index');
@@ -186,11 +185,6 @@ Route::group(['middleware'=>['authen','roles'],'roles'=>['Administrador']],funct
   Route::get('/produto/find', ['as'=>'findPrice','uses'=>'ProdutoController@findPrice']);
 
 
-=======
-
-
-  
->>>>>>> baf42987163344fb9a4b377e0f284afed29c1efb
 
 
   //Rotas de operações

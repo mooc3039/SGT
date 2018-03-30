@@ -49,7 +49,7 @@
 					</div>
 					<div class="row">
 						<div class="col-md-6"> MAPUTO</div>
-						<div class="col-md-6 text-right"> Data: {{$entrada->data}} </div>
+						<div class="col-md-6 text-right"> Data: {{date('d-m-Y', strtotime($entrada->data))}} </div>
 					</div>
 				</div>
 
@@ -98,25 +98,12 @@
 						</div>
 
 						<div class="col-md-6 text-right">
-
 							<table class="pull-right">
-
+								
 								<tr>
-									<td>
-										IVA:
-									</td>
-									<td>
-										17%
-									</td>
-								</tr>
-
-								<tr>
-									<td>
-										Valor Total:
-									</td>
-									<td>
-										<b>{{$entrada->valor}}</b>
-									</td>
+									<td>Valor Total:</td>
+									<td></td>
+									<td><b>{{$entrada->valor}}</b></td>
 								</tr>
 							</table>
 

@@ -52,7 +52,7 @@
         <div class="row">
           <div class="col-md-6">
 
-            {{Form::submit('Salvar', ['class'=>'btn btn-primary'])}}
+            {{Form::submit('Salvar', ['class'=>'btn btn-primary submit_iten'])}}
 
           </div>
           <div class="col-md-6 text-right">
@@ -69,4 +69,14 @@
   </div>
 </div>
 
+@endsection
+
+@section('script')
+<script type="text/javascript">
+
+  $('.submit_iten').on('click',function(){
+    $(".wait").css("display", "block");
+  });
+
+</script>
 @endsection

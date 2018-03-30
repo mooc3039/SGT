@@ -49,7 +49,7 @@
 					</div>
 					<div class="row">
 						<div class="col-md-6"> MAPUTO</div>
-						<div class="col-md-6 text-right"> Data: {{$guia_entrega->data}} </div>
+						<div class="col-md-6 text-right"> Data: {{date('d-m-Y', strtotime($guia_entrega->data))}} </div>
 					</div>
 				</div>
 
@@ -98,26 +98,10 @@
 						</div>
 
 						<div class="col-md-6 text-right">
-
 							<table class="pull-right">
 								<tr>
-									<td>Sub-Total:</td>
-									<td>{{$guia_entrega->subtotal}}</td>
-								</tr>
-
-
-								<tr>
-									<td>IVA:</td>
-									<td>17%</td>
-								</tr>
-
-								<tr>
-									<td>Desconto:</td>
-									<td>{{$guia_entrega->desconto}}</td>
-								</tr>
-
-								<tr>
 									<td>Valor Total:</td>
+									<td></td>
 									<td><b>{{$guia_entrega->valor_total}}</b></td>
 								</tr>
 							</table>

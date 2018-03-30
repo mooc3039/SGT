@@ -28,9 +28,9 @@
 							<div class="panel panel-default">
 								<div class="panel-body text-center">
 									<h2> <b> Dados do Cliente </b></h2> <hr>
-									Nome do Cliente: {{$saida->cliente->nome}}<br>
-									Endereço: {{$saida->cliente->endereco}}<br>
-									Nuit: {{$saida->cliente->nuit}}<br>
+									Nome do Cliente: {{$venda->cliente->nome}}<br>
+									Endereço: {{$venda->cliente->endereco}}<br>
+									Nuit: {{$venda->cliente->nuit}}<br>
 								</div>
 							</div>
 						</div>
@@ -39,8 +39,8 @@
 
 							<div class="panel panel-default">
 								<div class="panel-body text-center">
-									<h2> <b> Numero Factura </b> </h2> <hr>
-									<h1>{{$saida->id}}</h1>
+									<h2> <b> Numero da Venda </b> </h2> <hr>
+									<h1>{{$venda->id}}</h1>
 								</div>
 							</div>
 
@@ -49,7 +49,7 @@
 					</div>
 					<div class="row">
 						<div class="col-md-6"> MAPUTO</div>
-						<div class="col-md-6 text-right"> Data: {{date('d-m-Y', strtotime($saida->data))}}  </div>
+						<div class="col-md-6 text-right"> Data: {{date('d-m-Y', strtotime($venda->created_at))}}  </div>
 					</div>
 				</div>
 
@@ -68,12 +68,12 @@
 										<th><i class="icon_cogs"></i> Valor Total </th>
 									</tr>
 
-									@foreach($saida->itensSaida as $iten_saida)
+									@foreach($venda->itensvenda as $iten_venda)
 									<tr>
-										<td> {{$iten_saida->quantidade}} </td>
-										<td> {{$iten_saida->produto->descricao}} </td>
-										<td> {{$iten_saida->produto->preco_venda}} </td>
-										<td> {{$iten_saida->valor}} </td>
+										<td> {{$iten_venda->quantidade}} </td>
+										<td> {{$iten_venda->produto->descricao}} </td>
+										<td> {{$iten_venda->produto->preco_venda}} </td>
+										<td> {{$iten_venda->valor}} </td>
 
 									</tr>
 									@endforeach
@@ -102,17 +102,17 @@
 								<tr>
 									<td>Sub-Total:</td>
 									<td style="width: 10px"></td>
-									<td>{{$saida->valor_total}}</td>
+									<td>{{$venda->valor_total}}</td>
 								</tr>
 								<tr>
 									<td>IVA(17%):</td>
 									<td></td>
-									<td>{{(($saida->valor_total)*17)/100}}</td>
+									<td>{{(($venda->valor_total)*17)/100}}</td>
 								</tr>
 								<tr>
 									<td>Valor Total:</td>
 									<td></td>
-									<td><b>{{$saida->valor_iva}}</b></td>
+									<td><b>{{$venda->valor_iva}}</b></td>
 								</tr>
 							</table>
 
@@ -144,10 +144,10 @@
 
 					</div>
 					<div class="row">
-						<div class="col-md-6"><a href="{{route('saida.show', $saida->id)}}/relatorio" class="btn btn-primary">Imprimir Saída</a>
+						<div class="col-md-6"><a href="{{route('venda.show', $venda->id)}}/relatorio" class="btn btn-primary">Imprimir Saída</a>
 
 						</div>
-						<div class="col-md-6 text-right"><a href="{{route('saida.index')}}" class="btn btn-warning">Cancelar</a>
+						<div class="col-md-6 text-right"><a href="{{route('venda.index')}}" class="btn btn-warning">Cancelar</a>
 
 						</div>
 					</div>

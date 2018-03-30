@@ -36,7 +36,7 @@
             @foreach($entradas as $entrada)
             <tr>
               <td> {{$entrada->id}} </td>
-              <td> {{$entrada->created_at}} </td>
+              <td> {{date('d-m-Y', strtotime($entrada->created_at))}} </td>
               <td> {{$entrada->fornecedor->nome}} </td>
               <td> {{$entrada->valor_total}} </td>
               {{ Form::open(['route'=>['entrada.destroy', $entrada->id], 'method'=>'DELETE']) }}

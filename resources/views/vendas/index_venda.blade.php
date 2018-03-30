@@ -40,7 +40,7 @@
                 @foreach($vendas as $venda)
                 <tr>
                   <td> {{$venda->id}} </td>
-                  <td> {{$venda->created_at}} </td>
+                  <td> {{date('d-m-Y', strtotime($venda->created_at))}} </td>
                   <td> {{$venda->cliente->nome}} </td>
                   <td> {{$venda->valor_iva}} </td>
                   {{ Form::open(['route'=>['venda.destroy', $venda->id], 'method'=>'DELETE']) }}

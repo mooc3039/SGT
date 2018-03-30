@@ -36,7 +36,7 @@
                 <tr>
                   <td> {{$guia_entrega->id}} </td>
                   <td> {{$guia_entrega->saida_id}} </td>
-                  <td> {{$guia_entrega->created_at}} </td>
+                  <td> {{date('d-m-Y', strtotime($guia_entrega->created_at))}} </td>
                   <td> {{$guia_entrega->cliente->nome}} </td>
                   <td> {{$guia_entrega->valor_total}} </td>
                   <td class="text-right">

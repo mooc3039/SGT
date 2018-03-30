@@ -146,7 +146,7 @@
                     {{ $pagamento_concurso->valor_pago}}
                   </td>
                   <td>
-                    {{ $pagamento_concurso->created_at}}
+                    {{ date('d-m-Y', strtotime($pagamento_concurso->created_at)) }}
                   </td>
                   <td>
                     {{ $pagamento_concurso->updated_at}}

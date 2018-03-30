@@ -114,31 +114,19 @@
 
 							<table class="pull-right">
 								<tr>
-									<td>
-										Sub-Total:
-									</td>
-									<td>
-										{{$cotacao->valor_total}}
-									</td>
+									<td>Sub-Total:</td>
+									<td style="width: 10px"></td>
+									<td>{{$cotacao->valor_total}}</td>
 								</tr>
-
-
 								<tr>
-									<td>
-										IVA:
-									</td>
-									<td>
-										17%
-									</td>
+									<td>IVA(17%):</td>
+									<td></td>
+									<td>{{(($cotacao->valor_total)*17)/100}}</td>
 								</tr>
-
 								<tr>
-									<td>
-										Valor Total:
-									</td>
-									<td>
-										<b>{{$cotacao->valor_iva}}</b>
-									</td>
+									<td>Valor Total:</td>
+									<td></td>
+									<td><b>{{$cotacao->valor_iva}}</b></td>
 								</tr>
 							</table>
 

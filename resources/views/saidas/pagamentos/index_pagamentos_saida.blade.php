@@ -144,7 +144,7 @@
                     {{ $pagamento_saida->valor_pago}}
                   </td>
                   <td>
-                    {{ $pagamento_saida->created_at}}
+                    {{ date('d-m-Y', strtotime($pagamento_saida->created_at))}}
                   </td>
                   <td>
                     {{ $pagamento_saida->updated_at}}

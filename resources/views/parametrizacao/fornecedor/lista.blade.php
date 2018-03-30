@@ -36,6 +36,7 @@
           <thead>
             <tr>
               <th><i class="icon_profile"></i>Nome do Fornecedor</th>
+              <th><i class="icon_profile"></i>NUIT</th>
               <th><i class="icon_mobile"></i> Endereço</th>
               <th><i class="icon_mail_alt"></i> Email</th>
               <th><i class="icon_pin_alt"></i> Telefone</th>
@@ -51,6 +52,7 @@
             @foreach($fornecedores as $fornecedor)
             <tr>
               <td> {{$fornecedor->nome}}</td>
+              <td> {{$fornecedor->nuit}}</td>
               <td>{{$fornecedor->endereco}}</td>
               <td>{{$fornecedor->email}}</td>
               <td>{{$fornecedor->telefone}}</td>

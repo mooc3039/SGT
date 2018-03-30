@@ -44,7 +44,7 @@
             @foreach($concursos as $concurso)
             <tr>
               <td> {{$concurso->codigo_concurso}} </td>
-              <td> {{$concurso->created_at}} </td>
+              <td> {{date('d-m-Y', strtotime($concurso->created_at))}} </td>
               <td> {{$concurso->cliente->nome}} </td>
               <td> {{$concurso->valor_iva}} </td>
               {{ Form::open(['route'=>['concurso.destroy', $concurso->id], 'method'=>'DELETE']) }}

@@ -209,6 +209,8 @@ class VendaController extends Controller
     public function show($id)
     {
         //
+      $venda = $this->venda->with('itensVenda.produto', 'cliente')->find($id);
+      return view('vendas.show_venda', compact('venda'));
     }
 
     /**

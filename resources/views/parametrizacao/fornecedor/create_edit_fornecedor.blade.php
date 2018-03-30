@@ -65,13 +65,19 @@
               {{Form::label('rubrica', 'Rubrica')}}
               {{Form::text('rubrica', null, ['placeholder' => 'Rubrica', 'class' => 'form-control'])}}
             </div>
+            <div class="col-md-3">
+              {{Form::label('nuit', 'NUIT')}}
+              {{Form::text('nuit', null, ['placeholder' => 'NUIT', 'class' => 'form-control'])}}
+            </div>
 
             <div class="col-md-3" >
               <div class="radio-inline" style="margin: 25px">
-                {{Form::radio('activo', '1', ['class' => 'form-horizontal'])}} Activo
+                <input type="radio" name="activo" value="1" id="activo"><label for="activo">Activo</label>
+                <!-- {{Form::radio('activo', '1', ['class' => 'form-horizontal'])}} Activo -->
               </div>
               <div class="radio-inline">
-                {{Form::radio('activo', '0', ['class' => 'form-horizontal'])}} Inactivo
+                <input type="radio" name="activo" value="1" id="inactivo"><label for="inactivo">Inactivo</label>
+                <!-- {{Form::radio('activo', '0', ['class' => 'form-horizontal'])}} Inactivo -->
               </div>
             </div>
 
@@ -79,36 +85,45 @@
 
         </div>
       </div>
-    <div class="panel-footer">
-      <div class="row">
-        <div class="col-md-6">
+      <div class="panel-footer">
+        <div class="row">
+          <div class="col-md-6">
 
-          @if(isset($fornecedor))
+            @if(isset($fornecedor))
 
-          {{Form::hidden('fornecedor_id', $fornecedor->id)}}
+            {{Form::hidden('fornecedor_id', $fornecedor->id)}}
 
-          {{Form::submit('Actualizar', ['class'=>'btn btn-primary'])}}
+            {{Form::submit('Actualizar', ['class'=>'btn btn-primary submit_iten'])}}
 
-          @else
+            @else
 
-          {{Form::submit('Salvar', ['class'=>'btn btn-primary'])}}
-          {{Form::reset('Limpar', ['class'=>'btn btn-default'])}}
+            {{Form::submit('Salvar', ['class'=>'btn btn-primary submit_iten'])}}
+            {{Form::reset('Limpar', ['class'=>'btn btn-default'])}}
 
-          @endif
+            @endif
 
-        </div>
-        <div class="col-md-6">
+          </div>
+          <div class="col-md-6">
 
-          <a href="{{route('fornecedores.index')}}" class="btn btn-warning pull-right"> Cancelar</a>
+            <a href="{{route('fornecedores.index')}}" class="btn btn-warning pull-right"> Cancelar</a>
 
+          </div>
         </div>
       </div>
-    </div>
 
-    {!! Form::close() !!}
+      {!! Form::close() !!}
 
-  </section>
+    </section>
+  </div>
 </div>
-</div>
 
+@endsection
+@section('script')
+<script type="text/javascript">
+
+  $('.submit_iten').on('click',function(){
+    $(".wait").css("display", "block");
+  });
+
+</script>
 @endsection

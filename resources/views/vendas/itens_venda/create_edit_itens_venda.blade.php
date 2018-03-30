@@ -115,14 +115,17 @@
               <table class="pull-right">
                 <tr>
                   <td>Sub-Total:</td>
+                  <td style="width: 10px"></td>
                   <td>{{$venda->valor_total}}</td>
                 </tr>
-
                 <tr>
-                  <td>IVA:</td>
-                  <td>17%</td>
+                  <td>IVA(17%):</td>
+                  <td></td>
+                  <td>{{(($venda->valor_total)*17)/100}}</td>
                 </tr>
-                <tr><td> Valor Total:</td>
+                <tr>
+                  <td>Valor Total:</td>
+                  <td></td>
                   <td><b>{{$venda->valor_iva}}</b></td>
                 </tr>
               </table>
