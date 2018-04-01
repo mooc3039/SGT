@@ -1,4 +1,4 @@
-@extends('layouts.empty_base')
+@extends('layouts.master')
 @section('content')
 
 <div class="container">
@@ -12,10 +12,7 @@
 							<div class="panel panel-default">
 								
 								<div class="panel-body">
-									Papelaria e Serviços Agenda<hr>
-									Emal: papelaria@gmail.com<br>
-									Telefone: +218293503 / +258840294826<br>
-									Endereco: Av. 24 de Julho<br>
+									@include('layouts.empresa.dados_empresa')
 								</div>
 							</div>
 
@@ -49,7 +46,7 @@
 					</div>
 					<div class="row">
 						<div class="col-md-6"> MAPUTO</div>
-						<div class="col-md-6 text-right"> Data: {{$entrada->data}} </div>
+						<div class="col-md-6 text-right"> Data: {{date('d-m-Y', strtotime($entrada->data))}} </div>
 					</div>
 				</div>
 
@@ -98,25 +95,12 @@
 						</div>
 
 						<div class="col-md-6 text-right">
-
 							<table class="pull-right">
-
+								
 								<tr>
-									<td>
-										IVA:
-									</td>
-									<td>
-										17%
-									</td>
-								</tr>
-
-								<tr>
-									<td>
-										Valor Total:
-									</td>
-									<td>
-										<b>{{$entrada->valor}}</b>
-									</td>
+									<td>Valor Total:</td>
+									<td style="width: 10px"></td>
+									<td><b>{{$entrada->valor_total}}</b></td>
 								</tr>
 							</table>
 
@@ -133,8 +117,7 @@
 									Datos bancarios
 								</div>
 								<div class="panel-body">
-									Conta BCI (MZN) 54169166 10 1<br>
-									Conta BIM (MZN) 5299/07<br>
+									@include('layouts.empresa.dados_bancarios_empresa')
 								</div>
 							</div>
 

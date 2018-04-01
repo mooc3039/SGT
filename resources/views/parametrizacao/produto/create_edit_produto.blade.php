@@ -88,9 +88,9 @@
           <div class="col-sm-4">
             {{Form::label('preco_aquisicao', 'Preço de Aquisição')}}
             <div class="input-group">
-            {{Form::text('preco_aquisicao', null, ['class' => 'form-control', 'placeholder' => '0.00 - 999999.99 '])}}
-            <div class="input-group-addon">Mtn</div>
-          </div>
+              {{Form::text('preco_aquisicao', null, ['class' => 'form-control', 'placeholder' => '0.00 - 999999.99 '])}}
+              <div class="input-group-addon">Mtn</div>
+            </div>
           </div>
 
         </div>
@@ -122,11 +122,11 @@
 
           @if(isset($produto))
 
-          {{Form::submit('Actualizar', ['class'=>'btn btn-primary'])}}
+          {{Form::submit('Actualizar', ['class'=>'btn btn-primary submit_iten'])}}
 
           @else
 
-          {{Form::submit('Salvar', ['class'=>'btn btn-primary'])}}
+          {{Form::submit('Salvar', ['class'=>'btn btn-primary submit_iten'])}}
 
           @endif
 
@@ -158,7 +158,7 @@
       </div>
       <div class="modal-body">
 
-        {{Form::open(['route'=>'categoria_salvar_rback', 'method'=>'POST'])}}
+        {{Form::open(['route'=>'categoria_salvar_rback', 'method'=>'POST', 'onsubmit'=>'submitFormCategoria.disabled = true; return true;'])}}
 
         <div class="form-group">
           {{Form::label('nome', 'Nome', ['class'=>'control-lable'])}}
@@ -169,7 +169,7 @@
       <div class="modal-footer">
 
         {{Form::button('Fechar', ['class'=>'btn btn-default', 'data-dismiss'=>'modal'])}}
-        {{Form::submit('Salvar', ['class'=>'btn btn-primary'])}}
+        {{Form::submit('Salvar', ['class'=>'btn btn-primary submit_iten', 'name'=>'submitFormCategoria', 'id'=>'submitFormCategoria'])}}
 
         {{Form::close()}}
       </div>
@@ -190,7 +190,7 @@
       </div>
       <div class="modal-body">
 
-        {{Form::open(['route'=>'fornecedor_salvar_rback', 'method'=>'POST'])}}
+        {{Form::open(['route'=>'fornecedor_salvar_rback', 'method'=>'POST', 'onsubmit'=>'submitFormFornecedor.disabled = true; return true;'])}}
         <div class="form-group">
           {{Form::label('nome', 'Nome', ['class'=>'control-lable'])}}
           {{Form::text('nome', null, ['placeholder' => 'Nome', 'class' => 'form-control'])}}
@@ -221,7 +221,7 @@
       </div>
       <div class="modal-footer">
         {{Form::button('Fechar', ['class'=>'btn btn-default', 'data-dismiss'=>'modal'])}}
-        {{Form::submit('Salvar', ['class'=>'btn btn-primary'])}}
+        {{Form::submit('Salvar', ['class'=>'btn btn-primary submit_iten', 'name'=>'submitFormFornecedor', 'id'=>'submitFormFornecedor'])}}
         <!-- <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
           <button type="button" class="btn btn-primary">Salvar</button> -->
           {{Form::close()}}
@@ -231,4 +231,14 @@
   </div><!-- /.modal -->
   <!--FIM MODAL FORNECEDOR -->
 
+  @endsection
+
+  @section('script')
+  <script type="text/javascript">
+
+    $('.submit_iten').on('click',function(){
+      $(".wait").css("display", "block");
+    });
+
+  </script>
   @endsection

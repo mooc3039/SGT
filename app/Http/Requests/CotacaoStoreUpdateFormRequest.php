@@ -25,6 +25,7 @@ class CotacaoStoreUpdateFormRequest extends FormRequest
     {
         return [
           'cliente_id' => 'required',
+          'validade' => 'required|numeric|min:0',
           // 'tipo_cotacao_id' => 'required',
           'produto_id' => 'required',
           'desconto' => 'required',
@@ -34,6 +35,9 @@ class CotacaoStoreUpdateFormRequest extends FormRequest
     public function messages(){
         return [
             'cliente_id.required' => 'É necessário selecionar o Cliente!',
+            'validade.required' => 'É informar informar a Validade em numero de dias!',
+            'validade.numeric' => 'A Validade deve ser um valor numerico!',
+            'validade.min' => 'A Validade deve ser um valor numerico maior que Zero!',
             // 'tipo_cotacao_id.required' => 'É necessário selecionar o tipo da Cotação!',
             'produto_id.required' => 'É necessário selecionar o Produto!',
             'desconto.required' => 'É necessário especificar o Desconto!',

@@ -59,9 +59,12 @@
       <div class="row">
         <div class="col-md-12">
           <div class="row" >
-            <div class="col-md-12" style="margin-bottom: 10px">
+            <div class="col-md-8" style="margin-bottom: 10px">
               <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modalInserirItem" data-new_valor_total={{ $concurso->valor_total }} data-new_concurso_id={{ $concurso->id }} data-new_codigo_concurso={{ $concurso->codigo_concurso }}><i class="fa fa-plus"></i></button>
             </div>
+             <div class="col-md-4">
+            <input type="text" id="pesq" class="form-control" placeholder="Pesquisa...">
+          </div>
           </div>
           <table class="table table-striped table-advance table-hover">
             <thead>

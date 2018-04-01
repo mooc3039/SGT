@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Database\QueryException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use App\Http\Requests\VendaStoreUpdateFormRequest;
 use App\Http\Requests\PagamentoVendaStoreUpdateFormRequest;
+use App\Model\Empresa;
 use App\Model\Venda;
 use App\Model\ItenVenda;
 use App\Model\Produto;
@@ -209,6 +211,9 @@ class VendaController extends Controller
     public function show($id)
     {
         //
+      $venda = $this->venda->with('itensVenda.produto', 'cliente')->find($id);
+      $empresa = Empresa::with('enderecos', 'telefones', 'emails', 'contas')->findOrFail(1);
+      return view('vendas.show_venda', compact('venda', 'empresa'));
     }
 
     /**
@@ -224,8 +229,9 @@ class VendaController extends Controller
       $formas_pagamento = DB::table('forma_pagamentos')->pluck('descricao', 'id')->all();
       $venda = $this->venda->with('itensVenda.produto', 'formaPagamento', 'cliente')->find($id); 
         // Tras a venda. Tras os Itens da venda e dentro da relacao Itensvenda eh possivel pegar a relacao Prodtuo atraves do dot ou ponto. NOTA: a relacao produto nao esta na venda e sim na itensvenda, mas eh possivel ter os seus dados partido da venda como se pode ver.
+      $empresa = Empresa::with('enderecos', 'telefones', 'emails', 'contas')->findOrFail(1);
 
-      return view('vendas.itens_venda.create_edit_itens_venda', compact('produtos', 'venda', 'formas_pagamento'));
+      return view('vendas.itens_venda.create_edit_itens_venda', compact('produtos', 'venda', 'formas_pagamento', 'empresa'));
     }
 
     /**
@@ -359,27 +365,32 @@ class VendaController extends Controller
     public function destroy($id)
     {
         //
-      $venda = $this->venda->find($id);
+      $venda = $this->venda->findOrFail($id);
 
+      DB::beginTransaction();
       try {
 
-        if($venda->delete()){
+        if($venda->itensVenda()->where('venda_id', $id)->delete()){
 
-          $sucess = 'Venda removida com sucesso!';
-          return redirect()->route('venda.index')->with('success', $sucess);
+          $venda->pagamentosVenda()->where('venda_id', $id)->delete();
+          $venda->delete();
+          DB::commit();
+
+          $success = "Venda eliminada com sucesso!";
+          return redirect()->route('venda.index')->with('success', $success);
 
         }else{
-
+          DB::rollback();
           $error = 'Erro ao remover a Venda!';
           return redirect()->back()->with('error', $error);
         }
 
-
       } catch (QueryException $e) {
-
+        DB::rollback();
         $error = "Erro ao remover Venda.Necessária a intervenção do Administrador da Base de Dados.!";
         return redirect()->back()->with('error', $error);
 
       }
+
     }
   }

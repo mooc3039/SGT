@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use App\Http\Requests\GuiaEntregaStoreUpdateFormRequest;
+use App\Model\Empresa;
 use App\Model\GuiaEntrega;
 use App\Model\ItenGuiaentrega;
 use App\Model\Saida;
@@ -156,8 +157,9 @@ class GuiaEntregaController extends Controller
         //
         $guia_entrega = $this->guia_entrega->with('itensGuiantrega.produto', 'cliente')->find($id); 
             // Tras a saida. Tras os Itens da Saida e dentro da relacao ItensSaida eh possivel pegar a relacao Prodtuo atraves do dot ou ponto. NOTA: a relacao produto nao esta na saida e sim na itensSaida, mas eh possivel ter os seus dados partido da saida como se pode ver.
+        $empresa = Empresa::with('enderecos', 'telefones', 'emails', 'contas')->findOrFail(1);
         
-        return view('guias_entrega.show_guia_entrega', compact('guia_entrega'));
+        return view('guias_entrega.show_guia_entrega', compact('guia_entrega', 'empresa'));
     }
 
     public function showRelatorio($id)
@@ -195,8 +197,9 @@ class GuiaEntregaController extends Controller
         $guia_entrega = $this->guia_entrega->with('itensGuiantrega.itenSaida.produto', 'saida.itensSaida', 'cliente')->find($id);
         //dd($guia_entrega);
         // Tras a saida. Tras os Itens da Saida e dentro da relacao ItensSaida eh possivel pegar a relacao Prodtuo atraves do dot ou ponto. NOTA: a relacao produto nao esta na saida e sim na itensSaida, mas eh possivel ter os seus dados partido da saida como se pode ver.
+        $empresa = Empresa::with('enderecos', 'telefones', 'emails', 'contas')->findOrFail(1);
 
-        return view('guias_entrega.itens_guiaentrega.create_edit_itens_guia_entrega', compact('produtos', 'guia_entrega'));
+        return view('guias_entrega.itens_guiaentrega.create_edit_itens_guia_entrega', compact('produtos', 'guia_entrega', 'empresa'));
     }
 
     /**

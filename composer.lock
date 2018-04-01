@@ -867,16 +867,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v5.5.39",
+            "version": "v5.5.40",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "a21ef7e51df831a7c38d24dcf8c4774ee0847526"
+                "reference": "d724ce0aa61bbd9adf658215eec484f5dd6711d6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/a21ef7e51df831a7c38d24dcf8c4774ee0847526",
-                "reference": "a21ef7e51df831a7c38d24dcf8c4774ee0847526",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/d724ce0aa61bbd9adf658215eec484f5dd6711d6",
+                "reference": "d724ce0aa61bbd9adf658215eec484f5dd6711d6",
                 "shasum": ""
             },
             "require": {
@@ -884,7 +884,7 @@
                 "erusev/parsedown": "~1.7",
                 "ext-mbstring": "*",
                 "ext-openssl": "*",
-                "league/flysystem": "~1.0",
+                "league/flysystem": "^1.0.8",
                 "monolog/monolog": "~1.12",
                 "mtdowling/cron-expression": "~1.0",
                 "nesbot/carbon": "^1.24.1",
@@ -997,7 +997,7 @@
                 "framework",
                 "laravel"
             ],
-            "time": "2018-03-09T17:24:53+00:00"
+            "time": "2018-03-30T13:29:30+00:00"
         },
         {
             "name": "laravel/tinker",
@@ -1064,16 +1064,16 @@
         },
         {
             "name": "laravelcollective/html",
-            "version": "v5.5.3",
+            "version": "v5.5.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/LaravelCollective/html.git",
-                "reference": "b79edc7acf574144c9811277286b4cafee8a07cc"
+                "reference": "04c596a69975b901f2223eb6eb4adf55354121c2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/LaravelCollective/html/zipball/b79edc7acf574144c9811277286b4cafee8a07cc",
-                "reference": "b79edc7acf574144c9811277286b4cafee8a07cc",
+                "url": "https://api.github.com/repos/LaravelCollective/html/zipball/04c596a69975b901f2223eb6eb4adf55354121c2",
+                "reference": "04c596a69975b901f2223eb6eb4adf55354121c2",
                 "shasum": ""
             },
             "require": {
@@ -1091,7 +1091,9 @@
             },
             "type": "library",
             "extra": {
-                "branch-alias": [],
+                "branch-alias": {
+                    "dev-master": "5.5-dev"
+                },
                 "laravel": {
                     "providers": [
                         "Collective\\Html\\HtmlServiceProvider"
@@ -1126,7 +1128,7 @@
             ],
             "description": "HTML and Form Builders for the Laravel Framework",
             "homepage": "https://laravelcollective.com",
-            "time": "2018-02-12T14:19:55+00:00"
+            "time": "2018-03-24T00:39:21+00:00"
         },
         {
             "name": "league/flysystem",
@@ -1336,16 +1338,16 @@
         },
         {
             "name": "nesbot/carbon",
-            "version": "1.24.2",
+            "version": "1.25.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/briannesbitt/Carbon.git",
-                "reference": "bba6c6e410c6b4317e37a9474aeaa753808c3875"
+                "reference": "cbcf13da0b531767e39eb86e9687f5deba9857b4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/bba6c6e410c6b4317e37a9474aeaa753808c3875",
-                "reference": "bba6c6e410c6b4317e37a9474aeaa753808c3875",
+                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/cbcf13da0b531767e39eb86e9687f5deba9857b4",
+                "reference": "cbcf13da0b531767e39eb86e9687f5deba9857b4",
                 "shasum": ""
             },
             "require": {
@@ -1385,7 +1387,7 @@
                 "datetime",
                 "time"
             ],
-            "time": "2018-03-10T10:10:14+00:00"
+            "time": "2018-03-19T15:50:49+00:00"
         },
         {
             "name": "nikic/php-parser",

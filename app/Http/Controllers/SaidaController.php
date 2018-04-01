@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
-// use Illuminate\Database\QueryException;
+use Illuminate\Database\QueryException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use App\Http\Requests\SaidaStoreUpdateFormRequest;
 use App\Http\Requests\PagamentoSaidaStoreUpdateFormRequest;
+use App\Model\Empresa;
 use App\Model\Saida;
 use App\Model\Concurso;
 use App\Model\ItenConcurso;
@@ -54,7 +56,7 @@ class SaidaController extends Controller
     {
         //
 
-      $saidas = $this->saida->with('itensSaida', 'pagamentosSaida')->orderBy('data', 'desc')->paginate(10);
+      $saidas = $this->saida->with('itensSaida', 'pagamentosSaida')->get();
       $formas_pagamento = DB::table('forma_pagamentos')->pluck('descricao', 'id')->all();
 
       return view('saidas.index_saida', compact('saidas', 'formas_pagamento'));
@@ -78,37 +80,6 @@ class SaidaController extends Controller
       $produtos = $this->produto->select('id', 'descricao')->get();
 
       return view('saidas.create_edit_saida', compact('clientes', 'tipos_cliente', 'formas_pagamento' , 'produtos'));
-    }
-
-    public function saidaPublicoCreate(){
-      $acronimo = TipoCliente::select('id')->where('acronimo', 'publico')->first();
-      $acronimo_id = $acronimo->id;
-
-      $clientes = DB::table('clientes')->where('tipo_cliente_id', $acronimo_id)->pluck('nome', 'id')->all();
-      $tipos_cliente = DB::table('tipo_clientes')->pluck('tipo_cliente', 'id')->all();
-      $formas_pagamento = DB::table('forma_pagamentos')->pluck('descricao', 'id')->all();
-      $produtos = $this->produto->select('id', 'descricao')->get();
-
-      return view('saidas.publicos.create_edit_saida_publico', compact('clientes', 'tipos_cliente', 'formas_pagamento' , 'produtos'));
-    }
-
-    public function saidaConcursoCreate(){
-      // $concurso_valor_zero_id = Concurso::select('id')->where('valor_total', 0)->get();
-      $concurso_id_qtd_rest_zero = ItenConcurso::select('concurso_id')->where('quantidade_rest','>', 0)->distinct()->get();
-      $array_concurso_id = array();
-
-      if(sizeof($concurso_id_qtd_rest_zero)>0){
-        for($i=0;$i<sizeof($concurso_id_qtd_rest_zero); $i++){
-          $array_concurso_id[] = $concurso_id_qtd_rest_zero[$i]->concurso_id;
-        }
-      }
-            
-      $clientes = DB::table('clientes')->pluck('nome', 'id')->all();
-      $concursos = DB::table('concursos')->whereIn('id', $array_concurso_id)->pluck('codigo_concurso', 'id')->all();
-      $formas_pagamento = DB::table('forma_pagamentos')->pluck('descricao', 'id')->all();
-      // $concurso = $this->concurso->with('itensConcurso.produto', 'cliente')->find($id);
-
-      return view('saidas.concursos.create_edit_saida_concurso', compact('concursos', 'clientes', 'formas_pagamento'));
     }
 
     /**
@@ -286,20 +257,12 @@ class SaidaController extends Controller
         //
 
         $saida = $this->saida->with('itensSaida.produto', 'cliente')->find($id); // Tras a saida. Tras os Itens da Saida e dentro da relacao ItensSaida eh possivel pegar a relacao Prodtuo atraves do dot ou ponto. NOTA: a relacao produto nao esta na saida e sim na itensSaida, mas eh possivel ter os seus dados partido da saida como se pode ver.
+        $empresa = Empresa::with('enderecos', 'telefones', 'emails', 'contas')->findOrFail(1); 
         
-        return view('saidas.show_saida', compact('saida'));
+        return view('saidas.show_saida', compact('saida', 'empresa'));
 
       }
 
-    public function showRelatorio($id)
-    {
-        //
-        $saida = $this->saida->with('itensSaida.produto', 'cliente')->find($id); 
-            // Tras a saida. Tras os Itens da Saida e dentro da relacao ItensSaida eh possivel pegar a relacao Prodtuo atraves do dot ou ponto. NOTA: a relacao produto nao esta na saida e sim na itensSaida, mas eh possivel ter os seus dados partido da saida como se pode ver.
-         $pdf = PDF::loadView('saidas.relatorio', compact('saida'));
-         return $pdf->download('saida.pdf');
-        
-    }
 
     /**
      * Show the form for editing the specified resource.
@@ -313,8 +276,9 @@ class SaidaController extends Controller
       $produtos = DB::table('produtos')->pluck('descricao', 'id')->all();
       $saida = $this->saida->with('itensSaida.produto', 'cliente')->find($id); 
         // Tras a saida. Tras os Itens da Saida e dentro da relacao ItensSaida eh possivel pegar a relacao Prodtuo atraves do dot ou ponto. NOTA: a relacao produto nao esta na saida e sim na itensSaida, mas eh possivel ter os seus dados partido da saida como se pode ver.
+      $empresa = Empresa::with('enderecos', 'telefones', 'emails', 'contas')->findOrFail(1);
 
-      return view('saidas.itens_saida.create_edit_itens_saida', compact('produtos', 'saida'));
+      return view('saidas.itens_saida.create_edit_itens_saida', compact('produtos', 'saida', 'empresa'));
     }
 
     /**
@@ -338,28 +302,65 @@ class SaidaController extends Controller
     public function destroy($id)
     {
         //
-      $saida = $this->saida->find($id);
 
+      $saida = $this->saida->findOrFail($id);
+
+      DB::beginTransaction();
       try {
 
-        if($saida->delete()){
+        if($saida->itensSaida()->where('saida_id', $id)->delete()){
+
+          $saida->pagamentosSaida()->where('saida_id', $id)->delete();
+
+          $saida->delete();
+          DB::commit();
 
           $sucess = 'Saída removida com sucesso!';
           return redirect()->route('saida.index')->with('success', $sucess);
 
         }else{
-
+          DB::rollback();
           $error = 'Erro ao remover a Saída!';
           return redirect()->back()->with('error', $error);
         }
 
-
       } catch (QueryException $e) {
-
-        $error = "Erro ao remover Saída. Possivelmente Registo em uso. Necessária a intervenção do Administrador da Base de Dados.!";
+        DB::rollback();
+        $error = "Erro ao remover Saída. Possivel Registo em uso. Necessária a intervenção do Administrador da Base de Dados.!";
         return redirect()->back()->with('error', $error);
 
       }
+    }
+
+    public function saidaPublicoCreate(){
+      $acronimo = TipoCliente::select('id')->where('acronimo', 'publico')->first();
+      $acronimo_id = $acronimo->id;
+
+      $clientes = DB::table('clientes')->where('tipo_cliente_id', $acronimo_id)->pluck('nome', 'id')->all();
+      $tipos_cliente = DB::table('tipo_clientes')->pluck('tipo_cliente', 'id')->all();
+      $formas_pagamento = DB::table('forma_pagamentos')->pluck('descricao', 'id')->all();
+      $produtos = $this->produto->select('id', 'descricao')->get();
+
+      return view('saidas.publicos.create_edit_saida_publico', compact('clientes', 'tipos_cliente', 'formas_pagamento' , 'produtos'));
+    }
+
+    public function saidaConcursoCreate(){
+      // $concurso_valor_zero_id = Concurso::select('id')->where('valor_total', 0)->get();
+      $concurso_id_qtd_rest_zero = ItenConcurso::select('concurso_id')->where('quantidade_rest','>', 0)->distinct()->get();
+      $array_concurso_id = array();
+
+      if(sizeof($concurso_id_qtd_rest_zero)>0){
+        for($i=0;$i<sizeof($concurso_id_qtd_rest_zero); $i++){
+          $array_concurso_id[] = $concurso_id_qtd_rest_zero[$i]->concurso_id;
+        }
+      }
+      
+      $clientes = DB::table('clientes')->pluck('nome', 'id')->all();
+      $concursos = DB::table('concursos')->whereIn('id', $array_concurso_id)->pluck('codigo_concurso', 'id')->all();
+      $formas_pagamento = DB::table('forma_pagamentos')->pluck('descricao', 'id')->all();
+      // $concurso = $this->concurso->with('itensConcurso.produto', 'cliente')->find($id);
+
+      return view('saidas.concursos.create_edit_saida_concurso', compact('concursos', 'clientes', 'formas_pagamento'));
     }
 
     public function pagamentoSaida(PagamentoSaidaStoreUpdateFormRequest $request){
@@ -505,6 +506,16 @@ class SaidaController extends Controller
         /*$pdf = PDF::loadView('reports.saidas.report_saida', compact('saida'));
         return $pdf->download('mypdf.pdf');
 */
+      }
+
+      public function showRelatorio($id)
+      {
+        //
+        $saida = $this->saida->with('itensSaida.produto', 'cliente')->find($id); 
+            // Tras a saida. Tras os Itens da Saida e dentro da relacao ItensSaida eh possivel pegar a relacao Prodtuo atraves do dot ou ponto. NOTA: a relacao produto nao esta na saida e sim na itensSaida, mas eh possivel ter os seus dados partido da saida como se pode ver.
+        $pdf = PDF::loadView('saidas.relatorio', compact('saida'));
+        return $pdf->download('saida.pdf');
+        
       }
 
       public function reportGeralSaidas(){

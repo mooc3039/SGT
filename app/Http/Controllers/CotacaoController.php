@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Requests\CotacaoStoreUpdateFormRequest;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
 use DB;
 use Session;
@@ -13,6 +14,11 @@ use App\User;
 use App\Model\Cotacao;
 use App\Model\TipoCotacao;
 use App\Model\ItenCotacao;
+use App\Model\Empresa;
+use App\Model\Endereco;
+use App\Model\Telefone;
+use App\Model\Conta;
+use App\Model\Email;
 use PDF;
 use Yajra\Datatables\Datatables;//yajira
 
@@ -45,7 +51,7 @@ class CotacaoController extends Controller
   public function index()
   {
     //
-    $cotacoes = $this->cotacao->orderBy('data', 'desc')->paginate(10);
+    $cotacoes = $this->cotacao->orderBy('created_at', 'desc')->paginate(10);
 
     return view('cotacoes.index_cotacao', compact('cotacoes'));
 
@@ -77,14 +83,15 @@ class CotacaoController extends Controller
   public function store(CotacaoStoreUpdateFormRequest $request)
   {
     //
-    if(request()->ajax()){
+    // dd($request->all());
+    if($request->all()){
 
       $cotacao = new Cotacao;
 
       $dataForm = $request->all();
 
       $cotacao->cliente_id = $request['cliente_id'];
-      $cotacao->tipo_cotacao_id = $request['tipo_cotacao_id'];
+      $cotacao->validade = $request['validade'];
       $cotacao->user_id = $request['user_id'];
       $cotacao->valor_total = 0; 
       $cotacao->valor_iva = 0; 
@@ -123,28 +130,25 @@ class CotacaoController extends Controller
 
           DB::commit();
 
-          $sucesso = "Cotacao cadastrada com sucesso!";
-          Session::flash('success', $sucesso);
-          return response()->json(['status'=>'success']);
-          // return response()->json($request->all());
+          $success = "Cotacao cadastrada com sucesso!";
+          return redirect()->route('cotacao.index')->with('success', $success);
 
         }
         else {
-
-          $erro = "Erro ao cadastrar a Cotacao!";
-          Session::flash('error', $erro);
-          return response()->json(['status'=>'error']);
+          DB::rollback();
+          $error = "Erro ao cadastrar a Cotacao!";
+          return redirect()->back()->with('error', $error);
 
         }
 
       } catch (QueryException $e){
 
-        $erro = "Erro ao cadastrar a Cotacao! => Possível redundância de um item/produto à mesma cotação ou preenchimento incorrecto dos campos!";
-        Session::flash('error', $erro);
+        $error = "Erro ao cadastrar a Cotacao! => Possível redundância de um item/produto à mesma cotação ou preenchimento incorrecto dos campos!";
 
         DB::rollback();
 
-        return response()->json(['status'=>'error']);
+        return redirect()->back()->with('error', $error);
+
 
       }
 
@@ -163,20 +167,21 @@ class CotacaoController extends Controller
   public function show($id)
   {
     //
+    $empresa = Empresa::with('enderecos', 'telefones', 'emails', 'contas')->findOrFail(1);
     $cotacao = $this->cotacao->with('itensCotacao.produto', 'cliente')->find($id); // Tras a cotacao. Tras os Itens da cotacao e dentro da relacao Itenscotacao eh possivel pegar a relacao Prodtuo atraves do dot ou ponto. NOTA: a relacao produto nao esta na cotacao e sim na itenscotacao, mas eh possivel ter os seus dados partido da cotacao como se pode ver.
 
-    return view('cotacoes.show_cotacao', compact('cotacao'));
+    return view('cotacoes.show_cotacao', compact('cotacao', 'empresa'));
   }
 
   public function showRelatorio($id)
-    {
+  {
         //
-        $cotacao = $this->cotacao->with('itensCotacao.produto', 'cliente')->find($id); 
+    $cotacao = $this->cotacao->with('itensCotacao.produto', 'cliente')->find($id); 
             // Tras a saida. Tras os Itens da Saida e dentro da relacao ItensSaida eh possivel pegar a relacao Prodtuo atraves do dot ou ponto. NOTA: a relacao produto nao esta na saida e sim na itensSaida, mas eh possivel ter os seus dados partido da saida como se pode ver.
-         $pdf = PDF::loadView('cotacoes.relatorio', compact('cotacao'));
-         return $pdf->download('cotacao.pdf');
-        
-    }
+    $pdf = PDF::loadView('cotacoes.relatorio', compact('cotacao'));
+    return $pdf->download('cotacao.pdf');
+
+  }
 
   /**
   * Show the form for editing the specified resource.
@@ -187,10 +192,11 @@ class CotacaoController extends Controller
   public function edit($id)
   {
     //
-    $produtos = DB::table('produtos')->pluck('descricao', 'id')->all();
+   $empresa = Empresa::with('enderecos', 'telefones', 'emails', 'contas')->findOrFail(1);
+   $produtos = DB::table('produtos')->pluck('descricao', 'id')->all();
     $cotacao = $this->cotacao->with('itensCotacao.produto', 'cliente')->find($id); // Tras a cotacao. Tras os Itens da cotacao e dentro da relacao Itenscotacao eh possivel pegar a relacao Prodtuo atraves do dot ou ponto. NOTA: a relacao produto nao esta na cotacao e sim na itenscotacao, mas eh possivel ter os seus dados partido da cotacao como se pode ver.
 
-    return view('cotacoes.itens_cotacao.create_edit_itens_cotacao', compact('cotacao', 'produtos'));
+    return view('cotacoes.itens_cotacao.create_edit_itens_cotacao', compact('cotacao', 'produtos', 'empresa'));
 
   }
 
@@ -217,28 +223,30 @@ class CotacaoController extends Controller
   public function destroy($id)
   {
     //
-    $cotacao = $this->cotacao->find($id);
+    $cotacao = $this->cotacao->findOrFail($id);
 
-        try {
+    DB::beginTransaction();
+    try {
 
-          if($cotacao->delete()){
+      if($cotacao->itensCotacao()->where('cotacao_id', $id)->delete()){
 
-            $sucess = 'Cotação removida com sucesso!';
-            return redirect()->route('cotacao.index')->with('success', $sucess);
+        $cotacao->delete();
+        DB::commit();
 
-          }else{
+        $sucess = 'Cotação removida com sucesso!';
+        return redirect()->route('cotacao.index')->with('success', $sucess);
 
-            $error = 'Erro ao remover a Cotação!';
-            return redirect()->back()->with('error', $error);
-          }
+      }else{
+        DB::rollback();
+        $error = 'Erro ao remover a Cotação!';
+        return redirect()->back()->with('error', $error);
+      }
 
-
-        } catch (QueryException $e) {
-
-          $error = "Erro ao remover Cotação. Possivelmente Registo em uso. Necessária a intervenção do Administrador da Base de Dados.!";
-          return redirect()->back()->with('error', $error);
-
-        }
+    } catch (QueryException $e) {
+      DB::rollback();
+      $error = "Erro ao remover Cotação. Possivelmente Registo em uso. Necessária a intervenção do Administrador da Base de Dados.!";
+      return redirect()->back()->with('error', $error);
+    }
   }
 
   public function reportGeralCotacoes(){

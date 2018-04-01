@@ -21,7 +21,7 @@
 
     <section class="panel panel-default">
 
-      {{ Form::open(['route'=>'cotacao.store', 'method'=>'POST', 'id'=>'form_cotacao', 'onsubmit'=>'submitFormCotacao.disabled = true; return true;']) }}
+      {{ Form::open(['route'=>'cotacao.store', 'method'=>'POST', 'id'=>'form_cotacao']) }}
 
       <div class="panel-body" style="border-bottom: 1px solid #ccc; ">
         <div class="row" style="margin-bottom: 15px">
@@ -41,6 +41,10 @@
                   {{Form::select('cliente_id', [''=>'Cliente',] + $clientes, null, ['class'=>'form-control select_search', 'id'=>'cliente_id'] )}}
                   {{Form::button('<i class="fa fa-plus"></i>', ['class'=>'input-group-addon', 'data-toggle'=>'modal', 'data-target'=>'#modalCliente', 'style'=>'width:auto; font-weight:lighter'])}}
                 </div>
+              </div>
+              <div class="col-md-4">
+                {{ Form::label('validade', 'Validade')}}
+                {{ Form::number('validade', null, ['class'=>'form-control'])}}
               </div>
 
             </div>
@@ -428,47 +432,47 @@
 
 
     //pegar dados e enviar para a rota que salva
-    $('#form_cotacao').submit(function(e){
-      e.preventDefault();
-      data = $(this).serialize();
+    // $('#form_cotacao').submit(function(e){
+    //   e.preventDefault();
+    //   data = $(this).serialize();
 
-      $.ajax({
-        type : "POST",
-        url : "cotacao_store",
-        dataType : "JSON",
-        data : data,
-        success : function(data){
-          if(data.status == 'success'){
-            window.location.href="index"; // Foi necessario definir mais uma rota para o mesmo metodo index() por forma a chama-lo daqui como nao eh possivl aceder ao index() com metodo resource. E tb nao eh possivel especificar um nome de rota para "resources"
-          }else{
-            window.location.href="create"; // Necessario para actualizar as mensagens do flash(success ou error nas views ou routes)
-          }
-        },
+    //   $.ajax({
+    //     type : "POST",
+    //     url : "cotacao_store",
+    //     dataType : "JSON",
+    //     data : data,
+    //     success : function(data){
+    //       if(data.status == 'success'){
+    //         window.location.href="index"; // Foi necessario definir mais uma rota para o mesmo metodo index() por forma a chama-lo daqui como nao eh possivl aceder ao index() com metodo resource. E tb nao eh possivel especificar um nome de rota para "resources"
+    //       }else{
+    //         window.location.href="create"; // Necessario para actualizar as mensagens do flash(success ou error nas views ou routes)
+    //       }
+    //     },
 
-        error : function(data){ // Automaticamente pega os erros de validacao do Form Request e devolve um json com uma mensagem padrao e o array contendo as validacoes que nao passaram no teste. Nao ha necessidade de fazer return response explicito no Controller
+    //     error : function(data){ // Automaticamente pega os erros de validacao do Form Request e devolve um json com uma mensagem padrao e o array contendo as validacoes que nao passaram no teste. Nao ha necessidade de fazer return response explicito no Controller
 
-          // var errors = $.parseJSON(data.responseText);
-          var errors = data.responseJSON;
-          printErrorMsg(errors.errors);
+    //       // var errors = $.parseJSON(data.responseText);
+    //       var errors = data.responseJSON;
+    //       printErrorMsg(errors.errors);
 
-        }
+    //     }
 
 
-      });
+    //   });
 
-      function printErrorMsg(msg){
-        $(".print-error-msg").find("ul").html('');
-        $(".print-error-msg").css('display', 'block');
-        $.each(msg, function(key, value){
-          $(".print-error-msg").find("ul").append('<li><strong>Erro!!</strong> '+value+'</li>');
-        });
-      };
+    //   function printErrorMsg(msg){
+    //     $(".print-error-msg").find("ul").html('');
+    //     $(".print-error-msg").css('display', 'block');
+    //     $.each(msg, function(key, value){
+    //       $(".print-error-msg").find("ul").append('<li><strong>Erro!!</strong> '+value+'</li>');
+    //     });
+    //   };
 
-      function habilitarSubmit(){
-        document.getElementById("#submitFormCotacao").disabled = false;
-      };
+    //   function habilitarSubmit(){
+    //     document.getElementById("#submitFormCotacao").disabled = false;
+    //   };
 
-    });
+    // });
 
 
 

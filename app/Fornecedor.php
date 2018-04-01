@@ -12,6 +12,7 @@ class Fornecedor extends Model
 		'telefone',
 		'endereco',
 		'email',
+		'nuit',
 		'rubrica',
 		'activo'
 	];
