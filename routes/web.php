@@ -113,8 +113,12 @@ Route::group(['middleware'=>['authen']],function(){
   Route::get('/table', 'DatableController@index');
   Route::get('/table/dados', 'DatableController@get_datatable');
 
-  Route::resource('/novouser', 'UsuarioController');
- // Route::get('/novo/usuario', ['as'=>'novouser','uses'=>'UsuarioController@index']);
+  Route::get('/usuarios/inactivos', ['as'=>'usuarios_inactivos', 'uses'=>'UsuarioController@inactivos']);
+  Route::get('/usuarios/activar/{id}', ['as'=>'usuarios_activar', 'uses'=>'UsuarioController@activar']);
+  Route::get('/usuarios/desactivar/{id}', ['as'=>'usuarios_desactivar', 'uses'=>'UsuarioController@desactivar']);
+  Route::get('/usuarios/lista', ['as'=>'indexUsuario','uses'=>'UsuarioController@index']);
+  Route::resource('/usuarios', 'UsuarioController');
+ 
 
 });
 
