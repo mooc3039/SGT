@@ -49,7 +49,7 @@ Route::group(['middleware'=>['authen']],function(){
   Route::get('/produto/find', ['as'=>'findPrice','uses'=>'ProdutoController@findPrice']);
 
   //Saídas
-  
+
   Route::resource('/iten_saida', 'ItenSaidaController');
   // CADASTRAR A SAIDA COM ajax => Malache
   Route::post('saida/saida_store', 'SaidaController@store');
@@ -61,6 +61,7 @@ Route::group(['middleware'=>['authen']],function(){
    Route::post('/saida/concurso/dados', 'SaidaController@findConcursoDados')->name('findConcursoDados');
    Route::resource('/saida', 'SaidaController');
 
+
    //Rotas get para gerar impressao em formato pdf => Malache
    Route::get('/saida/pdf/{id}', ['as'=>'saida_pdf', 'uses'=>'SaidaController@report']);
 
@@ -70,6 +71,7 @@ Route::group(['middleware'=>['authen']],function(){
    // CRIAR GUIA DE ENTREGA => Malache
   Route::get('/guia_entrega/create_guia/{id}', 'GuiaEntregaController@createGuia')->name('create_guia');
   Route::get('/guia_entrega/show_guia_entrega/{id}', 'GuiaEntregaController@showGuiasEntrega')->name('show_guia_entrega');
+
 
   //relatorios
   Route::get('/guia_entrega/{id}/relatorio', ['as'=>'guiaRelatorio','uses'=>'GuiaEntregaController@showRelatorio']);//TODO --para imprimir as guias de entrega
@@ -84,7 +86,11 @@ Route::group(['middleware'=>['authen']],function(){
   Route::post('/venda/pagamento', 'VendaController@pagamentoVenda')->name('pagamentoVenda');
   Route::resource('/entrada', 'EntradaController');
   Route::get('/venda/create_pagamento/{id}', 'VendaController@createPagamentoVenda')->name('createPagamentoVenda');
- 
+
+  // GERIR PAGAMENTO DA ENTRADA => Malache
+  Route::post('/entrada/pagamento', 'EntradaController@pagamentoEntrada')->name('pagamentoEntrada');
+  Route::get('/entrada/create_pagamento/{id}', 'EntradaController@createPagamentoEntrada')->name('createPagamentoEntrada');
+
 
   // GERIR PAGAMENTO DO CONCURSO => Malache
   Route::get('/concurso/create_pagamento/{id}', 'ConcursoController@createPagamentoConcurso')->name('createPagamentoConcurso');
@@ -106,16 +112,16 @@ Route::group(['middleware'=>['authen']],function(){
   //testando datatable
   Route::get('/table', 'DatableController@index');
   Route::get('/table/dados', 'DatableController@get_datatable');
-  
+
   Route::resource('/novouser', 'UsuarioController');
  // Route::get('/novo/usuario', ['as'=>'novouser','uses'=>'UsuarioController@index']);
-   
+
 });
 
 Route::group(['middleware'=>['authen','roles'],'roles'=>['Administrador']],function(){
 
-  //para administrador 
- 
+  //para administrador
+
   Route::get('/fornecedores/inactivos', ['as'=>'fornecedores_inactivos', 'uses'=>'fornecedorController@inactivos']);
 
   // Rotas para ACTIVAR e DESACTIVAR o Fornecedor => Malache
@@ -161,7 +167,7 @@ Route::group(['middleware'=>['authen','roles'],'roles'=>['Administrador']],funct
 
 
 
-  
+
 
 
   //Rotas de operações
@@ -173,8 +179,8 @@ Route::group(['middleware'=>['authen','roles'],'roles'=>['Administrador']],funct
   Route::resource('/cliente', 'ClienteController');
   Route::resource('/tipo_cliente', 'TipoClienteController');
 
- 
+
   Route::resource('/tipo_cotacao', 'TipoCotacaoController');
-  
+
 
 });

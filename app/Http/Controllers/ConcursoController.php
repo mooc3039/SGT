@@ -10,7 +10,7 @@ use App\User;
 use App\Model\Empresa;
 use App\Model\Concurso;
 use App\Model\TipoCliente;
-use App\Model\Itenconcurso;
+use App\Model\ItenConcurso;
 use App\Model\FormaPagamento;
 use App\Model\PagamentoConcurso;
 use App\Model\Produto;
