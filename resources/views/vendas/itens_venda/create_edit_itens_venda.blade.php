@@ -12,10 +12,7 @@
               <div class="panel panel-default">
 
                 <div class="panel-body">
-                  Papelaria e Serviços Agenda<hr>
-                  Emal: papelaria@gmail.com<br>
-                  Telefone: +218293503 / +258840294826<br>
-                  Endereco: Av. 24 de Julho<br>
+                  @include('layouts.empresa.dados_empresa')
                 </div>
               </div>
 
@@ -59,11 +56,14 @@
           <div class="row">
             <div class="col-md-12">
               <div class="row" >
-                <div class="col-md-12" style="margin-bottom: 10px">
+                <div class="col-md-8" style="margin-bottom: 10px">
                   <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modalInserirItem" data-new_valor_total={{ $venda->valor_total }} data-new_venda_id={{ $venda->id }}><i class="fa fa-plus"></i></button>
                 </div>
+                <div class="col-md-4">
+                <input type="text" id="pesq" class="form-control" placeholder="Pesquisa...">
               </div>
-              <table class="table table-striped table-advance table-hover">
+              </div>
+              <table class="mostrar table table-striped table-advance table-hover">
                 <thead>
                   <tr>
                     <th><i class="icon_mobile"></i> Designação </th>
@@ -143,8 +143,7 @@
                   Dados bancarios
                 </div>
                 <div class="panel-body">
-                  Conta BCI (MZN) 54169166 10 1<br>
-                  Conta BIM (MZN) 5299/07<br>
+                  @include('layouts.empresa.dados_bancarios_empresa')
                 </div>
               </div>
 

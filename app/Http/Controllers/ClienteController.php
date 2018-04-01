@@ -26,7 +26,7 @@ class ClienteController extends Controller
     public function index()
     {
         //
-        $clientes = $this->cliente->with('tipo_cliente')->where('activo', 1)->orderBy('nome', 'asc')->paginate(7);
+        $clientes = $this->cliente->with('tipo_cliente')->where('activo', 1)->get();
         return view('parametrizacao.cliente.index_cliente', compact('clientes'));
     }
 

@@ -12,10 +12,7 @@
 							<div class="panel panel-default">
 								
 								<div class="panel-body">
-									Papelaria e Serviços Agenda<hr>
-									Emal: papelaria@gmail.com<br>
-									Telefone: +218293503 / +258840294826<br>
-									Endereco: Av. 24 de Julho<br>
+									@include('layouts.empresa.dados_empresa')
 								</div>
 							</div>
 
@@ -101,7 +98,7 @@
 							<table class="pull-right">
 								<tr>
 									<td>Valor Total:</td>
-									<td></td>
+									<td style="width: 10px"></td>
 									<td><b>{{$guia_entrega->valor_total}}</b></td>
 								</tr>
 							</table>
@@ -119,8 +116,7 @@
 									Dados bancarios
 								</div>
 								<div class="panel-body">
-									Conta BCI (MZN) 54169166 10 1<br>
-									Conta BIM (MZN) 5299/07<br>
+									@include('layouts.empresa.dados_bancarios_empresa')
 								</div>
 							</div>
 
@@ -128,16 +124,16 @@
 
 						<div class="col-md-6">
 
-							
+
 
 						</div>
 
 					</div>
 					<div class="row">
 						<div class="col-md-6"><a href="{{route('guia_entrega.show', $guia_entrega->id)}}/relatorio" class="btn btn-primary">Imprimir</a></div>
-					<div class="col-md-6 text-right"><a href="{{route('guia_entrega.index')}}" class="btn btn-warning">Cancelar</a>
- 
-					</div>
+						<div class="col-md-6 text-right"><a href="{{route('guia_entrega.index')}}" class="btn btn-warning">Cancelar</a>
+
+						</div>
 					</div>
 				</div>
 
@@ -148,8 +144,8 @@
 
 		</div>
 	</div>
-<!-- </div> -->
-@endsection
+	<!-- </div> -->
+	@endsection
 
 
 

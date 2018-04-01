@@ -16,12 +16,15 @@
     <section class="panel panel-default">
       <div class="panel-body">
         <div class="row" style="margin-bottom: 10px">
-          <div class="col-md-12">
+          <div class="col-md-8">
             <a href="{{ route('entrada.create') }}" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i></a>
           </div>
+          <div class="col-md-4">
+                <input type="text" id="pesq" class="form-control" placeholder="Pesquisa...">
+              </div>
         </div>
 
-        <table class="table table-striped table-advance table-hover">
+        <table class="mostrar table table-striped table-advance table-hover">
           <thead>
             <tr>
               <th><i class="icon_profile"></i> Código da Entrada </th>

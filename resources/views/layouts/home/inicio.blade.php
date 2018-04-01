@@ -4,7 +4,7 @@
   <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
 
     <div class="info-box blue-bg">
-      <i class="fa fa-sign-out"></i>
+      <i class="fa fa-sign-in"></i>
       <div class="count">{{$valor_entrada}}</div>
       <div class="title">Valor Entradas / Mês</div>
       <div class="count">{{$valor_entrada_pago}}</div>

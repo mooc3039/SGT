@@ -25,9 +25,9 @@
 							<div class="panel panel-default">
 								<div class="panel-body text-center">
 									<h2> <b> Dados do Cliente </b></h2> <hr>
-									Nome do Cliente: {{$venda->cliente->nome}}<br>
-									Endereço: {{$venda->cliente->endereco}}<br>
-									Nuit: {{$venda->cliente->nuit}}<br>
+									Nome do Cliente: {{$concurso->cliente->nome}}<br>
+									Endereço: {{$concurso->cliente->endereco}}<br>
+									Nuit: {{$concurso->cliente->nuit}}<br>
 								</div>
 							</div>
 						</div>
@@ -36,8 +36,8 @@
 
 							<div class="panel panel-default">
 								<div class="panel-body text-center">
-									<h2> <b> Numero da Venda </b> </h2> <hr>
-									<h1>{{$venda->id}}</h1>
+									<h2> <b> Numero do Concurso </b> </h2> <hr>
+									<h1>{{$concurso->codigo_concurso}}</h1>
 								</div>
 							</div>
 
@@ -46,7 +46,7 @@
 					</div>
 					<div class="row">
 						<div class="col-md-6"> MAPUTO</div>
-						<div class="col-md-6 text-right"> Data: {{date('d-m-Y', strtotime($venda->created_at))}}  </div>
+						<div class="col-md-6 text-right"> Data: {{date('d-m-Y', strtotime($concurso->created_at))}}  </div>
 					</div>
 				</div>
 
@@ -65,12 +65,12 @@
 										<th><i class="icon_cogs"></i> Valor Total </th>
 									</tr>
 
-									@foreach($venda->itensvenda as $iten_venda)
+									@foreach($concurso->itensConcurso as $iten_concurso)
 									<tr>
-										<td> {{$iten_venda->quantidade}} </td>
-										<td> {{$iten_venda->produto->descricao}} </td>
-										<td> {{$iten_venda->produto->preco_venda}} </td>
-										<td> {{$iten_venda->valor}} </td>
+										<td> {{$iten_concurso->quantidade}} </td>
+										<td> {{$iten_concurso->produto->descricao}} </td>
+										<td> {{$iten_concurso->preco_venda}} </td>
+										<td> {{$iten_concurso->valor}} </td>
 
 									</tr>
 									@endforeach
@@ -99,17 +99,17 @@
 								<tr>
 									<td>Sub-Total:</td>
 									<td style="width: 10px"></td>
-									<td>{{$venda->valor_total}}</td>
+									<td>{{$concurso->valor_total}}</td>
 								</tr>
 								<tr>
 									<td>IVA(17%):</td>
 									<td></td>
-									<td>{{(($venda->valor_total)*17)/100}}</td>
+									<td>{{(($concurso->valor_total)*17)/100}}</td>
 								</tr>
 								<tr>
 									<td>Valor Total:</td>
 									<td></td>
-									<td><b>{{$venda->valor_iva}}</b></td>
+									<td><b>{{$concurso->valor_iva}}</b></td>
 								</tr>
 							</table>
 
@@ -123,7 +123,7 @@
 
 							<div class="panel panel-info">
 								<div class="panel-heading">
-									Datos bancarios
+									Dados bancarios
 								</div>
 								<div class="panel-body">
 									@include('layouts.empresa.dados_bancarios_empresa')
@@ -140,10 +140,10 @@
 
 					</div>
 					<div class="row">
-						<div class="col-md-6"><a href="{{route('venda.show', $venda->id)}}/relatorio" class="btn btn-primary">Imprimir Saída</a>
+						<div class="col-md-6"><a href="{{route('concurso.show', $concurso->id)}}/relatorio" class="btn btn-primary">Imprimir Concurso</a>
 
 						</div>
-						<div class="col-md-6 text-right"><a href="{{route('venda.index')}}" class="btn btn-warning">Cancelar</a>
+						<div class="col-md-6 text-right"><a href="{{route('concurso.index')}}" class="btn btn-warning">Cancelar</a>
 
 						</div>
 					</div>

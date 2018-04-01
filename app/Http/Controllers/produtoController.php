@@ -28,7 +28,7 @@ class produtoController extends Controller
      */
     public function index()
     {
-        $produtos = $this->produto->with('categoria', 'fornecedor')->paginate(6);
+        $produtos = $this->produto->with('categoria', 'fornecedor')->get();
 
         return view('parametrizacao.produto.index_produto', compact('produtos'));
     }

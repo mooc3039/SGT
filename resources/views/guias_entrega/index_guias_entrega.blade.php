@@ -21,7 +21,16 @@
       <div class="panel-body">
         <div class="row">
           <div class="col-md-12">
-            <table class="table table-striped table-advance table-hover">
+
+            <div class="row" style="margin-bottom: 10px">
+              <div class="col-md-8">
+              </div>
+              <div class="col-md-4">
+                <input type="text" id="pesq" class="form-control" placeholder="Pesquisa...">
+              </div>
+            </div>
+
+            <table class="mostrar table table-striped table-advance table-hover">
               <thead>
                 <tr>
                   <th><i class="icon_profile"></i>Código da Guia </th>

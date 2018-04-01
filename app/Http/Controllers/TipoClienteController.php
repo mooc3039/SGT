@@ -22,7 +22,7 @@ class TipoClienteController extends Controller
     public function index()
     {
         //
-        $tipos_cliente = $this->tipo_cliente->orderBy('tipo_cliente', 'asc')->paginate(10);
+        $tipos_cliente = $this->tipo_cliente->get();
         return view('parametrizacao.cliente.tipos_cliente.index_tipos_cliente', compact('tipos_cliente'));    
     }
 

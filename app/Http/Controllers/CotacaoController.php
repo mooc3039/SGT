@@ -14,6 +14,11 @@ use App\User;
 use App\Model\Cotacao;
 use App\Model\TipoCotacao;
 use App\Model\ItenCotacao;
+use App\Model\Empresa;
+use App\Model\Endereco;
+use App\Model\Telefone;
+use App\Model\Conta;
+use App\Model\Email;
 use PDF;
 
 class CotacaoController extends Controller
@@ -161,9 +166,10 @@ class CotacaoController extends Controller
   public function show($id)
   {
     //
+    $empresa = Empresa::with('enderecos', 'telefones', 'emails', 'contas')->findOrFail(1);
     $cotacao = $this->cotacao->with('itensCotacao.produto', 'cliente')->find($id); // Tras a cotacao. Tras os Itens da cotacao e dentro da relacao Itenscotacao eh possivel pegar a relacao Prodtuo atraves do dot ou ponto. NOTA: a relacao produto nao esta na cotacao e sim na itenscotacao, mas eh possivel ter os seus dados partido da cotacao como se pode ver.
 
-    return view('cotacoes.show_cotacao', compact('cotacao'));
+    return view('cotacoes.show_cotacao', compact('cotacao', 'empresa'));
   }
 
   public function showRelatorio($id)
@@ -185,10 +191,11 @@ class CotacaoController extends Controller
   public function edit($id)
   {
     //
-    $produtos = DB::table('produtos')->pluck('descricao', 'id')->all();
+   $empresa = Empresa::with('enderecos', 'telefones', 'emails', 'contas')->findOrFail(1);
+   $produtos = DB::table('produtos')->pluck('descricao', 'id')->all();
     $cotacao = $this->cotacao->with('itensCotacao.produto', 'cliente')->find($id); // Tras a cotacao. Tras os Itens da cotacao e dentro da relacao Itenscotacao eh possivel pegar a relacao Prodtuo atraves do dot ou ponto. NOTA: a relacao produto nao esta na cotacao e sim na itenscotacao, mas eh possivel ter os seus dados partido da cotacao como se pode ver.
 
-    return view('cotacoes.itens_cotacao.create_edit_itens_cotacao', compact('cotacao', 'produtos'));
+    return view('cotacoes.itens_cotacao.create_edit_itens_cotacao', compact('cotacao', 'produtos', 'empresa'));
 
   }
 
@@ -217,25 +224,27 @@ class CotacaoController extends Controller
     //
     $cotacao = $this->cotacao->findOrFail($id);
 
+    DB::beginTransaction();
     try {
 
-      if($cotacao->delete()){
+      if($cotacao->itensCotacao()->where('cotacao_id', $id)->delete()){
+
+        $cotacao->delete();
+        DB::commit();
 
         $sucess = 'Cotação removida com sucesso!';
         return redirect()->route('cotacao.index')->with('success', $sucess);
 
       }else{
-
+        DB::rollback();
         $error = 'Erro ao remover a Cotação!';
         return redirect()->back()->with('error', $error);
       }
 
-
     } catch (QueryException $e) {
-
+      DB::rollback();
       $error = "Erro ao remover Cotação. Possivelmente Registo em uso. Necessária a intervenção do Administrador da Base de Dados.!";
       return redirect()->back()->with('error', $error);
-
     }
   }
 

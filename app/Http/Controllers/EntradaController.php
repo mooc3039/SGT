@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Database\QueryException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use App\Http\Requests\PagamentoEntradaStoreUpdateFormRequest;
 use App\Http\Requests\EntradaStoreUpdateFormRequest;
+use App\Model\Empresa;
 use App\Model\Produto;
 use App\Model\Entrada;
 use App\Model\ItenEntrada;
@@ -206,8 +208,9 @@ class EntradaController extends Controller
     {
         //
       $entrada = $this->entrada->with('itensEntrada.produto', 'user')->find($id); 
+      $empresa = Empresa::with('enderecos', 'telefones', 'emails', 'contas')->findOrFail(1);
 
-      return view('entradas.show_entrada', compact('entrada'));
+      return view('entradas.show_entrada', compact('entrada', 'empresa'));
     }
     public function showRelatorio($id)
     {
@@ -231,8 +234,9 @@ class EntradaController extends Controller
       $formas_pagamento = DB::table('forma_pagamentos')->pluck('descricao', 'id')->all();
       $entrada = $this->entrada->with('itensEntrada.produto', 'formaPagamento', 'fornecedor')->find($id); 
         // Tras a entrada. Tras os Itens da entrada e dentro da relacao Itensentrada eh possivel pegar a relacao Prodtuo atraves do dot ou ponto. NOTA: a relacao produto nao esta na entrada e sim na itensentrada, mas eh possivel ter os seus dados partido da entrada como se pode ver.
+      $empresa = Empresa::with('enderecos', 'telefones', 'emails', 'contas')->findOrFail(1);
 
-      return view('entradas.itens_entrada.create_edit_itens_entrada', compact('produtos', 'entrada', 'formas_pagamento'));
+      return view('entradas.itens_entrada.create_edit_itens_entrada', compact('produtos', 'entrada', 'formas_pagamento', 'empresa'));
     }
 
     /**
@@ -256,24 +260,28 @@ class EntradaController extends Controller
     public function destroy($id)
     {
         //
-      $entrada = $this->entrada->find($id);
+      $entrada = $this->entrada->findOrFail($id);
 
+      DB::beginTransaction();
       try {
 
-        if($entrada->delete()){
+        if($entrada->itensEntrada()->where('entrada_id', $id)->delete()){
+
+          $entrada->pagamentosEntrada()->where('entrada_id', $id)->delete();
+          $entrada->delete();
+          DB::commit();
 
           $sucess = 'Entrada removida com sucesso!';
           return redirect()->route('entrada.index')->with('success', $sucess);
 
         }else{
-
+          DB::rollback();
           $error = 'Erro ao remover a Entrada!';
           return redirect()->back()->with('error', $error);
         }
 
-
       } catch (QueryException $e) {
-
+        DB::rollback();
         $error = "Erro ao remover Entrada. Possivelmente Registo em uso. Necessária a intervenção do Administrador da Base de Dados.!";
         return redirect()->back()->with('error', $error);
 

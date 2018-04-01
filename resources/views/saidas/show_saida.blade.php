@@ -12,10 +12,7 @@
 							<div class="panel panel-default">
 								
 								<div class="panel-body">
-									Papelaria e Serviços Agenda<hr>
-									Emal: papelaria@gmail.com<br>
-									Telefone: +218293503 / +258840294826<br>
-									Endereco: Av. 24 de Julho<br>
+									@include('layouts.empresa.dados_empresa')
 								</div>
 							</div>
 
@@ -129,8 +126,7 @@
 									Datos bancarios
 								</div>
 								<div class="panel-body">
-									Conta BCI (MZN) 54169166 10 1<br>
-									Conta BIM (MZN) 5299/07<br>
+									@include('layouts.empresa.dados_bancarios_empresa')
 								</div>
 							</div>
 

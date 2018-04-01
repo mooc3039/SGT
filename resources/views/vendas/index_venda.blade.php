@@ -13,38 +13,41 @@
 <div class="row">
   <div class="col-lg-12">
     
-<section class="panel panel-default">
+    <section class="panel panel-default">
       <!-- <header class="panel-heading">
         Vendas
       </header> -->
       <div class="panel-body">
         <div class="row" style="margin-bottom: 10px">
-          <div class="col-md-12">
+          <div class="col-md-8">
             <a href="{{ route('venda.create') }}" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i></a>
+          </div>
+          <div class="col-md-4">
+            <input type="text" id="pesq" class="form-control" placeholder="Pesquisa...">
           </div>
         </div>
         <div class="row">
           <div class="col-md-12">
-            <table class="table table-striped table-advance table-hover">
+            <table class="mostrar table table-striped table-advance table-hover">
               <thead>
                 <tr>
-                  <th><i class="icon_profile"></i>Código da Venda </th>
-                  <th><i class="icon_mobile"></i> Data de Emissão </th>
-                  <th><i class="icon_mail_alt"></i> Cliente </th>
-                  <th><i class="icon_mail_alt"></i> Valor Total </th>
-                  <th><i class="icon_mail_alt"></i> Pagamento </th>
+                  <th class="text-right"><i class="icon_profile"></i>Código da Venda </th>
+                  <th class="text-right"><i class="icon_mobile"></i> Data de Emissão </th>
+                  <th class="text-right"><i class="icon_mail_alt"></i> Cliente </th>
+                  <th class="text-right"><i class="icon_mail_alt"></i> Valor Total </th>
+                  <th class="text-right"><i class="icon_mail_alt"></i> Pagamento </th>
                   <th class="text-right"><i class="icon_cogs"></i> Operações </th>
                 </tr>
               </thead>
               <tbody>
                 @foreach($vendas as $venda)
                 <tr>
-                  <td> {{$venda->id}} </td>
-                  <td> {{date('d-m-Y', strtotime($venda->created_at))}} </td>
-                  <td> {{$venda->cliente->nome}} </td>
-                  <td> {{$venda->valor_iva}} </td>
+                  <td class="text-right"> {{$venda->id}} </td>
+                  <td class="text-right"> {{date('d-m-Y', strtotime($venda->created_at))}} </td>
+                  <td class="text-right"> {{$venda->cliente->nome}} </td>
+                  <td class="text-right"> {{$venda->valor_iva}} </td>
                   {{ Form::open(['route'=>['venda.destroy', $venda->id], 'method'=>'DELETE']) }}
-                  <td> 
+                  <td class="text-right"> 
                     <!-- <button type="button" data-toggle="modal" data-target="#modalPagamentoVenda" data-venda_id={{ $venda->id }} data-valor_total={{ $venda->valor_total }} data-valor_pago={{ $venda->valor_pago }} data-troco={{ $venda->troco }} data-forma_pagamento_id={{ $venda->forma_pagamento_id }} data-nr_documento_forma_pagamento={{ $venda->nr_documento_forma_pagamento }} -->
                       <a href="{{route('createPagamentoVenda', $venda->id)}}"
 
@@ -93,7 +96,7 @@
                   <td class="text-right">
 
                     <div class="btn-group btn-group-sm">
-                      <a class="btn btn-primary" href="{{route('venda.show', $venda->id)}}"><i class="fa fa-eye"></i></a>
+                      <a class="btn btn-primary" href="{{route('venda.show', $venda->id)}}"><i class="fa fa-eye" id="btnDelete"></i></a>
                       <a class="btn btn-success" href="{{route('venda.edit', $venda->id)}}"
                         @if($venda->pago==1)
                         {{ 'disabled' }}
@@ -117,7 +120,7 @@
       <div class="panel-footer">
         <div class="row">
           <div class="col-md-6">
-            {{ $vendas->links() }}
+            <!-- {{ $vendas->links() }} -->
           </div>
         </div>
       </div>
@@ -218,6 +221,17 @@
 @section('script')
 
 <script type="text/javascript">
+
+  $(document).ready(function() {
+
+  $('#btnDelete').click(function() {
+    bootbox.confirm("Are you sure want to delete?", function(result) {
+      alert("Confirm result: " + result);
+    });
+  });
+});
+
+
   $(document).ready(function(){
     $('.submit_iten').on('click',function(){
       $(".wait").css("display", "block");

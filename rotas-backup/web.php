@@ -44,12 +44,10 @@ Route::group(['middleware'=>['authen']],function(){
   // CADASTRAR A COTACAO COM ajax => Malache
   Route::post('cotacao/cotacao_store', 'CotacaoController@store');
   Route::get('cotacao/index', 'CotacaoController@index');
-  Route::get('cotaca/dados', 'CotacaoController@get_datatable');
-  // Route::get('/facturas/preco', ['as'=>'findPrice','uses'=>'FacturacaoController@findPrice']);
-  Route::get('/produto/find', ['as'=>'findPrice','uses'=>'ProdutoController@findPrice']);
+  Route::get('/facturas/preco', ['as'=>'findPrice','uses'=>'FacturacaoController@findPrice']);
 
   //Saídas
-  
+  Route::resource('/saida', 'SaidaController');
   Route::resource('/iten_saida', 'ItenSaidaController');
   // CADASTRAR A SAIDA COM ajax => Malache
   Route::post('saida/saida_store', 'SaidaController@store');
@@ -59,7 +57,6 @@ Route::group(['middleware'=>['authen']],function(){
    Route::get('/saida/saida_pubblico_create/', 'SaidaController@saidaPublicoCreate')->name('saidaPublicoCreate');
    Route::get('/saida/saida_concurso_create/', 'SaidaController@saidaConcursoCreate')->name('saidaConcursoCreate');
    Route::post('/saida/concurso/dados', 'SaidaController@findConcursoDados')->name('findConcursoDados');
-   Route::resource('/saida', 'SaidaController');
 
    //Rotas get para gerar impressao em formato pdf => Malache
    Route::get('/saida/pdf/{id}', ['as'=>'saida_pdf', 'uses'=>'SaidaController@report']);
@@ -92,7 +89,6 @@ Route::group(['middleware'=>['authen']],function(){
 
   // GERIR PAGAMENTO DA ENTRADA => Malache
   Route::post('/entrada/pagamento', 'EntradaController@pagamentoEntrada')->name('pagamentoEntrada');
-  Route::get('/entrada/create_pagamento/{id}', 'EntradaController@createPagamentoEntrada')->name('createPagamentoEntrada');
 
   // GERIR PAGAMENTO DA SAIDA => Malache
   Route::post('/saida/pagamento', 'SaidaController@pagamentoSaida')->name('pagamentoSaida');
@@ -106,9 +102,6 @@ Route::group(['middleware'=>['authen']],function(){
   //testando datatable
   Route::get('/table', 'DatableController@index');
   Route::get('/table/dados', 'DatableController@get_datatable');
-  
-  Route::resource('/novouser', 'UsuarioController');
- // Route::get('/novo/usuario', ['as'=>'novouser','uses'=>'UsuarioController@index']);
    
 });
 
@@ -159,16 +152,44 @@ Route::group(['middleware'=>['authen','roles'],'roles'=>['Administrador']],funct
   Route::post('/cliente/cliente_salvar_rback', 'ClienteController@storeRedirectBack')->name('cliente_salvar_rback');
 
 
+  // CADASTRAR A SAIDA COM ajax => Malache
+  // Route::post('saida/saida_store', 'SaidaController@store');
+  // Route::get('saida/index', 'SaidaController@index');
+
+  // SAIDAS, Privado, Publico, Concurso
+  Route::get('/saida/saida_pubblico_create/', 'SaidaController@saidaPublicoCreate')->name('saidaPublicoCreate');
+  Route::get('/saida/saida_concurso_create/', 'SaidaController@saidaConcursoCreate')->name('saidaConcursoCreate');
+  Route::post('/saida/concurso/dados', 'SaidaController@findConcursoDados')->name('findConcursoDados');
+
+  // CRIAR GUIA DE ENTREGA => Malache
+  Route::get('/guia_entrega/create_guia/{id}', 'GuiaEntregaController@createGuia')->name('create_guia');
+  Route::get('/guia_entrega/show_guia_entrega/{id}', 'GuiaEntregaController@showGuiasEntrega')->name('show_guia_entrega');
+  Route::get('/guia_entrega/{id}/relatorio', ['as'=>'guiaRelatorio','uses'=>'GuiaEntregaController@showRelatorio']);//TODO --para imprimir as guias de entrega
+  // GERIR PAGAMENTO DA VENDA => Malache
+  Route::get('/venda/create_pagamento/{id}', 'VendaController@createPagamentoVenda')->name('createPagamentoVenda');
+   Route::post('/venda/pagamento', 'VendaController@pagamentoVenda')->name('pagamentoVenda');
+
+  // GERIR PAGAMENTO DO CONCURSO => Malache
+  Route::get('/concurso/create_pagamento/{id}', 'ConcursoController@createPagamentoConcurso')->name('createPagamentoConcurso');
+  Route::post('/concurso/pagamento', 'ConcursoController@pagamentoConcurso')->name('pagamentoConcurso');
+
+  // GERIR PAGAMENTO DA ENTRADA => Malache
+  Route::post('/entrada/pagamento', 'EntradaController@pagamentoEntrada')->name('pagamentoEntrada');
+  Route::get('/entrada/create_pagamento/{id}', 'EntradaController@createPagamentoEntrada')->name('createPagamentoEntrada');
+
+  // GERIR PAGAMENTO DA SAIDA => Malache
+  Route::post('/saida/pagamento', 'SaidaController@pagamentoSaida')->name('pagamentoSaida');
+  Route::get('/saida/create_pagamento/{id}', 'SaidaController@createPagamentoSaida')->name('createPagamentoSaida');
 
 
-  
+  Route::get('/produto/find', ['as'=>'findPrice','uses'=>'ProdutoController@findPrice']);
+
+
 
 
   //Rotas de operações
   Route::resource('/fornecedores', 'fornecedorController');
   Route::resource('/produtos', 'produtoController');
-  Route::get('/produ', 'produtoController@index');
-  Route::get('/produ/dados', 'produtoController@get_datatable');
   Route::resource('/categoria', 'CategoriaController');
   Route::resource('/cliente', 'ClienteController');
   Route::resource('/tipo_cliente', 'TipoClienteController');

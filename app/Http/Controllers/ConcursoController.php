@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\ConcursoStoreUpdateFormRequest;
 use App\Http\Requests\PagamentoConcursoStoreUpdateFormRequest;
 use App\User;
+use App\Model\Empresa;
 use App\Model\Concurso;
 use App\Model\TipoCliente;
 use App\Model\Itenconcurso;
@@ -222,6 +223,10 @@ class ConcursoController extends Controller
     public function show($id)
     {
         //
+      $concurso = $this->concurso->with('itensConcurso.produto', 'cliente')->find($id);
+      $empresa = Empresa::with('enderecos', 'telefones', 'emails', 'contas')->findOrFail(1); 
+
+      return view('concursos.show_concurso', compact('concurso', 'empresa'));
     }
 
     /**
