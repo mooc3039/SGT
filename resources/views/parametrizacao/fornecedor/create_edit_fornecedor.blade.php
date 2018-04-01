@@ -17,7 +17,7 @@
       <header class="panel-heading">
         Novo Fornecedor
       </header>
-
+ 
       @if(isset($fornecedor))
 
       {{ Form::model($fornecedor, ['route' => ['fornecedores.update', $fornecedor->id], 'method' => 'PUT']) }}

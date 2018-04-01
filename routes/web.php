@@ -113,18 +113,19 @@ Route::group(['middleware'=>['authen']],function(){
   Route::get('/table', 'DatableController@index');
   Route::get('/table/dados', 'DatableController@get_datatable');
 
-  Route::get('/usuarios/inactivos', ['as'=>'usuarios_inactivos', 'uses'=>'UsuarioController@inactivos']);
-  Route::get('/usuarios/activar/{id}', ['as'=>'usuarios_activar', 'uses'=>'UsuarioController@activar']);
-  Route::get('/usuarios/desactivar/{id}', ['as'=>'usuarios_desactivar', 'uses'=>'UsuarioController@desactivar']);
-  Route::get('/usuarios/lista', ['as'=>'indexUsuario','uses'=>'UsuarioController@index']);
-  Route::resource('/usuarios', 'UsuarioController');
- 
+  
 
 });
 
 Route::group(['middleware'=>['authen','roles'],'roles'=>['Administrador']],function(){
 
   //para administrador
+  Route::get('/usuarios/inactivos', ['as'=>'usuarios_inactivos', 'uses'=>'UsuarioController@inactivos']);
+  Route::get('/usuarios/activar/{id}', ['as'=>'usuarios_activar', 'uses'=>'UsuarioController@activar']);
+  Route::get('/usuarios/desactivar/{id}', ['as'=>'usuarios_desactivar', 'uses'=>'UsuarioController@desactivar']);
+  Route::get('/usuarios/lista', ['as'=>'indexUsuario','uses'=>'UsuarioController@index']);
+  Route::resource('/usuarios', 'UsuarioController');
+ 
 
   Route::get('/fornecedores/inactivos', ['as'=>'fornecedores_inactivos', 'uses'=>'fornecedorController@inactivos']);
 

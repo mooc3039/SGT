@@ -27,7 +27,7 @@ class fornecedorController extends Controller
      */
     public function index()
     {
-      //  $fornecedores = Fornecedor::all();
+      //  $fornecedores = Fornecedor::all(); 
       $fornecedores = Fornecedor::where('activo', 1)->orderBy('nome','asc')->get();
       return view('parametrizacao.fornecedor.lista')->with('fornecedores',$fornecedores);
 

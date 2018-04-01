@@ -26,7 +26,7 @@ class FornecedorStoreUpdateFormRequest extends FormRequest
         $id = $this->get('fornecedor_id');
 
         return [
-            //
+            // 
             'nome' => 'required',
             'telefone' => 'required',
             'email' => 'unique:fornecedors,email,'.$id.',id',

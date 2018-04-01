@@ -23,7 +23,7 @@
     <!-- notificatoin dropdown start-->
     <ul class="nav pull-right top-menu">
 
-      <!-- task notificatoin start -->
+      <!-- task notificatoin start 
       <li id="task_notificatoin_bar" class="dropdown">
         <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                         <i class="icon-task-l"></i>
@@ -107,8 +107,8 @@
           </li>
         </ul>
       </li>
-      <!-- task notificatoin end -->
-      <!-- inbox notificatoin start-->
+       task notificatoin end -->
+      <!-- inbox notificatoin start
       <li id="mail_notificatoin_bar" class="dropdown">
         <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                         <i class="icon-envelope-l"></i>
@@ -172,8 +172,8 @@
           </li>
         </ul>
       </li>
-      <!-- inbox notificatoin end -->
-      <!-- alert notification start-->
+       inbox notificatoin end -->
+      <!-- alert notification start
       <li id="alert_notificatoin_bar" class="dropdown">
         <a data-toggle="dropdown" class="dropdown-toggle" href="#">
 
@@ -218,7 +218,7 @@
           </li>
         </ul>
       </li>
-      <!-- alert notification end-->
+       alert notification end-->
       <!-- user login dropdown start-->
       <li class="dropdown">
         <a data-toggle="dropdown" class="dropdown-toggle" href="#">
@@ -233,23 +233,12 @@
           <li class="eborder-top">
             <a href="{{ url('/dashboard/'.Auth::user()->name.'/profile')}}"><i class="icon_profile"></i> Meu Perfíl</a>
           </li>
-          <li>
-            <a href="#"><i class="icon_mail_alt"></i> My Inbox</a>
-          </li>
-          <li>
-            <a href="#"><i class="icon_clock_alt"></i> Timeline</a>
-          </li>
-          <li>
-            <a href="#"><i class="icon_chat_alt"></i> Chats</a>
-          </li>
+          
           <li>
             <a href="{{ route('logout') }}"><i class="icon_key_alt"></i> Log Out</a>
           </li>
           <li>
-            <a href="documentation.html"><i class="icon_key_alt"></i> Documentation</a>
-          </li>
-          <li>
-            <a href="documentation.html"><i class="icon_key_alt"></i> Documentation</a>
+            <a href="#"><i class="icon_key_alt"></i> Documentation</a>
           </li>
         </ul>
       </li>

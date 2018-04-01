@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\User;
 use App\Role;
+use App\Http\Requests\UsuarioRequest;
 
 class UsuarioController extends Controller
 {
@@ -35,8 +36,8 @@ class UsuarioController extends Controller
      */
     public function create()
     {
-        $usuario = User::all();
-        return view('parametrizacao.usuarios.usuario', compact('usuario')); 
+        $papel =Role::all();
+        return view('parametrizacao.usuarios.usuario', compact('papel'));
     }
 
     /**
@@ -45,9 +46,22 @@ class UsuarioController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(UsuarioRequest $request)
     {
-        //
+        $dataForm = $request->all();
+
+      $cadastro = $this->usuario->create($dataForm);
+      
+      if($cadastro){
+
+            $success = "Usuário cadastrado com sucesso.";
+            return redirect()->route('usuarios.index')->with('success', $success);
+        }
+        else{
+
+            $error = "Não foi possível cadastrar o Usuário.";
+            return redirect()->route('usuarios.index')->with('error', $error);
+        }
     }
 
     /**
@@ -69,7 +83,9 @@ class UsuarioController extends Controller
      */
     public function edit($id)
     {
-        //
+        $usuario = User::find($id);
+        $papel =Role::all();
+      return view('parametrizacao.usuarios.usuario', compact('usuario','papel'));
     }
 
     /**
@@ -79,9 +95,24 @@ class UsuarioController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UsuarioRequest $request, $id)
     {
-        //
+        $dataForm = $request->all();
+
+        $usuario = $this->usuario->find($id);
+  
+        $update = $usuario->update($dataForm);
+  
+        if($update){
+  
+                  $success = "Usuário actualizado com sucesso.";
+                  return redirect()->route('usuarios.index')->with('success', $success);
+              }
+              else{
+  
+                  $error = "Não foi possível actualizar o Usuário.";
+                  return redirect()->route('usuarios.index')->with('error', $error);
+              }
     }
 
     /**
@@ -92,7 +123,9 @@ class UsuarioController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $user = User::find($id);
+        $user->delete();
+        return redirect('/usuarios')->with('success', 'Usuario eliminado com sucesso!');
     }
         public function inactivos(){
 
@@ -116,4 +149,25 @@ class UsuarioController extends Controller
             return redirect()->back();
             
           }
+
+          public function storeRedirectBack(UsuarioRequest $request){
+
+            $usuario = $this->usuario->all();
+    
+            $dataForm = $request->all();
+    
+            $cadastro = $this->usuario->create($dataForm);
+    
+            if($cadastro){
+    
+                $success = "Usuário cadastrado com sucesso.";
+                return redirect()->back()->with('success', $success);
+            }
+            else{
+    
+                $error = "Não foi possível cadastrar o Usuário.";
+                return redirect()->back()->with('error', $error);
+            }
+    
+        }
 }
