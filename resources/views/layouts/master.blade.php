@@ -16,10 +16,13 @@
 
 
   {!!Html::style('css/sgt.css')!!}
- 
-  {!!Html::style('/datatable/datatables.bootstrap.css')!!}
+  
+  <!-- {!!Html::style('/datatable/datatables.bootstrap.css')!!} -->
   <!-- {!!Html::style('/datatable/bootstrap.min.css')!!} -->
+  
   {!!Html::style('css/bootstrap.min.css')!!}<!-- versão 3.3.7 -->
+  <!-- {!!Html::style('css/jquery.dataTables.min.css')!!}  -->
+  {!!Html::style('css/dataTables.bootstrap.min.css')!!} <!-- DataTables Funcionando 01-04-2018 -->
   {!!Html::style('css/bootstrap-theme.min.css')!!}
   {!!Html::style('css/elegant-icons-style.css')!!}
   {!!Html::style('css/font-awesome.min.css')!!}
@@ -70,17 +73,20 @@
 
   {!!Html::script('js/jquery.js')!!}
   {!!Html::script('js/jquery-ui-1.10.4.min.js')!!}
+  {!!Html::script('js/jquery.dataTables.min.js')!!} <!-- DataTables Funcionando 01-04-2018 -->
+  {!!Html::script('js/dataTables.bootstrap.min.js')!!} <!-- DataTables Funcionando 01-04-2018 -->
+
   
-  {!!Html::script('/datatable/jquery.min.js')!!}  <!--jQuery v2.1.3 -->
- <!--  {!!Html::script('js/jquery-3.2.1.min.js')!!} -->
+  <!-- {!!Html::script('/datatable/jquery.min.js')!!} -->  <!--jQuery v2.1.3 -->
+  <!--  {!!Html::script('js/jquery-3.2.1.min.js')!!} -->
   {!!Html::script('js/jquery-ui-1.9.2.custom.min.js')!!}
   {!!Html::script('js/bootstrap.min.js')!!} <!-- versão 3.3.7  -->
 
-    
- <!--    {!!Html::script('/datatable/bootstrap.min.js')!!}  --> <!-- Bootstrap v3.3.4 -->
+  
+  <!--    {!!Html::script('/datatable/bootstrap.min.js')!!}  --> <!-- Bootstrap v3.3.4 -->
 
-  {!!Html::script('/datatable/jquery.dataTables.min.js')!!}<!-- DataTables 1.10.9 -->
-  {!!Html::script('/datatable/datatables.bootstrap.js')!!} <!-- DataTables 1.10  -->
+  <!-- {!!Html::script('/datatable/jquery.dataTables.min.js')!!} --><!-- DataTables 1.10.9 -->
+  <!-- {!!Html::script('/datatable/datatables.bootstrap.js')!!} --> <!-- DataTables 1.10  -->
 
   {!!Html::script('js/jquery.scrollTo.min.js')!!}
   {!!Html::script('js/jquery.nicescroll.js')!!}
@@ -118,29 +124,61 @@
 
 
   <section id="container" class="">
+    <!-- <table class="mostrar">
+    <thead>
+      <th>Nome</th>
+      <th>Apelido</th>
+      <th>Mae</th>
+      <th>Pai</th>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Osorio</td>
+        <td>Malache</td>
+        <td>Gilda</td>
+        <td>Malace</td>
+      </tr>
+      <tr>
+        <td>Leo</td>
+        <td>Malache</td>
+        <td>Gilda</td>
+        <td>Malace</td>
+      </tr>
+    </tbody>
+  </table> -->
 
-    @include('layouts.processing.processing')
-    @include('layouts.header.header')
-    @include('layouts.sidebars.sidebar')
+  @include('layouts.processing.processing')
+  @include('layouts.header.header')
+  @include('layouts.sidebars.sidebar')
 
-    <section id="main-content">
-      <div class="wrapper">
+  <section id="main-content">
+    <div class="wrapper">
 
-        @include('layouts.validation.alertas')
-        @yield('content')
+      @include('layouts.validation.alertas')
+      @yield('content')
 
-      </div>
-    </section>
-
+    </div>
   </section>
-  @yield('script')
-  <script>
 
-    /** SEARCH SELECT */
-    $(document).ready( function() {
-      $('.select_search').select2();
+</section>
+@yield('script')
+<script>
+  $(document).ready(function() {
+    var oTable = $('.mostrar').DataTable( {
+      "pagingType": "full_numbers",
+      "dom": 'rtpl'
     });
-    /* FIM SEARCH SELECT */
+
+    $('#pesq').keyup(function(){
+      oTable.search($(this).val()).draw();
+    });
+  } );
+
+  /** SEARCH SELECT */
+  $(document).ready( function() {
+    $('.select_search').select2();
+  });
+  /* FIM SEARCH SELECT */
 
       //====
       $(document).ready(function(){

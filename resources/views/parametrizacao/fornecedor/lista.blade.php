@@ -24,18 +24,22 @@
       
       <div class="panel-body">
         <div class="row" style="margin-bottom: 10px">
-          <div class="col-md-12">
+          <div class="col-md-8">
             <a href="{{ route('fornecedores.create') }}" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i></a>
           </div>
+          <div class="col-md-4">
+                <input type="text" id="pesq" class="form-control" placeholder="Pesquisa...">
+              </div>
         </div>
         
         <div class="row">
           <div class="col-md-12">
-            <table class="table table-striped table-advance table-hover">
+            <table class="mostrar table table-striped table-advance table-hover">
           
           <thead>
             <tr>
               <th><i class="icon_profile"></i>Nome do Fornecedor</th>
+              <th><i class="icon_profile"></i>NUIT</th>
               <th><i class="icon_mobile"></i> Endereço</th>
               <th><i class="icon_mail_alt"></i> Email</th>
               <th><i class="icon_pin_alt"></i> Telefone</th>
@@ -47,10 +51,10 @@
 
           <tbody>
             
-            @if(count($fornecedores) > 0)
             @foreach($fornecedores as $fornecedor)
             <tr>
               <td> {{$fornecedor->nome}}</td>
+              <td> {{$fornecedor->nuit}}</td>
               <td>{{$fornecedor->endereco}}</td>
               <td>{{$fornecedor->email}}</td>
               <td>{{$fornecedor->telefone}}</td>
@@ -78,10 +82,6 @@
             
           </tr>
           @endforeach
-
-          @else
-          <p>Não Existe nenhum Fornecedor Parametrizado</p>
-          @endif
         </tbody>
       </table>
           </div>
@@ -95,7 +95,6 @@
 
       <div class="row">
         <div class="col-md-6 text-left">
-          {{ $fornecedores->links() }}
         </div>
         <div class="col-md-6 text-right">
 

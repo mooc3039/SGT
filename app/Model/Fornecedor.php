@@ -15,7 +15,8 @@ class Fornecedor extends Model
 		'endereco',
 		'email',
 		'rubrica',
-		'activo'
+		'activo',
+		'nuit'
 	];
 	public $timestamps = false;
 

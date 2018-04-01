@@ -12,10 +12,7 @@
 							<div class="panel panel-default">
 								
 								<div class="panel-body">
-									Papelaria e Serviços Agenda<hr>
-									Emal: papelaria@gmail.com<br>
-									Telefone: +218293503 / +258840294826<br>
-									Endereco: Av. 24 de Julho<br>
+									@include('layouts.empresa.dados_empresa')
 								</div>
 							</div>
 
@@ -49,7 +46,7 @@
 					</div>
 					<div class="row">
 						<div class="col-md-6"> MAPUTO</div>
-						<div class="col-md-6 text-right"> Data: {{$saida->data}} </div>
+						<div class="col-md-6 text-right"> Data: {{date('d-m-Y', strtotime($saida->data))}}  </div>
 					</div>
 				</div>
 
@@ -98,34 +95,21 @@
 						</div>
 
 						<div class="col-md-6 text-right">
-
 							<table class="pull-right">
 								<tr>
-									<td>
-										Sub-Total:
-									</td>
-									<td>
-										{{$saida->valor_total}}
-									</td>
+									<td>Sub-Total:</td>
+									<td style="width: 10px"></td>
+									<td>{{$saida->valor_total}}</td>
 								</tr>
-
-
 								<tr>
-									<td>
-										IVA:
-									</td>
-									<td>
-										17%
-									</td>
+									<td>IVA(17%):</td>
+									<td></td>
+									<td>{{(($saida->valor_total)*17)/100}}</td>
 								</tr>
-
 								<tr>
-									<td>
-										Valor Total:
-									</td>
-									<td>
-										<b>{{$saida->valor_iva}}</b>
-									</td>
+									<td>Valor Total:</td>
+									<td></td>
+									<td><b>{{$saida->valor_iva}}</b></td>
 								</tr>
 							</table>
 
@@ -142,8 +126,7 @@
 									Datos bancarios
 								</div>
 								<div class="panel-body">
-									Conta BCI (MZN) 54169166 10 1<br>
-									Conta BIM (MZN) 5299/07<br>
+									@include('layouts.empresa.dados_bancarios_empresa')
 								</div>
 							</div>
 

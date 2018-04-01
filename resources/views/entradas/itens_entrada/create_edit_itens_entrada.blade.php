@@ -12,10 +12,7 @@
               <div class="panel panel-default">
 
                 <div class="panel-body">
-                  Papelaria e Serviços Agenda<hr>
-                  Emal: papelaria@gmail.com<br>
-                  Telefone: +218293503 / +258840294826<br>
-                  Endereco: Av. 24 de Julho<br>
+                  @include('layouts.empresa.dados_empresa')
                 </div>
               </div>
 
@@ -59,11 +56,14 @@
           <div class="row">
             <div class="col-md-12">
               <div class="row" >
-                <div class="col-md-12" style="margin-bottom: 10px">
+                <div class="col-md-8" style="margin-bottom: 10px">
                   <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modalInserirItem" data-new_valor_total={{ $entrada->valor_total }} data-new_entrada_id={{ $entrada->id }}><i class="fa fa-plus"></i></button>
                 </div>
+                <div class="col-md-4">
+                  <input type="text" id="pesq" class="form-control" placeholder="Pesquisa...">
+                </div>
               </div>
-              <table class="table table-striped table-advance table-hover">
+              <table class="mostrar table table-striped table-advance table-hover">
                 <thead>
                   <tr>
                     <th><i class="icon_mobile"></i> Designação </th>
@@ -113,88 +113,88 @@
             <div class="col-md-6 text-right">
 
               <table class="pull-right">
-                <tr>
-                  <td> Valor Total:</td>
-                  <td><b>{{$entrada->valor_total}}</b></td>
-                </tr>
-              </table>
-
-            </div>
+               <tr>
+                <td>Valor Total:</td>
+                <td style="width: 10px"></td>
+                <td><b>{{$entrada->valor_total}}</b></td>
+              </tr>
+            </table>
 
           </div>
-          <br><br>
-          <div class="row">
 
-            <div class="col-md-6">
+        </div>
+        <br><br>
+        <div class="row">
 
-              <div class="panel panel-info">
-                <div class="panel-heading">
-                  Dados bancarios
-                </div>
-                <div class="panel-body">
-                  Conta BCI (MZN) 54169166 10 1<br>
-                  Conta BIM (MZN) 5299/07<br>
-                </div>
+          <div class="col-md-6">
+
+            <div class="panel panel-info">
+              <div class="panel-heading">
+                Dados bancarios
               </div>
-
-            </div>
-
-            <div class="col-md-6">
-
-
-
+              <div class="panel-body">
+                @include('layouts.empresa.dados_bancarios_empresa')
+              </div>
             </div>
 
           </div>
-          <div class="row">
-            <div class="col-md-6"><a href="" class="btn btn-primary">Imprimir entrada</a>
 
-            </div>
-            <div class="col-md-6 text-right"><a href="{{route('entrada.index')}}" class="btn btn-warning">Voltar</a>
+          <div class="col-md-6">
 
-            </div>
+
+
+          </div>
+
+        </div>
+        <div class="row">
+          <div class="col-md-6"><a href="" class="btn btn-primary">Imprimir entrada</a>
+
+          </div>
+          <div class="col-md-6 text-right"><a href="{{route('entrada.index')}}" class="btn btn-warning">Voltar</a>
+
           </div>
         </div>
-
-
       </div>
 
 
-
     </div>
+
+
+
   </div>
-  <!-- </div> -->
+</div>
+<!-- </div> -->
 
-  <!-- MODAL INSERIR ITEM -->
-  @include('entradas.itens_entrada.modals.frm_modal_inserir_iten_entrada')
-  <!-- FIM MODAL INSERIR ITEM -->
+<!-- MODAL INSERIR ITEM -->
+@include('entradas.itens_entrada.modals.frm_modal_inserir_iten_entrada')
+<!-- FIM MODAL INSERIR ITEM -->
 
-  <!-- MODAL EDITAR ITEM -->
-  @include('entradas.itens_entrada.modals.frm_modal_editar_iten_entrada')
-  <!-- FIM MODAL EDITAR ITEM -->
+<!-- MODAL EDITAR ITEM -->
+@include('entradas.itens_entrada.modals.frm_modal_editar_iten_entrada')
+<!-- FIM MODAL EDITAR ITEM -->
 
 
-  @endsection
+@endsection
 
-  @section('script')
-  <script>
-    $(document).ready(function(){
-      $('.submit_iten').on('click',function(){
-        $(".wait").css("display", "block");
-      });
+@section('script')
+<script>
+  $(document).ready(function(){
+    $('.submit_iten').on('click',function(){
+      $(".wait").css("display", "block");
     });
+  });
 
-    $(document).ready(function(){
-      $(document).ajaxStart(function(){
-        $(".wait").css("display", "block");
-        document.getElementById("new_quantidade").disabled = true;
-      });
-      $(document).ajaxComplete(function(){
-        $(".wait").css("display", "none");
-        document.getElementById("new_quantidade").disabled = false;
+  $(document).ready(function(){
+    $(document).ajaxStart(function(){
+      $(".wait").css("display", "block");
+      document.getElementById("new_quantidade").disabled = true;
+    });
+    $(document).ajaxComplete(function(){
+      $(".wait").css("display", "none");
+      document.getElementById("new_quantidade").disabled = false;
       $('#new_quantidade').focus(); // Nao esta no find price por tratar-se de modal aqui.
     });
-    });
+  });
 
 
     //JAVASCRIPT MODAL NOVO ITEM

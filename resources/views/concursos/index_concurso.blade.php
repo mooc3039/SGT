@@ -24,12 +24,15 @@
     <section class="panel panel-default">
       <div class="panel-body">
         <div class="row" style="margin-bottom: 10px">
-          <div class="col-md-12">
+          <div class="col-md-8">
             <a href="{{ route('concurso.create') }}" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i></a>
+          </div>
+          <div class="col-md-4">
+            <input type="text" id="pesq" class="form-control" placeholder="Pesquisa...">
           </div>
         </div>
 
-        <table class="table table-striped table-advance table-hover">
+        <table class="mostrar table table-striped table-advance table-hover">
           <thead>
             <tr>
               <th><i class="icon_profile"></i> Código do Concurso </th>
@@ -44,7 +47,7 @@
             @foreach($concursos as $concurso)
             <tr>
               <td> {{$concurso->codigo_concurso}} </td>
-              <td> {{$concurso->created_at}} </td>
+              <td> {{date('d-m-Y', strtotime($concurso->created_at))}} </td>
               <td> {{$concurso->cliente->nome}} </td>
               <td> {{$concurso->valor_iva}} </td>
               {{ Form::open(['route'=>['concurso.destroy', $concurso->id], 'method'=>'DELETE']) }}

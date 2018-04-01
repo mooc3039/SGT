@@ -19,14 +19,17 @@
 
       <div class="panel-body">
         <div class="row" style="margin-bottom: 10px">
-          <div class="col-md-12">
+          <div class="col-md-8">
             <a href="{{ route('tipo_cliente.create') }}" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i></a>
           </div>
+          <div class="col-md-4">
+                <input type="text" id="pesq" class="form-control" placeholder="Pesquisa...">
+              </div>
         </div>
 
         <div class="row">
           <div class="col-md-12">
-            <table class="table table-striped table-advance table-hover">
+            <table class="mostrar table table-striped table-advance table-hover">
 
           <thead>
             <tr>
@@ -65,7 +68,6 @@
       <div class="panel-footer">
         <div class="row">
           <div class="col-md-6">
-            {{  $tipos_cliente->links() }}
 
           </div>
         </div>

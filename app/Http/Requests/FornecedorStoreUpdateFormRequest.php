@@ -30,6 +30,7 @@ class FornecedorStoreUpdateFormRequest extends FormRequest
             'nome' => 'required',
             'telefone' => 'required',
             'email' => 'unique:fornecedors,email,'.$id.',id',
+            'nuit' => 'required|unique:fornecedors,nuit,'.$id.',id',
             'activo' => 'required',
         ];
 
@@ -41,6 +42,8 @@ class FornecedorStoreUpdateFormRequest extends FormRequest
             'nome.required' => 'O nome do Fornecedor é obrigatório.',
             'telefone.required' => 'O Telefone é obrigatório.',
             'email.unique' => 'O Email já existe!',
+            'nuit.required' => 'O NUIT é obrigatório.',
+            'nuit.unique' => 'O NUIT já existe!',
             'activo.required' => 'O Fornecedor deve ser Activo ou Inactivo.',
         ];
         

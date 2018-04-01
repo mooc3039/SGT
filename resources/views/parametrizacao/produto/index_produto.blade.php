@@ -20,13 +20,16 @@
 
       <div class="panel-body">
         <div class="row" style="margin-bottom: 10px">
-          <div class="col-md-12">
+          <div class="col-md-8">
             <a href="{{ route('produtos.create') }}" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i></a>
           </div>
+          <div class="col-md-4">
+                <input type="text" id="pesq" class="form-control" placeholder="Pesquisa...">
+              </div>
         </div>
         <div class="row">
           <div class="col-md-12">
-            <table class="table table-striped table-advance table-hover">
+            <table class="mostrar table table-striped table-advance table-hover">
 
           <thead>
             <tr>
@@ -40,7 +43,6 @@
           </thead>
 
           <tbody>
-            @if(count($produtos) > 0)
             @foreach($produtos as $produto)
             <tr>
               <td> {{$produto->descricao}}</td>
@@ -57,10 +59,6 @@
               </td>
             </tr>
             @endforeach
-
-            @else
-            <p>Não Existe nenhum Produto Parametrizado</p>
-            @endif
           </tbody>
         </table>
           </div>
@@ -72,7 +70,6 @@
       <div class="panel-footer">
         <div class="row">
           <div class="col-md-6">
-            {{$produtos->links()}}
           </div>
         </div>
       </div>

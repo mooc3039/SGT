@@ -1,10 +1,10 @@
 @extends('layouts.master')
 @section('content')
 
-<!-- <div class="container"> -->	
+<!-- <div class="container"> -->
 	<div class="row">
-		
 		<div class="col-md-12">
+			
 			<div class="panel panel-default">
 				<div class="panel-heading">
 					<div class="row">
@@ -25,9 +25,9 @@
 							<div class="panel panel-default">
 								<div class="panel-body text-center">
 									<h2> <b> Dados do Cliente </b></h2> <hr>
-									Nome do Cliente: {{$guia_entrega->cliente->nome}}<br>
-									Endereço: {{$guia_entrega->cliente->endereco}}<br>
-									Nuit: {{$guia_entrega->cliente->nuit}}<br>
+									Nome do Cliente: {{$venda->cliente->nome}}<br>
+									Endereço: {{$venda->cliente->endereco}}<br>
+									Nuit: {{$venda->cliente->nuit}}<br>
 								</div>
 							</div>
 						</div>
@@ -36,8 +36,8 @@
 
 							<div class="panel panel-default">
 								<div class="panel-body text-center">
-									<h2> <b> Numero de guia_entrega / Factura </b> </h2> <hr>
-									<h1>{{$guia_entrega->id}}</h1>
+									<h2> <b> Numero da Venda </b> </h2> <hr>
+									<h1>{{$venda->id}}</h1>
 								</div>
 							</div>
 
@@ -46,7 +46,7 @@
 					</div>
 					<div class="row">
 						<div class="col-md-6"> MAPUTO</div>
-						<div class="col-md-6 text-right"> Data: {{date('d-m-Y', strtotime($guia_entrega->data))}} </div>
+						<div class="col-md-6 text-right"> Data: {{date('d-m-Y', strtotime($venda->created_at))}}  </div>
 					</div>
 				</div>
 
@@ -65,12 +65,12 @@
 										<th><i class="icon_cogs"></i> Valor Total </th>
 									</tr>
 
-									@foreach($guia_entrega->itensGuiantrega as $iten_guia_entrega)
+									@foreach($venda->itensvenda as $iten_venda)
 									<tr>
-										<td> {{$iten_guia_entrega->quantidade}} </td>
-										<td> {{$iten_guia_entrega->produto->descricao}} </td>
-										<td> {{$iten_guia_entrega->produto->preco_venda}} </td>
-										<td> {{$iten_guia_entrega->valor}} </td>
+										<td> {{$iten_venda->quantidade}} </td>
+										<td> {{$iten_venda->produto->descricao}} </td>
+										<td> {{$iten_venda->produto->preco_venda}} </td>
+										<td> {{$iten_venda->valor}} </td>
 
 									</tr>
 									@endforeach
@@ -97,9 +97,19 @@
 						<div class="col-md-6 text-right">
 							<table class="pull-right">
 								<tr>
-									<td>Valor Total:</td>
+									<td>Sub-Total:</td>
 									<td style="width: 10px"></td>
-									<td><b>{{$guia_entrega->valor_total}}</b></td>
+									<td>{{$venda->valor_total}}</td>
+								</tr>
+								<tr>
+									<td>IVA(17%):</td>
+									<td></td>
+									<td>{{(($venda->valor_total)*17)/100}}</td>
+								</tr>
+								<tr>
+									<td>Valor Total:</td>
+									<td></td>
+									<td><b>{{$venda->valor_iva}}</b></td>
 								</tr>
 							</table>
 
@@ -113,7 +123,7 @@
 
 							<div class="panel panel-info">
 								<div class="panel-heading">
-									Dados bancarios
+									Datos bancarios
 								</div>
 								<div class="panel-body">
 									@include('layouts.empresa.dados_bancarios_empresa')
@@ -124,14 +134,16 @@
 
 						<div class="col-md-6">
 
-
+							
 
 						</div>
 
 					</div>
 					<div class="row">
-						<div class="col-md-6"><a href="{{route('guia_entrega.show', $guia_entrega->id)}}/relatorio" class="btn btn-primary">Imprimir</a></div>
-						<div class="col-md-6 text-right"><a href="{{route('guia_entrega.index')}}" class="btn btn-warning">Cancelar</a>
+						<div class="col-md-6"><a href="{{route('venda.show', $venda->id)}}/relatorio" class="btn btn-primary">Imprimir Saída</a>
+
+						</div>
+						<div class="col-md-6 text-right"><a href="{{route('venda.index')}}" class="btn btn-warning">Cancelar</a>
 
 						</div>
 					</div>

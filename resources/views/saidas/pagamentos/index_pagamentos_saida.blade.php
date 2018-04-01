@@ -116,8 +116,17 @@
         <div class="row">
           <div class="col-md-12">
             <br><br>
-            <legend>Pagamentos <span><i class="fa fa-caret-down"></i></span></legend>
-            <table class="table table-striped table-advance table-hover">
+            <legend>Listagem de Pagamentos <span><i class="fa fa-caret-down"></i></span></legend>
+
+            <div class="row" style="margin-bottom: 10px">
+              <div class="col-md-8">
+              </div>
+              <div class="col-md-4">
+                <input type="text" id="pesq" class="form-control" placeholder="Pesquisa...">
+              </div>
+            </div>
+
+            <table class="mostrar table table-striped table-advance table-hover">
 
               <thead>
                 <tr>
@@ -144,7 +153,7 @@
                     {{ $pagamento_saida->valor_pago}}
                   </td>
                   <td>
-                    {{ $pagamento_saida->created_at}}
+                    {{ date('d-m-Y', strtotime($pagamento_saida->created_at))}}
                   </td>
                   <td>
                     {{ $pagamento_saida->updated_at}}
