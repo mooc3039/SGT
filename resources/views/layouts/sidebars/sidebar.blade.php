@@ -84,6 +84,7 @@
                   </a>
         <ul class="sub">
           <li><a class="" href="{{ route('rg_clientes') }}"><i class="fa fa-file-text"></i>Clientes</a></li>
+          <li><a class="" href="{{ route('rg_concursos') }}"><i class="fa fa-file-text"></i>Concursos</a></li>
           <li><a class="" href="{{ route('rg_cotacoes') }}"><i class="fa fa-file-text"></i>Cotações</a></li>
           <li><a class="" href="{{ route('rg_entradas') }}"><i class="fa fa-file-text"></i>Entradas</a></li>
           <li><a class="" href="{{ route('rg_fornecedores') }}"><i class="fa fa-file-text"></i>Fornecedores</a></li>

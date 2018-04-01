@@ -2,7 +2,9 @@
 @section('content')
 <div class="row">
   <div class="col-lg-12">
-    <h3 class="page-header"><i class="fa fa-file-text-o"></i>Facturas</h3>
+    <h3 class="page-header"><i class="fa fa-file-text-o"></i>Facturas
+    	do Concurso <b><span style="color: blue;"> {{ $concurso->codigo_concurso }} </span></b>
+    </h3>
     <ol class="breadcrumb">
       <li><i class="fa fa-home"></i><a href="#">Home</a></li>
       <li><i class="icon_document_alt"></i>Facturas</li>
@@ -15,10 +17,10 @@
     <section class="panel panel-default">
       <div class="panel-body">
         <div class="row" style="margin-bottom: 10px">
-          <div class="col-md-8">
+          <div class="col-md-8"><!-- 
             <a href="{{ route('saida.create') }}" class="btn btn-primary btn-sm" data-toggle="confirmation" data-title="Open Google?"><i class="fa fa-plus"></i> Privado</a>
             <a href="{{ route('saidaPublicoCreate') }}" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i> Estado</a>
-            <a href="{{ route('saidaConcursoCreate') }}" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i> Concurso</a>
+            <a href="{{ route('saidaConcursoCreate') }}" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i> Concurso</a> -->
           </div>
           <div class="col-md-4">
             <input type="text" id="pesq" class="form-control" placeholder="Pesquisa...">
@@ -30,8 +32,6 @@
               <thead>
                 <tr>
                   <th><i class="icon_profile"></i>Código da Factura </th>
-                  <th><i class="icon_mobile"></i> Refe </th>
-                  <th><i class="icon_mobile"></i> Concur </th>
                   <th><i class="icon_mobile"></i> Data de Emissão </th>
                   <th><i class="icon_mail_alt"></i> Cliente </th>
                   <th><i class="icon_mail_alt"></i> Valor Total </th>
@@ -43,8 +43,6 @@
                 @foreach($saidas as $saida)
                 <tr>
                   <td> <a href="{{ route('show_guia_entrega', $saida->id) }}" data-toggle="tooltip" data-placement="right" title="Guias de Entrega">{{$saida->id}}</a> </td>
-                  <td> {{$saida->nr_referencia}} </td>
-                  <td> {{$saida->concurso_id}} </td>
                   <td> {{date('d-m-Y', strtotime($saida->data))}} </td>
                   <td> {{$saida->cliente->nome}} </td>
                   <td> {{$saida->valor_iva}} </td>
@@ -52,60 +50,7 @@
                   {{ Form::open(['route'=>['saida.destroy', $saida->id], 'method'=>'DELETE']) }} 
                   <td>
                     <div class="btn-group btn-group-sm">
-                      <!-- <button type="button" data-toggle="modal" data-target="#modalPagamentoSaida" data-saida_id={{ $saida->id }} data-valor_total={{ $saida->valor_total }} data-valor_pago={{ $saida->valor_pago }} data-remanescente={{ $saida->remanescente }} data-forma_pagamento_id={{ $saida->forma_pagamento_id }} data-nr_documento_forma_pagamento={{ $saida->nr_documento_forma_pagamento }} -->
-                        <a href="{{route('createPagamentoSaida', $saida->id)}}"
-
-                          <?php
-                          $valor_pago_soma = 0;
-                          $arry_valor_pago_soma = array();
-
-                          foreach($saida->pagamentosSaida as $pagamento){
-                            $arry_valor_pago_soma[] = $pagamento->valor_pago;
-                          }
-
-                          if(sizeof($arry_valor_pago_soma)<0){
-                            $valor_pago_soma = 0;
-                          }else{
-                            $valor_pago_soma = array_sum($arry_valor_pago_soma);
-                          }
-
-
-                          if($saida->concurso_id != 0){
-                            // Se for concurso entao, botao default
-                            echo 'class="btn btn-default btn-sm"'; 
-                            echo 'disabled';
-                          }else{
-                            if(($saida->pago==1 && ($valor_pago_soma >= $saida->valor_iva))){ 
-                              echo 'class="btn btn-success btn-sm"';
-                            }else{
-                              echo 'class="btn btn-danger btn-sm"';
-                            }
-                          }
-
-                          ?>
-                          >
-                          <!-- > -->
-                          Pagamento
-
-                          <?php
-
-                          if($saida->concurso_id != 0){
-                            echo '<i class="fa fa-warning"></i>';
-                          }else{
-                            if(($saida->pago==1 && ($valor_pago_soma >= $saida->valor_iva))){
-
-                              echo '<i class="fa fa-check"></i>';
-                            }else{
-                              echo '<i class="icon_close_alt2"></i>';
-                            }
-
-                          }
-                          
-                          ?>
-                        </a>
-                        <!-- </button> -->
-
-
+                      
                         @php
                         $som_quantidade_rest = 0;
                         @endphp
@@ -117,9 +62,9 @@
                         @endforeach
 
                         @if($som_quantidade_rest <= 0)
-                        {{Form::button('Factura Fechada', ['class'=>'btn btn-warning btn-sm', 'style'=>'width:110px', 'data-toggle'=>'confirmation', 'data-title'=>'Open Google?'])}}
+                        {{Form::button('Factura Fechada', ['class'=>'btn btn-warning btn-sm', 'style'=>'width:110px', 'disabled'])}}
                         @else
-                        <a href="{{ route('create_guia', $saida->id)}}" class="btn btn-default btn-sm" style="width:110px">Guia de Entrega</a>
+                        <a href="{{ route('create_guia', $saida->id)}}" class="btn btn-default btn-sm" style="width:110px" disabled>Guia de Entrega</a>
                         @endif
                       </div>
 

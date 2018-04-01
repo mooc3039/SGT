@@ -157,7 +157,7 @@
                     {{ date('d-m-Y', strtotime($pagamento_concurso->created_at)) }}
                   </td>
                   <td>
-                    {{ $pagamento_concurso->updated_at}}
+                    {{ date('d-m-Y', strtotime($pagamento_concurso->updated_at))}}
                   </td>
                 </tr>
                 @endif

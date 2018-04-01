@@ -55,6 +55,9 @@ Route::group(['middleware'=>['authen']],function(){
   Route::post('saida/saida_store', 'SaidaController@store');
   Route::get('saida/index', 'SaidaController@index');
 
+  // FACTURAS DO CONCURSO
+  Route::get('/concurso/facturas_concurso/{id}', 'ConcursoController@facturasConcurso')->name('facturasConcurso');
+
    // SAIDAS, Privado, Publico, Concurso
    Route::get('/saida/saida_pubblico_create/', 'SaidaController@saidaPublicoCreate')->name('saidaPublicoCreate');
    Route::get('/saida/saida_concurso_create/', 'SaidaController@saidaConcursoCreate')->name('saidaConcursoCreate');
@@ -148,6 +151,8 @@ Route::group(['middleware'=>['authen','roles'],'roles'=>['Administrador']],funct
 
   Route::get('/saidas/report_geral_saidas', ['as'=>'rg_saidas', 'uses'=>'SaidaController@reportGeralSaidas']);
   /*Route::get('/produtos/report_geral_produtos', ['as'=>'rg_produtos', 'uses'=>'produtoController@reportGeralProdutos']);*/
+  Route::get('/cotacoes/report_geral_concursos', ['as'=>'rg_concursos', 'uses'=>'ConcursoController@reportGeralConcursos']);
+
   Route::get('/cotacoes/report_geral_cotacoes', ['as'=>'rg_cotacoes', 'uses'=>'CotacaoController@reportGeralCotacoes']);
 
   // CRITERIOS DOS REPORTS PARA PRODUTOS => Malache

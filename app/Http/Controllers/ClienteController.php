@@ -168,7 +168,7 @@ class ClienteController extends Controller
 
     public function inactivos(){
 
-        $clientes = $this->cliente->where('activo', 0)->orderBy('nome', 'asc')->paginate(7);
+        $clientes = $this->cliente->where('activo', 0)->get();
 
         return view('parametrizacao.cliente.index_cliente', compact('clientes'));
     }

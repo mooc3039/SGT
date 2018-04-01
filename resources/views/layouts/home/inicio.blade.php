@@ -45,7 +45,7 @@
 
   <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
     <div class="info-box dark-bg">
-      <i class="fa fa-thumbs-o-up"></i>
+      <i class="fa fa-users"></i>
       <div class="count">{{$total_cliente_publico}}</div>
       <div class="title">Instituicoes Publicas</div>
     </div>
@@ -53,7 +53,7 @@
 
   <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
     <div class="info-box red-bg">
-      <i class="fa fa-thumbs-o-up"></i>
+      <i class="fa fa-users"></i>
       <div class="count">{{$total_cliente_privado}}</div>
       <div class="title">Clientes Privados</div>
     </div>
