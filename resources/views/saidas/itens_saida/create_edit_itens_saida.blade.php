@@ -2,210 +2,210 @@
 @section('content')
 
 
-	<div class="row">
-		<div class="col-md-12">
+<div class="row">
+	<div class="col-md-12">
 
-			<div class="panel panel-default">
-				<div class="panel-heading">
-					<div class="row">
-						<div class="col-md-5 border">
-							<div class="panel panel-default">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<div class="row">
+					<div class="col-md-5 border">
+						<div class="panel panel-default">
 
-								<div class="panel-body">
-									@include('layouts.empresa.dados_empresa')
-								</div>
-							</div>
-
-
-
-						</div>
-
-						<div class="col-md-4">
-
-							<div class="panel panel-default">
-								<div class="panel-body text-center">
-									<h2> <b> Dados do Cliente </b></h2> <hr>
-									Nome do Cliente: {{$saida->cliente->nome}}<br>
-									Endereço: {{$saida->cliente->endereco}}<br>
-									Nuit: {{$saida->cliente->nuit}}<br>
-								</div>
+							<div class="panel-body">
+								@include('layouts.empresa.dados_empresa')
 							</div>
 						</div>
 
-						<div class="col-md-3">
 
-							<div class="panel panel-default">
-								<div class="panel-body text-center">
-									<h2> <b> Numero da Factura </b> </h2> <hr>
-									<h1>{{$saida->id}}</h1>
-								</div>
+
+					</div>
+
+					<div class="col-md-4">
+
+						<div class="panel panel-default">
+							<div class="panel-body text-center">
+								<h2> <b> Dados do Cliente </b></h2> <hr>
+								Nome do Cliente: {{$saida->cliente->nome}}<br>
+								Endereço: {{$saida->cliente->endereco}}<br>
+								Nuit: {{$saida->cliente->nuit}}<br>
 							</div>
-
-
 						</div>
 					</div>
-					<div class="row">
-						<div class="col-md-6"> MAPUTO</div>
-						<div class="col-md-6 text-right"> Data: {{$saida->data}} </div>
+
+					<div class="col-md-3">
+
+						<div class="panel panel-default">
+							<div class="panel-body text-center">
+								<h2> <b> Numero da Factura </b> </h2> <hr>
+								<h1>{{$saida->id}}</h1>
+							</div>
+						</div>
+
+
 					</div>
 				</div>
-
-
-				<div class="panel-body">
-
-					<div class="row">
-						<div class="col-md-12">
-							<div class="row" >
-								<div class="col-md-8" style="margin-bottom: 10px">
-									<button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modalInserirItem" data-new_valor_total={{ $saida->valor_total }} data-new_saida_id={{ $saida->id }}><i class="fa fa-plus"></i></button>
-								</div>
-								<div class="col-md-4">
-                <input type="text" id="pesq" class="form-control" placeholder="Pesquisa...">
-              </div>
-							</div>
-							<table class="mostrar table table-striped table-advance table-hover">
-								<thead>
-									<tr>
-										<th><i class="icon_mobile"></i> Designação </th>
-										<th class="text-center"><i class="icon_profile"></i>Quantidade</th>
-										<th><i class="icon_mail_alt"></i> Preço Unitário </th>
-										<th><i class="icon_cogs"></i> Valor Total </th>
-										<th class="text-center"><i class="icon_close_alt2"></i> Remover </th>
-									</tr>
-								</thead>
-								<tbody>
-									@foreach($saida->itensSaida as $iten_saida)
-									<tr>
-										<td> {{$iten_saida->produto->descricao}} </td>
-
-										<td class="text-center"> <button type="button" class="btn btn-sm" data-toggle="modal" data-target="#modalProdutoIten" data-saida_id={{ $saida->id }} data-produto_id={{ $iten_saida->produto->id }} data-descricao={{ $iten_saida->produto->descricao }} data-quantidade={{ $iten_saida->quantidade }} data-quantidade_rest={{ $iten_saida->quantidade_rest }} data-qtd_referencial={{ $iten_saida->produto->quantidade_dispo }} data-qtd_min={{ $iten_saida->produto->quantidade_min }} data-preco_venda={{ $iten_saida->produto->preco_venda }} data-valor={{$iten_saida->valor }} data-desconto={{ $iten_saida->desconto }} data-subtotal={{ $iten_saida->subtotal }} data-valor_total={{ $saida->valor_total }} data-user_id={{ Auth::user()->id }}> {{$iten_saida->quantidade}} </button> </td>
-
-										<td> {{$iten_saida->produto->preco_venda}} </td>
-										<td> {{$iten_saida->valor}} </td>
-										{{ Form::open(['route'=>['iten_saida.destroy', $iten_saida->id], 'method'=>'DELETE']) }}
-										<td class="text-center">
-											{{ Form::button('<i class="icon_close_alt2"></i>', ['class'=>'btn btn-danger btn-sm submit_iten', 'type'=>'submit'] )}}
-										</td>
-										{{ Form::close() }}
-
-									</tr>
-									@endforeach
-								</tbody>
-							</table>
-						</div>
-					</div>
+				<div class="row">
+					<div class="col-md-6"> MAPUTO</div>
+					<div class="col-md-6 text-right"> Data: {{$saida->data}} </div>
 				</div>
-
-				<div class="panel-footer">
-					<div class="row">
-
-						<div class="col-md-6 border">
-
-
-							<div class="panel panel-default">
-								<div class="panel-body">
-									Motivo Justificativo da não aplicação de imposto:
-								</div>
-							</div>
-
-						</div>
-
-						<div class="col-md-6 text-right">
-
-							<table class="pull-right">
-								<tr>
-									<td>Sub-Total:</td>
-									<td style="width: 10px"></td>
-									<td>{{$saida->valor_total}}</td>
-								</tr>
-								<tr>
-									<td>IVA(17%):</td>
-									<td></td>
-									<td>{{(($saida->valor_total)*17)/100}}</td>
-								</tr>
-								<tr>
-									<td>Valor Total:</td>
-									<td></td>
-									<td><b>{{$saida->valor_iva}}</b></td>
-								</tr>
-							</table>
-
-						</div>
-
-					</div>
-					<br><br>
-					<div class="row">
-
-						<div class="col-md-6">
-
-							<div class="panel panel-info">
-								<div class="panel-heading">
-									Dados bancarios
-								</div>
-								<div class="panel-body">
-									@include('layouts.empresa.dados_bancarios_empresa')
-								</div>
-							</div>
-
-						</div>
-
-						<div class="col-md-6">
-
-
-
-						</div>
-
-					</div>
-					<div class="row">
-						<div class="col-md-6"><a href="" class="btn btn-primary">Imprimir Saída</a>
-
-						</div>
-						<div class="col-md-6 text-right"><a href="{{route('saida.index')}}" class="btn btn-warning">Voltar</a>
-
-						</div>
-					</div>
-				</div>
-
-
 			</div>
 
 
+			<div class="panel-body">
+
+				<div class="row">
+					<div class="col-md-12">
+						<div class="row" >
+							<div class="col-md-8" style="margin-bottom: 10px">
+								<button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modalInserirItem" data-new_valor_total={{ $saida->valor_total }} data-new_saida_id={{ $saida->id }}><i class="fa fa-plus"></i></button>
+							</div>
+							<div class="col-md-4">
+								<input type="text" id="pesq" class="form-control" placeholder="Pesquisa...">
+							</div>
+						</div>
+						<table class="mostrar table table-striped table-advance table-hover">
+							<thead>
+								<tr>
+									<th><i class="icon_mobile"></i> Designação </th>
+									<th class="text-center"><i class="icon_profile"></i>Quantidade</th>
+									<th><i class="icon_mail_alt"></i> Preço Unitário </th>
+									<th><i class="icon_cogs"></i> Valor Total </th>
+									<th class="text-center"><i class="icon_close_alt2"></i> Remover </th>
+								</tr>
+							</thead>
+							<tbody>
+								@foreach($saida->itensSaida as $iten_saida)
+								<tr>
+									<td> {{$iten_saida->produto->descricao}} </td>
+
+									<td class="text-center"> <button type="button" class="btn btn-sm" data-toggle="modal" data-target="#modalProdutoIten" data-saida_id={{ $saida->id }} data-produto_id={{ $iten_saida->produto->id }} data-descricao={{ $iten_saida->produto->descricao }} data-quantidade={{ $iten_saida->quantidade }} data-quantidade_rest={{ $iten_saida->quantidade_rest }} data-qtd_referencial={{ $iten_saida->produto->quantidade_dispo }} data-qtd_min={{ $iten_saida->produto->quantidade_min }} data-preco_venda={{ $iten_saida->produto->preco_venda }} data-valor={{$iten_saida->valor }} data-desconto={{ $iten_saida->desconto }} data-subtotal={{ $iten_saida->subtotal }} data-valor_total={{ $saida->valor_total }} data-user_id={{ Auth::user()->id }}> {{$iten_saida->quantidade}} </button> </td>
+
+									<td> {{$iten_saida->produto->preco_venda}} </td>
+									<td> {{$iten_saida->valor}} </td>
+									{{ Form::open(['route'=>['iten_saida.destroy', $iten_saida->id], 'method'=>'DELETE']) }}
+									<td class="text-center">
+										{{ Form::button('<i class="icon_close_alt2"></i>', ['class'=>'btn btn-danger btn-sm submit_iten', 'type'=>'submit'] )}}
+									</td>
+									{{ Form::close() }}
+
+								</tr>
+								@endforeach
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+
+			<div class="panel-footer">
+				<div class="row">
+
+					<div class="col-md-6 border">
+
+
+						<div class="panel panel-default">
+							<div class="panel-body">
+								Motivo Justificativo da não aplicação de imposto:
+							</div>
+						</div>
+
+					</div>
+
+					<div class="col-md-6 text-right">
+
+						<table class="pull-right">
+							<tr>
+								<td>Sub-Total:</td>
+								<td style="width: 10px"></td>
+								<td>{{$saida->valor_total}}</td>
+							</tr>
+							<tr>
+								<td>IVA(17%):</td>
+								<td></td>
+								<td>{{(($saida->valor_total)*17)/100}}</td>
+							</tr>
+							<tr>
+								<td>Valor Total:</td>
+								<td></td>
+								<td><b>{{$saida->valor_iva}}</b></td>
+							</tr>
+						</table>
+
+					</div>
+
+				</div>
+				<br><br>
+				<div class="row">
+
+					<div class="col-md-6">
+
+						<div class="panel panel-info">
+							<div class="panel-heading">
+								Dados bancarios
+							</div>
+							<div class="panel-body">
+								@include('layouts.empresa.dados_bancarios_empresa')
+							</div>
+						</div>
+
+					</div>
+
+					<div class="col-md-6">
+
+
+
+					</div>
+
+				</div>
+				<div class="row">
+					<div class="col-md-6"><a href="" class="btn btn-primary">Imprimir Saída</a>
+
+					</div>
+					<div class="col-md-6 text-right"><a href="{{route('saida.index')}}" class="btn btn-warning">Voltar</a>
+
+					</div>
+				</div>
+			</div>
+
 
 		</div>
+
+
+
 	</div>
-	<!-- </div> -->
+</div>
+<!-- </div> -->
 
-	<!-- MODAL INSERIR ITEM -->
-	@include('saidas.itens_saida.modals.frm_modal_inserir_iten_saida')
-	<!-- FIM MODAL INSERIR ITEM -->
+<!-- MODAL INSERIR ITEM -->
+@include('saidas.itens_saida.modals.frm_modal_inserir_iten_saida')
+<!-- FIM MODAL INSERIR ITEM -->
 
-	<!-- MODAL EDITAR ITEM -->
-	@include('saidas.itens_saida.modals.frm_modal_editar_iten_saida')
-	<!-- FIM MODAL EDITAR ITEM -->
+<!-- MODAL EDITAR ITEM -->
+@include('saidas.itens_saida.modals.frm_modal_editar_iten_saida')
+<!-- FIM MODAL EDITAR ITEM -->
 
 
-	@endsection
+@endsection
 
-	@section('script')
-	<script>
+@section('script')
+<script>
 
-		$(document).ready(function(){
-			$('.submit_iten').on('click',function(){
-				$(".wait").css("display", "block");
-			});
+	$(document).ready(function(){
+		$('.submit_iten').on('click',function(){
+			$(".wait").css("display", "block");
 		});
+	});
 
-		$(document).ready(function(){
-			$(document).ajaxStart(function(){
-				$(".wait").css("display", "block");
-				document.getElementById("new_quantidade").disabled = true;
-			});
-			$(document).ajaxComplete(function(){
-				$(".wait").css("display", "none");
-				document.getElementById("new_quantidade").disabled = false;
+	$(document).ready(function(){
+		$(document).ajaxStart(function(){
+			$(".wait").css("display", "block");
+			document.getElementById("new_quantidade").disabled = true;
+		});
+		$(document).ajaxComplete(function(){
+			$(".wait").css("display", "none");
+			document.getElementById("new_quantidade").disabled = false;
 			$('#new_quantidade').focus(); // Nao esta no find price por tratar-se de modal aqui.
 		});
-		});
+	});
 
 		//JAVASCRIPT MODAL NOVO ITEM
 

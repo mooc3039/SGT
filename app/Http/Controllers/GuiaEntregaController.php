@@ -175,8 +175,9 @@ class GuiaEntregaController extends Controller
 
     public function showGuiasEntrega($saida_id){
 
-        $guias_entrega = $this->guia_entrega->where('saida_id', $saida_id)->orderBy('created_at', 'desc')->paginate(10);
-        return view('guias_entrega.index_saida_guias_entrega', compact('guias_entrega'));
+        $saida_id = $saida_id;
+        $guias_entrega = $this->guia_entrega->where('saida_id', $saida_id)->get();
+        return view('guias_entrega.index_saida_guias_entrega', compact('guias_entrega', 'saida_id'));
 
     }
 

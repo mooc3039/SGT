@@ -2,7 +2,7 @@
 @section('content')
 <div class="row">
 	<div class="col-lg-12">
-		<h3 class="page-header"><i class="fa fa-file-text-o"></i>Facturas <b style="color: red">Instituições Públicas</b></h3>
+		<h3 class="page-header"><i class="fa fa-file-text-o"></i>Facturas <b style="color: red">Instituições do Estado</b></h3>
 		<ol class="breadcrumb">
 			<li><i class="fa fa-home"></i><a href="#">Home</a></li>
 			<li><i class="icon_document_alt"></i>Facturas</li>
@@ -23,7 +23,7 @@
     <div class="form-horizontal">
 
       <div class="col-sm-3">
-        {{Form::label('cliente_id', 'Cliente Público')}}
+        {{Form::label('cliente_id', 'Cliente Estado')}}
         <div class="input-group">
          {{Form::select('cliente_id', [''=>'Cliente',] + $clientes, null, ['class'=>'form-control select_search'] )}}
          {{Form::button('<i class="fa fa-plus"></i>', ['class'=>'input-group-addon', 'data-toggle'=>'modal', 'data-target'=>'#modalCliente', 'style'=>'width:auto; font-weight:lighter'])}}

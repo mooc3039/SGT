@@ -2,13 +2,15 @@
 
 namespace App\Http\Controllers;
 
-// use Illuminate\Database\QueryException;
+use Illuminate\Database\QueryException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use App\Http\Requests\ConcursoStoreUpdateFormRequest;
 use App\Http\Requests\PagamentoConcursoStoreUpdateFormRequest;
 use App\User;
 use App\Model\Empresa;
 use App\Model\Concurso;
+use App\Model\Saida;
 use App\Model\TipoCliente;
 use App\Model\ItenConcurso;
 use App\Model\FormaPagamento;
@@ -44,7 +46,7 @@ class ConcursoController extends Controller
     public function index()
     {
         //
-      $concursos = $this->concurso->with('itensConcurso')->orderBy('created_at', 'desc')->paginate(10);
+      $concursos = $this->concurso->with('itensConcurso')->get();
       $formas_pagamento = DB::table('forma_pagamentos')->pluck('descricao', 'id')->all();
 
       return view('concursos.index_concurso', compact('concursos', 'formas_pagamento'));
@@ -401,5 +403,24 @@ class ConcursoController extends Controller
         return redirect()->back()->with('error', $error);
 
       }
+    }
+
+    public function reportGeralConcursos(){
+
+      $concursos = $this->concurso->with('cliente')->get();
+
+      return view('reports.concursos.report_geral_concursos', compact('concursos'));
+
+    }
+
+    public function facturasConcurso($concurso_id){
+
+
+      $concurso = Concurso::where('id', $concurso_id)->first();
+      $saidas = Saida::with('itensSaida', 'pagamentosSaida')->where('concurso_id', $concurso_id)->get();
+      // dd($saidas);
+      $formas_pagamento = DB::table('forma_pagamentos')->pluck('descricao', 'id')->all();
+
+      return view('reports.concursos.index_saidas_concurso', compact('saidas', 'formas_pagamento', 'concurso'));
     }
   }

@@ -57,33 +57,35 @@
 						<div class="panel-body">
 
 							<div class="row">
-								<div class="row" style="margin-bottom: 10px">
-									<div class="col-md-8">
-									</div>
-									<div class="col-md-4">
-										<input type="text" id="pesq" class="form-control" placeholder="Pesquisa...">
-									</div>
-								</div>
 								<div class="col-md-12">
-									<table class="mostrar table table-striped table-advance table-hover">
-										<thead>
-											<tr>
-												<th><i class="icon_mobile"></i> Designação </th>
-												<th class="text-center"><i class="icon_profile"></i>Quantidade</th>
-												<th><i class="icon_mail_alt"></i> Preço Unitário </th>
-												<th><i class="icon_cogs"></i> Valor Total </th>
-												<!-- <th class="text-center"><i class="icon_close_alt2"></i> Remover </th> -->
-											</tr>
-										</thead>
-										<tbody>
-											@foreach($guia_entrega->itensGuiantrega as $iten_guia_entrega)
-											<tr>
-												<td> {{$iten_guia_entrega->produto->descricao}}</td>
+									<div class="row" style="margin-bottom: 10px">
+										<div class="col-md-8">
+										</div>
+										<div class="col-md-4">
+											<input type="text" id="pesq" class="form-control" placeholder="Pesquisa...">
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-md-12">
+											<table class="mostrar table table-striped table-advance table-hover">
+												<thead>
+													<tr>
+														<th><i class="icon_mobile"></i> Designação </th>
+														<th class="text-center"><i class="icon_profile"></i>Quantidade</th>
+														<th><i class="icon_mail_alt"></i> Preço Unitário </th>
+														<th><i class="icon_cogs"></i> Valor Total </th>
+														<!-- <th class="text-center"><i class="icon_close_alt2"></i> Remover </th> -->
+													</tr>
+												</thead>
+												<tbody>
+													@foreach($guia_entrega->itensGuiantrega as $iten_guia_entrega)
+													<tr>
+														<td> {{$iten_guia_entrega->produto->descricao}}</td>
 
-												<td class="text-center"> <button type="button" class="btn btn-sm" data-toggle="modal" data-target="#modalProdutoIten" data-guia_entrega_id={{ $guia_entrega->id }} data-produto_id={{ $iten_guia_entrega->produto->id }} data-descricao={{ $iten_guia_entrega->produto->descricao }} data-quantidade={{ $iten_guia_entrega->quantidade }}  data-qtd_rest_iten_saida={{ $iten_guia_entrega->itenSaida->quantidade_rest}} data-preco_venda={{ $iten_guia_entrega->produto->preco_venda }} data-valor={{$iten_guia_entrega->valor }} data-desconto={{ $iten_guia_entrega->desconto }} data-subtotal={{ $iten_guia_entrega->subtotal }} data-valor_total={{ $guia_entrega->valor_total }} data-user_id={{ Auth::user()->id }}> {{$iten_guia_entrega->quantidade}} </button> </td>
+														<td class="text-center"> <button type="button" class="btn btn-sm" data-toggle="modal" data-target="#modalProdutoIten" data-guia_entrega_id={{ $guia_entrega->id }} data-produto_id={{ $iten_guia_entrega->produto->id }} data-descricao={{ $iten_guia_entrega->produto->descricao }} data-quantidade={{ $iten_guia_entrega->quantidade }}  data-qtd_rest_iten_saida={{ $iten_guia_entrega->itenSaida->quantidade_rest}} data-preco_venda={{ $iten_guia_entrega->produto->preco_venda }} data-valor={{$iten_guia_entrega->valor }} data-desconto={{ $iten_guia_entrega->desconto }} data-subtotal={{ $iten_guia_entrega->subtotal }} data-valor_total={{ $guia_entrega->valor_total }} data-user_id={{ Auth::user()->id }}> {{$iten_guia_entrega->quantidade}} </button> </td>
 
-												<td> {{$iten_guia_entrega->produto->preco_venda}} </td>
-												<td> {{$iten_guia_entrega->valor}} </td>
+														<td> {{$iten_guia_entrega->produto->preco_venda}} </td>
+														<td> {{$iten_guia_entrega->valor}} </td>
 										<!-- {{ Form::open() }}
 										<td class="text-center">
 											{{ Form::button('<i class="icon_close_alt2"></i>', ['class'=>'btn btn-danger btn-sm', 'type'=>'submit'] )}}
@@ -97,94 +99,96 @@
 						</div>
 					</div>
 				</div>
+			</div>
+		</div>
 
-				<div class="panel-footer">
-					<div class="row">
+		<div class="panel-footer">
+			<div class="row">
 
-						<div class="col-md-6 border">
-
-
-							<div class="panel panel-default">
-								<div class="panel-body">
-									Motivo Justificativo da não aplicação de imposto:
-								</div>
-							</div>
-
-						</div>
-
-						<div class="col-md-6 text-right">
-
-							<table class="pull-right">
-								<tr>
-									<td>Valor Total:</td>
-									<td style="width: 10px"></td>
-									<td><b>{{$guia_entrega->valor_total}}</b></td>
-								</tr>
-							</table>
-
-						</div>
-
-					</div>
-					<br><br>
-					<div class="row">
-
-						<div class="col-md-6">
-
-							<div class="panel panel-info">
-								<div class="panel-heading">
-									Dados bancarios
-								</div>
-								<div class="panel-body">
-									@include('layouts.empresa.dados_bancarios_empresa')
-								</div>
-							</div>
-
-						</div>
-
-						<div class="col-md-6">
+				<div class="col-md-6 border">
 
 
-
-						</div>
-
-					</div>
-					<div class="row">
-						<div class="col-md-6"><a href="" class="btn btn-primary">Imprimir Saída</a>
-
-						</div>
-						<div class="col-md-6 text-right"><a href="{{route('show_guia_entrega', $guia_entrega->saida_id)}}" class="btn btn-warning">Cancelar</a>
-
+					<div class="panel panel-default">
+						<div class="panel-body">
+							Motivo Justificativo da não aplicação de imposto:
 						</div>
 					</div>
+
 				</div>
 
+				<div class="col-md-6 text-right">
+
+					<table class="pull-right">
+						<tr>
+							<td>Valor Total:</td>
+							<td style="width: 10px"></td>
+							<td><b>{{$guia_entrega->valor_total}}</b></td>
+						</tr>
+					</table>
+
+				</div>
 
 			</div>
+			<br><br>
+			<div class="row">
+
+				<div class="col-md-6">
+
+					<div class="panel panel-info">
+						<div class="panel-heading">
+							Dados bancarios
+						</div>
+						<div class="panel-body">
+							@include('layouts.empresa.dados_bancarios_empresa')
+						</div>
+					</div>
+
+				</div>
+
+				<div class="col-md-6">
 
 
 
+				</div>
+
+			</div>
+			<div class="row">
+				<div class="col-md-6"><a href="" class="btn btn-primary">Imprimir Saída</a>
+
+				</div>
+				<div class="col-md-6 text-right"><a href="{{route('show_guia_entrega', $guia_entrega->saida_id)}}" class="btn btn-warning">Cancelar</a>
+
+				</div>
+			</div>
 		</div>
+
+
 	</div>
-	<!-- </div> -->
-
-	<!-- MODAL EDITAR ITEM -->
-	@include('guias_entrega.itens_guiaentrega.modals.frm_modal_editar_iten_guia_entrega')
-	<!-- FIM MODAL EDITAR ITEM -->
 
 
-	@endsection
 
-	@section('script')
+</div>
+</div>
+<!-- </div> -->
 
-	<script type="text/javascript">
+<!-- MODAL EDITAR ITEM -->
+@include('guias_entrega.itens_guiaentrega.modals.frm_modal_editar_iten_guia_entrega')
+<!-- FIM MODAL EDITAR ITEM -->
 
-		$(document).ready(function(){
-			$('.submit_iten').on('click',function(){
-				$("#wait").css("display", "block");
-			});
+
+@endsection
+
+@section('script')
+
+<script type="text/javascript">
+
+	$(document).ready(function(){
+		$('.submit_iten').on('click',function(){
+			$("#wait").css("display", "block");
 		});
+	});
 
-		$('#modalProdutoIten').on('show.bs.modal', function (event) {
+	$('#modalProdutoIten').on('show.bs.modal', function (event) {
 				var button = $(event.relatedTarget) // Button that triggered the modal
 				var dta_guia_entrega_id = button.data('guia_entrega_id')
 				var dta_produto_id = button.data('produto_id')

@@ -2,7 +2,7 @@
 @section('content')
 <div class="row">
   <div class="col-lg-8">
-    <h3 class="page-header"><i class="fa fa-file-text-o"></i>Guias de Entrega</h3>
+    <h3 class="page-header"><i class="fa fa-file-text-o"></i>Guias de Entrega  da Factura <span style="color: blue"><b>{{ $saida_id }}</b></span></h3>
     <ol class="breadcrumb">
       <li><i class="fa fa-home"></i><a href="#">Home</a></li>
       <li><i class="icon_document_alt"></i>Guias de Entrega</li>
@@ -69,7 +69,6 @@
       <div class="panel-footer">
         <div class="row">
           <div class="col-md-6">
-            {{ $guias_entrega->links() }}
           </div>
           <div class="col-md-6 text-right">
             <a href="{{ route('saida.index') }}" class="btn btn-warning"><i class="fa fa-list"></i> Lista Facturas </a>

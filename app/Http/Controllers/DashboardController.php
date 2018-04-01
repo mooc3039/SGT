@@ -27,16 +27,28 @@ class DashboardController extends Controller
   public function dashboard()
   {
    $mes = date('m');
-  $data = ItenSaida::all();
-  $total_facturacao = Saida::count();
-  $total_fornecedor = Fornecedor::count();
-  $total_stock = ItenEntrada::count();
+   $data = ItenSaida::all();
+   $total_facturacao = Saida::count();
+   $total_fornecedor = Fornecedor::count();
+   $total_stock = ItenEntrada::count();
 
-  $valor_entrada = Entrada::whereMonth('created_at', $mes)->sum('valor_total');
-  $valor_entrada_pago = PagamentoEntrada::whereMonth('created_at', $mes)->sum('valor_pago');
+   $valor_entrada = Entrada::whereMonth('created_at', $mes)->sum('valor_total');
+   $valor_entrada_pago = PagamentoEntrada::whereMonth('created_at', $mes)->sum('valor_pago');
 
-  $valor_saida = Saida::whereMonth('data', $mes)->sum('valor_iva');
-  $valor_saida_pago = PagamentoSaida::whereMonth('created_at', $mes)->sum('valor_pago');
+   // SAIDA
+   $valor_saida = Saida::whereMonth('data', $mes)->where('concurso_id', '=', 0)->sum('valor_iva');
+   $saida_ids_concurso_zero = Saida::where('concurso_id', '=', 0)->get();
+
+   $array_saida_id = array();
+
+   if(sizeof($saida_ids_concurso_zero)>0){
+    for($i=0;$i<sizeof($saida_ids_concurso_zero); $i++){
+      $array_saida_id[] = $saida_ids_concurso_zero[$i]->id;
+    }
+  }
+
+  $valor_saida_pago = PagamentoSaida::whereMonth('created_at', $mes)->whereIn('saida_id', $array_saida_id)->sum('valor_pago');
+  // FIM SAIDA
 
   $valor_venda = Venda::whereMonth('created_at', $mes)->sum('valor_iva');
   $valor_venda_pago = PagamentoVenda::whereMonth('created_at', $mes)->sum('valor_pago');
@@ -63,9 +75,9 @@ class DashboardController extends Controller
     'valor_venda_pago',
     'total_cliente_publico',
     'total_cliente_privado')); 
- }
- public function paginaInicial()
- {
-  
+}
+public function paginaInicial()
+{
+
 }
 }
