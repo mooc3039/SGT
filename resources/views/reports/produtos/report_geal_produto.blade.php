@@ -16,20 +16,16 @@
 <div class="row">
   <div class="col-lg-12">
     <section class="panel panel-default">
-      <div class="panel-heading">
+      <div class="panel-body">
+
         <div class="row">
-          <div class="col-md-4">
-
-            <a href="#"><h5><b><i class="fa fa-print"></i>Imprimir </b></h5></a>
-
-          </div>
 
           <div class="col-md-8">
 
-            <a href="{{route('report_geral_produto')}}" class="btn btn-default pull-right" style="width: auto; height: 28px; margin-top: 4px; margin-left: 3px; font-size: 15px; font-weight: normal; padding: 3px 10px;"> <i class="fa fa-list"></i> Listar Todos </a>
+            <a href="{{route('report_geral_produto')}}" class="btn btn-default pull-left" style="width: auto; height: 28px; margin-left: 3px; font-size: 15px; font-weight: normal; padding: 3px 10px;"> <i class="fa fa-list"></i> Listar Todos </a>
 
             
-            <div class="btn-group pull-right" role="group" aria-label="...">
+            <div class="btn-group pull-left" role="group" aria-label="...">
 
 
               <select class="btn btn-default select_search" id="categoria"><i class="fa fa-list"></i>
@@ -50,12 +46,13 @@
             </div>
 
           </div>
+          <div class="col-md-4">
+            <input type="text" id="pesq" class="form-control" placeholder="Pesquisa...">
+          </div>
         </div>
-      </div>
-      <div class="panel-body">
 
 
-        <table class="table table-striped table-advance table-hover" id="tbl_report_geral_prd">
+        <table class="mostrar table table-striped table-advance table-hover" id="tbl_report_geral_prd">
 
 
           <thead>
@@ -73,38 +70,38 @@
 
            @foreach($produtos as $produto)
            <tr
-            @php
-            if($produto->quantidade_dispo <= $produto->quantidade_min )
-              {
-                echo 'style="color:red"';
-              } elseif($produto->quantidade_dispo <= ($produto->quantidade_min + $produto->quantidade_min/3)){
-              echo 'style="color:blue"';
-            }
-            @endphp
-            >
-            <td>{{$produto->descricao}}</td>
-            <td>{{$produto->quantidade_dispo}}</td>
-            <td>{{$produto->preco_venda}}</td>
-            <td>{{$produto->preco_aquisicao}}</td>
-            <td>{{$produto->categoria->nome}}</td>
-            <td>{{$produto->fornecedor->nome}}</td>
-          </tr>
-          @endforeach
+           @php
+           if($produto->quantidade_dispo <= $produto->quantidade_min )
+           {
+            echo 'style="color:red"';
+          } elseif($produto->quantidade_dispo <= ($produto->quantidade_min + $produto->quantidade_min/3)){
+          echo 'style="color:blue"';
+        }
+        @endphp
+        >
+        <td>{{$produto->descricao}}</td>
+        <td>{{$produto->quantidade_dispo}}</td>
+        <td>{{$produto->preco_venda}}</td>
+        <td>{{$produto->preco_aquisicao}}</td>
+        <td>{{$produto->categoria->nome}}</td>
+        <td>{{$produto->fornecedor->nome}}</td>
+      </tr>
+      @endforeach
 
-        </tbody>
+    </tbody>
 
-        <tbody id="data-ajax">
+    <tbody id="data-ajax">
 
-        </tbody>
-      </table>
+    </tbody>
+  </table>
 
-    </div>
-    <div class="panel-footer">
-      {{ $produtos->links() }}
-    </div>
+</div>
+<div class="panel-footer">
+  {{ $produtos->links() }}
+</div>
 
 
-  </section>
+</section>
 </div>
 </div>
 
@@ -114,15 +111,15 @@
 @section('script')
 
 <script type="text/javascript">
-  
+
   $(document).ready(function(){
-      $(document).ajaxStart(function(){
-        $(".wait").css("display", "block");
-      });
-      $(document).ajaxComplete(function(){
-        $(".wait").css("display", "none");
-      });
+    $(document).ajaxStart(function(){
+      $(".wait").css("display", "block");
     });
+    $(document).ajaxComplete(function(){
+      $(".wait").css("display", "none");
+    });
+  });
 
   $(document).ready(function(){
 

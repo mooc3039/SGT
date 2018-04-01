@@ -4,7 +4,7 @@
     <!-- sidebar menu start-->
     <ul class="sidebar-menu">
       <li class="active">
-        <a class="" href="{{ route('paginainicial' )}}">
+        <a class="" href="{{ route('dashboard' )}}">
                       <i class="icon_house_alt"></i>
                       <span>Administração </span>
                   </a>

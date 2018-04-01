@@ -26,21 +26,7 @@ class DashboardController extends Controller
 
   public function dashboard()
   {
-   $data = ItenSaida::all();
-   $total_facturacao = Saida::count();
-   $total_fornecedor = Fornecedor::count();
-   $total_cliente = Cliente::count();
-   $total_stock = ItenEntrada::count();
-
-
-
-
-
-   return view('layouts.home.inicio',  compact('total_facturacao','total_fornecedor','total_cliente','total_stock'));
- }
- public function paginaInicial()
- {
-  $mes = date('m');
+   $mes = date('m');
   $data = ItenSaida::all();
   $total_facturacao = Saida::count();
   $total_fornecedor = Fornecedor::count();
@@ -77,5 +63,9 @@ class DashboardController extends Controller
     'valor_venda_pago',
     'total_cliente_publico',
     'total_cliente_privado')); 
+ }
+ public function paginaInicial()
+ {
+  
 }
 }

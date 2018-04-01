@@ -15,19 +15,17 @@
 <div class="row">
   <div class="col-lg-12">
     <section class="panel panel-default">
-      <div class="panel-heading">
+
+      <div class="panel-body">
         <div class="row">
-          <div class="col-md-12">
-
-            <a href="#"><h5><b><i class="fa fa-print"></i>Imprimir </b></h5></a>
-
+          <div class="col-md-8"></div>
+          <div class="col-md-4">
+            <input type="text" id="pesq" class="form-control" placeholder="Pesquisa...">
           </div>
         </div>
-      </div>
-      <div class="panel-body">
 
-        <table class="table table-striped table-advance table-hover">
-          <tbody>
+        <table class="mostrar table table-striped table-advance table-hover">
+          <thead>
 
             <tr>
               <th><i class="icon_profile"></i>Código da Entrada </th>
@@ -35,7 +33,8 @@
               <th><i class="icon_mail_alt"></i> Valor </th>
               <th><i class="icon_mail_alt"></i> Usúario Cadastrante </th>
             </tr>
-
+          </thead>
+          <tbody>
             @foreach($entradas as $entrada)
             <tr>
 
