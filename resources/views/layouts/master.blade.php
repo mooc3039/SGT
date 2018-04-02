@@ -74,6 +74,12 @@
   {!!Html::script('js/jquery.js')!!}
   {!!Html::script('js/jquery-ui-1.10.4.min.js')!!}
   {!!Html::script('js/jquery.dataTables.min.js')!!} <!-- DataTables Funcionando 01-04-2018 -->
+  {!!Html::script('js/dataTables.buttons.min.js')!!} <!-- DataTables Buttons Funcionando 01-04-2018 -->
+  {!!Html::script('js/buttons.print.min.js')!!} <!-- DataTables print Funcionando 01-04-2018 -->
+  {!!Html::script('js/jszip.min.js')!!} <!-- DataTables print Funcionando 01-04-2018 -->
+  {!!Html::script('js/pdfmake.min.js')!!} <!-- DataTables print Funcionando 01-04-2018 -->
+  {!!Html::script('js/vfs_fonts.js')!!} <!-- DataTables print Funcionando 01-04-2018 -->
+  {!!Html::script('js/buttons.html5.min.js')!!} <!-- DataTables print Funcionando 01-04-2018 -->
   {!!Html::script('js/dataTables.bootstrap.min.js')!!} <!-- DataTables Funcionando 01-04-2018 -->
 
   
@@ -166,8 +172,28 @@
   $(document).ready(function() {
     var oTable = $('.mostrar').DataTable( {
       "pagingType": "full_numbers",
-      "dom": 'rtpl'
-    });
+      "dom": 'Brtpl',
+      buttons: [
+            // 'print',
+            // 'excelHtml5',
+            // 'pdfHtml5'
+            {
+              text: 'Imprimir',
+              extend: 'print',
+              className: 'btn btn-defaul btn-sm'
+            },
+            {
+              text: 'Excel',
+              extend: 'excelHtml5',
+              className: 'btn btn-defaul btn-sm'
+            },
+            {
+              text: 'PDF',
+              extend: 'pdfHtml5',
+              className: 'btn btn-defaul btn-sm'
+            }
+            ]
+          });
 
     $('#pesq').keyup(function(){
       oTable.search($(this).val()).draw();
