@@ -60,7 +60,8 @@ Dados do Cliente</span></em></strong><br />
 &nbsp;</td>
 <td style="width: 153px; height: 188px;">
 <div class="" style="border: 2px solid black; border-radius: 10px; height: 45px;">
-<h3 style="text-align: center;"><strong>FACTURA</strong></h3>
+<h3 style="text-align: center;"><strong>GUIA DE ENTREGA</strong></h3>
+<h6 style="text-align: center;"><strong>Da factura nr: {{$guia_entrega->saida_id}}</strong></h6>
 </div>
 <br />
 <div style="border: 2px solid black; border-radius: 10px; height: 100px;"><br />
