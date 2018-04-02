@@ -17,6 +17,7 @@ use App\Model\PagamentoVenda;
 use App\User;
 use DB;
 use Session;
+use PDF;
 
 class VendaController extends Controller
 {
@@ -216,6 +217,16 @@ class VendaController extends Controller
       return view('vendas.show_venda', compact('venda', 'empresa'));
     }
 
+    public function showRelatorio($id)
+    {
+      //
+      $venda = $this->venda->with('itensVenda.produto', 'cliente')->find($id); 
+      $empresa = Empresa::with('enderecos', 'telefones', 'emails', 'contas')->findOrFail(1);
+          // Tras a saida. Tras os Itens da Saida e dentro da relacao ItensSaida eh possivel pegar a relacao Prodtuo atraves do dot ou ponto. NOTA: a relacao produto nao esta na saida e sim na itensSaida, mas eh possivel ter os seus dados partido da saida como se pode ver.
+      $pdf = PDF::loadView('vendas.relatorio', compact('venda','empresa'));
+      return $pdf->download('venda.pdf');
+      
+    }
     /**
      * Show the form for editing the specified resource.
      *

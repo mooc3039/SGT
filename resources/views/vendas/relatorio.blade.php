@@ -50,20 +50,21 @@
 <small> papelaria@gmail.com</small><br />
  <small> <strong>NUIT 400345368</strong></small></div>
 &nbsp;</td>
-<td style="width: 197px; text-align: center; height: 188px;">
+<td style="width: 197px; text-align: center; height: 188px;">&nbsp;
 <div style="border: 2px solid black; border-radius: 10px; height: 160px;">
 <strong><em><span style="text-decoration: underline; font-size: 16px;"><br>
-Usuário do Sistema</span></em></strong><br /> 
-<strong>Usuário</strong>: {{$entrada->user->name}}<br /> 
-
+Dados do Cliente</span></em></strong><br /> 
+<strong>Exmo (s)</strong>: {{$venda->cliente->nome}}<br /> 
+<strong>Morada</strong>: {{$venda->cliente->endereco}}<br /> 
+<strong>NUIT</strong>: {{$venda->cliente->nuit}}</div>
 &nbsp;</td>
 <td style="width: 153px; height: 188px;">
 <div class="" style="border: 2px solid black; border-radius: 10px; height: 45px;">
-<h3 style="text-align: center;"><strong>ENTRADA</strong></h3>
+<h3 style="text-align: center;"><strong>VENDA</strong></h3>
 </div>
 <br />
 <div style="border: 2px solid black; border-radius: 10px; height: 100px;"><br />
-<h2 style="color: red; text-align: center;">N&ordm; {{$entrada->id}}</h2>
+<h2 style="color: red; text-align: center;">N&ordm; {{$venda->id}}</h2>
 </div>
 </td>
 </tr>
@@ -75,7 +76,7 @@ Usuário do Sistema</span></em></strong><br />
 </td>
 <td style="width: 197px; height: 46px; text-align: center;">
 <div style="border: 2px solid black; border-radius: 3px;">
-<p><strong>Data:</strong> {{date('d-m-Y', strtotime($entrada->data))}}</p>
+<p><strong>Data:</strong> {{date('d-m-Y', strtotime($venda->created_at))}}</p>
 </div>
 </td>
 <td style="width: 153px; height: 46px;">&nbsp;</td>
@@ -92,40 +93,39 @@ Usuário do Sistema</span></em></strong><br />
 <td style="text-align: center;" class="linha"><strong>QUANTIDADE</strong></td>
 <td style="width: 300px; text-align: center;" class="linha"><strong>DESIGNA&Ccedil;&Atilde;O</strong></td>
 <td style="width: 129px; text-align: center;" class="linhawidth: 129px;">
-<strong>PRE&Ccedil;O DE AQUISIÇÃO</strong></td>
-<td style="width: 161px; text-align: center;" class="linha"><strong>P/Uni. TOTAIS</strong></td>
+<strong>PRE&Ccedil;O UNIT&Aacute;RIO</strong></td>
+<td style="width: 161px; text-align: center;" class="linha"><strong>VALOR TOTAL</strong></td>
 </tr>
-@foreach($entrada->itensEntrada as $iten_entrada)
+@foreach($venda->itensvenda as $iten_venda)
 <tr>
-<td style="text-align: center;" class="linha">{{$iten_entrada->quantidade}} </td>
-<td style="width: 300px; text-align: center;" class="linha">{{$iten_entrada->produto->descricao}} </td>
-<td style="width: 129px; text-align: center;" class="linha">{{$iten_entrada->produto->preco_aquisicao}} </td>
-<td style="width: 161px; text-align: center;" class="linha">{{($iten_entrada->quantidade)*($iten_entrada->produto->preco_aquisicao)}}</td>
+<td style="text-align: center;" class="linha">{{$iten_venda->quantidade}}</td>
+<td style="width: 300px; text-align: center;" class="linha">{{$iten_venda->produto->descricao}}</td>
+<td style="width: 129px; text-align: center;" class="linha">{{$iten_venda->produto->preco_venda}}</td>
+<td style="width: 161px; text-align: center;" class="linha">{{$iten_venda->valor}}</td>
 </tr>
 @endforeach
 </tbody>
 </table>
-
 <table class="total wena" style="height: 84px; width: 750px;">
 <tbody>
 <tr style="height: 18px;">
-<td style="width: 159px; height: 18px;">&nbsp;</td>
-<td  style="width: ; height: 18px;">&nbsp;</td>
-<td class="linha" style="width: ; height: 18px;text-align: right;"><strong>&nbsp;TOTAL</strong></td>
-<td class="linha" style="width: 155px; text-align: center;">{{$entrada->valor_total}}Mtn</td>
-</tr>
-<tr style="height: 18px;">
 <td  style="width: 159px; height: 18px;">&nbsp;</td>
 <td  style="width: 270px; height: 18px;">&nbsp;</td>
-<td class="" style="width: 120px; height: 18px;text-align: right;">
-<strong>&nbsp;</strong></td>
-<td class="" style="width: 155px; text-align: center;"></td>
+<td class="linha" style="width: 120px; height: 18px;text-align: right;">
+<strong>&nbsp;SUB-TOTAL</strong></td>
+<td class="linha" style="width: 155px; text-align: center;">{{$venda->valor_total}}Mtn</td> 
 </tr>
 <tr style="height: 17px;">
 <td  style="width: 159px; height: 17px;">&nbsp;</td>
 <td  style="width: ; height: 17px;">&nbsp;</td>
-<td class="" style="width:; height: 17px;text-align: right;"><strong>&nbsp;</strong></td>
-<td class="" style="width: 155px; text-align: center;"></td>
+<td class="linha" style="width:; height: 17px;text-align: right;"><strong>&nbsp;IVA 17%</strong></td>
+<td class="linha" style="width: 155px; text-align: center;">{{(($venda->valor_total)*17)/100}}</td>
+</tr>
+<tr style="height: 18px;">
+<td style="width: 159px; height: 18px;">&nbsp;</td>
+<td  style="width: ; height: 18px;">&nbsp;</td>
+<td class="linha" style="width: ; height: 18px;text-align: right;"><strong>&nbsp;TOTAL</strong></td>
+<td class="linha" style="width: 155px; text-align: center;">{{$venda->valor_iva}}Mtn</td>
 </tr>
 <tr style="height: 18px;">
 <td  style="width: 159px; height: 18px;">&nbsp;</td>
@@ -135,7 +135,8 @@ Usuário do Sistema</span></em></strong><br />
 </tr>
 
 </tbody>
-</table> 
+</table>
+
 
 </div>
 <br>

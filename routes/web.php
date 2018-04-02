@@ -81,6 +81,7 @@ Route::group(['middleware'=>['authen']],function(){
   Route::get('/cotacao/{id}/relatorio', ['as'=>'cotacaoRelatorio','uses'=>'CotacaoController@showRelatorio']);
   Route::get('/saida/{id}/relatorio', ['as'=>'saidaRelatorio','uses'=>'SaidaController@showRelatorio']);
   Route::get('/entrada/{id}/relatorio', ['as'=>'entradaRelatorio','uses'=>'EntradaController@showRelatorio']);
+  Route::get('/venda/{id}/relatorio', ['as'=>'vendaRelatorio','uses'=>'VendaController@showRelatorio']);
 
   Route::resource('/venda', 'VendaController');
   Route::resource('/iten_venda', 'ItenVendaController');

@@ -18,7 +18,7 @@ class Cotacao extends Model
         'valor_iva',
     	'validade',
     ];
-    public $timestamps = false;
+    public $timestamps = true;
 
     public function cliente(){
 

@@ -113,29 +113,30 @@ Dados do Cliente</span></em></strong><br />
 <td  style="width: 270px; height: 18px;">&nbsp;</td>
 <td class="linha" style="width: 120px; height: 18px;text-align: right;">
 <strong>&nbsp;SUB-TOTAL</strong></td>
-<td class="linha" style="width: 155px; text-align: center;">{{$saida->subtotal}}Mtn</td>
+<td class="linha" style="width: 155px; text-align: center;">{{$saida->valor_total}}Mtn</td>
 </tr>
 <tr style="height: 17px;">
 <td  style="width: 159px; height: 17px;">&nbsp;</td>
 <td  style="width: ; height: 17px;">&nbsp;</td>
 <td class="linha" style="width:; height: 17px;text-align: right;"><strong>&nbsp;IVA 17%</strong></td>
-<td class="linha" style="width: 155px; text-align: center;">&nbsp;</td>
-</tr>
-<tr style="height: 18px;">
-<td  style="width: 159px; height: 18px;">&nbsp;</td>
-<td  style="width: ; height: 18px;">&nbsp;</td>
-<td class="linha" style="width: ; height: 18px;text-align: right;"><strong>&nbsp;DESCONTO</strong></td>
-<td class="linha" style="width: 155px; text-align: center;">{{$saida->desconto}}</td>
+<td class="linha" style="width: 155px; text-align: center;">{{(($saida->valor_total)*17)/100}}</td>
 </tr>
 <tr style="height: 18px;">
 <td style="width: 159px; height: 18px;">&nbsp;</td>
 <td  style="width: ; height: 18px;">&nbsp;</td>
 <td class="linha" style="width: ; height: 18px;text-align: right;"><strong>&nbsp;TOTAL</strong></td>
-<td class="linha" style="width: 155px; text-align: center;">{{$saida->valor_total}}Mtn</td>
+<td class="linha" style="width: 155px; text-align: center;">{{$saida->valor_iva}}Mtn</td>
 </tr>
+<tr style="height: 18px;">
+<td  style="width: 159px; height: 18px;">&nbsp;</td>
+<td  style="width: ; height: 18px;">&nbsp;</td>
+<td class="" style="width: ; height: 18px;text-align: right;"><strong>&nbsp;</strong></td>
+<td class="" style="width: 155px; text-align: center;"></td>
+</tr>
+
 </tbody>
 </table>
-
+ 
 
 </div>
 <br>

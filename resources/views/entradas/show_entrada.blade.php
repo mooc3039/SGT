@@ -72,7 +72,7 @@
 										<td> {{$iten_entrada->produto->preco_aquisicao}} </td>
 										
 
-									</tr>
+									</tr> 
 									@endforeach
 								</tbody>
 							</table>
