@@ -30,8 +30,6 @@
               <thead>
                 <tr>
                   <th><i class="icon_profile"></i>Código da Factura </th>
-                  <th><i class="icon_mobile"></i> Refe </th>
-                  <th><i class="icon_mobile"></i> Concur </th>
                   <th><i class="icon_mobile"></i> Data de Emissão </th>
                   <th><i class="icon_mail_alt"></i> Cliente </th>
                   <th><i class="icon_mail_alt"></i> Valor Total </th>
@@ -43,8 +41,6 @@
                 @foreach($saidas as $saida)
                 <tr>
                   <td> <a href="{{ route('show_guia_entrega', $saida->id) }}" data-toggle="tooltip" data-placement="right" title="Guias de Entrega">{{$saida->id}}</a> </td>
-                  <td> {{$saida->nr_referencia}} </td>
-                  <td> {{$saida->concurso_id}} </td>
                   <td> {{date('d-m-Y', strtotime($saida->data))}} </td>
                   <td> {{$saida->cliente->nome}} </td>
                   <td> {{$saida->valor_iva}} </td>
