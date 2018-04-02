@@ -76,10 +76,14 @@ Dados do Cliente</span></em></strong><br />
 </td>
 <td style="width: 197px; height: 46px; text-align: center;">
 <div style="border: 2px solid black; border-radius: 3px;">
-<p><strong>Data:</strong> {{$cotacao->data}}</p>
+<p><strong>Data:</strong> {{date('d-m-Y', strtotime($cotacao->created_at))}}</p>
 </div>
 </td>
-<td style="width: 153px; height: 46px;">&nbsp;</td>
+<td style="width: 153px; height: 46px; text-align: center;">
+<div style="border: 2px solid red; border-radius: 3px;">
+<p><strong>Validade:</strong> {{date('d-m-Y', strtotime($cotacao->data_vencimento))}}</p>
+</div>
+</td>
 </tr>
 </tbody>
 </table>
@@ -113,26 +117,27 @@ Dados do Cliente</span></em></strong><br />
 <td  style="width: 270px; height: 18px;">&nbsp;</td>
 <td class="linha" style="width: 120px; height: 18px;text-align: right;">
 <strong>&nbsp;SUB-TOTAL</strong></td>
-<td class="linha" style="width: 155px; text-align: center;">{{$cotacao->subtotal}}Mtn</td>
+<td class="linha" style="width: 155px; text-align: center;">{{$cotacao->valor_total}}Mtn</td> 
 </tr>
 <tr style="height: 17px;">
 <td  style="width: 159px; height: 17px;">&nbsp;</td>
 <td  style="width: ; height: 17px;">&nbsp;</td>
 <td class="linha" style="width:; height: 17px;text-align: right;"><strong>&nbsp;IVA 17%</strong></td>
-<td class="linha" style="width: 155px; text-align: center;">&nbsp;</td>
-</tr>
-<tr style="height: 18px;">
-<td  style="width: 159px; height: 18px;">&nbsp;</td>
-<td  style="width: ; height: 18px;">&nbsp;</td>
-<td class="linha" style="width: ; height: 18px;text-align: right;"><strong>&nbsp;DESCONTO</strong></td>
-<td class="linha" style="width: 155px; text-align: center;">{{$cotacao->desconto}}</td>
+<td class="linha" style="width: 155px; text-align: center;">{{(($cotacao->valor_total)*17)/100}}</td>
 </tr>
 <tr style="height: 18px;">
 <td style="width: 159px; height: 18px;">&nbsp;</td>
 <td  style="width: ; height: 18px;">&nbsp;</td>
 <td class="linha" style="width: ; height: 18px;text-align: right;"><strong>&nbsp;TOTAL</strong></td>
-<td class="linha" style="width: 155px; text-align: center;">{{$cotacao->valor_total}}Mtn</td>
+<td class="linha" style="width: 155px; text-align: center;">{{$cotacao->valor_iva}}Mtn</td>
 </tr>
+<tr style="height: 18px;">
+<td  style="width: 159px; height: 18px;">&nbsp;</td>
+<td  style="width: ; height: 18px;">&nbsp;</td>
+<td class="" style="width: ; height: 18px;text-align: right;"><strong>&nbsp;</strong></td>
+<td class="" style="width: 155px; text-align: center;"></td>
+</tr>
+
 </tbody>
 </table>
 

@@ -76,7 +76,7 @@ Dados do Cliente</span></em></strong><br />
 </td>
 <td style="width: 197px; height: 46px; text-align: center;">
 <div style="border: 2px solid black; border-radius: 3px;">
-<p><strong>Data:</strong> {{$guia_entrega->data}}</p>
+<p><strong>Data:</strong> {{date('d-m-Y', strtotime($guia_entrega->data))}} </p>
 </div>
 </td>
 <td style="width: 153px; height: 46px;">&nbsp;</td>
@@ -112,26 +112,26 @@ Dados do Cliente</span></em></strong><br />
 <td  style="width: 159px; height: 18px;">&nbsp;</td>
 <td  style="width: 270px; height: 18px;">&nbsp;</td>
 <td class="linha" style="width: 120px; height: 18px;text-align: right;">
-<strong>&nbsp;SUB-TOTAL</strong></td>
-<td class="linha" style="width: 155px; text-align: center;">{{$guia_entrega->subtotal}}Mtn</td>
+<strong>&nbsp;TOTAL</strong></td>
+<td class="linha" style="width: 155px; text-align: center;">{{$guia_entrega->valor_total}}Mtn</td>
 </tr>
 <tr style="height: 17px;">
 <td  style="width: 159px; height: 17px;">&nbsp;</td>
 <td  style="width: ; height: 17px;">&nbsp;</td>
-<td class="linha" style="width:; height: 17px;text-align: right;"><strong>&nbsp;IVA 17%</strong></td>
-<td class="linha" style="width: 155px; text-align: center;">&nbsp;</td>
+<td class="" style="width:; height: 17px;text-align: right;"><strong>&nbsp;</strong></td>
+<td class="" style="width: 155px; text-align: center;">&nbsp;</td>
 </tr>
 <tr style="height: 18px;">
 <td  style="width: 159px; height: 18px;">&nbsp;</td>
 <td  style="width: ; height: 18px;">&nbsp;</td>
-<td class="linha" style="width: ; height: 18px;text-align: right;"><strong>&nbsp;DESCONTO</strong></td>
-<td class="linha" style="width: 155px; text-align: center;">{{$guia_entrega->desconto}}</td>
+<td class="" style="width: ; height: 18px;text-align: right;"><strong>&nbsp;</strong></td>
+<td class="" style="width: 155px; text-align: center;"></td>
 </tr>
 <tr style="height: 18px;">
 <td style="width: 159px; height: 18px;">&nbsp;</td>
 <td  style="width: ; height: 18px;">&nbsp;</td>
-<td class="linha" style="width: ; height: 18px;text-align: right;"><strong>&nbsp;TOTAL</strong></td>
-<td class="linha" style="width: 155px; text-align: center;">{{$guia_entrega->valor_total}}Mtn</td>
+<td class="" style="width: ; height: 18px;text-align: right;"><strong>&nbsp;</strong></td>
+<td class="" style="width: 155px; text-align: center;"></td>
 </tr>
 </tbody>
 </table>

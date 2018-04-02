@@ -95,7 +95,7 @@
 						</div>
 
 						<div class="col-md-6 text-right">
-							<table class="pull-right">
+							<table class="pull-right"> 
 								<tr>
 									<td>Sub-Total:</td>
 									<td style="width: 10px"></td>

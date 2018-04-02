@@ -16,6 +16,7 @@ use App\Model\FormaPagamento;
 use App\User;
 use DB;
 use Session;
+use PDF;
 
 class EntradaController extends Controller
 {
