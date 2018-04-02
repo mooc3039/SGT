@@ -32,11 +32,11 @@ class DashboardController extends Controller
    $total_fornecedor = Fornecedor::count();
    $total_stock = ItenEntrada::count();
 
-   $valor_entrada = Entrada::whereMonth('created_at', $mes)->sum('valor_total');
-   $valor_entrada_pago = PagamentoEntrada::whereMonth('created_at', $mes)->sum('valor_pago');
+   $valor_entrada = Entrada::whereMonth('updated_at', $mes)->sum('valor_total');
+   $valor_entrada_pago = PagamentoEntrada::whereMonth('updated_at', $mes)->sum('valor_pago');
 
    // SAIDA
-   $valor_saida = Saida::whereMonth('data', $mes)->where('concurso_id', '=', 0)->sum('valor_iva');
+   $valor_saida = Saida::whereMonth('data_edicao', $mes)->where('concurso_id', '=', 0)->sum('valor_iva');
    $saida_ids_concurso_zero = Saida::where('concurso_id', '=', 0)->get();
 
    $array_saida_id = array();
@@ -47,11 +47,11 @@ class DashboardController extends Controller
     }
   }
 
-  $valor_saida_pago = PagamentoSaida::whereMonth('created_at', $mes)->whereIn('saida_id', $array_saida_id)->sum('valor_pago');
+  $valor_saida_pago = PagamentoSaida::whereMonth('updated_at', $mes)->whereIn('saida_id', $array_saida_id)->sum('valor_pago');
   // FIM SAIDA
 
-  $valor_venda = Venda::whereMonth('created_at', $mes)->sum('valor_iva');
-  $valor_venda_pago = PagamentoVenda::whereMonth('created_at', $mes)->sum('valor_pago');
+  $valor_venda = Venda::whereMonth('updated_at', $mes)->sum('valor_iva');
+  $valor_venda_pago = PagamentoVenda::whereMonth('updated_at', $mes)->sum('valor_pago');
 
   $acronimo_cli_publico = TipoCliente::select('id')->where('acronimo', 'publico')->first();
   $acronimo_cli_publico_id = $acronimo_cli_publico->id;

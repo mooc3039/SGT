@@ -6,7 +6,7 @@
       <li class="active">
         <a class="" href="{{ route('dashboard' )}}">
                       <i class="icon_house_alt"></i>
-                      <span>Administração </span>
+                      <span>Páginal Inicial </span>
                   </a>
       </li>
 
