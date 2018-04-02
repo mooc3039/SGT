@@ -21,6 +21,7 @@ class UsuarioRequest extends FormRequest
      *
      * @return array
      */
+    
     public function rules()
     {
         $id = $this->get('usuario_id');
