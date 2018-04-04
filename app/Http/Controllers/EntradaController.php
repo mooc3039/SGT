@@ -94,7 +94,7 @@ class EntradaController extends Controller
 
         $entrada->fornecedor_id = $request['fornecedor_id'];
         $entrada->user_id = $request['user_id'];
-        $entrada->valor_total = 0;  
+        $entrada->valor_total = 0;
           // Eh necessario que o valor total seja zero, uma vez que este campo na tabela cotacaos eh actualizado pelo trigger apos o "insert" bem como o "update" na tabela itens_cotacaos de acordo com o codigo da cotacao. Nao pode ser o valor_total vindo do formulario, pois este valor sera acrescido a cada insercao abaixo quando executar o iten_cotacao->save().
 
         $pago = 0;
@@ -146,7 +146,7 @@ class EntradaController extends Controller
 
             $count = count($request->produto_id);
 
-            $entr = array('0' => $entrada->id); 
+            $entr = array('0' => $entrada->id);
 
               // Para inserir o cotacao_id no iten_cotacaos eh necessario converter este unico valor em array, o qual ira assumir o mesmo valor no loop da insercao como eh o mesmo id da cotacao para varios itens;
               //$cot_id = array('0' => '20');
@@ -210,7 +210,7 @@ class EntradaController extends Controller
     public function show($id)
     {
         //
-      $entrada = $this->entrada->with('itensEntrada.produto', 'user')->find($id); 
+      $entrada = $this->entrada->with('itensEntrada.produto', 'user')->find($id);
       $empresa = Empresa::with('enderecos', 'telefones', 'emails', 'contas')->findOrFail(1);
 
       return view('entradas.show_entrada', compact('entrada', 'empresa'));
@@ -218,10 +218,10 @@ class EntradaController extends Controller
     public function showRelatorio($id)
     {
         //
-      $entrada = $this->entrada->with('itensEntrada.produto', 'user')->find($id); 
-            // Tras a saida. Tras os Itens da Saida e dentro da relacao ItensSaida eh possivel pegar a relacao Prodtuo atraves do dot ou ponto. NOTA: a relacao produto nao esta na saida e sim na itensSaida, mas eh possivel ter os seus dados partido da saida como se pode ver.
-      $pdf = PDF::loadView('entradas.relatorio', compact('entrada'));
-      return $pdf->download('entrada.pdf');
+        $entrada = $this->entrada->with('itensEntrada.produto', 'user')->find($id);
+        $empresa = Empresa::with('enderecos', 'telefones', 'emails', 'contas')->findOrFail(1);
+         $pdf = PDF::loadView('entradas.relatorio', compact('entrada','empresa'));
+         return $pdf->download('entrada.pdf');
 
     }
     /**
@@ -235,7 +235,7 @@ class EntradaController extends Controller
         //
       $produtos = DB::table('produtos')->pluck('descricao', 'id')->all();
       $formas_pagamento = DB::table('forma_pagamentos')->pluck('descricao', 'id')->all();
-      $entrada = $this->entrada->with('itensEntrada.produto', 'formaPagamento', 'fornecedor')->find($id); 
+      $entrada = $this->entrada->with('itensEntrada.produto', 'formaPagamento', 'fornecedor')->find($id);
         // Tras a entrada. Tras os Itens da entrada e dentro da relacao Itensentrada eh possivel pegar a relacao Prodtuo atraves do dot ou ponto. NOTA: a relacao produto nao esta na entrada e sim na itensentrada, mas eh possivel ter os seus dados partido da entrada como se pode ver.
       $empresa = Empresa::with('enderecos', 'telefones', 'emails', 'contas')->findOrFail(1);
 

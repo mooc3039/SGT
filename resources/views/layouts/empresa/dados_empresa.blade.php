@@ -11,4 +11,4 @@
 
 @foreach($empresa->enderecos as $endereco)
 {{$endereco->endereco}} / 
-@endforeach
+@endforeach 

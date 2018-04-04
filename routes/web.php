@@ -27,7 +27,7 @@ Route::group(['middleware'=>['authen']],function(){
 
   Route::get('/produto/find', ['as'=>'findPrice','uses'=>'ProdutoController@findPrice']);
 
-  
+
   //======================= Profile ============================
   //TODO profile update data
   Route::get('/dashboard/{name}/profile', 'ProfileController@index');
@@ -118,7 +118,7 @@ Route::group(['middleware'=>['authen']],function(){
   Route::resource('/cotacao', 'CotacaoController');
   Route::resource('/cotacao/iten_cotacao', 'ItenCotacaoController');
 
-  
+
 
 });
 

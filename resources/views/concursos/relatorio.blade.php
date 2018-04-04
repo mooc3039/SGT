@@ -22,7 +22,7 @@
 		}
 
 		.clearfix {
-				padding: 25px;
+				padding: 23px;
 
 			}
         .total {
@@ -60,18 +60,17 @@
 <div style="border: 2px solid black; border-radius: 10px; height: 160px;">
 <strong><em><span style="text-decoration: underline; font-size: 16px;"><br>
 Dados do Cliente</span></em></strong><br /> 
-<strong>Exmo (s)</strong>: {{$guia_entrega->cliente->nome}}<br /> 
-<strong>Morada</strong>: {{$guia_entrega->cliente->endereco}}<br /> 
-<strong>NUIT</strong>: {{$guia_entrega->cliente->nuit}}</div>
+<strong>Exmo (s)</strong>: {{$concurso->cliente->nome}}<br /> 
+<strong>Morada</strong>: {{$concurso->cliente->endereco}}<br /> 
+<strong>NUIT</strong>: {{$concurso->cliente->nuit}}</div>
 &nbsp;</td>
 <td style="width: 153px; height: 188px;">
 <div class="" style="border: 2px solid black; border-radius: 10px; height: 45px;">
-<h3 style="text-align: center;"><strong>GUIA DE ENTREGA</strong></h3>
-<h6 style="text-align: center;"><strong>Da factura nr: {{$guia_entrega->saida_id}}</strong></h6>
+<h3 style="text-align: center;"><strong>CONCURSO</strong></h3>
 </div>
 <br />
 <div style="border: 2px solid black; border-radius: 10px; height: 100px;"><br />
-<h2 style="color: red; text-align: center;">N&ordm; {{$guia_entrega->id}}</h2>
+<h2 style="color: red; text-align: center;">N&ordm; {{$concurso->codigo_concurso}}</h2>
 </div>
 </td>
 </tr>
@@ -83,7 +82,7 @@ Dados do Cliente</span></em></strong><br />
 </td>
 <td style="width: 197px; height: 46px; text-align: center;">
 <div style="border: 2px solid black; border-radius: 3px;">
-<p><strong>Data:</strong> {{date('d-m-Y', strtotime($guia_entrega->data))}} </p>
+<p><strong>Data:</strong> {{date('d-m-Y', strtotime($concurso->created_at))}}</p>
 </div>
 </td>
 <td style="width: 153px; height: 46px;">&nbsp;</td>
@@ -103,12 +102,12 @@ Dados do Cliente</span></em></strong><br />
 <strong>PRE&Ccedil;O UNIT&Aacute;RIO</strong></td>
 <td style="width: 161px; text-align: center;" class="linha"><strong>VALOR TOTAL</strong></td>
 </tr>
-@foreach($guia_entrega->itensGuiantrega as $iten_guia_entrega)
+@foreach($concurso->itensConcurso as $iten_concurso)
 <tr>
-<td style="text-align: center;" class="linha">{{$iten_guia_entrega->quantidade}}</td>
-<td style="width: 300px; text-align: center;" class="linha">{{$iten_guia_entrega->produto->descricao}}</td>
-<td style="width: 129px; text-align: center;" class="linha">{{$iten_guia_entrega->produto->preco_venda}}</td>
-<td style="width: 161px; text-align: center;" class="linha">{{$iten_guia_entrega->valor}}</td>
+<td style="text-align: center;" class="linha">{{$iten_concurso->quantidade}}</td>
+<td style="width: 300px; text-align: center;" class="linha">{{$iten_concurso->produto->descricao}}</td>
+<td style="width: 129px; text-align: center;" class="linha">{{$iten_concurso->preco_venda}}</td>
+<td style="width: 161px; text-align: center;" class="linha">{{$iten_concurso->valor}} </td>
 </tr>
 @endforeach
 </tbody>
@@ -119,14 +118,20 @@ Dados do Cliente</span></em></strong><br />
 <td  style="width: 159px; height: 18px;">&nbsp;</td>
 <td  style="width: 270px; height: 18px;">&nbsp;</td>
 <td class="linha" style="width: 120px; height: 18px;text-align: right;">
-<strong>&nbsp;TOTAL</strong></td>
-<td class="linha" style="width: 155px; text-align: center;">{{$guia_entrega->valor_total}}Mtn</td>
+<strong>&nbsp;SUB-TOTAL</strong></td>
+<td class="linha" style="width: 155px; text-align: center;">{{$concurso->valor_total}}Mtn</td>
 </tr>
 <tr style="height: 17px;">
 <td  style="width: 159px; height: 17px;">&nbsp;</td>
 <td  style="width: ; height: 17px;">&nbsp;</td>
-<td class="" style="width:; height: 17px;text-align: right;"><strong>&nbsp;</strong></td>
-<td class="" style="width: 155px; text-align: center;">&nbsp;</td>
+<td class="linha" style="width:; height: 17px;text-align: right;"><strong>&nbsp;IVA 17%</strong></td>
+<td class="linha" style="width: 155px; text-align: center;">{{(($concurso->valor_total)*17)/100}}</td>
+</tr>
+<tr style="height: 18px;">
+<td style="width: 159px; height: 18px;">&nbsp;</td>
+<td  style="width: ; height: 18px;">&nbsp;</td>
+<td class="linha" style="width: ; height: 18px;text-align: right;"><strong>&nbsp;TOTAL</strong></td>
+<td class="linha" style="width: 155px; text-align: center;">{{$concurso->valor_iva}}Mtn</td>
 </tr>
 <tr style="height: 18px;">
 <td  style="width: 159px; height: 18px;">&nbsp;</td>
@@ -134,15 +139,10 @@ Dados do Cliente</span></em></strong><br />
 <td class="" style="width: ; height: 18px;text-align: right;"><strong>&nbsp;</strong></td>
 <td class="" style="width: 155px; text-align: center;"></td>
 </tr>
-<tr style="height: 18px;">
-<td style="width: 159px; height: 18px;">&nbsp;</td>
-<td  style="width: ; height: 18px;">&nbsp;</td>
-<td class="" style="width: ; height: 18px;text-align: right;"><strong>&nbsp;</strong></td>
-<td class="" style="width: 155px; text-align: center;"></td>
-</tr>
+
 </tbody>
 </table>
-
+ 
 
 </div>
 <br>

@@ -22,7 +22,7 @@
 		}
 
 		.clearfix {
-				padding: 25px;
+				padding: 23px;
 
 			}
         .total {
@@ -40,15 +40,20 @@
 <table style="height: 153px; width: 750px;">
 <tbody>
 <tr style="height: 188px;">
-<td style="width: 271px; text-align: center; height: 188px;">&nbsp;
-<div style="border: 2px solid black; border-radius: 10px; text-align: center; height: 160px;">
+<td style="width: 271px; text-align: center; height: 188px;">&nbsp;<div style="border: 2px solid black; border-radius: 10px; text-align: center; height: 160px;">
 &nbsp;<em><strong><span style="text-decoration: underline; font-size: 16px;">
-<br>&nbsp;Papelaria e Servi&ccedil;os Agenda</span></strong></em> <br /> 
-<small><strong>Venda de Material de Escrit&oacute;rio e Consum&iacute;veis</strong></small> <br /> 
-<small>Av. Rua de Capelo - Bairro da Malanga n&ordm; 43</small> <br /> 
-<small>Telefone: +218293503 / +258840294826</small><br /> 
-<small> papelaria@gmail.com</small><br />
- <small> <strong>NUIT 400345368</strong></small></div>
+<br>&nbsp;{{$empresa->nome}}</span></strong></em> <br /> 
+<small><strong>{{$empresa->actuacao}}</strong></small> <br /> 
+@foreach($empresa->enderecos as $endereco)
+<small>{{$endereco->endereco}}</small> <br /> 
+@endforeach
+@foreach($empresa->telefones as $telefone)
+<small>Telefone: {{$telefone->telefone}}</small><br /> 
+@endforeach
+@foreach($empresa->emails as $email)
+<small> {{$email->email}}</small><br />
+@endforeach
+ <small> <strong>NUIT {{$empresa->nuit}}</strong></small></div>
 &nbsp;</td>
 <td style="width: 197px; text-align: center; height: 188px;">&nbsp;
 <div style="border: 2px solid black; border-radius: 10px; height: 160px;">
@@ -146,8 +151,11 @@ Dados do Cliente</span></em></strong><br />
 	<tr>
 	<td style="width: 450px;text-align: center;">&nbsp;</td>
 	<td style="width: 280px; text-align: left;">
-	<div ><strong>CONTA BCI</strong>(MZN) 54169166 10 1&nbsp;<br />
-	 <strong>CONTA ICB</strong>(MZN) 5299/07</div>
+	<div >
+    @foreach($empresa->contas as $conta)
+    <strong>{{$conta->banco}}</strong>(MZN) {{$conta->numero}}&nbsp;<br />
+     @endforeach
+     </div> 
 	</td>
 	</tr>
 	

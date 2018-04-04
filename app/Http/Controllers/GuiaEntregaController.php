@@ -166,8 +166,8 @@ class GuiaEntregaController extends Controller
     {
         //
         $guia_entrega = $this->guia_entrega->with('itensGuiantrega.produto', 'cliente')->find($id); 
-            // Tras a saida. Tras os Itens da Saida e dentro da relacao ItensSaida eh possivel pegar a relacao Prodtuo atraves do dot ou ponto. NOTA: a relacao produto nao esta na saida e sim na itensSaida, mas eh possivel ter os seus dados partido da saida como se pode ver.
-         $pdf = PDF::loadView('guias_entrega.relatorio', compact('guia_entrega'));
+        $empresa = Empresa::with('enderecos', 'telefones', 'emails', 'contas')->findOrFail(1); 
+         $pdf = PDF::loadView('guias_entrega.relatorio', compact('guia_entrega','empresa'));
          return $pdf->download('guia_entrega.pdf');
         // return view('guias_entrega.relatorio', compact('guia_entrega'));
         
