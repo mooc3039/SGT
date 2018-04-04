@@ -217,8 +217,8 @@ class EntradaController extends Controller
     {
         //
         $entrada = $this->entrada->with('itensEntrada.produto', 'user')->find($id); 
-            // Tras a saida. Tras os Itens da Saida e dentro da relacao ItensSaida eh possivel pegar a relacao Prodtuo atraves do dot ou ponto. NOTA: a relacao produto nao esta na saida e sim na itensSaida, mas eh possivel ter os seus dados partido da saida como se pode ver.
-         $pdf = PDF::loadView('entradas.relatorio', compact('entrada'));
+        $empresa = Empresa::with('enderecos', 'telefones', 'emails', 'contas')->findOrFail(1);
+         $pdf = PDF::loadView('entradas.relatorio', compact('entrada','empresa'));
          return $pdf->download('entrada.pdf');
         
     }
