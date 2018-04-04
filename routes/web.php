@@ -45,8 +45,8 @@ Route::group(['middleware'=>['authen']],function(){
   Route::post('cotacao/cotacao_store', 'CotacaoController@store');
   Route::get('cotacao/index', 'CotacaoController@index');
   Route::get('cotaca/dados', 'CotacaoController@get_datatable');
-  // Route::get('/facturas/preco', ['as'=>'findPrice','uses'=>'FacturacaoController@findPrice']);
-  Route::get('/produto/find', ['as'=>'findPrice','uses'=>'ProdutoController@findPrice']);
+  Route::get('/facturas/preco', ['as'=>'findPrice','uses'=>'FacturacaoController@findPrice']);
+ // Route::get('/produto/find', ['as'=>'findPrice','uses'=>'ProdutoController@findPrice']);
 
   //Saídas
 
@@ -82,6 +82,7 @@ Route::group(['middleware'=>['authen']],function(){
   Route::get('/saida/{id}/relatorio', ['as'=>'saidaRelatorio','uses'=>'SaidaController@showRelatorio']);
   Route::get('/entrada/{id}/relatorio', ['as'=>'entradaRelatorio','uses'=>'EntradaController@showRelatorio']);
   Route::get('/venda/{id}/relatorio', ['as'=>'vendaRelatorio','uses'=>'VendaController@showRelatorio']);
+  Route::get('/concurso/{id}/relatorio', ['as'=>'concursoRelatorio','uses'=>'ConcursoController@showRelatorio']);
 
   Route::resource('/venda', 'VendaController');
   Route::resource('/iten_venda', 'ItenVendaController');

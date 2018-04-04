@@ -181,6 +181,7 @@ class VendaController extends Controller
               DB::commit();
 
               $success = "Venda cadastrada com sucesso!";
+              
               return redirect()->route('venda.index')->with('success', $success);
 
             }

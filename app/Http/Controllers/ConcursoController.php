@@ -19,6 +19,7 @@ use App\Model\Produto;
 use App\Model\Cliente;
 use DB;
 use Session;
+use PDF;
 
 class ConcursoController extends Controller
 {
@@ -229,6 +230,16 @@ class ConcursoController extends Controller
       $empresa = Empresa::with('enderecos', 'telefones', 'emails', 'contas')->findOrFail(1); 
 
       return view('concursos.show_concurso', compact('concurso', 'empresa'));
+    }
+
+    public function showRelatorio($id)
+    {
+      //
+      $concurso = $this->concurso->with('itensConcurso.produto', 'cliente')->find($id); 
+      $empresa = Empresa::with('enderecos', 'telefones', 'emails', 'contas')->findOrFail(1); 
+      $pdf = PDF::loadView('concursos.relatorio', compact('concurso','empresa'));
+      return $pdf->download('concursos.pdf');
+      
     }
 
     /**
