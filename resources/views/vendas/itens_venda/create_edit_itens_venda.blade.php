@@ -63,7 +63,7 @@
                 <input type="text" id="pesq" class="form-control" placeholder="Pesquisa...">
               </div>
               </div>
-              <table class="mostrar table table-striped table-advance table-hover">
+              <table class="table table-striped table-advance table-hover" id="tbl_create_edit_itens_vendas" data-order='[[ 0, "desc" ]]'>
                 <thead>
                   <tr>
                     <th><i class="icon_mobile"></i> Designação </th>
@@ -157,7 +157,8 @@
 
           </div>
           <div class="row">
-            <div class="col-md-6"><a href="" class="btn btn-primary">Imprimir Venda</a>
+            <div class="col-md-6">
+              <!-- <a href="" class="btn btn-primary">Imprimir Venda</a> -->
 
             </div>
             <div class="col-md-6 text-right"><a href="{{route('venda.index')}}" class="btn btn-warning">Voltar</a>
@@ -183,11 +184,58 @@
   @include('vendas.itens_venda.modals.frm_modal_editar_iten_venda')
   <!-- FIM MODAL EDITAR ITEM -->
 
-
+{{Form::hidden('codigo_venda', $venda->id, ['id'=>'codigo_venda', 'disabled'])}}
   @endsection
 
   @section('script')
   <script>
+
+    // DataTables Inicio
+  $(document).ready(function() {
+
+    var codigo_venda = $('#codigo_venda').val();
+    var titulo = "Itens da Venda "+codigo_venda;   
+    var msg_bottom = "Papelaria Agenda & Serviços";
+
+    var oTable = $('#tbl_create_edit_itens_vendas').DataTable( {
+      "processing": true,
+      "pagingType": "full_numbers",
+      "dom": 'Brtpl',
+      buttons: [
+            // 'print',
+            // 'excelHtml5',
+            // 'pdfHtml5'
+            {
+              text: 'Imprimir',
+              extend: 'print',
+              title: titulo,
+              messageBottom: msg_bottom,
+              className: 'btn btn-defaul btn-sm'
+            },
+            {
+              text: 'Excel',
+              extend: 'excelHtml5',
+              title: titulo,
+              messageBottom: msg_bottom,
+              className: 'btn btn-defaul btn-sm'
+            },
+            {
+              text: 'PDF',
+              extend: 'pdfHtml5',
+              title: titulo,
+              messageBottom: msg_bottom,
+              className: 'btn btn-defaul btn-sm'
+            }
+            ]
+          });
+
+    $('#pesq').keyup(function(){
+      oTable.search($(this).val()).draw();
+    });
+
+  } );
+  // DataTables Fim
+
     $(document).ready(function(){
       $('.submit_iten').on('click',function(){
         $(".wait").css("display", "block");

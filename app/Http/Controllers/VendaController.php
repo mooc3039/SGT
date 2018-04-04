@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use App\Http\Requests\VendaStoreUpdateFormRequest;
 use App\Http\Requests\PagamentoVendaStoreUpdateFormRequest;
 use App\Model\Empresa;
+use App\Model\Ano;
+use App\Model\Me;
 use App\Model\Venda;
 use App\Model\ItenVenda;
 use App\Model\Produto;
@@ -404,4 +406,68 @@ class VendaController extends Controller
       }
 
     }
-  }
+
+    public function reportGeralVendas(){
+
+      $valor_venda = Venda::sum('valor_iva');
+      $valor_venda_pago = PagamentoVenda::sum('valor_pago');
+      $mes = null;
+      $ano = null;
+
+      $vendas = $this->venda->with('itensVenda', 'user', 'cliente')->get();
+      $anos = DB::table('anos')->pluck('ano', 'id')->all();
+      $meses = DB::table('mes')->pluck('nome', 'id')->all();
+      
+      return view('reports.vendas.report_geral_vendas', compact('vendas', 'valor_venda', 'valor_venda_pago', 'anos', 'meses', 'mes', 'ano'));
+
+    }
+
+    public function listarVendaPorMes(Request $request){
+      $mes_id = $request->mes_id;
+      $mes_model = Me::select('nome')->where('id', $mes_id)->firstOrFail();
+      $mes = $mes_model->nome;
+      $ano = null;
+      // dd($mes_id);
+
+
+      $vendas = $this->venda->with('itensVenda', 'pagamentosVenda', 'user', 'cliente')->whereMonth('created_at', $mes_id)->get();
+      $valor_venda = Venda::whereMonth('created_at', $mes_id)->sum('valor_iva');
+      $valor_venda_pago = 0;
+      $anos = DB::table('anos')->pluck('ano', 'id')->all();
+      $meses = DB::table('mes')->pluck('nome', 'id')->all();
+
+      foreach ($vendas as $venda) {
+       foreach ($venda->pagamentosVenda as $pagamentos) {
+         $valor_venda_pago = $valor_venda_pago + $pagamentos->valor_pago;
+       }
+     }
+
+     return view('reports.vendas.report_geral_vendas', compact('vendas', 'valor_venda', 'valor_venda_pago', 'anos', 'meses', 'mes', 'ano'));
+     
+   }
+
+   public function listarVendaPorAno(Request $request){
+       //dd($request->all());
+     $ano_id = $request->ano_id;
+     $ano_model = Ano::select('ano')->where('id', $ano_id)->firstOrFail();
+     $ano = $ano_model->ano;
+     $mes = null;
+
+
+     $vendas = $this->venda->with('itensVenda', 'pagamentosVenda', 'user', 'cliente')->whereYear('created_at', $ano)->get();
+     $valor_venda = Venda::whereYear('created_at', $ano)->sum('valor_iva');
+     $valor_venda_pago = 0;
+     $anos = DB::table('anos')->pluck('ano', 'id')->all();
+     $meses = DB::table('mes')->pluck('nome', 'id')->all();
+
+     foreach ($vendas as $venda) {
+       foreach ($venda->pagamentosVenda as $pagamentos) {
+         $valor_venda_pago = $valor_venda_pago + $pagamentos->valor_pago;
+       }
+     }
+     
+
+
+     return view('reports.vendas.report_geral_vendas', compact('vendas', 'valor_venda', 'valor_venda_pago', 'anos', 'meses', 'ano', 'mes'));
+   }
+ }

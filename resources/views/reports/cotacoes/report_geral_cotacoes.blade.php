@@ -23,7 +23,7 @@
           </div>
         </div>
 
-        <table class="mostrar table table-striped table-advance table-hover">
+        <table class="table table-striped table-advance table-hover" id="tbl_report_cotacoes" data-order='[[ 0, "desc" ]]'>
           <thead>
 
             <tr>
@@ -38,7 +38,7 @@
             <tr>
 
               <td> {{$cotacao->id}} </td>
-              <td> {{$cotacao->data}} </td>
+              <td> {{date('d-m-Y', strtotime($cotacao->created_at))}} </td>
               <td> {{$cotacao->cliente->nome}} </td>
               <td> {{$cotacao->valor_total}} </td>
 
@@ -55,4 +55,53 @@
   </div>
 </div>
 
+@endsection
+
+@section('script')
+<script type="text/javascript">
+
+  $(document).ready(function() {
+
+    var titulo = "Cotações";   
+    var msg_bottom = "Papelaria Agenda & Serviços";
+
+    var oTable = $('#tbl_report_cotacoes').DataTable( {
+      "processing": true,
+      "pagingType": "full_numbers",
+      "dom": 'Brtpl',
+      buttons: [
+            // 'print',
+            // 'excelHtml5',
+            // 'pdfHtml5'
+            {
+              text: 'Imprimir',
+              extend: 'print',
+              title: titulo,
+              messageBottom: msg_bottom,
+              className: 'btn btn-defaul btn-sm'
+            },
+            {
+              text: 'Excel',
+              extend: 'excelHtml5',
+              title: titulo,
+              messageBottom: msg_bottom,
+              className: 'btn btn-defaul btn-sm'
+            },
+            {
+              text: 'PDF',
+              extend: 'pdfHtml5',
+              title: titulo,
+              messageBottom: msg_bottom,
+              className: 'btn btn-defaul btn-sm'
+            }
+            ]
+        });
+
+    $('#pesq').keyup(function(){
+      oTable.search($(this).val()).draw();
+    });
+
+  } );
+
+</script>
 @endsection

@@ -29,7 +29,7 @@
               </div>
             </div>
             
-            <table class="mostrar table table-striped table-advance table-hover">
+            <table class="table table-striped table-advance table-hover" id="tbl_index_guias_saida" data-order='[[ 0, "desc" ]]'>
               <thead>
                 <tr>
                   <th><i class="icon_profile"></i>Código da Guia </th>
@@ -79,10 +79,56 @@
     </section>
   </div>
 </div>
-
+{{Form::hidden('codigo_saida', $saida_id, ['id'=>'codigo_saida', 'disabled'])}}
 @endsection
 @section('script')
 <script type="text/javascript">
+
+  // DataTables Inicio
+  $(document).ready(function() {
+
+    var codigo_saida = $('#codigo_saida').val();
+    var titulo = "Guias de Entrega da Factura: "+codigo_saida;   
+    var msg_bottom = "Papelaria Agenda & Serviços";
+
+    var oTable = $('#tbl_index_guias_saida').DataTable( {
+      "processing": true,
+      "pagingType": "full_numbers",
+      "dom": 'Brtpl',
+      buttons: [
+            // 'print',
+            // 'excelHtml5',
+            // 'pdfHtml5'
+            {
+              text: 'Imprimir',
+              extend: 'print',
+              title: titulo,
+              messageBottom: msg_bottom,
+              className: 'btn btn-defaul btn-sm'
+            },
+            {
+              text: 'Excel',
+              extend: 'excelHtml5',
+              title: titulo,
+              messageBottom: msg_bottom,
+              className: 'btn btn-defaul btn-sm'
+            },
+            {
+              text: 'PDF',
+              extend: 'pdfHtml5',
+              title: titulo,
+              messageBottom: msg_bottom,
+              className: 'btn btn-defaul btn-sm'
+            }
+            ]
+          });
+
+    $('#pesq').keyup(function(){
+      oTable.search($(this).val()).draw();
+    });
+
+  } );
+  // DataTables Fim
   $(document).ready(function(){
     $('.submit_iten').on('click',function(){
       $(".wait").css("display", "block");

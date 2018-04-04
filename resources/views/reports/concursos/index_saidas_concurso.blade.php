@@ -4,6 +4,7 @@
   <div class="col-lg-12">
     <h3 class="page-header"><i class="fa fa-file-text-o"></i>Facturas
     	do Concurso <b><span style="color: blue;"> {{ $concurso->codigo_concurso }} </span></b>
+      {{Form::hidden('codigo_concurso', $concurso->codigo_concurso, ['disabled', 'id'=>'codigo_concurso'])}}
     </h3>
     <ol class="breadcrumb">
       <li><i class="fa fa-home"></i><a href="#">Home</a></li>
@@ -28,7 +29,7 @@
         </div>
         <div class="row">
           <div class="col-md-12">
-            <table class="mostrar table table-striped table-advance table-hover">
+            <table class="table table-striped table-advance table-hover" id="tbl_facturas_concurso" data-order='[[ 0, "desc" ]]'>
               <thead>
                 <tr>
                   <th><i class="icon_profile"></i>Código da Factura </th>
@@ -50,70 +51,70 @@
                   {{ Form::open(['route'=>['saida.destroy', $saida->id], 'method'=>'DELETE']) }} 
                   <td>
                     <div class="btn-group btn-group-sm">
-                      
-                        @php
-                        $som_quantidade_rest = 0;
-                        @endphp
 
-                        @foreach($saida->itensSaida as $iten_saida)
-                        @php
-                        $som_quantidade_rest = $som_quantidade_rest + $iten_saida->quantidade_rest
-                        @endphp
-                        @endforeach
+                      @php
+                      $som_quantidade_rest = 0;
+                      @endphp
 
-                        @if($som_quantidade_rest <= 0)
-                        {{Form::button('Factura Fechada', ['class'=>'btn btn-warning btn-sm', 'style'=>'width:110px', 'disabled'])}}
-                        @else
-                        <a href="{{ route('create_guia', $saida->id)}}" class="btn btn-default btn-sm" style="width:110px" disabled>Guia de Entrega</a>
-                        @endif
-                      </div>
+                      @foreach($saida->itensSaida as $iten_saida)
+                      @php
+                      $som_quantidade_rest = $som_quantidade_rest + $iten_saida->quantidade_rest
+                      @endphp
+                      @endforeach
 
-                    </td>
-                    <td class="text-right">
-
-
-                      <div class="btn-group btn-group-sm">
-                        <a class="btn btn-primary" href="{{route('saida.show', $saida->id)}}"><i class="fa fa-eye"></i></a>
-                        <a class="btn btn-success" href="{{route('saida.edit', $saida->id)}}"
-                          @if($saida->concurso_id != 0)
-                          {{ 'disabled' }}
-                          @endif
-                          @if($saida->pago==1)
-                          {{ 'disabled' }}
-                          @endif
-                          >
-                          <i class="fa fa-pencil"></i>
-                        </a>
-
-                        <button type="submit" class="btn btn-danger remover_iten" 
-                        @if($saida->concurso_id != 0)
-                        {{ 'disabled' }}
-                        @endif
-                        >
-                        <i class="icon_close_alt2"></i>
-                      </button>
-
+                      @if($som_quantidade_rest <= 0)
+                      {{Form::button('Factura Fechada', ['class'=>'btn btn-warning btn-sm', 'style'=>'width:110px', 'disabled'])}}
+                      @else
+                      <a href="{{ route('create_guia', $saida->id)}}" class="btn btn-default btn-sm" style="width:110px" disabled>Guia de Entrega</a>
+                      @endif
                     </div>
 
                   </td>
-                  {{ Form::close() }}
+                  <td class="text-right">
 
-                </tr>
-                @endforeach
-              </tbody>
-            </table>
-          </div>
+
+                    <div class="btn-group btn-group-sm">
+                      <a class="btn btn-primary" href="{{route('saida.show', $saida->id)}}"><i class="fa fa-eye"></i></a>
+                      <a class="btn btn-success" href="{{route('saida.edit', $saida->id)}}"
+                        @if($saida->concurso_id != 0)
+                        {{ 'disabled' }}
+                        @endif
+                        @if($saida->pago==1)
+                        {{ 'disabled' }}
+                        @endif
+                        >
+                        <i class="fa fa-pencil"></i>
+                      </a>
+
+                      <button type="submit" class="btn btn-danger remover_iten" 
+                      @if($saida->concurso_id != 0)
+                      {{ 'disabled' }}
+                      @endif
+                      >
+                      <i class="icon_close_alt2"></i>
+                    </button>
+
+                  </div>
+
+                </td>
+                {{ Form::close() }}
+
+              </tr>
+              @endforeach
+            </tbody>
+          </table>
         </div>
       </div>
-      <div class="panel-footer">
-        <div class="row">
-          <div class="col-md-6">
-          </div>
+    </div>
+    <div class="panel-footer">
+      <div class="row">
+        <div class="col-md-6">
         </div>
       </div>
+    </div>
 
-    </section>
-  </div>
+  </section>
+</div>
 </div>
 
 <!-- Modal Pagamento -->
@@ -209,6 +210,50 @@
 
 @section('script')
 <script type="text/javascript">
+  // DataTables Inicio
+  $(document).ready(function() {
+    var codigo_concurso = $('#codigo_concurso').val();
+    var titulo = "Facturas do Concurso "+codigo_concurso;   
+    var msg_bottom = "Papelaria Agenda & Serviços";
+
+    var oTable = $('#tbl_facturas_concurso').DataTable( {
+      "processing": true,
+      "pagingType": "full_numbers",
+      "dom": 'Brtpl',
+      buttons: [
+            // 'print',
+            // 'excelHtml5',
+            // 'pdfHtml5'
+            {
+              text: 'Imprimir',
+              extend: 'print',
+              title: titulo,
+              messageBottom: msg_bottom,
+              className: 'btn btn-defaul btn-sm'
+            },
+            {
+              text: 'Excel',
+              extend: 'excelHtml5',
+              title: titulo,
+              messageBottom: msg_bottom,
+              className: 'btn btn-defaul btn-sm'
+            },
+            {
+              text: 'PDF',
+              extend: 'pdfHtml5',
+              title: titulo,
+              messageBottom: msg_bottom,
+              className: 'btn btn-defaul btn-sm'
+            }
+            ]
+          });
+
+    $('#pesq').keyup(function(){
+      oTable.search($(this).val()).draw();
+    });
+
+  } );
+  // DataTables Fim
   $(document).ready(function(){
     $('.submit_iten').on('click',function(){
       $(".wait").css("display", "block");

@@ -127,7 +127,7 @@
               </div>
             </div>
 
-            <table class="mostrar table table-striped table-advance table-hover">
+            <table class="table table-striped table-advance table-hover" id="tbl_index_pagamentos_venda" data-order='[[ 3, "desc" ]]'>
 
               <thead>
                 <tr>
@@ -187,10 +187,59 @@
   </div>
 </div>
 
+{{Form::hidden('codigo_venda', $venda->id, ['id'=>'codigo_venda', 'disabled'])}}
+
 @endsection
 
 @section('script')
 <script type="text/javascript">
+
+   // DataTables Inicio
+  $(document).ready(function() {
+
+    var codigo_venda = $('#codigo_venda').val();
+    var titulo = "Pagamentos da Venda "+codigo_venda;   
+    var msg_bottom = "Papelaria Agenda & Serviços";
+
+    var oTable = $('#tbl_index_pagamentos_venda').DataTable( {
+      "processing": true,
+      "pagingType": "full_numbers",
+      "dom": 'Brtpl',
+      buttons: [
+            // 'print',
+            // 'excelHtml5',
+            // 'pdfHtml5'
+            {
+              text: 'Imprimir',
+              extend: 'print',
+              title: titulo,
+              messageBottom: msg_bottom,
+              className: 'btn btn-defaul btn-sm'
+            },
+            {
+              text: 'Excel',
+              extend: 'excelHtml5',
+              title: titulo,
+              messageBottom: msg_bottom,
+              className: 'btn btn-defaul btn-sm'
+            },
+            {
+              text: 'PDF',
+              extend: 'pdfHtml5',
+              title: titulo,
+              messageBottom: msg_bottom,
+              className: 'btn btn-defaul btn-sm'
+            }
+            ]
+          });
+
+    $('#pesq').keyup(function(){
+      oTable.search($(this).val()).draw();
+    });
+
+  } );
+  // DataTables Fim
+  
   $(document).ready(function(){
     $('.submit_iten').on('click',function(){
       $(".wait").css("display", "block");

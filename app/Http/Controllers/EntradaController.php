@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use App\Http\Requests\PagamentoEntradaStoreUpdateFormRequest;
 use App\Http\Requests\EntradaStoreUpdateFormRequest;
 use App\Model\Empresa;
+use App\Model\Ano;
+use App\Model\Me;
 use App\Model\Produto;
 use App\Model\Entrada;
 use App\Model\ItenEntrada;
@@ -216,11 +218,11 @@ class EntradaController extends Controller
     public function showRelatorio($id)
     {
         //
-        $entrada = $this->entrada->with('itensEntrada.produto', 'user')->find($id); 
+      $entrada = $this->entrada->with('itensEntrada.produto', 'user')->find($id); 
             // Tras a saida. Tras os Itens da Saida e dentro da relacao ItensSaida eh possivel pegar a relacao Prodtuo atraves do dot ou ponto. NOTA: a relacao produto nao esta na saida e sim na itensSaida, mas eh possivel ter os seus dados partido da saida como se pode ver.
-         $pdf = PDF::loadView('entradas.relatorio', compact('entrada'));
-         return $pdf->download('entrada.pdf');
-        
+      $pdf = PDF::loadView('entradas.relatorio', compact('entrada'));
+      return $pdf->download('entrada.pdf');
+
     }
     /**
      * Show the form for editing the specified resource.
@@ -402,11 +404,70 @@ class EntradaController extends Controller
 
     public function reportGeralEntradas(){
 
-      $entradas = $this->entrada->with('user')->orderBy('id', 'asc')->get();
+      // $entradas = $this->entrada->with('user')->orderBy('id', 'asc')->get();
 
-      return view('reports.entradas.report_geral_entradas', compact('entradas'));
+      // return view('reports.entradas.report_geral_entradas', compact('entradas'));
+
+      $valor_entrada = Entrada::sum('valor_total');
+      $valor_entrada_pago = PagamentoEntrada::sum('valor_pago');
+      $mes = null;
+      $ano = null;
+
+      $entradas = $this->entrada->with('itensEntrada', 'user', 'fornecedor')->get();
+      $anos = DB::table('anos')->pluck('ano', 'id')->all();
+      $meses = DB::table('mes')->pluck('nome', 'id')->all();
+
+      return view('reports.entradas.report_geral_entradas', compact('entradas', 'valor_entrada', 'valor_entrada_pago', 'anos', 'meses', 'mes', 'ano'));
 
     }
+
+    public function listarEntradaPorMes(Request $request){
+        $mes_id = $request->mes_id;
+        $mes_model = Me::select('nome')->where('id', $mes_id)->firstOrFail();
+        $mes = $mes_model->nome;
+        $ano = null;
+      // dd($mes_id);
+
+
+        $entradas = $this->entrada->with('itensEntrada', 'pagamentosEntrada', 'user', 'fornecedor')->whereMonth('created_at', $mes_id)->get();
+        $valor_entrada = Entrada::whereMonth('created_at', $mes_id)->sum('valor_total');
+        $valor_entrada_pago = 0;
+        $anos = DB::table('anos')->pluck('ano', 'id')->all();
+        $meses = DB::table('mes')->pluck('nome', 'id')->all();
+
+        foreach ($entradas as $entrada) {
+         foreach ($entrada->pagamentosEntrada as $pagamentos) {
+           $valor_entrada_pago = $valor_entrada_pago + $pagamentos->valor_pago;
+         }
+       }
+
+       return view('reports.entradas.report_geral_entradas', compact('entradas', 'valor_entrada', 'valor_entrada_pago', 'anos', 'meses', 'mes', 'ano'));
+
+     }
+
+     public function listarEntradaPorAno(Request $request){
+       //dd($request->all());
+       $ano_id = $request->ano_id;
+       $ano_model = Ano::select('ano')->where('id', $ano_id)->firstOrFail();
+       $ano = $ano_model->ano;
+       $mes = null;
+
+
+       $entradas = $this->entrada->with('itensEntrada', 'pagamentosEntrada', 'user', 'fornecedor')->whereYear('created_at', $ano)->get();
+       $valor_entrada = Entrada::whereYear('created_at', $ano)->sum('valor_total');
+       $valor_entrada_pago = 0;
+       $anos = DB::table('anos')->pluck('ano', 'id')->all();
+       $meses = DB::table('mes')->pluck('nome', 'id')->all();
+
+       foreach ($entradas as $entrada) {
+         foreach ($entrada->pagamentosEntrada as $pagamentos) {
+           $valor_entrada_pago = $valor_entrada_pago + $pagamentos->valor_pago;
+         }
+       }
+
+
+       return view('reports.entradas.report_geral_entradas', compact('entradas', 'valor_entrada', 'valor_entrada_pago', 'anos', 'meses', 'ano', 'mes'));
+     }
 
     public function entradaTeste($id){
       echo "Teste";

@@ -30,7 +30,7 @@
               </div>
             </div>
 
-            <table class="mostrar table table-striped table-advance table-hover">
+            <table class="table table-striped table-advance table-hover" id="index_guias_entrega" data-order='[[ 0, "desc" ]]'>
               <thead>
                 <tr>
                   <th><i class="icon_profile"></i>Código da Guia </th>
@@ -83,6 +83,52 @@
 
 @section('script')
 <script type="text/javascript">
+
+  // DataTables Inicio
+  $(document).ready(function() {
+
+    var titulo = "Guias de Entrega";   
+    var msg_bottom = "Papelaria Agenda & Serviços";
+
+    var oTable = $('#index_guias_entrega').DataTable( {
+      "processing": true,
+      "pagingType": "full_numbers",
+      "dom": 'Brtpl',
+      buttons: [
+            // 'print',
+            // 'excelHtml5',
+            // 'pdfHtml5'
+            {
+              text: 'Imprimir',
+              extend: 'print',
+              title: titulo,
+              messageBottom: msg_bottom,
+              className: 'btn btn-defaul btn-sm'
+            },
+            {
+              text: 'Excel',
+              extend: 'excelHtml5',
+              title: titulo,
+              messageBottom: msg_bottom,
+              className: 'btn btn-defaul btn-sm'
+            },
+            {
+              text: 'PDF',
+              extend: 'pdfHtml5',
+              title: titulo,
+              messageBottom: msg_bottom,
+              className: 'btn btn-defaul btn-sm'
+            }
+            ]
+          });
+
+    $('#pesq').keyup(function(){
+      oTable.search($(this).val()).draw();
+    });
+
+  } );
+  // DataTables Fim
+
   $(document).ready(function(){
     $('.submit_iten').on('click',function(){
       $(".wait").css("display", "block");

@@ -145,7 +145,7 @@ class produtoController extends Controller
     public function listarTodos()
     {
         
-        $produtos = $this->produto->with('categoria', 'fornecedor')->paginate(7);
+        $produtos = $this->produto->with('categoria', 'fornecedor')->get();
 
         $categorias = DB::table('categorias')->select('nome', 'id')->get();
 

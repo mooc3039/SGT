@@ -30,7 +30,7 @@
 
         <div class="row">
           <div class="col-md-12">
-            <table class="mostrar table table-striped table-advance table-hover">
+            <table class="table table-striped table-advance table-hover" id="tbl_index_clientes" data-order='[[ 0, "asc" ]]'>
 
           <thead>
             <tr>
@@ -107,3 +107,53 @@
 </div>
 
 @endsection
+
+@section('script')
+<script type="text/javascript">
+    // DataTables Inicio
+  $(document).ready(function() {
+
+    var titulo = "Clientes";   
+    var msg_bottom = "Papelaria Agenda & Serviços";
+
+    var oTable = $('#tbl_index_clientes').DataTable( {
+      "processing": true,
+      "pagingType": "full_numbers",
+      "dom": 'Brtpl',
+      buttons: [
+            // 'print',
+            // 'excelHtml5',
+            // 'pdfHtml5'
+            {
+              text: 'Imprimir',
+              extend: 'print',
+              title: titulo,
+              messageBottom: msg_bottom,
+              className: 'btn btn-defaul btn-sm'
+            },
+            {
+              text: 'Excel',
+              extend: 'excelHtml5',
+              title: titulo,
+              messageBottom: msg_bottom,
+              className: 'btn btn-defaul btn-sm'
+            },
+            {
+              text: 'PDF',
+              extend: 'pdfHtml5',
+              title: titulo,
+              messageBottom: msg_bottom,
+              className: 'btn btn-defaul btn-sm'
+            }
+            ]
+          });
+
+    $('#pesq').keyup(function(){
+      oTable.search($(this).val()).draw();
+    });
+
+  } );
+  // DataTables Fim
+</script>
+@endsection
+

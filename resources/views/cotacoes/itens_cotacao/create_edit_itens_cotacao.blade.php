@@ -63,7 +63,7 @@
 									<input type="text" id="pesq" class="form-control" placeholder="Pesquisa...">
 								</div>
 							</div>
-							<table class="mostrar table table-striped table-advance table-hover">
+							<table class="table table-striped table-advance table-hover" id="tbl_create_edit_itens_cotacoes" data-order='[[ 0, "desc" ]]'>
 								<thead>
 									<tr>
 										<th><i class="icon_mobile"></i> Designação </th>
@@ -337,10 +337,58 @@
 			</div><!-- /.modal -->
 
 			<!-- FIM MODAL INSERIR ITEM -->
+			{{Form::hidden('codigo_cotacao', $cotacao->id, ['id'=>'codigo_cotacao', 'disabled'])}}
 			@endsection
 
 			@section('script')
 			<script>
+
+				 // DataTables Inicio
+  $(document).ready(function() {
+
+    var codigo_cotacao = $('#codigo_cotacao').val();
+    var titulo = "Itens da Venda "+codigo_cotacao;   
+    var msg_bottom = "Papelaria Agenda & Serviços";
+
+    var oTable = $('#tbl_create_edit_itens_cotacoes').DataTable( {
+      "processing": true,
+      "pagingType": "full_numbers",
+      "dom": 'Brtpl',
+      buttons: [
+            // 'print',
+            // 'excelHtml5',
+            // 'pdfHtml5'
+            {
+              text: 'Imprimir',
+              extend: 'print',
+              title: titulo,
+              messageBottom: msg_bottom,
+              className: 'btn btn-defaul btn-sm'
+            },
+            {
+              text: 'Excel',
+              extend: 'excelHtml5',
+              title: titulo,
+              messageBottom: msg_bottom,
+              className: 'btn btn-defaul btn-sm'
+            },
+            {
+              text: 'PDF',
+              extend: 'pdfHtml5',
+              title: titulo,
+              messageBottom: msg_bottom,
+              className: 'btn btn-defaul btn-sm'
+            }
+            ]
+          });
+
+    $('#pesq').keyup(function(){
+      oTable.search($(this).val()).draw();
+    });
+
+  } );
+  // DataTables Fim
+
 
 				$(document).ready(function(){
 					$('.submit_iten').on('click',function(){

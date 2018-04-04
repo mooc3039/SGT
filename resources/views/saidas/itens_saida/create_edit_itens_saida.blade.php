@@ -63,7 +63,7 @@
 								<input type="text" id="pesq" class="form-control" placeholder="Pesquisa...">
 							</div>
 						</div>
-						<table class="mostrar table table-striped table-advance table-hover">
+						<table class="table table-striped table-advance table-hover" id="tbl_create_edit_itens_saida" data-order='[[ 0, "desc" ]]'>
 							<thead>
 								<tr>
 									<th><i class="icon_mobile"></i> Designação </th>
@@ -157,7 +157,8 @@
 
 				</div>
 				<div class="row">
-					<div class="col-md-6"><a href="" class="btn btn-primary">Imprimir Saída</a>
+					<div class="col-md-6">
+						<!-- <a href="" class="btn btn-primary">Imprimir Saída</a> -->
 
 					</div>
 					<div class="col-md-6 text-right"><a href="{{route('saida.index')}}" class="btn btn-warning">Voltar</a>
@@ -183,29 +184,76 @@
 @include('saidas.itens_saida.modals.frm_modal_editar_iten_saida')
 <!-- FIM MODAL EDITAR ITEM -->
 
+{{Form::hidden('codigo_saida', $saida->id, ['id'=>'codigo_saida', 'disabled'])}}
 
 @endsection
 
 @section('script')
 <script>
 
-	$(document).ready(function(){
-		$('.submit_iten').on('click',function(){
-			$(".wait").css("display", "block");
-		});
-	});
+	// DataTables Inicio
+	$(document).ready(function() {
 
-	$(document).ready(function(){
-		$(document).ajaxStart(function(){
-			$(".wait").css("display", "block");
-			document.getElementById("new_quantidade").disabled = true;
+		var codigo_saida = $('#codigo_saida').val();
+		var titulo = "Itens da Factura "+codigo_saida;   
+		var msg_bottom = "Papelaria Agenda & Serviços";
+
+		var oTable = $('#tbl_create_edit_itens_saida').DataTable( {
+			"processing": true,
+			"pagingType": "full_numbers",
+			"dom": 'Brtpl',
+			buttons: [
+            // 'print',
+            // 'excelHtml5',
+            // 'pdfHtml5'
+            {
+            	text: 'Imprimir',
+            	extend: 'print',
+            	title: titulo,
+            	messageBottom: msg_bottom,
+            	className: 'btn btn-defaul btn-sm'
+            },
+            {
+            	text: 'Excel',
+            	extend: 'excelHtml5',
+            	title: titulo,
+            	messageBottom: msg_bottom,
+            	className: 'btn btn-defaul btn-sm'
+            },
+            {
+            	text: 'PDF',
+            	extend: 'pdfHtml5',
+            	title: titulo,
+            	messageBottom: msg_bottom,
+            	className: 'btn btn-defaul btn-sm'
+            }
+            ]
+        });
+
+		$('#pesq').keyup(function(){
+			oTable.search($(this).val()).draw();
 		});
-		$(document).ajaxComplete(function(){
-			$(".wait").css("display", "none");
-			document.getElementById("new_quantidade").disabled = false;
+
+	} );
+  // DataTables Fim
+
+  $(document).ready(function(){
+  	$('.submit_iten').on('click',function(){
+  		$(".wait").css("display", "block");
+  	});
+  });
+
+  $(document).ready(function(){
+  	$(document).ajaxStart(function(){
+  		$(".wait").css("display", "block");
+  		document.getElementById("new_quantidade").disabled = true;
+  	});
+  	$(document).ajaxComplete(function(){
+  		$(".wait").css("display", "none");
+  		document.getElementById("new_quantidade").disabled = false;
 			$('#new_quantidade').focus(); // Nao esta no find price por tratar-se de modal aqui.
 		});
-	});
+  });
 
 		//JAVASCRIPT MODAL NOVO ITEM
 

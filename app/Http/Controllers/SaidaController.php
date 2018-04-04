@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use App\Http\Requests\SaidaStoreUpdateFormRequest;
 use App\Http\Requests\PagamentoSaidaStoreUpdateFormRequest;
 use App\Model\Empresa;
+use App\Model\Ano;
+use App\Model\Me;
 use App\Model\Saida;
 use App\Model\Concurso;
 use App\Model\ItenConcurso;
@@ -520,23 +522,71 @@ class SaidaController extends Controller
 
       public function reportGeralSaidas(){
 
-        $saidas = $this->saida->orderBy('id', 'asc')->get();
+      
+        $valor_saida = Saida::sum('valor_iva');
+        $valor_saida_pago = PagamentoSaida::sum('valor_pago');
+        $mes = null;
+        $ano = null;
 
-        $valor_total_saidas = 0;
+        $saidas = $this->saida->with('itensSaida', 'user', 'cliente')->get();
+        $anos = DB::table('anos')->pluck('ano', 'id')->all();
+        $meses = DB::table('mes')->pluck('nome', 'id')->all();
+
+        return view('reports.saidas.report_geral_saidas', compact('saidas', 'valor_saida', 'valor_saida_pago', 'anos', 'meses', 'mes', 'ano'));
+
+      }
+
+      public function listarSaidaPorMes(Request $request){
+        $mes_id = $request->mes_id;
+        $mes_model = Me::select('nome')->where('id', $mes_id)->firstOrFail();
+        $mes = $mes_model->nome;
+        $ano = null;
+      // dd($mes_id);
+
+
+        $saidas = $this->saida->with('itensSaida', 'pagamentosSaida', 'user', 'cliente')->where('concurso_id', 0)->whereMonth('data', $mes_id)->get();
+        $valor_saida = Saida::where('concurso_id', 0)->whereMonth('data', $mes_id)->sum('valor_iva');
+        $valor_saida_pago = 0;
+        $anos = DB::table('anos')->pluck('ano', 'id')->all();
+        $meses = DB::table('mes')->pluck('nome', 'id')->all();
 
         foreach ($saidas as $saida) {
+         foreach ($saida->pagamentosSaida as $pagamentos) {
+           $valor_saida_pago = $valor_saida_pago + $pagamentos->valor_pago;
+         }
+       }
 
-          $valor_total_saidas = $valor_total_saidas + $saida->valor_total;
+       return view('reports.saidas.report_geral_saidas', compact('saidas', 'valor_saida', 'valor_saida_pago', 'anos', 'meses', 'mes', 'ano'));
 
-        }
+     }
 
-        return view('reports.saidas.report_geral_saidas', compact('saidas', 'valor_total_saidas'));
+     public function listarSaidaPorAno(Request $request){
+       //dd($request->all());
+       $ano_id = $request->ano_id;
+       $ano_model = Ano::select('ano')->where('id', $ano_id)->firstOrFail();
+       $ano = $ano_model->ano;
+       $mes = null;
 
-      }
 
-      public function findConcursoDados(Request $request)
-      {
-        $concurso = $this->concurso->with('itensConcurso.produto', 'pagamentosConcurso.formaPagamento', 'cliente', 'formaPagamento')->find($request->id);
-        return response()->json($concurso);
-      }
+       $saidas = $this->saida->with('itensSaida', 'pagamentosSaida', 'user', 'cliente')->where('concurso_id', 0)->whereYear('data', $ano)->get();
+       $valor_saida = Saida::where('concurso_id', 0)->whereYear('data', $ano)->sum('valor_iva');
+       $valor_saida_pago = 0;
+       $anos = DB::table('anos')->pluck('ano', 'id')->all();
+       $meses = DB::table('mes')->pluck('nome', 'id')->all();
+
+       foreach ($saidas as $saida) {
+         foreach ($saida->pagamentosSaida as $pagamentos) {
+           $valor_saida_pago = $valor_saida_pago + $pagamentos->valor_pago;
+         }
+       }
+
+
+       return view('reports.saidas.report_geral_saidas', compact('saidas', 'valor_saida', 'valor_saida_pago', 'anos', 'meses', 'ano', 'mes'));
+     }
+
+     public function findConcursoDados(Request $request)
+     {
+      $concurso = $this->concurso->with('itensConcurso.produto', 'pagamentosConcurso.formaPagamento', 'cliente', 'formaPagamento')->find($request->id);
+      return response()->json($concurso);
     }
+  }

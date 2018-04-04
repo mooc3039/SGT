@@ -9,6 +9,8 @@ use App\Http\Requests\ConcursoStoreUpdateFormRequest;
 use App\Http\Requests\PagamentoConcursoStoreUpdateFormRequest;
 use App\User;
 use App\Model\Empresa;
+use App\Model\Ano;
+use App\Model\Me;
 use App\Model\Concurso;
 use App\Model\Saida;
 use App\Model\TipoCliente;
@@ -407,20 +409,79 @@ class ConcursoController extends Controller
 
     public function reportGeralConcursos(){
 
-      $concursos = $this->concurso->with('cliente')->get();
+      // $concursos = $this->concurso->with('cliente')->get();
 
-      return view('reports.concursos.report_geral_concursos', compact('concursos'));
+      // return view('reports.concursos.report_geral_concursos', compact('concursos'));
+
+      $valor_concurso = Concurso::sum('valor_iva');
+      $valor_concurso_pago = PagamentoConcurso::sum('valor_pago');
+      $mes = null;
+      $ano = null;
+
+      $concursos = $this->concurso->with('user', 'cliente')->get();
+      $anos = DB::table('anos')->pluck('ano', 'id')->all();
+      $meses = DB::table('mes')->pluck('nome', 'id')->all();
+
+      return view('reports.concursos.report_geral_concursos', compact('concursos', 'valor_concurso', 'valor_concurso_pago', 'anos', 'meses', 'mes', 'ano'));
 
     }
 
-    public function facturasConcurso($concurso_id){
+    public function listarconcursoPorMes(Request $request){
+      $mes_id = $request->mes_id;
+      $mes_model = Me::select('nome')->where('id', $mes_id)->firstOrFail();
+      $mes = $mes_model->nome;
+      $ano = null;
+      // dd($mes_id);
 
 
-      $concurso = Concurso::where('id', $concurso_id)->first();
-      $saidas = Saida::with('itensSaida', 'pagamentosSaida')->where('concurso_id', $concurso_id)->get();
-      // dd($saidas);
-      $formas_pagamento = DB::table('forma_pagamentos')->pluck('descricao', 'id')->all();
+      $concursos = $this->concurso->with('pagamentosConcurso', 'user', 'cliente')->whereMonth('created_at', $mes_id)->get();
+      $valor_concurso = Concurso::whereMonth('created_at', $mes_id)->sum('valor_iva');
+      $valor_concurso_pago = 0;
+      $anos = DB::table('anos')->pluck('ano', 'id')->all();
+      $meses = DB::table('mes')->pluck('nome', 'id')->all();
 
-      return view('reports.concursos.index_saidas_concurso', compact('saidas', 'formas_pagamento', 'concurso'));
-    }
+      foreach ($concursos as $concurso) {
+       foreach ($concurso->pagamentosConcurso as $pagamentos) {
+         $valor_concurso_pago = $valor_concurso_pago + $pagamentos->valor_pago;
+       }
+     }
+
+     return view('reports.concursos.report_geral_concursos', compact('concursos', 'valor_concurso', 'valor_concurso_pago', 'anos', 'meses', 'mes', 'ano'));
+
+   }
+
+   public function listarconcursoPorAno(Request $request){
+       //dd($request->all());
+     $ano_id = $request->ano_id;
+     $ano_model = Ano::select('ano')->where('id', $ano_id)->firstOrFail();
+     $ano = $ano_model->ano;
+     $mes = null;
+
+
+     $concursos = $this->concurso->with('pagamentosConcurso', 'user', 'cliente')->whereYear('created_at', $ano)->get();
+     $valor_concurso = concurso::whereYear('created_at', $ano)->sum('valor_iva');
+     $valor_concurso_pago = 0;
+     $anos = DB::table('anos')->pluck('ano', 'id')->all();
+     $meses = DB::table('mes')->pluck('nome', 'id')->all();
+
+     foreach ($concursos as $concurso) {
+       foreach ($concurso->pagamentosConcurso as $pagamentos) {
+         $valor_concurso_pago = $valor_concurso_pago + $pagamentos->valor_pago;
+       }
+     }
+
+
+     return view('reports.concursos.report_geral_concursos', compact('concursos', 'valor_concurso', 'valor_concurso_pago', 'anos', 'meses', 'ano', 'mes'));
+   }
+
+   public function facturasConcurso($concurso_id){
+
+
+    $concurso = Concurso::where('id', $concurso_id)->first();
+    $saidas = Saida::with('itensSaida', 'pagamentosSaida')->where('concurso_id', $concurso_id)->get();
+      // dd($concursos);
+    $formas_pagamento = DB::table('forma_pagamentos')->pluck('descricao', 'id')->all();
+
+    return view('reports.concursos.index_saidas_concurso', compact('saidas', 'formas_pagamento', 'concurso'));
   }
+}

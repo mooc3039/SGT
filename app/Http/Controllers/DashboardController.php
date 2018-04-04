@@ -32,34 +32,57 @@ class DashboardController extends Controller
    $total_fornecedor = Fornecedor::count();
    $total_stock = ItenEntrada::count();
 
-   $valor_entrada = Entrada::whereMonth('updated_at', $mes)->sum('valor_total');
-   $valor_entrada_pago = PagamentoEntrada::whereMonth('updated_at', $mes)->sum('valor_pago');
+   $entradas = Entrada::with('pagamentosEntrada')->whereMonth('created_at', $mes)->get();
+   $valor_entrada = Entrada::whereMonth('created_at', $mes)->sum('valor_total');
+   $valor_entrada_pago = 0;
+
+   foreach ($entradas as $entrada) {
+       foreach ($entrada->pagamentosEntrada as $pagamentos) {
+         $valor_entrada_pago = $valor_entrada_pago + $pagamentos->valor_pago;
+       }
+     }
 
    // SAIDA
-   $valor_saida = Saida::whereMonth('data_edicao', $mes)->where('concurso_id', '=', 0)->sum('valor_iva');
-   $saida_ids_concurso_zero = Saida::where('concurso_id', '=', 0)->get();
+   $saidas = Saida::whereMonth('data', $mes)->where('concurso_id', '=', 0)->get();
+   $valor_saida = Saida::with('pagamentosSaida')->whereMonth('data', $mes)->where('concurso_id', '=', 0)->sum('valor_iva');
+  //  $saida_ids_concurso_zero = Saida::where('concurso_id', '=', 0)->get();
 
-   $array_saida_id = array();
+  //  $array_saida_id = array();
 
-   if(sizeof($saida_ids_concurso_zero)>0){
-    for($i=0;$i<sizeof($saida_ids_concurso_zero); $i++){
-      $array_saida_id[] = $saida_ids_concurso_zero[$i]->id;
-    }
-  }
+  //  if(sizeof($saida_ids_concurso_zero)>0){
+  //   for($i=0;$i<sizeof($saida_ids_concurso_zero); $i++){
+  //     $array_saida_id[] = $saida_ids_concurso_zero[$i]->id;
+  //   }
+  // }
 
-  $valor_saida_pago = PagamentoSaida::whereMonth('updated_at', $mes)->whereIn('saida_id', $array_saida_id)->sum('valor_pago');
+  // $valor_saida_pago = PagamentoSaida::whereMonth('updated_at', $mes)->whereIn('saida_id', $array_saida_id)->sum('valor_pago');
+   $valor_saida_pago = 0;
+
+  foreach ($saidas as $saida) {
+       foreach ($saida->pagamentosSaida as $pagamentos) {
+         $valor_saida_pago = $valor_saida_pago + $pagamentos->valor_pago;
+       }
+     }
   // FIM SAIDA
 
-  $valor_venda = Venda::whereMonth('updated_at', $mes)->sum('valor_iva');
-  $valor_venda_pago = PagamentoVenda::whereMonth('updated_at', $mes)->sum('valor_pago');
+  $vendas = Venda::whereMonth('created_at', $mes)->get();
+  $valor_venda = Venda::whereMonth('created_at', $mes)->sum('valor_iva');
+  // $valor_venda_pago = PagamentoVenda::whereMonth('updated_at', $mes)->sum('valor_pago');
+  $valor_venda_pago = 0;
+
+  foreach ($vendas as $venda) {
+       foreach ($venda->pagamentosVenda as $pagamentos) {
+         $valor_venda_pago = $valor_venda_pago + $pagamentos->valor_pago;
+       }
+     }
 
   $acronimo_cli_publico = TipoCliente::select('id')->where('acronimo', 'publico')->first();
   $acronimo_cli_publico_id = $acronimo_cli_publico->id;
 
-  $acronimo_cli_nao_publico_id = array('0', $acronimo_cli_publico_id);
+  $array_acronimo_cli_publico_id = array('0', $acronimo_cli_publico_id);
 
   $total_cliente_publico = Cliente::where('tipo_cliente_id', $acronimo_cli_publico_id)->count();
-  $total_cliente_privado = Cliente::whereNotIn('tipo_cliente_id', $acronimo_cli_nao_publico_id)->count();
+  $total_cliente_privado = Cliente::whereNotIn('tipo_cliente_id', $array_acronimo_cli_publico_id)->count();
   
   
   return view('layouts.home.inicio',  compact(

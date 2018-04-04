@@ -63,6 +63,7 @@
     color: red;
   }
 
+
 </style>
 
 </head>
@@ -169,36 +170,36 @@
 </section>
 @yield('script')
 <script>
-  $(document).ready(function() {
-    var oTable = $('.mostrar').DataTable( {
-      "pagingType": "full_numbers",
-      "dom": 'Brtpl',
-      buttons: [
-            // 'print',
-            // 'excelHtml5',
-            // 'pdfHtml5'
-            {
-              text: 'Imprimir',
-              extend: 'print',
-              className: 'btn btn-defaul btn-sm'
-            },
-            {
-              text: 'Excel',
-              extend: 'excelHtml5',
-              className: 'btn btn-defaul btn-sm'
-            },
-            {
-              text: 'PDF',
-              extend: 'pdfHtml5',
-              className: 'btn btn-defaul btn-sm'
-            }
-            ]
-          });
+  // $(document).ready(function() {
+  //   var oTable = $('.mostrar').DataTable( {
+  //     "pagingType": "full_numbers",
+  //     "dom": 'Brtpl',
+  //     buttons: [
+  //           // 'print',
+  //           // 'excelHtml5',
+  //           // 'pdfHtml5'
+  //           {
+  //             text: 'Imprimir',
+  //             extend: 'print',
+  //             className: 'btn btn-defaul btn-sm'
+  //           },
+  //           {
+  //             text: 'Excel',
+  //             extend: 'excelHtml5',
+  //             className: 'btn btn-defaul btn-sm'
+  //           },
+  //           {
+  //             text: 'PDF',
+  //             extend: 'pdfHtml5',
+  //             className: 'btn btn-defaul btn-sm'
+  //           }
+  //           ]
+  //         });
 
-    $('#pesq').keyup(function(){
-      oTable.search($(this).val()).draw();
-    });
-  } );
+  //   $('#pesq').keyup(function(){
+  //     oTable.search($(this).val()).draw();
+  //   });
+  // } );
 
   /** SEARCH SELECT */
   $(document).ready( function() {

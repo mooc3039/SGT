@@ -52,7 +52,7 @@
         </div>
 
 
-        <table class="mostrar table table-striped table-advance table-hover" id="tbl_report_geral_prd">
+        <table class="mostrar table table-striped table-advance table-hover" id="tbl_report_geral_prd" data-order='[[ 0, "desc" ]]'>
 
 
           <thead>
@@ -97,7 +97,6 @@
 
 </div>
 <div class="panel-footer">
-  {{ $produtos->links() }}
 </div>
 
 
@@ -111,6 +110,38 @@
 @section('script')
 
 <script type="text/javascript">
+
+  $(document).ready(function() {
+    var oTable = $('#tbl_report_geral_prd').DataTable( {
+      "pagingType": "full_numbers",
+      "dom": 'Brtpl',
+      buttons: [
+            // 'print',
+            // 'excelHtml5',
+            // 'pdfHtml5'
+            {
+              text: 'Imprimir',
+              extend: 'print',
+              className: 'btn btn-defaul btn-sm'
+            },
+            {
+              text: 'Excel',
+              extend: 'excelHtml5',
+              className: 'btn btn-defaul btn-sm'
+            },
+            {
+              text: 'PDF',
+              extend: 'pdfHtml5',
+              className: 'btn btn-defaul btn-sm'
+            }
+            ]
+        });
+
+    $('#pesq').keyup(function(){
+      oTable.search($(this).val()).draw();
+    });
+  } );
+
 
   $(document).ready(function(){
     $(document).ajaxStart(function(){

@@ -24,18 +24,6 @@
           
         </ul>
       </li>
-
-      <!-- <li class="sub-menu">
-        <a href="javascript:;" class="">
-                      <i class="icon_table"></i>
-                      <span>Stocks</span>
-                      <span class="menu-arrow arrow_carrot-right"></span>
-                  </a>
-        <ul class="sub">
-          <li><a class="" href="{{ route('indexStock') }}"><i class="fa fa-paperclip"></i>Todos Produtos</a></li>
-        </ul>
-      </li> -->
-
       <li class="sub-menu">
         <a href="javascript:;" class="">
                       <i class="icon_table"></i>
@@ -90,6 +78,7 @@
           <li><a class="" href="{{ route('rg_fornecedores') }}"><i class="fa fa-file-text"></i>Fornecedores</a></li>
           <li><a class="" href="{{ route('rg_saidas') }}"><i class="fa fa-file-text"></i>Facturações</a></li>
           <li><a class="" href="{{ route('report_geral_produto') }}"><i class="fa fa-file-text"></i>Produtos</a></li>
+          <li><a class="" href="{{ route('rg_vendas') }}"><i class="fa fa-file-text"></i>Vendas</a></li>
           
         </ul>
       </li>

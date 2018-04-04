@@ -4,7 +4,7 @@
   </div>
 
   <!--logo start-->
-  <a href="{{ route('dashboard' )}}" class="logo">Gestão <span class="lite">Stocks</span></a>
+  <a href="{{ route('dashboard' )}}" class="logo">Gestão <span class="lite">Stock </span><span>- Papelaria & Serviços Agenda</span></a>
   <!--logo end-->
 
   <div class="nav search-row" id="top_menu">
