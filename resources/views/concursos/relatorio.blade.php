@@ -43,8 +43,8 @@
 <td style="width: 271px; text-align: center; height: 188px;">&nbsp;
 <div style="border: 2px solid black; border-radius: 10px; text-align: center; height: 160px;">
 &nbsp;<em><strong><span style="text-decoration: underline; font-size: 16px;">
-<br>&nbsp;Papelaria e Servi&ccedil;os Agenda</span></strong></em> <br /> 
-<small><strong>Venda de Material de Escrit&oacute;rio e Consum&iacute;veis</strong></small> <br /> 
+<br>&nbsp;{{$empresa->nome}}</span></strong></em> <br /> 
+<small><strong>{{$empresa->actuacao}}</strong></small> <br /> 
 <small>Av. Rua de Capelo - Bairro da Malanga n&ordm; 43</small> <br /> 
 <small>Telefone: +218293503 / +258840294826</small><br /> 
 <small> papelaria@gmail.com</small><br />
