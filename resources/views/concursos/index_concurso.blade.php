@@ -105,7 +105,7 @@
 
                     <a class="btn btn-primary" href="{{route('concurso.show', $concurso->id)}}"><i class="fa fa-eye"></i></a>
                     <!-- <a class="btn btn-success" href="{{route('concurso.edit', $concurso->id)}}"><i class="fa fa-pencil"></i></a> -->
-                    <!-- {{ Form::button('<i class="icon_close_alt2"></i>', ['type'=>'submit', 'class'=>'btn btn-danger submit_iten']) }} -->
+                    {{ Form::button('<i class="icon_close_alt2"></i>', ['type'=>'submit', 'class'=>'btn btn-danger submit_iten', 'id'=>'apagar_con']) }}
 
                   </div>
                 </td>

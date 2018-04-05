@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Database\QueryException;
+// use Illuminate\Database\QueryException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use App\Http\Requests\ConcursoStoreUpdateFormRequest;
@@ -282,217 +282,411 @@ class ConcursoController extends Controller
     public function destroy($id)
     {
         //
-      $concurso = $this->concurso->find($id);
 
+      DB::beginTransaction();
       try {
 
-        if($concurso->delete()){
+        $concurso = $this->concurso->findOrFail($id);
+        $saidas = Saida::where('concurso_id', $id)->get();
 
+        
+
+        if(empty($concurso->pagamentosConcurso()->where('concurso_id', $id)->get())){
+
+          if(sizeof($concurso->itensConcurso) <= 0){
+
+            if(sizeof($saidas) <= 0){
+
+              $concurso->delete();
+              DB::commit();
+              $sucess = 'Concurso removido com sucesso!';
+              return redirect()->route('concurso.index')->with('success', $sucess);
+
+            }else{
+
+              foreach ($saidas as $saida) {
+
+               if(empty($saida->pagamentosSaida)){
+
+                if(sizeof($saida->itensSaida) <= 0){
+                  $saida->delete();
+                }else{
+                  foreach ($saida->itensSaida as $iten_saida) {
+                    $iten_saida->delete();
+                    $saida->delete();
+                  }
+                }
+                
+              }else{
+                $saida->pagamentosSaida()->delete();
+
+                if(sizeof($saida->itensSaida) <= 0){
+                  $saida->delete();
+                }else{
+                  foreach ($saida->itensSaida as $iten_saida) {
+                    $iten_saida->delete();
+                    $saida->delete();
+                  }
+                }
+              } 
+            }
+
+            $concurso->delete();
+            DB::commit();
+            $sucess = 'Concurso removido com sucesso!';
+
+          }
+
+          
+          return redirect()->route('concurso.index')->with('success', $sucess);
+
+        }else{
+
+          $concurso->itensConcurso()->where('concurso_id', $id)->delete();
+
+          if(sizeof($saidas) <= 0){
+
+            $concurso->delete();
+            DB::commit();
+            $sucess = 'Concurso removido com sucesso!';
+            return redirect()->route('concurso.index')->with('success', $sucess);
+
+          }else{
+
+            foreach ($saidas as $saida) {
+
+             if(empty($saida->pagamentosSaida)){
+
+              if(sizeof($saida->itensSaida) <= 0){
+                $saida->delete();
+              }else{
+                foreach ($saida->itensSaida as $iten_saida) {
+                  $iten_saida->delete();
+                  $saida->delete();
+                }
+              }
+
+            }else{
+              $saida->pagamentosSaida()->delete();
+
+              if(sizeof($saida->itensSaida) <= 0){
+                $saida->delete();
+              }else{
+                foreach ($saida->itensSaida as $iten_saida) {
+                  $iten_saida->delete();
+                  $saida->delete();
+                }
+              }
+              
+            } 
+          }
+
+          $concurso->delete();
+          DB::commit();
+          $sucess = 'Concurso removido com sucesso!';
+          return redirect()->route('concurso.index')->with('success', $sucess);
+
+        }
+          // $concurso->delete();
+      }
+
+
+
+    }else{
+      $concurso->pagamentosConcurso()->where('concurso_id', $id)->delete();
+
+      if(sizeof($concurso->itensConcurso) <= 0){
+
+        if(sizeof($saidas) <= 0){
+
+          $concurso->delete();
+          DB::commit();
           $sucess = 'Concurso removido com sucesso!';
           return redirect()->route('concurso.index')->with('success', $sucess);
 
         }else{
 
-          $error = 'Erro ao remover o Concurso!';
-          return redirect()->back()->with('error', $error);
+          foreach ($saidas as $saida) {
+
+           if(empty($saida->pagamentosSaida)){
+
+            if(sizeof($saida->itensSaida) <= 0){
+              $saida->delete();
+            }else{
+              foreach ($saida->itensSaida as $iten_saida) {
+                $iten_saida->delete();
+                $saida->delete();
+              }
+            }
+
+          }else{
+            $saida->pagamentosSaida()->delete();
+
+            if(sizeof($saida->itensSaida) <= 0){
+              $saida->delete();
+            }else{
+              foreach ($saida->itensSaida as $iten_saida) {
+                $iten_saida->delete();
+                $saida->delete();
+              }
+            }
+          } 
         }
 
-
-      } catch (QueryException $e) {
-
-        $error = "Erro ao remover o Concurso. Possivelmente Registo em uso. Necessária a intervenção do Administrador da Base de Dados.!";
-        return redirect()->back()->with('error', $error);
+        $concurso->delete();
+        DB::commit();
+        $sucess = 'Concurso removido com sucesso!';
+        return redirect()->route('concurso.index')->with('success', $sucess);
 
       }
-    }
-
-    public function pagamentoConcurso(PagamentoConcursoStoreUpdateFormRequest $request){
-        //dd($request->all());
-      $acronimo_forma_pagamento_naoaplicavel = FormaPagamento::select('id')->where('acronimo', 'naoaplicavel')->first();
-      $acronimo_forma_pagamento_naoaplicavel_id = $acronimo_forma_pagamento_naoaplicavel->id;
-
-      $concurso_id = $request->concurso_id;
-
-      $pago = 0;
-      $valor_pago = 0.00;
-      $remanescente = 0.00;
-      $forma_pagamento_id = $acronimo_forma_pagamento_naoaplicavel_id;
-      $nr_documento_forma_pagamento = "Nao Aplicavel";
 
 
-      
 
-      $concurso = $this->concurso->find($concurso_id);
+    }else{
 
-      if($request['pago'] == 0){
+      $concurso->itensConcurso()->where('concurso_id', $id)->delete();
 
-        $pago = $pago;
-        $valor_pago = $valor_pago;
-        $remanescente = $request['valor_iva'];
-        $forma_pagamento_id = $forma_pagamento_id;
-        $nr_documento_forma_pagamento = $nr_documento_forma_pagamento;
+      if(sizeof($saidas) <= 0){
+
+        $concurso->delete();
+        DB::commit();
+        $sucess = 'Concurso removido com sucesso!';
+        return redirect()->route('concurso.index')->with('success', $sucess);
 
       }else{
 
-        $pago = $request['pago'];
+        foreach ($saidas as $saida) {
 
-        if(!empty($request['valor_pago'])){
-          $valor_pago = $request['valor_pago'];
-        }
+         if(empty($saida->pagamentosSaida)){
 
-        if(!empty($request['remanescente'])){
-          $remanescente = $request['remanescente'];
-        }
+          if(sizeof($saida->itensSaida) <= 0){
+            $saida->delete();
+          }else{
+            foreach ($saida->itensSaida as $iten_saida) {
+              $iten_saida->delete();
+              $saida->delete();
+            }
+          }
 
-        if(!empty($request['forma_pagamento_id'])){
-          $forma_pagamento_id = $request['forma_pagamento_id'];
-        }
-
-        if(!empty($request['nr_documento_forma_pagamento'])){
-          $nr_documento_forma_pagamento = $request['nr_documento_forma_pagamento'];
-        }
-
+        }else{
+          $saida->pagamentosSaida()->delete();
+          
+          if(sizeof($saida->itensSaida) <= 0){
+            $saida->delete();
+          }else{
+            foreach ($saida->itensSaida as $iten_saida) {
+              $iten_saida->delete();
+              $saida->delete();
+            }
+          }
+        } 
       }
 
-      DB::beginTransaction();
+      $concurso->delete();
+      DB::commit();
+      $sucess = 'Concurso removido com sucesso!';
+      return redirect()->route('concurso.index')->with('success', $sucess);
 
-      try {
+    }
+  }
 
-        $concurso->pago = $pago;
+}
 
-        if($concurso->update()){
+} catch (QueryException $e) {
+  DB::rollback();
+  $error = "Erro ao remover o Concurso. Possivel Registo em uso (Guias de Entrega). Necessária a intervenção do Administrador da Base de Dados.!";
+  return redirect()->back()->with('error', $error);
 
-          if($pago == 0){
+}
+}
 
-            $pagamento_concurso_ids = PagamentoConcurso::select('id')->where('concurso_id', $concurso->id)->get();
+public function pagamentoConcurso(PagamentoConcursoStoreUpdateFormRequest $request){
+        //dd($request->all());
+  $acronimo_forma_pagamento_naoaplicavel = FormaPagamento::select('id')->where('acronimo', 'naoaplicavel')->first();
+  $acronimo_forma_pagamento_naoaplicavel_id = $acronimo_forma_pagamento_naoaplicavel->id;
 
-            if(sizeof($pagamento_concurso_ids)>0){
+  $concurso_id = $request->concurso_id;
 
-              for($i = 0; $i < sizeof($pagamento_concurso_ids); $i++){
+  $pago = 0;
+  $valor_pago = 0.00;
+  $remanescente = 0.00;
+  $forma_pagamento_id = $acronimo_forma_pagamento_naoaplicavel_id;
+  $nr_documento_forma_pagamento = "Nao Aplicavel";
 
-                $pagamento_concurso = PagamentoConcurso::find($pagamento_concurso_ids[$i]->id);
-                $pagamento_concurso->valor_pago = $valor_pago;
-                $pagamento_concurso->forma_pagamento_id = $forma_pagamento_id;
-                $pagamento_concurso->nr_documento_forma_pagamento = $nr_documento_forma_pagamento;
-                $pagamento_concurso->remanescente = $remanescente;
-                $pagamento_concurso->delete();
 
-              }
 
-            }else{
-              DB::rollback();
-              $error = "Nao existem Pagamentos para esta Factura!";
-              return redirect()->back()->with('error', $error);
-            }
-            
 
-          }else{
+  $concurso = $this->concurso->find($concurso_id);
 
-            $pagamento_concurso = new PagamentoConcurso;
-            $pagamento_concurso->concurso_id = $concurso->id;
+  if($request['pago'] == 0){
+
+    $pago = $pago;
+    $valor_pago = $valor_pago;
+    $remanescente = $request['valor_iva'];
+    $forma_pagamento_id = $forma_pagamento_id;
+    $nr_documento_forma_pagamento = $nr_documento_forma_pagamento;
+
+  }else{
+
+    $pago = $request['pago'];
+
+    if(!empty($request['valor_pago'])){
+      $valor_pago = $request['valor_pago'];
+    }
+
+    if(!empty($request['remanescente'])){
+      $remanescente = $request['remanescente'];
+    }
+
+    if(!empty($request['forma_pagamento_id'])){
+      $forma_pagamento_id = $request['forma_pagamento_id'];
+    }
+
+    if(!empty($request['nr_documento_forma_pagamento'])){
+      $nr_documento_forma_pagamento = $request['nr_documento_forma_pagamento'];
+    }
+
+  }
+
+  DB::beginTransaction();
+
+  try {
+
+    $concurso->pago = $pago;
+
+    if($concurso->update()){
+
+      if($pago == 0){
+
+        $pagamento_concurso_ids = PagamentoConcurso::select('id')->where('concurso_id', $concurso->id)->get();
+
+        if(sizeof($pagamento_concurso_ids)>0){
+
+          for($i = 0; $i < sizeof($pagamento_concurso_ids); $i++){
+
+            $pagamento_concurso = PagamentoConcurso::find($pagamento_concurso_ids[$i]->id);
             $pagamento_concurso->valor_pago = $valor_pago;
             $pagamento_concurso->forma_pagamento_id = $forma_pagamento_id;
             $pagamento_concurso->nr_documento_forma_pagamento = $nr_documento_forma_pagamento;
             $pagamento_concurso->remanescente = $remanescente;
-            $pagamento_concurso->save();
+            $pagamento_concurso->delete();
 
           }
 
-          DB::commit();
-          $success = "Pagamento efectuado com sucesso!";
-          return redirect()->route('concurso.index')->with('success', $success);
-
         }else{
-
           DB::rollback();
-          $error = "Pagamento nao efectuado!!";
+          $error = "Nao existem Pagamentos para esta Factura!";
           return redirect()->back()->with('error', $error);
-
         }
 
-      } catch (QueryException $e) {
-        //echo $e;
-        $error = 'Erro ao efectuar o pagamento! Erro relacionado ao DB. Necessária a intervenção do Administrador da Base de Dados.!';
-        return redirect()->back()->with('error', $error);
+
+      }else{
+
+        $pagamento_concurso = new PagamentoConcurso;
+        $pagamento_concurso->concurso_id = $concurso->id;
+        $pagamento_concurso->valor_pago = $valor_pago;
+        $pagamento_concurso->forma_pagamento_id = $forma_pagamento_id;
+        $pagamento_concurso->nr_documento_forma_pagamento = $nr_documento_forma_pagamento;
+        $pagamento_concurso->remanescente = $remanescente;
+        $pagamento_concurso->save();
 
       }
+
+      DB::commit();
+      $success = "Pagamento efectuado com sucesso!";
+      return redirect()->route('concurso.index')->with('success', $success);
+
+    }else{
+
+      DB::rollback();
+      $error = "Pagamento nao efectuado!!";
+      return redirect()->back()->with('error', $error);
+
     }
 
-    public function reportGeralConcursos(){
+  } catch (QueryException $e) {
+        //echo $e;
+    $error = 'Erro ao efectuar o pagamento! Erro relacionado ao DB. Necessária a intervenção do Administrador da Base de Dados.!';
+    return redirect()->back()->with('error', $error);
+
+  }
+}
+
+public function reportGeralConcursos(){
 
       // $concursos = $this->concurso->with('cliente')->get();
 
       // return view('reports.concursos.report_geral_concursos', compact('concursos'));
 
-      $valor_concurso = Concurso::sum('valor_iva');
-      $valor_concurso_pago = PagamentoConcurso::sum('valor_pago');
-      $mes = null;
-      $ano = null;
+  $valor_concurso = Concurso::sum('valor_iva');
+  $valor_concurso_pago = PagamentoConcurso::sum('valor_pago');
+  $mes = null;
+  $ano = null;
 
-      $concursos = $this->concurso->with('user', 'cliente')->get();
-      $anos = DB::table('anos')->pluck('ano', 'id')->all();
-      $meses = DB::table('mes')->pluck('nome', 'id')->all();
+  $concursos = $this->concurso->with('user', 'cliente')->get();
+  $anos = DB::table('anos')->pluck('ano', 'id')->all();
+  $meses = DB::table('mes')->pluck('nome', 'id')->all();
 
-      return view('reports.concursos.report_geral_concursos', compact('concursos', 'valor_concurso', 'valor_concurso_pago', 'anos', 'meses', 'mes', 'ano'));
+  return view('reports.concursos.report_geral_concursos', compact('concursos', 'valor_concurso', 'valor_concurso_pago', 'anos', 'meses', 'mes', 'ano'));
 
-    }
+}
 
-    public function listarconcursoPorMes(Request $request){
-      $mes_id = $request->mes_id;
-      $mes_model = Me::select('nome')->where('id', $mes_id)->firstOrFail();
-      $mes = $mes_model->nome;
-      $ano = null;
+public function listarconcursoPorMes(Request $request){
+  $mes_id = $request->mes_id;
+  $mes_model = Me::select('nome')->where('id', $mes_id)->firstOrFail();
+  $mes = $mes_model->nome;
+  $ano = null;
       // dd($mes_id);
 
 
-      $concursos = $this->concurso->with('pagamentosConcurso', 'user', 'cliente')->whereMonth('created_at', $mes_id)->get();
-      $valor_concurso = Concurso::whereMonth('created_at', $mes_id)->sum('valor_iva');
-      $valor_concurso_pago = 0;
-      $anos = DB::table('anos')->pluck('ano', 'id')->all();
-      $meses = DB::table('mes')->pluck('nome', 'id')->all();
+  $concursos = $this->concurso->with('pagamentosConcurso', 'user', 'cliente')->whereMonth('created_at', $mes_id)->get();
+  $valor_concurso = Concurso::whereMonth('created_at', $mes_id)->sum('valor_iva');
+  $valor_concurso_pago = 0;
+  $anos = DB::table('anos')->pluck('ano', 'id')->all();
+  $meses = DB::table('mes')->pluck('nome', 'id')->all();
 
-      foreach ($concursos as $concurso) {
-       foreach ($concurso->pagamentosConcurso as $pagamentos) {
-         $valor_concurso_pago = $valor_concurso_pago + $pagamentos->valor_pago;
-       }
-     }
-
-     return view('reports.concursos.report_geral_concursos', compact('concursos', 'valor_concurso', 'valor_concurso_pago', 'anos', 'meses', 'mes', 'ano'));
-
+  foreach ($concursos as $concurso) {
+   foreach ($concurso->pagamentosConcurso as $pagamentos) {
+     $valor_concurso_pago = $valor_concurso_pago + $pagamentos->valor_pago;
    }
+ }
 
-   public function listarconcursoPorAno(Request $request){
+ return view('reports.concursos.report_geral_concursos', compact('concursos', 'valor_concurso', 'valor_concurso_pago', 'anos', 'meses', 'mes', 'ano'));
+
+}
+
+public function listarconcursoPorAno(Request $request){
        //dd($request->all());
-     $ano_id = $request->ano_id;
-     $ano_model = Ano::select('ano')->where('id', $ano_id)->firstOrFail();
-     $ano = $ano_model->ano;
-     $mes = null;
+ $ano_id = $request->ano_id;
+ $ano_model = Ano::select('ano')->where('id', $ano_id)->firstOrFail();
+ $ano = $ano_model->ano;
+ $mes = null;
 
 
-     $concursos = $this->concurso->with('pagamentosConcurso', 'user', 'cliente')->whereYear('created_at', $ano)->get();
-     $valor_concurso = concurso::whereYear('created_at', $ano)->sum('valor_iva');
-     $valor_concurso_pago = 0;
-     $anos = DB::table('anos')->pluck('ano', 'id')->all();
-     $meses = DB::table('mes')->pluck('nome', 'id')->all();
+ $concursos = $this->concurso->with('pagamentosConcurso', 'user', 'cliente')->whereYear('created_at', $ano)->get();
+ $valor_concurso = concurso::whereYear('created_at', $ano)->sum('valor_iva');
+ $valor_concurso_pago = 0;
+ $anos = DB::table('anos')->pluck('ano', 'id')->all();
+ $meses = DB::table('mes')->pluck('nome', 'id')->all();
 
-     foreach ($concursos as $concurso) {
-       foreach ($concurso->pagamentosConcurso as $pagamentos) {
-         $valor_concurso_pago = $valor_concurso_pago + $pagamentos->valor_pago;
-       }
-     }
-
-
-     return view('reports.concursos.report_geral_concursos', compact('concursos', 'valor_concurso', 'valor_concurso_pago', 'anos', 'meses', 'ano', 'mes'));
+ foreach ($concursos as $concurso) {
+   foreach ($concurso->pagamentosConcurso as $pagamentos) {
+     $valor_concurso_pago = $valor_concurso_pago + $pagamentos->valor_pago;
    }
+ }
 
-   public function facturasConcurso($concurso_id){
+
+ return view('reports.concursos.report_geral_concursos', compact('concursos', 'valor_concurso', 'valor_concurso_pago', 'anos', 'meses', 'ano', 'mes'));
+}
+
+public function facturasConcurso($concurso_id){
 
 
-    $concurso = Concurso::where('id', $concurso_id)->first();
-    $saidas = Saida::with('itensSaida', 'pagamentosSaida')->where('concurso_id', $concurso_id)->get();
+  $concurso = Concurso::where('id', $concurso_id)->first();
+  $saidas = Saida::with('itensSaida', 'pagamentosSaida')->where('concurso_id', $concurso_id)->get();
       // dd($concursos);
-    $formas_pagamento = DB::table('forma_pagamentos')->pluck('descricao', 'id')->all();
+  $formas_pagamento = DB::table('forma_pagamentos')->pluck('descricao', 'id')->all();
 
-    return view('reports.concursos.index_saidas_concurso', compact('saidas', 'formas_pagamento', 'concurso'));
-  }
+  return view('reports.concursos.index_saidas_concurso', compact('saidas', 'formas_pagamento', 'concurso'));
+}
 }

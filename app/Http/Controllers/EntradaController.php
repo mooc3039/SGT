@@ -218,10 +218,10 @@ class EntradaController extends Controller
     public function showRelatorio($id)
     {
         //
-        $entrada = $this->entrada->with('itensEntrada.produto', 'user')->find($id);
-        $empresa = Empresa::with('enderecos', 'telefones', 'emails', 'contas')->findOrFail(1);
-         $pdf = PDF::loadView('entradas.relatorio', compact('entrada','empresa'));
-         return $pdf->download('entrada.pdf');
+      $entrada = $this->entrada->with('itensEntrada.produto', 'user')->find($id);
+      $empresa = Empresa::with('enderecos', 'telefones', 'emails', 'contas')->findOrFail(1);
+      $pdf = PDF::loadView('entradas.relatorio', compact('entrada','empresa'));
+      return $pdf->download('entrada.pdf');
 
     }
     /**
@@ -263,32 +263,32 @@ class EntradaController extends Controller
     public function destroy($id)
     {
         //
-      $entrada = $this->entrada->findOrFail($id);
 
       DB::beginTransaction();
       try {
 
-        if($entrada->itensEntrada()->where('entrada_id', $id)->delete()){
+        $entrada = $this->entrada->findOrFail($id);
 
+        if(empty($entrada->pagamentosEntrada()->where('entrada_id', $id)->get())){
+          $entrada->delete();
+          DB::commit();
+          $sucess = 'Entrada removida com sucesso!';
+          return redirect()->route('entrada.index')->with('success', $sucess);
+        }else{
           $entrada->pagamentosEntrada()->where('entrada_id', $id)->delete();
           $entrada->delete();
           DB::commit();
-
           $sucess = 'Entrada removida com sucesso!';
           return redirect()->route('entrada.index')->with('success', $sucess);
-
-        }else{
-          DB::rollback();
-          $error = 'Erro ao remover a Entrada!';
-          return redirect()->back()->with('error', $error);
         }
 
       } catch (QueryException $e) {
         DB::rollback();
-        $error = "Erro ao remover Entrada. Possivelmente Registo em uso. Necessária a intervenção do Administrador da Base de Dados.!";
+        $error = "Erro ao remover Entrada. Possivel Registo em uso. Necessária a intervenção do Administrador da Base de Dados.!";
         return redirect()->back()->with('error', $error);
 
       }
+
     }
 
     public function pagamentoEntrada(PagamentoEntradaStoreUpdateFormRequest $request){
@@ -422,54 +422,54 @@ class EntradaController extends Controller
     }
 
     public function listarEntradaPorMes(Request $request){
-        $mes_id = $request->mes_id;
-        $mes_model = Me::select('nome')->where('id', $mes_id)->firstOrFail();
-        $mes = $mes_model->nome;
-        $ano = null;
+      $mes_id = $request->mes_id;
+      $mes_model = Me::select('nome')->where('id', $mes_id)->firstOrFail();
+      $mes = $mes_model->nome;
+      $ano = null;
       // dd($mes_id);
 
 
-        $entradas = $this->entrada->with('itensEntrada', 'pagamentosEntrada', 'user', 'fornecedor')->whereMonth('created_at', $mes_id)->get();
-        $valor_entrada = Entrada::whereMonth('created_at', $mes_id)->sum('valor_total');
-        $valor_entrada_pago = 0;
-        $anos = DB::table('anos')->pluck('ano', 'id')->all();
-        $meses = DB::table('mes')->pluck('nome', 'id')->all();
+      $entradas = $this->entrada->with('itensEntrada', 'pagamentosEntrada', 'user', 'fornecedor')->whereMonth('created_at', $mes_id)->get();
+      $valor_entrada = Entrada::whereMonth('created_at', $mes_id)->sum('valor_total');
+      $valor_entrada_pago = 0;
+      $anos = DB::table('anos')->pluck('ano', 'id')->all();
+      $meses = DB::table('mes')->pluck('nome', 'id')->all();
 
-        foreach ($entradas as $entrada) {
-         foreach ($entrada->pagamentosEntrada as $pagamentos) {
-           $valor_entrada_pago = $valor_entrada_pago + $pagamentos->valor_pago;
-         }
+      foreach ($entradas as $entrada) {
+       foreach ($entrada->pagamentosEntrada as $pagamentos) {
+         $valor_entrada_pago = $valor_entrada_pago + $pagamentos->valor_pago;
        }
-
-       return view('reports.entradas.report_geral_entradas', compact('entradas', 'valor_entrada', 'valor_entrada_pago', 'anos', 'meses', 'mes', 'ano'));
-
      }
 
-     public function listarEntradaPorAno(Request $request){
+     return view('reports.entradas.report_geral_entradas', compact('entradas', 'valor_entrada', 'valor_entrada_pago', 'anos', 'meses', 'mes', 'ano'));
+
+   }
+
+   public function listarEntradaPorAno(Request $request){
        //dd($request->all());
-       $ano_id = $request->ano_id;
-       $ano_model = Ano::select('ano')->where('id', $ano_id)->firstOrFail();
-       $ano = $ano_model->ano;
-       $mes = null;
+     $ano_id = $request->ano_id;
+     $ano_model = Ano::select('ano')->where('id', $ano_id)->firstOrFail();
+     $ano = $ano_model->ano;
+     $mes = null;
 
 
-       $entradas = $this->entrada->with('itensEntrada', 'pagamentosEntrada', 'user', 'fornecedor')->whereYear('created_at', $ano)->get();
-       $valor_entrada = Entrada::whereYear('created_at', $ano)->sum('valor_total');
-       $valor_entrada_pago = 0;
-       $anos = DB::table('anos')->pluck('ano', 'id')->all();
-       $meses = DB::table('mes')->pluck('nome', 'id')->all();
+     $entradas = $this->entrada->with('itensEntrada', 'pagamentosEntrada', 'user', 'fornecedor')->whereYear('created_at', $ano)->get();
+     $valor_entrada = Entrada::whereYear('created_at', $ano)->sum('valor_total');
+     $valor_entrada_pago = 0;
+     $anos = DB::table('anos')->pluck('ano', 'id')->all();
+     $meses = DB::table('mes')->pluck('nome', 'id')->all();
 
-       foreach ($entradas as $entrada) {
-         foreach ($entrada->pagamentosEntrada as $pagamentos) {
-           $valor_entrada_pago = $valor_entrada_pago + $pagamentos->valor_pago;
-         }
+     foreach ($entradas as $entrada) {
+       foreach ($entrada->pagamentosEntrada as $pagamentos) {
+         $valor_entrada_pago = $valor_entrada_pago + $pagamentos->valor_pago;
        }
-
-
-       return view('reports.entradas.report_geral_entradas', compact('entradas', 'valor_entrada', 'valor_entrada_pago', 'anos', 'meses', 'ano', 'mes'));
      }
 
-    public function entradaTeste($id){
-      echo "Teste";
-    }
+
+     return view('reports.entradas.report_geral_entradas', compact('entradas', 'valor_entrada', 'valor_entrada_pago', 'anos', 'meses', 'ano', 'mes'));
+   }
+
+   public function entradaTeste($id){
+    echo "Teste";
   }
+}

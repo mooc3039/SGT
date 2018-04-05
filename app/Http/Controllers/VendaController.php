@@ -379,29 +379,25 @@ class VendaController extends Controller
     public function destroy($id)
     {
         //
-      $venda = $this->venda->findOrFail($id);
-
       DB::beginTransaction();
       try {
 
-        if($venda->itensVenda()->where('venda_id', $id)->delete()){
+        $venda = $this->venda->findOrFail($id);
 
+        if(empty($venda->pagamentosVenda()->where('venda_id', $id)->get())){
+          $venda->delete();
+          DB::commit();
+        }else{
           $venda->pagamentosVenda()->where('venda_id', $id)->delete();
           $venda->delete();
           DB::commit();
-
           $success = "Venda eliminada com sucesso!";
           return redirect()->route('venda.index')->with('success', $success);
-
-        }else{
-          DB::rollback();
-          $error = 'Erro ao remover a Venda!';
-          return redirect()->back()->with('error', $error);
         }
 
       } catch (QueryException $e) {
         DB::rollback();
-        $error = "Erro ao remover Venda.Necessária a intervenção do Administrador da Base de Dados.!";
+        $error = "Erro ao remover Venda. Possivel Registo em uso. Necessária a intervenção do Administrador da Base de Dados.!";
         return redirect()->back()->with('error', $error);
 
       }

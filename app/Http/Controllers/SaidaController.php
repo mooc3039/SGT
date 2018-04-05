@@ -304,31 +304,27 @@ class SaidaController extends Controller
     public function destroy($id)
     {
         //
-
-      $saida = $this->saida->findOrFail($id);
-
       DB::beginTransaction();
       try {
 
-        if($saida->itensSaida()->where('saida_id', $id)->delete()){
+        $saida = $this->saida->findOrFail($id);
 
-          $saida->pagamentosSaida()->where('saida_id', $id)->delete();
-
+        if(empty($saida->pagamentosSaida()->where('saida_id', $id)->get())){
           $saida->delete();
           DB::commit();
-
-          $sucess = 'Saída removida com sucesso!';
+          $sucess = 'Factura removida com sucesso!';
           return redirect()->route('saida.index')->with('success', $sucess);
-
         }else{
-          DB::rollback();
-          $error = 'Erro ao remover a Saída!';
-          return redirect()->back()->with('error', $error);
+          $saida->pagamentosSaida()->where('saida_id', $id)->delete();
+          $saida->delete();
+          DB::commit();
+          $sucess = 'Factura removida com sucesso!';
+          return redirect()->route('saida.index')->with('success', $sucess);
         }
 
       } catch (QueryException $e) {
         DB::rollback();
-        $error = "Erro ao remover Saída. Possivel Registo em uso. Necessária a intervenção do Administrador da Base de Dados.!";
+        $error = "Erro ao remover Factura. Possivel Registo em uso. Necessária a intervenção do Administrador da Base de Dados.!";
         return redirect()->back()->with('error', $error);
 
       }
