@@ -25,7 +25,8 @@ Route::group(['middleware'=>['authen']],function(){
   Route::get('/dashboard',['as'=>'dashboard','uses'=>'DashboardController@dashboard']);
   Route::get('/dashboard/inicio',['as'=>'paginainicial','uses'=>'DashboardController@paginaInicial']);
 
-  Route::get('/produto/find', ['as'=>'findPrice','uses'=>'ProdutoController@findPrice']);
+  Route::get('/produto/find', ['as'=>'findPrice','uses'=>'ProdutoController@findPrice']); 
+  Route::get('/facturas/preco', ['as'=>'findPrice','uses'=>'FacturacaoController@findPrice']);
 
 
   //======================= Profile ============================
