@@ -33,6 +33,7 @@
 
           <thead>
             <tr>
+              <th><i class="icon_profile"></i>Referência</th>
               <th><i class="icon_profile"></i>Descrição</th>
               <th><i class="icon_mobile"></i> Preço de Venda</th>
               <th><i class="icon_mail_alt"></i> Preço de Aquisição</th>
@@ -45,6 +46,7 @@
           <tbody>
             @foreach($produtos as $produto)
             <tr>
+            <td> {{$produto->referencia}}</td>
               <td> {{$produto->descricao}}</td>
               <td>{{$produto->preco_venda}}</td>
               <td>{{$produto->preco_aquisicao}}</td>

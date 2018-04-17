@@ -222,8 +222,29 @@ class CotacaoController extends Controller
   */
   public function destroy($id)
   {
+
+  
+      //
+      $cotacao = $this->cotacao->findOrFail($id);
+  
+      DB::beginTransaction();
+      try {
+  
+  
+          $cotacao->delete();
+          DB::commit();
+  
+          $sucess = 'Cotação removida com sucesso!';
+          return redirect()->route('cotacao.index')->with('success', $sucess);
+  
+      } catch (QueryException $e) {
+        DB::rollback();
+        $error = "Erro ao remover Cotação. Possivelmente Registo em uso. Necess�ria a interven��o do Administrador da Base de Dados.!";
+        return redirect()->back()->with('error', $error);
+      }
+    
     //
-    $cotacao = $this->cotacao->findOrFail($id);
+/*     $cotacao = $this->cotacao->findOrFail($id);
 
     DB::beginTransaction();
     try {
@@ -246,7 +267,7 @@ class CotacaoController extends Controller
       DB::rollback();
       $error = "Erro ao remover Cotação. Possivelmente Registo em uso. Necessária a intervenção do Administrador da Base de Dados.!";
       return redirect()->back()->with('error', $error);
-    }
+    } */
   }
 
   public function reportGeralCotacoes(){
