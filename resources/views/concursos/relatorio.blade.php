@@ -78,7 +78,7 @@ Dados do Cliente</span></em></strong><br />
 <h3 style="text-align: center;"><strong>CONCURSO</strong></h3>
 </div>
 <br />
-<div style="border: 2px solid black; border-radius: 10px; height: 100px;"><br />
+<div style="border: 2px solid black; border-radius: 10px; height: 95px;"><br />
 <h2 style="color: red; text-align: center;">N&ordm; {{$concurso->codigo_concurso}}</h2>
 </div>
 </td>
@@ -121,32 +121,31 @@ Dados do Cliente</span></em></strong><br />
 @endforeach
 </tbody>
 </table>
-<table class="total wena" style="height: 84px; width: 750px;">
+<table class="total wena" style="height: 84px; width: 748px;">
 <tbody>
 <tr style="height: 18px;">
-<td  style="width: 159px; height: 18px;">&nbsp;</td>
-<td  style="width: 270px; height: 18px;">&nbsp;</td>
-<td class="linha" style="width: 120px; height: 18px;text-align: right;">
+<td class="linha" style="width: 409px; height: 18px; text-align: center;">Motivo justicado da n&atilde;o aplica&ccedil;&atilde;o do imposto</td>
+<td class="linha" style="width: 118px; height: 18px;text-align: right;">
 <strong>&nbsp;SUB-TOTAL</strong></td>
-<td class="linha" style="width: 155px; text-align: center;">{{$concurso->valor_total}}Mtn</td>
+<td class="linha" style="width: 148px; text-align: center;">{{$concurso->valor_total}}Mtn</td>
 </tr>
 <tr style="height: 17px;">
-<td  style="width: 159px; height: 17px;">&nbsp;</td>
-<td  style="width: ; height: 17px;">&nbsp;</td>
-<td class="linha" style="width:; height: 17px;text-align: right;"><strong>&nbsp;IVA 17%</strong></td>
-<td class="linha" style="width: 155px; text-align: center;">{{(($concurso->valor_total)*17)/100}}</td>
+
+<td class="linha" style="width: ; height: 18px;">&nbsp;</td>
+<td class="linha" style="width:; height: 18px;text-align: right;"><strong>&nbsp;IVA 17%</strong></td>
+<td class="linha" style="width: 148px; text-align: center;">{{(($concurso->valor_total)*17)/100}}</td>
 </tr>
 <tr style="height: 18px;">
-<td style="width: 159px; height: 18px;">&nbsp;</td>
-<td  style="width: ; height: 18px;">&nbsp;</td>
+
+<td class="linha" style="width: ; height: 18px;">&nbsp;</td>
 <td class="linha" style="width: ; height: 18px;text-align: right;"><strong>&nbsp;TOTAL</strong></td>
-<td class="linha" style="width: 155px; text-align: center;">{{$concurso->valor_iva}}Mtn</td>
+<td class="linha" style="width: 148px; text-align: center;">{{$concurso->valor_iva}}Mtn</td>
 </tr>
 <tr style="height: 18px;">
-<td  style="width: 159px; height: 18px;">&nbsp;</td>
+
 <td  style="width: ; height: 18px;">&nbsp;</td>
 <td class="" style="width: ; height: 18px;text-align: right;"><strong>&nbsp;</strong></td>
-<td class="" style="width: 155px; text-align: center;"></td>
+<td class="" style="width: 148px; text-align: center;"></td>
 </tr>
 
 </tbody>
