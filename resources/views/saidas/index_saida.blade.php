@@ -45,7 +45,7 @@
                   <td> {{$saida->cliente->nome}} </td>
                   <td> {{$saida->valor_iva}} </td>
                   <!-- Abertura para o form destroy. Aberto aqui e nao mais abaixo para melhor estetica do btn-group. Existe apenas um submit dentro deste codigo, como nao eh apenas o ofrmulario aqui -->
-                  {{ Form::open(['route'=>['saida.destroy', $saida->id], 'method'=>'DELETE']) }} 
+                  {{ Form::open(['route'=>['saida.destroy', $saida->id], 'method'=>'DELETE']) }}
                   <td>
                     <div class="btn-group btn-group-sm">
                       <!-- <button type="button" data-toggle="modal" data-target="#modalPagamentoSaida" data-saida_id={{ $saida->id }} data-valor_total={{ $saida->valor_total }} data-valor_pago={{ $saida->valor_pago }} data-remanescente={{ $saida->remanescente }} data-forma_pagamento_id={{ $saida->forma_pagamento_id }} data-nr_documento_forma_pagamento={{ $saida->nr_documento_forma_pagamento }} -->
@@ -68,10 +68,10 @@
 
                           if($saida->concurso_id != 0){
                             // Se for concurso entao, botao default
-                            echo 'class="btn btn-default btn-sm"'; 
+                            echo 'class="btn btn-default btn-sm"';
                             echo 'disabled';
                           }else{
-                            if(($saida->pago==1 && ($valor_pago_soma >= $saida->valor_iva))){ 
+                            if(($saida->pago==1 && ($valor_pago_soma >= $saida->valor_iva))){
                               echo 'class="btn btn-success btn-sm"';
                             }else{
                               echo 'class="btn btn-danger btn-sm"';
@@ -96,7 +96,7 @@
                             }
 
                           }
-                          
+
                           ?>
                         </a>
                         <!-- </button> -->
@@ -136,7 +136,7 @@
                           <i class="fa fa-pencil"></i>
                         </a>
 
-                        <button type="submit" class="btn btn-danger remover_iten" 
+                        <button type="submit" class="btn btn-danger remover_iten"
                         @if($saida->concurso_id != 0)
                         {{ 'disabled' }}
                         @endif
@@ -204,7 +204,7 @@
 
                       {{ Form::hidden('valor_remanescente_ref', null, ['class'=>'form-control', 'id'=>'valor_remanescente_ref'])}}
                       <div class="input-group-addon">$</div>
-                    </div>            
+                    </div>
                   </div>
                   <div class="col-md-6">
                     {{ Form::label('remanescente', 'Remanescente')}}
@@ -264,7 +264,7 @@
    // DataTables Inicio
   $(document).ready(function() {
 
-    var titulo = "Facturas";   
+    var titulo = "Facturas";
     var msg_bottom = "Papelaria Agenda & Serviços";
 
     var oTable = $('#tbl_index_saidas').DataTable( {
@@ -342,7 +342,7 @@
   });
 
   $('#modalPagamentoSaida').on('show.bs.modal', function (event) {
-    var button = $(event.relatedTarget); 
+    var button = $(event.relatedTarget);
     var dta_saida_id = button.data('saida_id');
     var dta_valor_total = button.data('valor_total');
     var dta_valor_pago = button.data('valor_pago');
@@ -435,7 +435,7 @@
 
   });
 
-  // ==== formatando os numeros ====
+  // ==== formatando os numeros ==== 
   Number.prototype.formatMoney = function(decPlaces, thouSeparator, decSeparator){
     var n = this,
     decPlaces = isNaN(decPlaces = Math.abs(decPlaces)) ? 2 : decPlaces,
