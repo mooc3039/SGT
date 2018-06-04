@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Requests\CotacaoStoreUpdateFormRequest;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Database\QueryException;
+// use Illuminate\Database\Eloquent\ModelNotFoundException;
+// use Illuminate\Database\QueryException;
 use DB;
 use Session;
 use App\Model\Produto;
@@ -84,6 +84,8 @@ class CotacaoController extends Controller
   {
     //
     // dd($request->all());
+    $bad_symbols = array(",");
+
     if($request->all()){
 
       $cotacao = new Cotacao;
@@ -95,6 +97,7 @@ class CotacaoController extends Controller
       $cotacao->user_id = $request['user_id'];
       $cotacao->valor_total = 0; 
       $cotacao->valor_iva = 0; 
+      $cotacao->iva = 0; 
       // Eh necessario que o valor total seja zero, uma vez que este campo na tabela cotacaos eh actualizado pelo trigger apos o "insert" bem como o "update" na tabela itens_cotacaos de acordo com o codigo da cotacao. Nao pode ser o valor_total vindo do formulario, pois este valor sera acrescido a cada insercao abaixo quando executar o iten_cotacao->save().
 
       // $salvar =1;
@@ -118,10 +121,10 @@ class CotacaoController extends Controller
             $iten_cotacao =  new ItenCotacao;
 
             $iten_cotacao->produto_id = $request['produto_id'][$i];
-            $iten_cotacao->quantidade = $request['quantidade'][$i];
-            $iten_cotacao->valor = $request['subtotal'][$i];
-            $iten_cotacao->desconto = $request['desconto'][$i];
-            $iten_cotacao->subtotal = $request['subtotal'][$i];
+            $iten_cotacao->quantidade = str_replace($bad_symbols, "", $request['quantidade'][$i]);
+            $iten_cotacao->valor = str_replace($bad_symbols, "", $request['valor'][$i]);
+            $iten_cotacao->desconto = str_replace($bad_symbols, "", $request['desconto'][$i]);
+            $iten_cotacao->subtotal = str_replace($bad_symbols, "", $request['subtotal'][$i]);
             $iten_cotacao->cotacao_id = $cotacao_id[$i];
 
             $iten_cotacao->save();

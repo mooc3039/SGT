@@ -90,12 +90,12 @@
           <table class="table table-striped table-advance table-hover">
             <thead>
               <tr>
-                <th><i class="icon_profile"></i> Nome do Produto</th>
-                <th><i class="icon_calendar"></i> Qtd/Unidades</th>
-                <th><i class="icon_mail_alt"></i> Preço</th>
-                <th><i class="icon_mail_alt"></i> Valor</th>
-                <th><i class="icon_pin_alt"></i> Desconto</th>
-                <th><i class="icon_mobile"></i> Subtotal</th>
+                <th> Nome do Produto</th>
+                <th> Qtd/Unidades</th>
+                <th> Preço (Mtn)</th>
+                <th> Valor (Mtn)</th>
+                <th> Desconto (%)</th>
+                <th> Subtotal (Mtn)</th>
               </tr>
             </thead>
             <tbody>
@@ -283,40 +283,25 @@
 
     function total()
     {
-      var total =0;
-      var total_iva = 0;
-      var iva = 0;
+      var total = Number.parseFloat(0);
+      var total_iva = Number.parseFloat(0);
       $('.subtotal').each(function(i,e){
-        var subtotal = $(this).val()-0;
-        total += subtotal*1;
-        iva = (total*17)/100;
-        total_iva = total + (total*17)/100;
-
+        var subtotal_string = $(this).val();
+        var subtotal_float = Number.parseFloat(subtotal_string.replace(/[^0-9-.]/g, ''));
+        total +=subtotal_float;
       })
+
+      iva = Number.parseFloat(Number.parseFloat((total*17)/100).toFixed(2)); // o parseFloat interno gera uma string e garante duas casas decimas, o parseFloat externo garante que seja um float para posteriores operacoes artime.
+      total_iva = (total + iva);
 
       $('#valor_total_iva').val(total_iva);
       $('#valor_pago').val(total_iva);
 
-      $('.valor_visual').html(total.formatMoney(2,',','.')+ " Mtn");
-      $('.iva').html(iva.formatMoney(2,',','.')+ " Mtn");
-      $('.valor_visual_iva').html(total_iva.formatMoney(2,',','.')+ " Mtn");
+      $('.valor_visual').html(total.formatMoney()+ " Mtn");
+      $('.iva').html(iva.formatMoney()+ " Mtn");
+      $('.valor_visual_iva').html(total_iva.formatMoney()+ " Mtn");
     };
 
-
-
-    // ==== formatando os numeros ====
-    Number.prototype.formatMoney = function(decPlaces, thouSeparator, decSeparator){
-      var n = this,
-      decPlaces = isNaN(decPlaces = Math.abs(decPlaces)) ? 2 : decPlaces,
-      decSeparator = decSeparator == undefined ? ".": decSeparator,
-      thouSeparator = thouSeparator == undefined ? ",": thouSeparator,
-      sign = n < 0 ? "-" : "",
-      i = parseInt(n = Math.abs(+n || 0).toFixed(decPlaces)) + "",
-      j = (j = i.length) > 3 ? j % 3 : 0;
-      return sign + (j ? i.substr(0,j) + thouSeparator : "")
-      + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thouSeparator)
-      + (decPlaces ? decSeparator + Math.abs(n-i).toFixed(decPlaces).slice(2) : "");
-    };
     //---começam aqui as funçoes que filtram somente números
     //---find element by row--
     function findRowNum(input){

@@ -67,12 +67,12 @@
             <table class="table table-striped table-advance table-hover">
               <tbody>
                 <tr>
-                  <th><i class="icon_profile"></i> Nome do Produto</th>
-                  <th><i class="icon_calendar"></i> Quantidade/Unidades</th>
-                  <th><i class="icon_mail_alt"></i> Preço</th>
-                  <th><i class="icon_mail_alt"></i> Valor</th>
-                  <th><i class="icon_pin_alt"></i> Desconto</th>
-                  <th><i class="icon_mobile"></i> Subtotal</th>
+                  <th> Nome do Produto</th>
+                  <th> Quantidade/Unidades</th>
+                  <th> Preço (Mtn)</th>
+                  <th> Valor (Mtn)</th>
+                  <th> Desconto (%)</th>
+                  <th> Subtotal (Mtn)</th>
                   <th><a class="btn btn-primary addRow" href="#"><i class="icon_plus_alt2"></i></a></th>
                 </tr>
                 <tr>
@@ -94,15 +94,32 @@
 
               </tbody>
               <tfoot>
-                <tr>
-                  <td style="border:none"></td>
-                  <td style="border:none"></td>
-                  <td style="border:none"></td>
-                  <td><b>Total</b></td>
-                  <td><b><div class="valor_visual" style="border:none"> </div></b></td>
-                  <td></td>
-                </tr>
-              </tfoot>
+   <tr>
+        <td style="border:none"></td>
+        <td style="border:none"></td>
+        <td style="border:none"></td>
+        <td></td>
+        <td><b>Subtotal</b></td>
+        <td><b><div class="valor_total_visual" style="border:none"> </div></b></td>
+        <td></td>
+      </tr><tr>
+        <td style="border:none"></td>
+        <td style="border:none"></td>
+        <td style="border:none"></td>
+        <td></td>
+        <td><b>IVA(17%)</b></td>
+        <td><b><div class="iva" style="border:none"> </div></b></td>
+        <td></td>
+      </tr><tr>
+        <td style="border:none"></td>
+        <td style="border:none"></td>
+        <td style="border:none"></td>
+        <td></td>
+        <td><b>Total</b></td>
+        <td><b><div class="valor_total_iva_visual" style="border:none"> </div></b></td>
+        <td></td>
+      </tr>
+</tfoot>
             </table>
           </div>
           <div class="panel-footer">
@@ -184,11 +201,12 @@
                       <div class="row">
                         <div class="col-md-4">
                           <div class="radio-inline">
-                            {{Form::radio('activo', '1')}} Activo
+                            <input type="radio" name="activo" value="1" id="activo"> <label for="activo">Activo</label>
                           </div>
                           <div class="radio-inline">
-                            {{Form::radio('activo', '0')}} Inactivo
+                            <input type="radio" name="activo" value="0" id="inactivo"> <label for="inactivo">Inactivo</label>
                           </div>
+
                         </div>
                       </div>
                     </div>
@@ -228,7 +246,7 @@
               </div>
               <div class="modal-footer">
                 {{Form::button('Fechar', ['class'=>'btn btn-default', 'data-dismiss'=>'modal'])}}
-                {{Form::submit('Salvar', ['class'=>'btn btn-primary', 'name'=>'submitFormCliente', 'id'=>'submitFormCliente'])}}
+                {{Form::submit('Salvar', ['class'=>'btn btn-primary submit_cliente', 'name'=>'submitFormCliente', 'id'=>'submitFormCliente'])}}
 
                 {{Form::close()}}
               </div>
@@ -244,7 +262,10 @@
     @endsection
     @section('script')
     <script text="text/javascript">
-
+      
+      $('.submit_cliente').on('click',function(){
+      $(".wait").css("display", "block");
+    });
 
 
     //função que adiciona a linha
@@ -317,16 +338,17 @@
         dataType: 'json',
         data  : dataId,
         success:function(data){
-          tr.find('.preco_venda').val(data.preco_venda);
+
+          tr.find('.preco_venda').val((Number.parseFloat(data.preco_venda)).formatMoney());
 
           // O codigo abaixo obriga o recalculo apos selecionar outro produto na mesma linha depois de preencher os restanes campos
-          var quantidade = tr.find('.quantidade').val();
-          var preco_venda = tr.find('.preco_venda').val();
+          var quantidade = Number.parseInt(tr.find('.quantidade').val());
+          var preco_venda = Number.parseFloat((tr.find('.preco_venda').val()).replace(/[^0-9-.]/g, ''));
           var valor = (quantidade*preco_venda);
-          var desconto = tr.find('.desconto').val();
+          var desconto = Number.parseInt(tr.find('.desconto').val());
           var subtotal = (quantidade*preco_venda)-(quantidade*preco_venda*desconto)/100;
-          tr.find('.valor').val(valor);
-          tr.find('.subtotal').val(subtotal);
+          tr.find('.valor').val(valor.formatMoney());
+          tr.find('.subtotal').val(subtotal.formatMoney());
           total();
           
         },
@@ -341,42 +363,68 @@
     $('tbody').delegate('.quantidade,.preco_venda,.desconto','keyup',function(){
      document.getElementById("submitFormCotacao").disabled = false;
      var tr = $(this).parent().parent();
-     var quantidade = tr.find('.quantidade').val();
-     var preco_venda = tr.find('.preco_venda').val();
+     var quantidade = Number.parseInt(tr.find('.quantidade').val());
+     var preco_venda = Number.parseFloat((tr.find('.preco_venda').val()).replace(/[^0-9-.]/g, ''));
      var valor = (quantidade*preco_venda);
-     var desconto = tr.find('.desconto').val();
+     var desconto = Number.parseInt(tr.find('.desconto').val());
      var subtotal = (quantidade*preco_venda)-(quantidade*preco_venda*desconto)/100;
-     tr.find('.valor').val(subtotal);
-     tr.find('.subtotal').val(subtotal);
+     tr.find('.valor').val(valor.formatMoney());
+     tr.find('.subtotal').val(subtotal.formatMoney());
      total();
    });
 
     //==calculo do total de todas as linhas
     function total()
     {
-      var total =0;
+      var total = Number.parseFloat(0);
+      var total_iva = Number.parseFloat(0);
       $('.subtotal').each(function(i,e){
-        var subtotal = $(this).val()-0;
-        total +=subtotal;
+        var subtotal_string = $(this).val();
+        var subtotal_float = Number.parseFloat(subtotal_string.replace(/[^0-9-.]/g, ''));
+        total +=subtotal_float;
       })
-      $('.valor_visual').html(total.formatMoney(2,',','.')+ " Mtn");
+
+      iva = Number.parseFloat(Number.parseFloat((total*17)/100).toFixed(2)); // o parseFloat interno gera uma string e garante duas casas decimas, o parseFloat externo garante que seja um float para posteriores operacoes artime.
+      total_iva = (total + iva);
+
+      $('.valor_total_visual').html(total.formatMoney() + " Mtn");
       $('.valor_total').val(total);
+      // console.log(total);
+      $('.iva').html(iva.formatMoney()+ " Mtn");
+      $('.valor_total_iva_visual').html(total_iva.formatMoney()+ " Mtn");
+      
     };
+
+
+    // Extend the default Number object with a formatMoney() method:
+// usage: someVar.formatMoney(decimalPlaces, symbol, thousandsSeparator, decimalSeparator)
+// defaults: (2, "$", ",", ".")
+// Number.prototype.formatMoney = function(places, symbol, thousand, decimal) {
+//   places = !isNaN(places = Math.abs(places)) ? places : 2;
+//   symbol = symbol !== undefined ? symbol : "";
+//   thousand = thousand || ",";
+//   decimal = decimal || ".";
+//   var number = this, 
+//       negative = number < 0 ? "-" : "",
+//       i = parseInt(number = Math.abs(+number || 0).toFixed(places), 10) + "",
+//       j = (j = i.length) > 3 ? j % 3 : 0;
+//   return symbol + negative + (j ? i.substr(0, j) + thousand : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thousand) + (places ? decimal + Math.abs(number - i).toFixed(places).slice(2) : "");
+// };
 
 
     // ==== formatando os numeros ====
-    Number.prototype.formatMoney = function(decPlaces, thouSeparator, decSeparator){
-      var n = this,
-      decPlaces = isNaN(decPlaces = Math.abs(decPlaces)) ? 2 : decPlaces,
-      decSeparator = decSeparator == undefined ? ".": decSeparator,
-      thouSeparator = thouSeparator == undefined ? ",": thouSeparator,
-      sign = n < 0 ? "-" : "",
-      i = parseInt(n = Math.abs(+n || 0).toFixed(decPlaces)) + "",
-      j = (j = i.length) > 3 ? j % 3 : 0;
-      return sign + (j ? i.substr(0,j) + thouSeparator : "")
-      + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thouSeparator)
-      + (decPlaces ? decSeparator + Math.abs(n-i).toFixed(decPlaces).slice(2) : "");
-    };
+    // Number.prototype.formatMoney = function(decPlaces, thouSeparator, decSeparator){
+    //   var n = this,
+    //   decPlaces = isNaN(decPlaces = Math.abs(decPlaces)) ? 2 : decPlaces,
+    //   decSeparator = decSeparator == undefined ? ".": decSeparator,
+    //   thouSeparator = thouSeparator == undefined ? ",": thouSeparator,
+    //   sign = n < 0 ? "-" : "",
+    //   i = parseInt(n = Math.abs(+n || 0).toFixed(decPlaces)) + "",
+    //   j = (j = i.length) > 3 ? j % 3 : 0;
+    //   return sign + (j ? i.substr(0,j) + thouSeparator : "")
+    //   + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thouSeparator)
+    //   + (decPlaces ? decSeparator + Math.abs(n-i).toFixed(decPlaces).slice(2) : "");
+    // };
     //---começam aqui as funçoes que filtram somente números
     //---find element by row--
     function findRowNum(input){

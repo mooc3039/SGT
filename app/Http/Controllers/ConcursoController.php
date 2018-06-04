@@ -92,6 +92,7 @@ class ConcursoController extends Controller
       // dd($request->all());
       $acronimo_forma_pagamento_naoaplicavel = FormaPagamento::select('id')->where('acronimo', 'naoaplicavel')->first();
       $acronimo_forma_pagamento_naoaplicavel_id = $acronimo_forma_pagamento_naoaplicavel->id;
+      $bad_symbols = array(",");
 
         // dd($request->all());
       if($request->all()){
@@ -107,8 +108,8 @@ class ConcursoController extends Controller
         if($request['pago'] == 0){
 
           $pago = $pago;
-          $valor_pago = $valor_pago;
-          $remanescente = $request['valor_total_iva'];
+          $valor_pago = str_replace($bad_symbols, "", $valor_pago);
+          $remanescente = str_replace($bad_symbols, "", $request['valor_total_iva']);
           $forma_pagamento_id = $acronimo_forma_pagamento_naoaplicavel_id;
           $nr_documento_forma_pagamento = 'Nao Aplicavel';
 
@@ -117,11 +118,11 @@ class ConcursoController extends Controller
           $pago = $request['pago'];
 
           if(!empty($request['valor_pago'])){
-            $valor_pago = $request['valor_pago'];
+            $valor_pago = str_replace($bad_symbols, "", $request['valor_pago']);
           }
 
           if(!empty($request['remanescente'])){
-            $remanescente = $request['remanescente'];
+            $remanescente = str_replace($bad_symbols, "", $request['remanescente']);
           }
 
           if(!empty($request['forma_pagamento_id'])){
@@ -146,6 +147,7 @@ class ConcursoController extends Controller
           $concurso->user_id = $request['user_id'];
           $concurso->valor_total = 0; 
           $concurso->valor_iva = 0; 
+          $concurso->iva = 0; 
 
           $concurso->pago = $pago;
           $concurso->codigo_concurso = $codigo_concurso;
@@ -167,14 +169,14 @@ class ConcursoController extends Controller
                 $iten_concurso =  new ItenConcurso;
 
                 $iten_concurso->produto_id = $request['produto_id'][$i];
-                $iten_concurso->quantidade = $request['quantidade'][$i];
-                $iten_concurso->quantidade_rest = $request['quantidade'][$i];
-                $iten_concurso->preco_venda = $request['preco_venda'][$i];
-                $iten_concurso->valor = $request['valor'][$i];
-                $iten_concurso->valor_rest = $request['valor'][$i];
-                $iten_concurso->desconto = $request['desconto'][$i];
-                $iten_concurso->subtotal = $request['subtotal'][$i];
-                $iten_concurso->subtotal_rest = $request['subtotal'][$i];
+                $iten_concurso->quantidade = str_replace($bad_symbols, "", $request['quantidade'][$i]);
+                $iten_concurso->quantidade_rest = str_replace($bad_symbols, "", $request['quantidade'][$i]);
+                $iten_concurso->preco_venda = str_replace($bad_symbols, "", $request['preco_venda'][$i]);
+                $iten_concurso->valor = str_replace($bad_symbols, "", $request['valor'][$i]);
+                $iten_concurso->valor_rest = str_replace($bad_symbols, "", $request['valor'][$i]);
+                $iten_concurso->desconto = str_replace($bad_symbols, "", $request['desconto'][$i]);
+                $iten_concurso->subtotal = str_replace($bad_symbols, "", $request['subtotal'][$i]);
+                $iten_concurso->subtotal_rest = str_replace($bad_symbols, "", $request['subtotal'][$i]);
                 $iten_concurso->concurso_id = $concurso_id[$i];
                 $iten_concurso->user_id = $usr_id[$i];
 
@@ -504,6 +506,7 @@ public function pagamentoConcurso(PagamentoConcursoStoreUpdateFormRequest $reque
         //dd($request->all());
   $acronimo_forma_pagamento_naoaplicavel = FormaPagamento::select('id')->where('acronimo', 'naoaplicavel')->first();
   $acronimo_forma_pagamento_naoaplicavel_id = $acronimo_forma_pagamento_naoaplicavel->id;
+  $bad_symbols = array(",");
 
   $concurso_id = $request->concurso_id;
 
@@ -521,8 +524,8 @@ public function pagamentoConcurso(PagamentoConcursoStoreUpdateFormRequest $reque
   if($request['pago'] == 0){
 
     $pago = $pago;
-    $valor_pago = $valor_pago;
-    $remanescente = $request['valor_iva'];
+    $valor_pago = str_replace($bad_symbols, "", $valor_pago);
+    $remanescente = str_replace($bad_symbols, "", $request['valor_iva']);
     $forma_pagamento_id = $forma_pagamento_id;
     $nr_documento_forma_pagamento = $nr_documento_forma_pagamento;
 
@@ -531,11 +534,11 @@ public function pagamentoConcurso(PagamentoConcursoStoreUpdateFormRequest $reque
     $pago = $request['pago'];
 
     if(!empty($request['valor_pago'])){
-      $valor_pago = $request['valor_pago'];
+      $valor_pago = str_replace($bad_symbols, "", $request['valor_pago']);
     }
 
     if(!empty($request['remanescente'])){
-      $remanescente = $request['remanescente'];
+      $remanescente = str_replace($bad_symbols, "", $request['remanescente']);
     }
 
     if(!empty($request['forma_pagamento_id'])){

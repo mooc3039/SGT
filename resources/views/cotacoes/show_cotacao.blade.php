@@ -60,18 +60,18 @@
 								<tbody>
 
 									<tr>
-										<th><i class="icon_profile"></i>Quantidade</th>
-										<th><i class="icon_mobile"></i> Designação </th>
-										<th><i class="icon_mail_alt"></i> Preço Unitário </th>
-										<th><i class="icon_cogs"></i> Valor Total </th>
+										<th> Quantidade</th>
+										<th> Designação </th>
+										<th> Preço Unitário (Mtn)</th>
+										<th> Valor Total (Mtn)</th>
 									</tr>
 
 									@foreach($cotacao->itensCotacao as $iten_cotacao)
 									<tr>
 										<td> {{$iten_cotacao->quantidade}} </td>
 										<td> {{$iten_cotacao->produto->descricao}} </td>
-										<td> {{$iten_cotacao->produto->preco_venda}} </td>
-										<td> {{$iten_cotacao->valor}} </td>
+										<td> {{number_format($iten_cotacao->produto->preco_venda, 2, '.', ',')}} </td>
+										<td> {{number_format($iten_cotacao->valor, 2, '.', ',')}} </td>
 
 									</tr>
 									@endforeach
@@ -101,17 +101,17 @@
 								<tr>
 									<td>Sub-Total:</td>
 									<td style="width: 10px"></td>
-									<td>{{$cotacao->valor_total}}</td>
+									<td>{{number_format($cotacao->valor_total, 2, '.', ',')}} Mtn</td>
 								</tr>
 								<tr>
 									<td>IVA(17%):</td>
 									<td></td>
-									<td>{{(($cotacao->valor_total)*17)/100}}</td>
+									<td>{{number_format($cotacao->iva, 2, '.', ',')}} Mtn</td>
 								</tr>
 								<tr>
 									<td>Valor Total:</td>
 									<td></td>
-									<td><b>{{$cotacao->valor_iva}}</b></td>
+									<td><b>{{number_format($cotacao->valor_iva, 2, '.', ',')}} Mtn</b></td>
 								</tr>
 							</table>
 

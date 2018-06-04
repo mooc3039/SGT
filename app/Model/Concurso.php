@@ -12,6 +12,7 @@ class Concurso extends Model
     	'user_id',
     	'valor_total',
         'valor_iva',
+        'iva',
         'pago',
         'valor_pago',
         'remanescente',

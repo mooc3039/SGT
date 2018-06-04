@@ -96,6 +96,7 @@ class SaidaController extends Controller
         //
       $acronimo_forma_pagamento_naoaplicavel = FormaPagamento::select('id')->where('acronimo', 'naoaplicavel')->first();
       $acronimo_forma_pagamento_naoaplicavel_id = $acronimo_forma_pagamento_naoaplicavel->id;
+      $bad_symbols = array(",");
 
       if($request->all()){
 
@@ -112,8 +113,8 @@ class SaidaController extends Controller
         if($request['pago'] == 0){
 
           $pago = $pago;
-          $valor_pago = $valor_pago;
-          $remanescente = $request['valor_total_iva'];
+          $valor_pago = str_replace($bad_symbols, "", $valor_pago);
+          $remanescente = str_replace($bad_symbols, "", $request['valor_total_iva']);
           $forma_pagamento_id = $forma_pagamento_id;
           $nr_documento_forma_pagamento = $nr_documento_forma_pagamento;
 
@@ -122,11 +123,11 @@ class SaidaController extends Controller
           $pago = $request['pago'];
 
           if(!empty($request['valor_pago'])){
-            $valor_pago = $request['valor_pago'];
+            $valor_pago = str_replace($bad_symbols, "", $request['valor_pago']);
           }
 
           if(!empty($request['remanescente'])){
-            $remanescente = $request['remanescente'];
+            $remanescente = str_replace($bad_symbols, "", $request['remanescente']);
           }
 
           if(!empty($request['forma_pagamento_id'])){
@@ -159,7 +160,8 @@ class SaidaController extends Controller
           $saida->cliente_id = $request['cliente_id'];
           $saida->user_id = $request['user_id'];
           $saida->valor_total = 0; 
-          $saida->valor_iva = 0; 
+          $saida->valor_iva = 0;
+          $saida->iva = 0;
           // Eh necessario que o valor total seja zero, uma vez que este campo na tabela cotacaos eh actualizado pelo trigger apos o "insert" bem como o "update" na tabela itens_cotacaos de acordo com o codigo da cotacao. Nao pode ser o valor_total vindo do formulario, pois este valor sera acrescido a cada insercao abaixo quando executar o iten_cotacao->save().
 
           $saida->pago = $pago;
@@ -188,13 +190,13 @@ class SaidaController extends Controller
                 $iten_saida =  new ItenSaida;
 
                 $iten_saida->produto_id = $request['produto_id'][$i];
-                $iten_saida->quantidade = $request['quantidade'][$i];
-                $iten_saida->quantidade_rest = $request['quantidade'][$i];
-                $iten_saida->valor = $request['valor'][$i];
-                $iten_saida->valor_rest = $request['valor'][$i];
-                $iten_saida->desconto = $request['desconto'][$i];
-                $iten_saida->subtotal = $request['subtotal'][$i];
-                $iten_saida->subtotal_rest = $request['subtotal'][$i];
+                $iten_saida->quantidade = str_replace($bad_symbols, "", $request['quantidade'][$i]);
+                $iten_saida->quantidade_rest = str_replace($bad_symbols, "", $request['quantidade'][$i]);
+                $iten_saida->valor = str_replace($bad_symbols, "", $request['valor'][$i]);
+                $iten_saida->valor_rest = str_replace($bad_symbols, "", $request['valor'][$i]);
+                $iten_saida->desconto = str_replace($bad_symbols, "", $request['desconto'][$i]);
+                $iten_saida->subtotal = str_replace($bad_symbols, "", $request['subtotal'][$i]);
+                $iten_saida->subtotal_rest = str_replace($bad_symbols, "", $request['subtotal'][$i]) ;
                 $iten_saida->saida_id = $array_saida_id[$i];
 
                 $iten_saida->save();
@@ -236,7 +238,7 @@ class SaidaController extends Controller
 
           } catch (QueryException $e){
 
-            $error = "Erro ao cadastrar a Cotacao! => Possível redundância de um item/produto à mesma cotação ou preenchimento incorrecto dos campos!";
+            $error = "Erro ao cadastrar a Cotacao! => Possível redundância de um item/produto à mesma Factura ou preenchimento incorrecto dos campos!";
             DB::rollback();
             return redirect()->back()->with('error', $error);
 
@@ -365,6 +367,7 @@ class SaidaController extends Controller
         // dd($request->all());
       $acronimo_forma_pagamento_naoaplicavel = FormaPagamento::select('id')->where('acronimo', 'naoaplicavel')->first();
       $acronimo_forma_pagamento_naoaplicavel_id = $acronimo_forma_pagamento_naoaplicavel->id;
+      $bad_symbols = array(",");
 
       $saida_id = $request->saida_id;
 
@@ -381,8 +384,8 @@ class SaidaController extends Controller
       if($request['pago'] == 0){
 // dd($request->all());
         $pago = $pago;
-        $valor_pago = $valor_pago;
-        $remanescente = $request['valor_iva'];
+        $valor_pago = str_replace($bad_symbols, "", $valor_pago);
+        $remanescente = str_replace($bad_symbols, "", $request['valor_iva']);
         $forma_pagamento_id = $forma_pagamento_id;
         $nr_documento_forma_pagamento = $nr_documento_forma_pagamento;
 
@@ -391,11 +394,11 @@ class SaidaController extends Controller
         $pago = $request['pago'];
 
         if(!empty($request['valor_pago'])){
-          $valor_pago = $request['valor_pago'];
+          $valor_pago = str_replace($bad_symbols, "", $request['valor_pago']);
         }
 
         if(!empty($request['remanescente'])){
-          $remanescente = $request['remanescente'];
+          $remanescente = str_replace($bad_symbols, "", $request['remanescente']);
         }
 
         if(!empty($request['forma_pagamento_id'])){

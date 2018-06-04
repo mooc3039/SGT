@@ -85,6 +85,7 @@ class EntradaController extends Controller
         // dd($request->all());
       $acronimo_forma_pagamento_naoaplicavel = FormaPagamento::select('id')->where('acronimo', 'naoaplicavel')->first();
       $acronimo_forma_pagamento_naoaplicavel_id = $acronimo_forma_pagamento_naoaplicavel->id;
+      $bad_symbols = array(",");
         //dd($request->all());
 
       if($request->all()){
@@ -106,8 +107,8 @@ class EntradaController extends Controller
         if($request['pago'] == 0){
 
           $pago = $request['pago'];
-          $valor_pago = 0.00;
-          $remanescente = $request['valor_total'];
+          $valor_pago = str_replace($bad_symbols, "", $valor_pago);
+          $remanescente = str_replace($bad_symbols, "", $request['valor_total']);
           $forma_pagamento_id = $acronimo_forma_pagamento_naoaplicavel_id;
           $nr_documento_forma_pagamento = 'Nao Aplicavel';
 
@@ -116,11 +117,11 @@ class EntradaController extends Controller
           $pago = $request['pago'];
 
           if(!empty($request['valor_pago'])){
-            $valor_pago = $request['valor_pago'];
+            $valor_pago = str_replace($bad_symbols, "", $request['valor_pago']);
           }
 
           if(!empty($request['remanescente'])){
-            $remanescente = $request['remanescente'];
+            $remanescente = str_replace($bad_symbols, "", $request['remanescente']);
           }
 
           if(!empty($request['forma_pagamento_id'])){
@@ -158,10 +159,10 @@ class EntradaController extends Controller
                 $iten_entrada =  new ItenEntrada;
 
                 $iten_entrada->produto_id = $request['produto_id'][$i];
-                $iten_entrada->quantidade = $request['quantidade'][$i];
-                $iten_entrada->valor = $request['valor'][$i];
-                $iten_entrada->desconto = $request['desconto'][$i];
-                $iten_entrada->subtotal = $request['subtotal'][$i];
+                $iten_entrada->quantidade = str_replace($bad_symbols, "", $request['quantidade'][$i]);
+                $iten_entrada->valor = str_replace($bad_symbols, "", $request['valor'][$i]);
+                $iten_entrada->desconto = str_replace($bad_symbols, "", $request['desconto'][$i]);
+                $iten_entrada->subtotal = str_replace($bad_symbols, "", $request['subtotal'][$i]);
                 $iten_entrada->entrada_id = $entrada_id[$i];
 
                 $iten_entrada->save();
@@ -296,6 +297,7 @@ class EntradaController extends Controller
 
       $acronimo_forma_pagamento_naoaplicavel = FormaPagamento::select('id')->where('acronimo', 'naoaplicavel')->first();
       $acronimo_forma_pagamento_naoaplicavel_id = $acronimo_forma_pagamento_naoaplicavel->id;
+      $bad_symbols = array(",");
 
 
       $entrada_id = $request->entrada_id;
@@ -314,8 +316,8 @@ class EntradaController extends Controller
       if($request['pago'] == 0){
 
         $pago = $pago;
-        $valor_pago = $valor_pago;
-        $remanescente = $request['valor_iva'];
+        $valor_pago = str_replace($bad_symbols, "", $valor_pago);
+        $remanescente = str_replace($bad_symbols, "", $request['valor_total']);
         $forma_pagamento_id = $forma_pagamento_id;
         $nr_documento_forma_pagamento = $nr_documento_forma_pagamento;
 
@@ -324,11 +326,11 @@ class EntradaController extends Controller
         $pago = $request['pago'];
 
         if(!empty($request['valor_pago'])){
-          $valor_pago = $request['valor_pago'];
+          $valor_pago = str_replace($bad_symbols, "", $request['valor_pago']);
         }
 
         if(!empty($request['remanescente'])){
-          $remanescente = $request['remanescente'];
+          $remanescente = str_replace($bad_symbols, "", $request['remanescente']);
         }
 
         if(!empty($request['forma_pagamento_id'])){

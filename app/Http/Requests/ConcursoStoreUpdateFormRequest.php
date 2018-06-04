@@ -33,8 +33,7 @@ class ConcursoStoreUpdateFormRequest extends FormRequest
           'desconto' => 'required',
           
           'pago' => 'required',
-          'valor_pago' => 'required|numeric',
-          'remanescente' => 'numeric|min:0',
+          'valor_pago' => 'required',
           'forma_pagamento_id' => 'required',
           'nr_documento_forma_pagamento' => 'required',
       ];
@@ -51,9 +50,6 @@ class ConcursoStoreUpdateFormRequest extends FormRequest
         
         'pago.required' => 'É necessário informar se o Concurso foi Pago ou Nao!',
         'valor_pago.required' => 'É necessário informar o Valor Pago!',
-        'valor_pago.numeric' => 'O Valor Pago deve ser um valor numerico!',
-        'remanescente.numeric' => 'O Remanescente deve ser um Valor Numerico!',
-        'remanescente.min' => 'O Remanescente deve ser um Valor Numerico positivo! NB: O Valor Pago nao deve ser superior que o Remanescente!',
         'forma_pagamento_id.required' => 'É necessário informar a Forma de pagamento!',
         'nr_documento_forma_pagamento.required' => 'É necessário indicar o nurmero do documento da forma de pagamento!',
     ];

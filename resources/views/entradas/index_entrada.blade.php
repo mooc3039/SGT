@@ -27,11 +27,11 @@
         <table class="table table-striped table-advance table-hover" id="tbl_index_entradas" data-order='[[ 0, "desc" ]]'>
           <thead>
             <tr>
-              <th><i class="icon_profile"></i> Código da Entrada </th>
-              <th><i class="icon_mobile"></i> Data de Entrada </th>
-              <th><i class="icon_mobile"></i> Fornecedor </th>
-              <th><i class="icon_mail_alt"></i> Valor Total </th>
-              <th><i class="icon_mail_alt"></i> Pagamento </th>
+              <th> Código da Entrada </th>
+              <th> Data de Entrada </th>
+              <th> Fornecedor </th>
+              <th> Valor Total </th>
+              <th> Pagamento </th>
               <th class="text-right"><i class="icon_cogs"></i> Operações </th>
             </tr>
           </thead>
@@ -41,7 +41,7 @@
               <td> {{$entrada->id}} </td>
               <td> {{date('d-m-Y', strtotime($entrada->created_at))}} </td>
               <td> {{$entrada->fornecedor->nome}} </td>
-              <td> {{$entrada->valor_total}} </td>
+              <td> {{number_format($entrada->valor_total, 2, '.', ',')}} </td>
               {{ Form::open(['route'=>['entrada.destroy', $entrada->id], 'method'=>'DELETE']) }}
               <td>
                 <!-- <button type="button" data-toggle="modal" data-target="#modalPagamentoEntrada" data-entrada_id={{ $entrada->id }} data-valor_total={{ $entrada->valor_total }} data-valor_pago={{ $entrada->valor_pago }} data-troco={{ $entrada->troco }} data-forma_pagamento_id={{ $entrada->forma_pagamento_id }} data-nr_documento_forma_pagamento={{ $entrada->nr_documento_forma_pagamento }} -->

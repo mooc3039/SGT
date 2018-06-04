@@ -88,6 +88,7 @@ class VendaController extends Controller
       // dd($request->all());
       $acronimo_forma_pagamento_naoaplicavel = FormaPagamento::select('id')->where('acronimo', 'naoaplicavel')->first();
       $acronimo_forma_pagamento_naoaplicavel_id = $acronimo_forma_pagamento_naoaplicavel->id;
+      $bad_symbols = array(",");
         //dd($request->all());
 
       if($request->all()){
@@ -99,6 +100,7 @@ class VendaController extends Controller
         $venda->user_id = $request['user_id'];
         $venda->valor_total = 0; 
         $venda->valor_iva = 0; 
+        $venda->iva = 0; 
           // Eh necessario que o valor total seja zero, uma vez que este campo na tabela cotacaos eh actualizado pelo trigger apos o "insert" bem como o "update" na tabela itens_cotacaos de acordo com o codigo da cotacao. Nao pode ser o valor_total vindo do formulario, pois este valor sera acrescido a cada insercao abaixo quando executar o iten_cotacao->save().
 
         $pago = 0;
@@ -110,8 +112,8 @@ class VendaController extends Controller
         if($request['pago'] == 0){
 
           $pago = $request['pago'];
-          $valor_pago = 0.00;
-          $remanescente = $request['valor_total_iva'];
+          $valor_pago = str_replace($bad_symbols, "", $valor_pago);
+          $remanescente = str_replace($bad_symbols, "", $request['valor_total_iva']);
           $forma_pagamento_id = $acronimo_forma_pagamento_naoaplicavel_id;
           $nr_documento_forma_pagamento = 'Nao Aplicavel';
 
@@ -120,11 +122,11 @@ class VendaController extends Controller
           $pago = $request['pago'];
 
           if(!empty($request['valor_pago'])){
-            $valor_pago = $request['valor_pago'];
+            $valor_pago = str_replace($bad_symbols, "", $request['valor_pago']);
           }
 
           if(!empty($request['remanescente'])){
-            $remanescente = $request['remanescente'];
+            $remanescente = str_replace($bad_symbols, "", $request['remanescente']);
           }
 
           if(!empty($request['forma_pagamento_id'])){
@@ -162,10 +164,10 @@ class VendaController extends Controller
                 $iten_venda =  new ItenVenda;
 
                 $iten_venda->produto_id = $request['produto_id'][$i];
-                $iten_venda->quantidade = $request['quantidade'][$i];
-                $iten_venda->valor = $request['valor'][$i];
-                $iten_venda->desconto = $request['desconto'][$i];
-                $iten_venda->subtotal = $request['subtotal'][$i];
+                $iten_venda->quantidade = str_replace($bad_symbols, "", $request['quantidade'][$i]);
+                $iten_venda->valor = str_replace($bad_symbols, "", $request['valor'][$i]);
+                $iten_venda->desconto = str_replace($bad_symbols, "", $request['desconto'][$i]);
+                $iten_venda->subtotal = str_replace($bad_symbols, "", $request['subtotal'][$i]);
                 $iten_venda->venda_id = $venda_id[$i];
 
                 $iten_venda->save();
@@ -264,6 +266,7 @@ class VendaController extends Controller
         //dd($request->all());
      $acronimo_forma_pagamento_naoaplicavel = FormaPagamento::select('id')->where('acronimo', 'naoaplicavel')->first();
      $acronimo_forma_pagamento_naoaplicavel_id = $acronimo_forma_pagamento_naoaplicavel->id;
+     $bad_symbols = array(",");
 
 
      $venda_id = $request->venda_id;
@@ -282,8 +285,8 @@ class VendaController extends Controller
      if($request['pago'] == 0){
 
       $pago = $pago;
-      $valor_pago = $valor_pago;
-      $remanescente = $request['valor_iva'];
+      $valor_pago = str_replace($bad_symbols, "", $valor_pago);;
+      $remanescente = str_replace($bad_symbols, "", $request['valor_iva']);;
       $forma_pagamento_id = $forma_pagamento_id;
       $nr_documento_forma_pagamento = $nr_documento_forma_pagamento;
 
@@ -292,11 +295,11 @@ class VendaController extends Controller
       $pago = $request['pago'];
 
       if(!empty($request['valor_pago'])){
-        $valor_pago = $request['valor_pago'];
+        $valor_pago = str_replace($bad_symbols, "", $request['valor_pago']);;
       }
 
       if(!empty($request['remanescente'])){
-        $remanescente = $request['remanescente'];
+        $remanescente = str_replace($bad_symbols, "", $request['remanescente']);;
       }
 
       if(!empty($request['forma_pagamento_id'])){

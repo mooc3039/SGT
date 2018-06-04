@@ -35,11 +35,11 @@
         <table class="table table-striped table-advance table-hover" id="tbl_index_concursos" data-order='[[ 0, "desc" ]]'>
           <thead>
             <tr>
-              <th><i class="icon_profile"></i> Código do Concurso </th>
-              <th><i class="icon_mobile"></i> Data do Concurso </th>
-              <th><i class="icon_mobile"></i> Cliente </th>
-              <th><i class="icon_mail_alt"></i> Valor Total </th>
-              <th><i class="icon_mail_alt"></i> Pagamento </th>
+              <th> Código do Concurso </th>
+              <th> Data do Concurso </th>
+              <th> Cliente </th>
+              <th> Valor Total </th>
+              <th> Pagamento </th>
               <th class="text-right"><i class="icon_cogs"></i> Operações </th>
             </tr>
           </thead>
@@ -49,7 +49,7 @@
               <td> {{$concurso->codigo_concurso}} </td>
               <td> {{date('d-m-Y', strtotime($concurso->created_at))}} </td>
               <td> {{$concurso->cliente->nome}} </td>
-              <td> {{$concurso->valor_iva}} </td>
+              <td> {{number_format($concurso->valor_iva, 2, '.', ',')}} </td>
               {{ Form::open(['route'=>['concurso.destroy', $concurso->id], 'method'=>'DELETE']) }}
               <td>
                 <!-- <button type="button" data-toggle="modal" data-target="#modalPagamentoConcurso" data-concurso_id={{ $concurso->id }} data-valor_concurso={{ $concurso->valor_concurso }} data-valor_total={{ $concurso->valor_total }} data-forma_pagamento_id={{ $concurso->forma_pagamento_id }} data-nr_documento_forma_pagamento={{ $concurso->nr_documento_forma_pagamento }} -->

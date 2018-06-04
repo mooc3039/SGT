@@ -208,14 +208,18 @@
           {{Form::text('email', null, ['placeholder' => 'Email', 'class' => 'form-control'])}}
         </div>
         <div class="form-group">
+          {{Form::label('nuit', 'NUIT', ['class'=>'control-lable'])}}
+          {{Form::text('nuit', null, ['placeholder' => 'NUIT', 'class' => 'form-control'])}}
+        </div>
+        <div class="form-group">
           {{Form::label('rubrica', 'Rubrica', ['class'=>'control-lable'])}}
           {{Form::text('rubrica', null, ['placeholder' => 'Rubrica', 'class' => 'form-control'])}}
         </div>
         <div class="radio-inline">
-          {{Form::radio('activo', '1')}} Activo
+          <input type="radio" name="activo" value="1" id="activo"> <label for="activo">Activo</label>
         </div>
         <div class="radio-inline">
-          {{Form::radio('activo', '0')}} Inactivo
+          <input type="radio" name="activo" value="0" id="inactivo"> <label for="inactivo">Inactivo</label>
         </div>
 
       </div>

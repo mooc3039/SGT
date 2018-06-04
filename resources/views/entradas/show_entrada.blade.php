@@ -59,9 +59,9 @@
 								<tbody>
 
 									<tr>
-										<th><i class="icon_profile"></i>Quantidade</th>
-										<th><i class="icon_mobile"></i> Valor </th>
-										<th><i class="icon_mobile"></i> Preço Aquisição </th>
+										<th> Quantidade</th>
+										<th> Designação </th>
+										<th> Preço Aquisição (Mtn)</th>
 										
 									</tr>
 
@@ -69,7 +69,7 @@
 									<tr>
 										<td> {{$iten_entrada->quantidade}} </td>
 										<td> {{$iten_entrada->produto->descricao}} </td>
-										<td> {{$iten_entrada->produto->preco_aquisicao}} </td>
+										<td> {{number_format($iten_entrada->produto->preco_aquisicao, 2, '.', ',')}} </td>
 										
 
 									</tr> 
@@ -100,7 +100,7 @@
 								<tr>
 									<td>Valor Total:</td>
 									<td style="width: 10px"></td>
-									<td><b>{{$entrada->valor_total}}</b></td>
+									<td><b>{{number_format($entrada->valor_total, 2, '.', ',')}} Mtn</b></td>
 								</tr>
 							</table>
 

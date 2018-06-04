@@ -297,18 +297,30 @@
         }
 
         // ==== formatando os numeros para 0.000,00 ====
-        Number.prototype.formatMoney = function(decPlaces, thouSeparator, decSeparator){
-          var n = this,
-          decPlaces = isNaN(decPlaces = Math.abs(decPlaces)) ? 2 : decPlaces,
-          decSeparator = decSeparator == undefined ? ".": decSeparator,
-          thouSeparator = thouSeparator == undefined ? ",": thouSeparator,
-          sign = n < 0 ? "-" : "",
-          i = parseInt(n = Math.abs(+n || 0).toFixed(decPlaces)) + "",
-          j = (j = i.length) > 3 ? j % 3 : 0;
-          return sign + (j ? i.substr(0,j) + thouSeparator : "")
-          + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thouSeparator)
-          + (decPlaces ? decSeparator + Math.abs(n-i).toFixed(decPlaces).slice(2) : "");
-        };
+        // Number.prototype.formatMoney = function(decPlaces, thouSeparator, decSeparator){
+        //   var n = this,
+        //   decPlaces = isNaN(decPlaces = Math.abs(decPlaces)) ? 2 : decPlaces,
+        //   decSeparator = decSeparator == undefined ? ".": decSeparator,
+        //   thouSeparator = thouSeparator == undefined ? ",": thouSeparator,
+        //   sign = n < 0 ? "-" : "",
+        //   i = parseInt(n = Math.abs(+n || 0).toFixed(decPlaces)) + "",
+        //   j = (j = i.length) > 3 ? j % 3 : 0;
+        //   return sign + (j ? i.substr(0,j) + thouSeparator : "")
+        //   + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thouSeparator)
+        //   + (decPlaces ? decSeparator + Math.abs(n-i).toFixed(decPlaces).slice(2) : "");
+        // };
+
+            Number.prototype.formatMoney = function(places, symbol, thousand, decimal) {
+  places = !isNaN(places = Math.abs(places)) ? places : 2;
+  symbol = symbol !== undefined ? symbol : "";
+  thousand = thousand || ",";
+  decimal = decimal || ".";
+  var number = this, 
+      negative = number < 0 ? "-" : "",
+      i = parseInt(number = Math.abs(+number || 0).toFixed(places), 10) + "",
+      j = (j = i.length) > 3 ? j % 3 : 0;
+  return symbol + negative + (j ? i.substr(0, j) + thousand : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thousand) + (places ? decimal + Math.abs(number - i).toFixed(places).slice(2) : "");
+};
 
 
 

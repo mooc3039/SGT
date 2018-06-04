@@ -17,6 +17,7 @@ class Saida extends Model
     	'cliente_id',
     	'user_id',
         'valor_total',
+        'iva',
     	'valor_iva',
         'pago',
         'valor_pago',

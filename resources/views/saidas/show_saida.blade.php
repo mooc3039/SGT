@@ -59,18 +59,18 @@
 								<tbody>
 
 									<tr>
-										<th><i class="icon_profile"></i>Quantidade</th>
-										<th><i class="icon_mobile"></i> Designação </th>
-										<th><i class="icon_mail_alt"></i> Preço Unitário </th>
-										<th><i class="icon_cogs"></i> Valor Total </th>
+										<th> Quantidade</th>
+										<th> Designação </th>
+										<th> Preço Unitário (Mtn)</th>
+										<th> Valor Total (Mtn)</th>
 									</tr>
 
 									@foreach($saida->itensSaida as $iten_saida)
 									<tr>
 										<td> {{$iten_saida->quantidade}} </td>
 										<td> {{$iten_saida->produto->descricao}} </td>
-										<td> {{$iten_saida->produto->preco_venda}} </td>
-										<td> {{$iten_saida->valor}} </td>
+										<td> {{number_format($iten_saida->produto->preco_venda, 2, '.', ',')}} </td>
+										<td> {{number_format($iten_saida->valor, 2, '.', ',')}} </td>
 
 									</tr>
 									@endforeach
@@ -99,17 +99,17 @@
 								<tr>
 									<td>Sub-Total:</td>
 									<td style="width: 10px"></td>
-									<td>{{$saida->valor_total}}</td>
+									<td>{{number_format($saida->valor_total, 2, '.', ',')}} Mtn</td>
 								</tr>
 								<tr>
 									<td>IVA(17%):</td>
 									<td></td>
-									<td>{{(($saida->valor_total)*17)/100}}</td>
+									<td>{{number_format($saida->iva, 2, '.', ',')}} Mtn</td>
 								</tr>
 								<tr>
 									<td>Valor Total:</td>
 									<td></td>
-									<td><b>{{$saida->valor_iva}}</b></td>
+									<td><b>{{number_format($saida->valor_iva, 2, '.', ',')}} Mtn</b></td>
 								</tr>
 							</table>
 

@@ -16,6 +16,7 @@ class Cotacao extends Model
     	'user_id',
         'valor_total',
         'valor_iva',
+        'iva',
     	'validade',
     ];
     public $timestamps = true;

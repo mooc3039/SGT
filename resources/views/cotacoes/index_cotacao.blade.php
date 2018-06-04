@@ -35,11 +35,11 @@
             <table class="table table-striped table-advance table-hover" id="tbl_index_cotacoes" data-order='[[ 0, "desc" ]]'>
               <thead>
                 <tr>
-                  <th><i class="icon_profile"></i>Código da Cotação </th>
-                  <th><i class="icon_mobile"></i> Data de Emissão </th>
-                  <th><i class="icon_mobile"></i> Data de Vencimento </th>
-                  <th><i class="icon_mail_alt"></i> Cliente </th>
-                  <th><i class="icon_mail_alt"></i> Valor Total </th>
+                  <th> Código da Cotação </th>
+                  <th> Data de Emissão </th>
+                  <th> Data de Vencimento </th>
+                  <th> Cliente </th>
+                  <th> Valor Total (Mtn)</th>
                   <th class="text-right"><i class="icon_cogs"></i> Operações </th>
                 </tr>
               </thead>
@@ -67,7 +67,7 @@
                 <td> {{date('d-m-Y', strtotime($cotacao->created_at))}} </td>
                 <td> {{date('d-m-Y', strtotime($cotacao->data_vencimento))}} </td>
                 <td> {{$cotacao->cliente->nome}} </td>
-                <td> {{$cotacao->valor_total}} </td>
+                <td> {{number_format($cotacao->valor_total, 2, '.', ',')}} </td>
                 <td class="text-right">
                   {{ Form::open(['route'=>['cotacao.destroy', $cotacao->id], 'method'=>'DELETE']) }}
                   <div class="btn-group btn-group-sm">

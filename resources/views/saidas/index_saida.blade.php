@@ -29,11 +29,11 @@
             <table class="table table-striped table-advance table-hover" id="tbl_index_saidas" data-order='[[ 0, "desc" ]]'>
               <thead>
                 <tr>
-                  <th><i class="icon_profile"></i>Código da Factura </th>
-                  <th><i class="icon_mobile"></i> Data de Emissão </th>
-                  <th><i class="icon_mail_alt"></i> Cliente </th>
-                  <th><i class="icon_mail_alt"></i> Valor Total </th>
-                  <th><i class="icon_mail_alt"></i> Pagamento & Guia de Entrega </th>
+                  <th> Código da Factura </th>
+                  <th> Data de Emissão </th>
+                  <th> Cliente </th>
+                  <th> Valor Total (Mtn) </th>
+                  <th> Pagamento & Guia de Entrega </th>
                   <th class="text-right"><i class="icon_cogs"></i> Operações </th>
                 </tr>
               </thead>
@@ -43,7 +43,7 @@
                   <td> <a href="{{ route('show_guia_entrega', $saida->id) }}" data-toggle="tooltip" data-placement="right" title="Guias de Entrega">{{$saida->id}}</a> </td>
                   <td> {{date('d-m-Y', strtotime($saida->data))}} </td>
                   <td> {{$saida->cliente->nome}} </td>
-                  <td> {{$saida->valor_iva}} </td>
+                  <td> {{number_format($saida->valor_iva, 2, '.', ',')}} </td>
                   <!-- Abertura para o form destroy. Aberto aqui e nao mais abaixo para melhor estetica do btn-group. Existe apenas um submit dentro deste codigo, como nao eh apenas o ofrmulario aqui -->
                   {{ Form::open(['route'=>['saida.destroy', $saida->id], 'method'=>'DELETE']) }} 
                   <td>

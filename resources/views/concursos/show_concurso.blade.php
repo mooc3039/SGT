@@ -59,18 +59,18 @@
 								<tbody>
 
 									<tr>
-										<th><i class="icon_profile"></i>Quantidade</th>
-										<th><i class="icon_mobile"></i> Designação </th>
-										<th><i class="icon_mail_alt"></i> Preço Unitário </th>
-										<th><i class="icon_cogs"></i> Valor Total </th>
+										<th> Quantidade</th>
+										<th> Designação </th>
+										<th> Preço Unitário </th>
+										<th> Valor Total </th>
 									</tr>
 
 									@foreach($concurso->itensConcurso as $iten_concurso)
 									<tr>
 										<td> {{$iten_concurso->quantidade}} </td>
 										<td> {{$iten_concurso->produto->descricao}} </td>
-										<td> {{$iten_concurso->preco_venda}} </td>
-										<td> {{$iten_concurso->valor}} </td>
+										<td> {{number_format($iten_concurso->preco_venda, 2, '.', ',')}} </td>
+										<td> {{number_format($iten_concurso->valor, 2, '.', ',')}} </td>
 
 									</tr>
 									@endforeach
@@ -99,17 +99,17 @@
 								<tr>
 									<td>Sub-Total:</td>
 									<td style="width: 10px"></td>
-									<td>{{$concurso->valor_total}}</td>
+									<td>{{number_format($concurso->valor_total, 2, '.', ',')}}</td>
 								</tr>
 								<tr>
 									<td>IVA(17%):</td>
 									<td></td>
-									<td>{{(($concurso->valor_total)*17)/100}}</td>
+									<td>{{number_format($concurso->iva, 2, '.', ',')}}</td>
 								</tr>
 								<tr>
 									<td>Valor Total:</td>
 									<td></td>
-									<td><b>{{$concurso->valor_iva}}</b></td>
+									<td><b>{{number_format($concurso->valor_iva, 2, '.', ',')}}</b></td>
 								</tr>
 							</table>
 
