@@ -28,6 +28,15 @@
         .total {
         		float: right;
         }
+				.footer {
+					position: absolute;
+					right: 0;
+					bottom: 0;
+					left: 0;
+					padding: 1rem;
+					background-color: #efefef;
+					text-align: right;
+				}
 	</style>
 
 </head>
@@ -42,13 +51,13 @@
 <tr style="height: 188px;">
 <td style="width: 271px; text-align: center; height: 188px;">&nbsp;<div style="border: 2px solid black; border-radius: 10px; text-align: center; height: 160px;">
 &nbsp;<em><strong><span style="text-decoration: underline; font-size: 16px;">
-<br>&nbsp;{{$empresa->nome}}</span></strong></em> <br /> 
-<small><strong>{{$empresa->actuacao}}</strong></small> <br /> 
+<br>&nbsp;{{$empresa->nome}}</span></strong></em> <br />
+<small><strong>{{$empresa->actuacao}}</strong></small> <br />
 @foreach($empresa->enderecos as $endereco)
-<small>{{$endereco->endereco}}</small> <br /> 
+<small>{{$endereco->endereco}}</small> <br />
 @endforeach
 @foreach($empresa->telefones as $telefone)
-<small>Telefone: {{$telefone->telefone}}</small><br /> 
+<small>Telefone: {{$telefone->telefone}}</small><br />
 @endforeach
 @foreach($empresa->emails as $email)
 <small> {{$email->email}}</small><br />
@@ -58,9 +67,9 @@
 <td style="width: 197px; text-align: center; height: 188px;">&nbsp;
 <div style="border: 2px solid black; border-radius: 10px; height: 160px;">
 <strong><em><span style="text-decoration: underline; font-size: 16px;"><br>
-Dados do Cliente</span></em></strong><br /> 
-<strong>Exmo (s)</strong>: {{$cotacao->cliente->nome}}<br /> 
-<strong>Morada</strong>: {{$cotacao->cliente->endereco}}<br /> 
+Dados do Cliente</span></em></strong><br />
+<strong>Exmo (s)</strong>: {{$cotacao->cliente->nome}}<br />
+<strong>Morada</strong>: {{$cotacao->cliente->endereco}}<br />
 <strong>NUIT</strong>: {{$cotacao->cliente->nuit}}</div>
 &nbsp;</td>
 <td style="width: 153px; height: 188px;">
@@ -68,7 +77,7 @@ Dados do Cliente</span></em></strong><br />
 <h3 style="text-align: center;"><strong>COTAÇÃO</strong></h3>
 </div>
 <br />
-<div style="border: 2px solid black; border-radius: 10px; height: 100px;"><br />
+<div style="border: 2px solid black; border-radius: 10px; height: 95px;"><br />
 <h2 style="color: red; text-align: center;">N&ordm; {{$cotacao->id}}</h2>
 </div>
 </td>
@@ -115,32 +124,31 @@ Dados do Cliente</span></em></strong><br />
 @endforeach
 </tbody>
 </table>
-<table class="total wena" style="height: 84px; width: 750px;">
+<table class="total wena" style="height: 84px; width: 748px;">
 <tbody>
 <tr style="height: 18px;">
-<td  style="width: 159px; height: 18px;">&nbsp;</td>
-<td  style="width: 270px; height: 18px;">&nbsp;</td>
-<td class="linha" style="width: 120px; height: 18px;text-align: right;">
+<td class="linha" style="width: 409px; height: 18px; text-align: center;">Motivo justicado da n&atilde;o aplica&ccedil;&atilde;o do imposto</td>
+<td class="linha" style="width: 118px; height: 18px;text-align: right;">
 <strong>&nbsp;SUB-TOTAL</strong></td>
-<td class="linha" style="width: 155px; text-align: center;">{{$cotacao->valor_total}}Mtn</td> 
-</tr>
-<tr style="height: 17px;">
-<td  style="width: 159px; height: 17px;">&nbsp;</td>
-<td  style="width: ; height: 17px;">&nbsp;</td>
-<td class="linha" style="width:; height: 17px;text-align: right;"><strong>&nbsp;IVA 17%</strong></td>
-<td class="linha" style="width: 155px; text-align: center;">{{(($cotacao->valor_total)*17)/100}}</td>
+<td class="linha" style="width: 148px; text-align: center;">{{$cotacao->valor_total}}Mtn</td>
 </tr>
 <tr style="height: 18px;">
-<td style="width: 159px; height: 18px;">&nbsp;</td>
-<td  style="width: ; height: 18px;">&nbsp;</td>
+
+<td class="linha" style="width: ; height: 18px;">&nbsp;</td>
+<td class="linha" style="width:; height: 18px;text-align: right;"><strong>&nbsp;IVA 17%</strong></td>
+<td class="linha" style="width: 148px; text-align: center;">{{(($cotacao->valor_total)*17)/100}}</td>
+</tr>
+<tr style="height: 18px;">
+
+<td class="linha" style="width: ; height: 18px;">&nbsp;</td>
 <td class="linha" style="width: ; height: 18px;text-align: right;"><strong>&nbsp;TOTAL</strong></td>
-<td class="linha" style="width: 155px; text-align: center;">{{$cotacao->valor_iva}}Mtn</td>
+<td class="linha" style="width: 148px; text-align: center;">{{$cotacao->valor_iva}}Mtn</td>
 </tr>
 <tr style="height: 18px;">
-<td  style="width: 159px; height: 18px;">&nbsp;</td>
+
 <td  style="width: ; height: 18px;">&nbsp;</td>
 <td class="" style="width: ; height: 18px;text-align: right;"><strong>&nbsp;</strong></td>
-<td class="" style="width: 155px; text-align: center;"></td>
+<td class="" style="width: 148px; text-align: center;"></td>
 </tr>
 
 </tbody>
@@ -151,7 +159,7 @@ Dados do Cliente</span></em></strong><br />
 <br>
 <footer style="margin-bottom: 30px;">
 <table style=" width: 750px;">
-	
+
 	<tr>
 	<td style="width: 450px;text-align: center;">&nbsp;</td>
 	<td style="width: 280px; text-align: left;">
@@ -159,12 +167,12 @@ Dados do Cliente</span></em></strong><br />
     @foreach($empresa->contas as $conta)
     <strong>{{$conta->banco}}</strong>(MZN) {{$conta->numero}}&nbsp;<br />
      @endforeach
-     </div> 
+     </div>
 	</td>
 	</tr>
-	
+
 </table>
 </footer>
-
+<div class="footer"> <small>Processado por computador</small>.</div>
 </body>
 </html>

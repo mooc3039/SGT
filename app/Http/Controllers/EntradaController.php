@@ -13,7 +13,7 @@ use App\Model\Me;
 use App\Model\Produto;
 use App\Model\Entrada;
 use App\Model\ItenEntrada;
-use App\Model\Pagamentoentrada;
+use App\Model\PagamentoEntrada;
 use App\Model\FormaPagamento;
 use App\User;
 use DB;
