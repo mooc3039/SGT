@@ -66,11 +66,11 @@
 							<table class="table table-striped table-advance table-hover" id="tbl_create_edit_itens_cotacoes" data-order='[[ 0, "desc" ]]'>
 								<thead>
 									<tr>
-										<th><i class="icon_mobile"></i> Designação </th>
-										<th class="text-center"><i class="icon_profile"></i>Quantidade</th>
-										<th><i class="icon_mail_alt"></i> Preço Unitário </th>
-										<th><i class="icon_cogs"></i> Valor Total </th>
-										<th class="text-center"><i class="icon_close_alt2"></i> Remover </th>
+										<th> Designação </th>
+										<th> Quantidade</th>
+										<th> Preço Unitário (Mtn)</th>
+										<th> Valor Total (Mtn)</th>
+										<th><i class="icon_close_alt2"></i> Remover </th>
 									</tr>
 								</thead>
 								<tbody>
@@ -80,8 +80,8 @@
 
 										<td class="text-center"> <button type="button" class="btn btn-sm" data-toggle="modal" data-target="#modalProdutoIten" data-cotacao_id={{ $cotacao->id }} data-produto_id={{ $iten_cotacao->produto->id }} data-descricao={{ $iten_cotacao->produto->descricao }} data-quantidade={{ $iten_cotacao->quantidade }} data-preco_venda={{ $iten_cotacao->produto->preco_venda }} data-valor={{$iten_cotacao->valor }} data-desconto={{ $iten_cotacao->desconto }} data-subtotal={{ $iten_cotacao->subtotal }} data-valor_total={{ $cotacao->valor_total }} data-user_id={{ Auth::user()->id }}> {{$iten_cotacao->quantidade}} </button> </td>
 
-										<td> {{$iten_cotacao->produto->preco_venda}} </td>
-										<td> {{$iten_cotacao->valor}} </td>
+										<td> {{number_format($iten_cotacao->produto->preco_venda, 2, '.', ',')}} </td>
+										<td> {{number_format($iten_cotacao->valor, 2, '.', ',')}} </td>
 										{{ Form::open(['route'=>['iten_cotacao.destroy', $iten_cotacao->id], 'method'=>'DELETE']) }}
 										<td class="text-center">
 											{{ Form::button('<i class="icon_close_alt2"></i>', ['class'=>'btn btn-danger btn-sm submit_iten', 'type'=>'submit'] )}}
