@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Database\QueryException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\DB;
 use App\Model\Fornecedor;
 use App\Http\Requests\FornecedorStoreUpdateFormRequest;
@@ -89,7 +91,7 @@ class fornecedorController extends Controller
      */
     public function edit($id)
     {
-      $fornecedor = Fornecedor::find($id);
+      $fornecedor = Fornecedor::findOrFail($id);
       return view('parametrizacao.fornecedor.create_edit_fornecedor', compact('fornecedor'));
     }
 
@@ -122,7 +124,7 @@ class fornecedorController extends Controller
 
       $dataForm = $request->all();
 
-      $fornecedor = $this->fornecedor->find($id);
+      $fornecedor = $this->fornecedor->findOrFail($id);
 
       $update = $fornecedor->update($dataForm);
 
@@ -149,7 +151,7 @@ class fornecedorController extends Controller
     public function destroy($id)
     {
         //echo $id;
-      $fornece = Fornecedor::find($id);
+      $fornece = Fornecedor::findOrFail($id);
       $fornece->delete();
       return redirect('/fornecedores')->with('success', 'Fornecedor eliminado com sucesso!');
     }

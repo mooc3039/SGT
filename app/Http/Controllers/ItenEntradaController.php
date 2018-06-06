@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Database\QueryException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Http\Requests\ItenEntregaStoreUpdateFormRequest;
 use Illuminate\Http\Request;
 use App\Model\Produto;
@@ -48,13 +49,14 @@ class ItenEntradaController extends Controller
     {
         //
         //dd($request->all());
+        $bad_symbols = array(",");
         $dataForm = [
             'entrada_id' => $request->entrada_id,
             'produto_id' => $request->produto_id,
             'quantidade' => $request->quantidade,
-            'valor' => $request->valor,
-            'desconto' => $request->desconto,
-            'subtotal' => $request->subtotal,
+            'valor' => str_replace($bad_symbols, "", $request->valor),
+            'desconto' => str_replace($bad_symbols, "", $request->desconto),
+            'subtotal' => str_replace($bad_symbols, "", $request->subtotal),
         ];
 
 
@@ -114,13 +116,14 @@ class ItenEntradaController extends Controller
     {
         //
         //dd($request->all());
+        $bad_symbols = array(",");
 
         $dataForm = [
             'produto_id' => $request->produto_id,
             'quantidade' => $request->quantidade,
-            'valor' => $request->valor,
-            'desconto' => $request->desconto,
-            'subtotal' => $request->subtotal,
+            'valor' => str_replace($bad_symbols, "", $request->valor),
+            'desconto' => str_replace($bad_symbols, "", $request->desconto),
+            'subtotal' => str_replace($bad_symbols, "", $request->subtotal),
             'entrada_id' => $request->entrada_id,
         ];
         
@@ -169,11 +172,11 @@ class ItenEntradaController extends Controller
     public function destroy($id)
     {
         //
-        $iten_entrada = $this->iten_entrada->find($id);
+        $iten_entrada = $this->iten_entrada->findOrFail($id);
         $qtd_iten_entrada = $iten_entrada->quantidade;
 
         $id_iten_entrada_produto = $iten_entrada->produto->id;
-        $produto = $this->produto->find($id_iten_entrada_produto);
+        $produto = $this->produto->findOrFail($id_iten_entrada_produto);
         $qtd_total_produto = $produto->quantidade_dispo;
         $qtd_min_produto = $produto->quantidade_min;
 

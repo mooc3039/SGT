@@ -94,176 +94,184 @@
 
               </tbody>
               <tfoot>
-   <tr>
-        <td style="border:none"></td>
-        <td style="border:none"></td>
-        <td style="border:none"></td>
-        <td></td>
-        <td><b>Subtotal</b></td>
-        <td><b><div class="valor_total_visual" style="border:none"> </div></b></td>
-        <td></td>
-      </tr><tr>
-        <td style="border:none"></td>
-        <td style="border:none"></td>
-        <td style="border:none"></td>
-        <td></td>
-        <td><b>IVA(17%)</b></td>
-        <td><b><div class="iva" style="border:none"> </div></b></td>
-        <td></td>
-      </tr><tr>
-        <td style="border:none"></td>
-        <td style="border:none"></td>
-        <td style="border:none"></td>
-        <td></td>
-        <td><b>Total</b></td>
-        <td><b><div class="valor_total_iva_visual" style="border:none"> </div></b></td>
-        <td></td>
-      </tr>
-</tfoot>
-            </table>
-          </div>
-          <div class="panel-footer">
-            <div class="row">
-              <div class="col-md-6"></div>
-              <div class="col-md-6 text-right">
-                <a href="{{ route('cotacao.index')}}" class="btn btn-warning">Cancelar</a>
-              </div>
+               <tr>
+                <td style="border:none"></td>
+                <td style="border:none"></td>
+                <td style="border:none"></td>
+                <td></td>
+                <td><b>Subtotal</b></td>
+                <td><b><div class="valor_total_visual" style="border:none"> </div></b></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td style="border:none"></td>
+                <td style="border:none"></td>
+                <td style="border:none"></td>
+                <td></td>
+                <td><b>IVA(17%)</b></td>
+                <td><b><div class="iva" style="border:none"> </div></b></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td style="border:none">
+                  <div class="motivo_imposto">
+                    <label>
+                      <input type="motivo_imposto"> Motivo Justificativo da não aplicação de imposto
+                    </label>
+                  </div>
+                </td>
+                <td style="border:none"></td>
+                <td style="border:none"></td>
+                <td></td>
+                <td><b>Total</b></td>
+                <td><b><div class="valor_total_iva_visual" style="border:none"> </div></b></td>
+                <td></td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+        <div class="panel-footer">
+          <div class="row">
+            <div class="col-md-6"></div>
+            <div class="col-md-6 text-right">
+              <a href="{{ route('cotacao.index')}}" class="btn btn-warning">Cancelar</a>
             </div>
           </div>
-        </section>
-        {{ Form::hidden('valor_total', 0, ['class'=>'valor_total']) }}
-        {{ Form::hidden('user_id', Auth::user()->id) }}
-        {!!Form::hidden('_token',csrf_token())!!}
-        {{ Form::close() }}
+        </div>
       </section>
-    </div>
+      {{ Form::hidden('valor_total', 0, ['class'=>'valor_total']) }}
+      {{ Form::hidden('user_id', Auth::user()->id) }}
+      {!!Form::hidden('_token',csrf_token())!!}
+      {{ Form::close() }}
+    </section>
   </div>
+</div>
 
-  <!-- MODAL TIPO COTACAO -->
-  <div class="modal fade" tabindex="-1" role="dialog" id="modalTipoCotacao">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <h4 class="modal-title">Cadastrar Tipo de Cotação</h4>
+<!-- MODAL TIPO COTACAO -->
+<div class="modal fade" tabindex="-1" role="dialog" id="modalTipoCotacao">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Cadastrar Tipo de Cotação</h4>
+      </div>
+      <div class="modal-body">
+
+        {{Form::open(['route'=>'tipo_cotacao_salvar_rback', 'method'=>'POST'])}}
+
+        <div class="form-group">
+          {{Form::label('nome', 'Nome', ['class'=>'control-lable'])}}
+          {{Form::text('nome', null, ['placeholder' => 'Nome', 'class' => 'form-control'])}}
         </div>
-        <div class="modal-body">
 
-          {{Form::open(['route'=>'tipo_cotacao_salvar_rback', 'method'=>'POST'])}}
+        <div class="form-group">
+          {{Form::label('descricao', 'Nome', ['class'=>'control-lable'])}}
+          {{Form::textarea('descricao', null, ['placeholder' => 'Descric', 'class' => 'form-control'])}}
+        </div>
 
-          <div class="form-group">
-            {{Form::label('nome', 'Nome', ['class'=>'control-lable'])}}
-            {{Form::text('nome', null, ['placeholder' => 'Nome', 'class' => 'form-control'])}}
+      </div>
+      <div class="modal-footer">
+
+        {{Form::button('Fechar', ['class'=>'btn btn-default', 'data-dismiss'=>'modal'])}}
+        {{Form::submit('Salvar', ['class'=>'btn btn-primary'])}}
+
+        {{Form::close()}}
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<!-- FIM MODAL TIPO COTACAO -->
+
+<!-- MODAL CLIENTE -->
+<div class="modal fade" tabindex="-1" role="dialog" id="modalCliente">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Cadastrar Tipo de Cotação</h4>
+      </div>
+      <div class="modal-body">
+
+        <div class="row">
+          <div class="col-md-12">
+            <div class="panel-body">
+              {{ Form::open(['route'=>'cliente_salvar_rback', 'method'=>'POST', 'onsubmit'=>'submitFormCliente.disabled = true; return true;']) }}
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-horizontal">
+                    <div class="row" style="margin-bottom: 15px;">
+                      <div class="col-md-4">
+                        {{ Form::label('tipo_cliente_id', 'Tipo de Cliente', ['class'=>'control-label']) }}
+                        {{ Form::select('tipo_cliente_id', [''=>'Tipo de Cliente',] + $tipos_cliente, null, ['class'=>'form-control', 'id'=>'mdl_cli_email']) }}
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-4">
+                        <div class="radio-inline">
+                          <input type="radio" name="activo" value="1" id="activo"> <label for="activo">Activo</label>
+                        </div>
+                        <div class="radio-inline">
+                          <input type="radio" name="activo" value="0" id="inactivo"> <label for="inactivo">Inactivo</label>
+                        </div>
+
+                      </div>
+                    </div>
+                  </div>
+                  <hr style="border: 1px solid #ccc;">
+                  <div class="form-horizontal">
+                    <div class="row" style="margin-bottom: 15px;">
+                      <div class="col-md-4">
+                        {{ Form::label('nome', 'Nome', ['class'=>'control-label']) }}
+                        {{ Form::text('nome', null, ['placeholder'=>'Nome','class'=>'form-control', 'id'=>'mdl_cli_nome']) }}
+                      </div>
+                      <div class="col-md-4">
+                        {{ Form::label('endereco', 'Endereço', ['class'=>'control-label']) }}
+                        {{ Form::text('endereco', null, ['placeholder'=>'Endereço','class'=>'form-control', 'id'=>'mdl_cli_endereco']) }}
+                      </div>
+                      <div class="col-md-4">
+                        {{ Form::label('telefone', 'Telefone', ['class'=>'control-label']) }}
+                        {{ Form::text('telefone', null, ['placeholder'=>'telefone','class'=>'form-control', 'id'=>'mdl_cli_telefone']) }}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-horizontal">
+                    <div class="row" style="margin-bottom: 15px;">
+                      <div class="col-md-4">
+                        {{ Form::label('email', 'Email', ['class'=>'control-label']) }}
+                        {{ Form::text('email', null, ['placeholder'=>'Email','class'=>'form-control', 'id'=>'mdl_cli_email']) }}
+                      </div>
+                      <div class="col-md-4">
+                        {{ Form::label('nuit', 'NUIT', ['class'=>'control-label']) }}
+                        {{ Form::text('nuit', null, ['placeholder'=>'NUIT','class'=>'form-control', 'id'=>'mdl_cli_nuit']) }}
+                      </div>
+                    </div>
+                  </div>
+
+
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              {{Form::button('Fechar', ['class'=>'btn btn-default', 'data-dismiss'=>'modal'])}}
+              {{Form::submit('Salvar', ['class'=>'btn btn-primary submit_cliente', 'name'=>'submitFormCliente', 'id'=>'submitFormCliente'])}}
+
+              {{Form::close()}}
+            </div>
           </div>
-
-          <div class="form-group">
-            {{Form::label('descricao', 'Nome', ['class'=>'control-lable'])}}
-            {{Form::textarea('descricao', null, ['placeholder' => 'Descric', 'class' => 'form-control'])}}
-          </div>
-
         </div>
-        <div class="modal-footer">
 
-          {{Form::button('Fechar', ['class'=>'btn btn-default', 'data-dismiss'=>'modal'])}}
-          {{Form::submit('Salvar', ['class'=>'btn btn-primary'])}}
-
-          {{Form::close()}}
-        </div>
       </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
   </div><!-- /.modal -->
 
-  <!-- FIM MODAL TIPO COTACAO -->
+  <!-- FIM MODAL CLIENTE -->
 
-  <!-- MODAL CLIENTE -->
-  <div class="modal fade" tabindex="-1" role="dialog" id="modalCliente">
-    <div class="modal-dialog modal-lg" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <h4 class="modal-title">Cadastrar Tipo de Cotação</h4>
-        </div>
-        <div class="modal-body">
+  @endsection
+  @section('script')
+  <script text="text/javascript">
 
-          <div class="row">
-            <div class="col-md-12">
-              <div class="panel-body">
-                {{ Form::open(['route'=>'cliente_salvar_rback', 'method'=>'POST', 'onsubmit'=>'submitFormCliente.disabled = true; return true;']) }}
-                <div class="row">
-                  <div class="col-md-12">
-                    <div class="form-horizontal">
-                      <div class="row" style="margin-bottom: 15px;">
-                        <div class="col-md-4">
-                          {{ Form::label('tipo_cliente_id', 'Tipo de Cliente', ['class'=>'control-label']) }}
-                          {{ Form::select('tipo_cliente_id', [''=>'Tipo de Cliente',] + $tipos_cliente, null, ['class'=>'form-control', 'id'=>'mdl_cli_email']) }}
-                        </div>
-                      </div>
-                      <div class="row">
-                        <div class="col-md-4">
-                          <div class="radio-inline">
-                            <input type="radio" name="activo" value="1" id="activo"> <label for="activo">Activo</label>
-                          </div>
-                          <div class="radio-inline">
-                            <input type="radio" name="activo" value="0" id="inactivo"> <label for="inactivo">Inactivo</label>
-                          </div>
-
-                        </div>
-                      </div>
-                    </div>
-                    <hr style="border: 1px solid #ccc;">
-                    <div class="form-horizontal">
-                      <div class="row" style="margin-bottom: 15px;">
-                        <div class="col-md-4">
-                          {{ Form::label('nome', 'Nome', ['class'=>'control-label']) }}
-                          {{ Form::text('nome', null, ['placeholder'=>'Nome','class'=>'form-control', 'id'=>'mdl_cli_nome']) }}
-                        </div>
-                        <div class="col-md-4">
-                          {{ Form::label('endereco', 'Endereço', ['class'=>'control-label']) }}
-                          {{ Form::text('endereco', null, ['placeholder'=>'Endereço','class'=>'form-control', 'id'=>'mdl_cli_endereco']) }}
-                        </div>
-                        <div class="col-md-4">
-                          {{ Form::label('telefone', 'Telefone', ['class'=>'control-label']) }}
-                          {{ Form::text('telefone', null, ['placeholder'=>'telefone','class'=>'form-control', 'id'=>'mdl_cli_telefone']) }}
-                        </div>
-                      </div>
-                    </div>
-                    <div class="form-horizontal">
-                      <div class="row" style="margin-bottom: 15px;">
-                        <div class="col-md-4">
-                          {{ Form::label('email', 'Email', ['class'=>'control-label']) }}
-                          {{ Form::text('email', null, ['placeholder'=>'Email','class'=>'form-control', 'id'=>'mdl_cli_email']) }}
-                        </div>
-                        <div class="col-md-4">
-                          {{ Form::label('nuit', 'NUIT', ['class'=>'control-label']) }}
-                          {{ Form::text('nuit', null, ['placeholder'=>'NUIT','class'=>'form-control', 'id'=>'mdl_cli_nuit']) }}
-                        </div>
-                      </div>
-                    </div>
-
-
-                  </div>
-                </div>
-              </div>
-              <div class="modal-footer">
-                {{Form::button('Fechar', ['class'=>'btn btn-default', 'data-dismiss'=>'modal'])}}
-                {{Form::submit('Salvar', ['class'=>'btn btn-primary submit_cliente', 'name'=>'submitFormCliente', 'id'=>'submitFormCliente'])}}
-
-                {{Form::close()}}
-              </div>
-            </div>
-          </div>
-
-        </div><!-- /.modal-content -->
-      </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
-
-    <!-- FIM MODAL CLIENTE -->
-
-    @endsection
-    @section('script')
-    <script text="text/javascript">
-      
-      $('.submit_cliente').on('click',function(){
+    $('.submit_cliente').on('click',function(){
       $(".wait").css("display", "block");
     });
 

@@ -33,11 +33,11 @@
             <table class="table table-striped table-advance table-hover" id="index_guias_entrega" data-order='[[ 0, "desc" ]]'>
               <thead>
                 <tr>
-                  <th><i class="icon_profile"></i>Código da Guia </th>
-                  <th><i class="icon_profile"></i>Código da Factura </th>
-                  <th><i class="icon_mobile"></i> Data de Emissão </th>
-                  <th><i class="icon_mail_alt"></i> Cliente </th>
-                  <th><i class="icon_mail_alt"></i> Valor Total </th>
+                  <th> Código da Guia </th>
+                  <th> Código da Factura </th>
+                  <th> Data de Emissão </th>
+                  <th> Cliente </th>
+                  <th> Valor Total (Mtn)</th>
                   <th class="text-right"><i class="icon_cogs"></i> Operações </th>
                 </tr>
               </thead>
@@ -48,7 +48,7 @@
                   <td> {{$guia_entrega->saida_id}} </td>
                   <td> {{date('d-m-Y', strtotime($guia_entrega->created_at))}} </td>
                   <td> {{$guia_entrega->cliente->nome}} </td>
-                  <td> {{$guia_entrega->valor_total}} </td>
+                  <td> {{number_format($guia_entrega->valor_total, 2, '.', ',')}} </td>
                   <td class="text-right">
                     {{ Form::open(['route'=>['guia_entrega.destroy', $guia_entrega->id], 'method'=>'DELETE'])}}
                     {{ Form::button('Cancelar Guia', ['type'=>'submit', 'class'=>'btn btn-danger btn-sm submit_iten'])}}

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-// use Illuminate\Database\QueryException;
+use Illuminate\Database\QueryException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use App\Http\Requests\ConcursoStoreUpdateFormRequest;
@@ -230,7 +230,7 @@ class ConcursoController extends Controller
     public function show($id)
     {
         //
-      $concurso = $this->concurso->with('itensConcurso.produto', 'cliente')->find($id);
+      $concurso = $this->concurso->with('itensConcurso.produto', 'cliente')->findOrFail($id);
       $empresa = Empresa::with('enderecos', 'telefones', 'emails', 'contas')->findOrFail(1); 
 
       return view('concursos.show_concurso', compact('concurso', 'empresa'));
@@ -239,7 +239,7 @@ class ConcursoController extends Controller
     public function showRelatorio($id)
     {
       //
-      $concurso = $this->concurso->with('itensConcurso.produto', 'cliente')->find($id); 
+      $concurso = $this->concurso->with('itensConcurso.produto', 'cliente')->findOrFail($id); 
       $empresa = Empresa::with('enderecos', 'telefones', 'emails', 'contas')->findOrFail(1); 
       $pdf = PDF::loadView('concursos.relatorio', compact('concurso','empresa'));
       return $pdf->download('concursos.pdf');
@@ -257,7 +257,7 @@ class ConcursoController extends Controller
         //
       $produtos = DB::table('produtos')->pluck('descricao', 'id')->all();
       $formas_pagamento = DB::table('forma_pagamentos')->pluck('descricao', 'id')->all();
-      $concurso = $this->concurso->with('itensConcurso.produto', 'formaPagamento', 'cliente')->find($id); 
+      $concurso = $this->concurso->with('itensConcurso.produto', 'formaPagamento', 'cliente')->findOrFail($id); 
         // Tras a concurso. Tras os Itens da concurso e dentro da relacao Itensconcurso eh possivel pegar a relacao Prodtuo atraves do dot ou ponto. NOTA: a relacao produto nao esta na concurso e sim na itensconcurso, mas eh possivel ter os seus dados partido da concurso como se pode ver.
 
       return view('concursos.itens_concurso.create_edit_itens_concurso', compact('produtos', 'concurso', 'formas_pagamento'));
@@ -519,7 +519,7 @@ public function pagamentoConcurso(PagamentoConcursoStoreUpdateFormRequest $reque
 
 
 
-  $concurso = $this->concurso->find($concurso_id);
+  $concurso = $this->concurso->findOrFail($concurso_id);
 
   if($request['pago'] == 0){
 
@@ -567,7 +567,7 @@ public function pagamentoConcurso(PagamentoConcursoStoreUpdateFormRequest $reque
 
           for($i = 0; $i < sizeof($pagamento_concurso_ids); $i++){
 
-            $pagamento_concurso = PagamentoConcurso::find($pagamento_concurso_ids[$i]->id);
+            $pagamento_concurso = PagamentoConcurso::findOrFail($pagamento_concurso_ids[$i]->id);
             $pagamento_concurso->valor_pago = $valor_pago;
             $pagamento_concurso->forma_pagamento_id = $forma_pagamento_id;
             $pagamento_concurso->nr_documento_forma_pagamento = $nr_documento_forma_pagamento;

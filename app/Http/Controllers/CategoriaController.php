@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Database\QueryException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Model\Categoria;
 use App\Http\Requests\CategoriaStoreUpdateFormRequest;
 
@@ -90,7 +91,7 @@ class CategoriaController extends Controller
     public function edit($id)
     {
         //
-        $categoria = $this->categoria->find($id);
+        $categoria = $this->categoria->findOrFail($id);
 
         return view('parametrizacao.categoria.create_edit_categoria', compact('categoria'));
 
@@ -108,7 +109,7 @@ class CategoriaController extends Controller
         //
         $dataForm = $request->all();
 
-        $categoria = $this->categoria->find($id);
+        $categoria = $this->categoria->findOrFail($id);
 
         $update = $categoria->update($dataForm);
 
@@ -134,7 +135,7 @@ class CategoriaController extends Controller
     public function destroy($id)
     {
         //
-        $categoria = $this->categoria->find($id);
+        $categoria = $this->categoria->findOrFail($id);
 
           try{
 

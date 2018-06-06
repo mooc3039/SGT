@@ -33,6 +33,7 @@
                   <th> Data de Emissão </th>
                   <th> Cliente </th>
                   <th> Valor Total (Mtn) </th>
+                  <th> Valor Total - IVA (Mtn) </th>
                   <th> Pagamento & Guia de Entrega </th>
                   <th class="text-right"><i class="icon_cogs"></i> Operações </th>
                 </tr>
@@ -43,6 +44,7 @@
                   <td> <a href="{{ route('show_guia_entrega', $saida->id) }}" data-toggle="tooltip" data-placement="right" title="Guias de Entrega">{{$saida->id}}</a> </td>
                   <td> {{date('d-m-Y', strtotime($saida->data))}} </td>
                   <td> {{$saida->cliente->nome}} </td>
+                  <td> {{number_format($saida->valor_total, 2, '.', ',')}} </td>
                   <td> {{number_format($saida->valor_iva, 2, '.', ',')}} </td>
                   <!-- Abertura para o form destroy. Aberto aqui e nao mais abaixo para melhor estetica do btn-group. Existe apenas um submit dentro deste codigo, como nao eh apenas o ofrmulario aqui -->
                   {{ Form::open(['route'=>['saida.destroy', $saida->id], 'method'=>'DELETE']) }} 

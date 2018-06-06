@@ -73,17 +73,15 @@
         <div class="form-horizontal">
 
           <div class="col-sm-4">
+            {{Form::label('referencia', 'Referência')}}
+            {{Form::text('referencia', null, ['class' => 'form-control', 'placeholder' => 'Referência'])}}
+          </div>
+
+          <div class="col-sm-4">
             {{Form::label('descricao', 'Descrição')}}
             {{Form::text('descricao', null, ['class' => 'form-control', 'placeholder' => 'Descrição do Produto'])}}
           </div>
 
-          <div class="col-sm-4">
-            {{Form::label('preco_venda', 'Preço de Venda')}}
-            <div class="input-group">
-              {{Form::text('preco_venda', null, ['class' => 'form-control', 'placeholder' => '0.00 - 999999.99'])}}
-              <div class="input-group-addon">Mtn</div>
-            </div>
-          </div>
 
           <div class="col-sm-4">
             {{Form::label('preco_aquisicao', 'Preço de Aquisição')}}
@@ -100,6 +98,14 @@
       <div class="row">
 
         <div class="form-horizontal">
+
+          <div class="col-sm-4">
+            {{Form::label('preco_venda', 'Preço de Venda')}}
+            <div class="input-group">
+              {{Form::text('preco_venda', null, ['class' => 'form-control', 'placeholder' => '0.00 - 999999.99'])}}
+              <div class="input-group-addon">Mtn</div>
+            </div>
+          </div>
 
           <div class="col-sm-4">
             {{Form::label('quantidade_dispo', 'Quantidade Disponível')}}

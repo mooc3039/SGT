@@ -61,18 +61,18 @@
 								<tbody>
 
 									<tr>
-										<th><i class="icon_profile"></i>Quantidade</th>
-										<th><i class="icon_mobile"></i> Designação </th>
-										<th><i class="icon_mail_alt"></i> Preço Unitário </th>
-										<th><i class="icon_cogs"></i> Valor Total </th>
+										<th>Quantidade</th>
+										<th> Designação </th>
+										<th> Preço Unitário (Mtn)</th>
+										<th> Valor Total (Mtn)</th>
 									</tr>
 
 									@foreach($guia_entrega->itensGuiantrega as $iten_guia_entrega)
 									<tr>
 										<td> {{$iten_guia_entrega->quantidade}} </td>
 										<td> {{$iten_guia_entrega->produto->descricao}} </td>
-										<td> {{$iten_guia_entrega->produto->preco_venda}} </td>
-										<td> {{$iten_guia_entrega->valor}} </td>
+										<td> {{number_format($iten_guia_entrega->produto->preco_venda, 2, '.', ',')}} </td>
+										<td> {{number_format($iten_guia_entrega->valor, 2, '.', ',')}} </td>
 
 									</tr>
 									@endforeach
@@ -101,7 +101,7 @@
 								<tr>
 									<td>Valor Total:</td>
 									<td style="width: 10px"></td>
-									<td><b>{{$guia_entrega->valor_total}}</b></td>
+									<td><b>{{number_format($guia_entrega->valor_total, 2, '.', ',')}}</b></td>
 								</tr>
 							</table>
 

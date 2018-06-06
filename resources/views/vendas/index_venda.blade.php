@@ -34,7 +34,8 @@
                   <th> Código da Venda </th>
                   <th> Data de Emissão </th>
                   <th> Cliente </th>
-                  <th> Valor Total </th>
+                  <th> Valor Total (Mtn)</th>
+                  <th> Valor Total - IVA (Mtn)</th>
                   <th> Pagamento </th>
                   <th><i class="icon_cogs"></i> Operações </th>
                 </tr>
@@ -45,6 +46,7 @@
                   <td> {{$venda->id}} </td>
                   <td> {{date('d-m-Y', strtotime($venda->created_at))}} </td>
                   <td> {{$venda->cliente->nome}} </td>
+                  <td> {{number_format($venda->valor_total, 2, '.', ',')}} </td>
                   <td> {{number_format($venda->valor_iva, 2, '.', ',')}} </td>
                   {{ Form::open(['route'=>['venda.destroy', $venda->id], 'method'=>'DELETE']) }}
                   <td> 

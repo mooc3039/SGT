@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Database\QueryException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use App\Http\Requests\TipoClienteStoreUpdateFormRequest;
 use App\Model\TipoCliente;
@@ -93,7 +94,7 @@ class TipoClienteController extends Controller
     public function edit($id)
     {
         //
-        $tipo_cliente = $this->tipo_cliente->find($id);
+        $tipo_cliente = $this->tipo_cliente->findOrFail($id);
         return view('parametrizacao.cliente.tipos_cliente.create_edit_tipos_cliente', compact('tipo_cliente'));
     }
 
@@ -108,7 +109,7 @@ class TipoClienteController extends Controller
     {
         //
         $dataForm = $request->all();
-        $tipo_cliente = $this->tipo_cliente->find($id);
+        $tipo_cliente = $this->tipo_cliente->findOrFail($id);
 
         try {
 
@@ -141,7 +142,7 @@ class TipoClienteController extends Controller
     public function destroy($id)
     {
         //
-        $tipo_cliente = $this->tipo_cliente->find($id);
+        $tipo_cliente = $this->tipo_cliente->findOrFail($id);
 
         try {
 

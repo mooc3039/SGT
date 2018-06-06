@@ -38,7 +38,8 @@
               <th> Código do Concurso </th>
               <th> Data do Concurso </th>
               <th> Cliente </th>
-              <th> Valor Total </th>
+              <th> Valor Total (Mtn)</th>
+              <th> Valor Total - IVA (Mtn)</th>
               <th> Pagamento </th>
               <th class="text-right"><i class="icon_cogs"></i> Operações </th>
             </tr>
@@ -49,6 +50,7 @@
               <td> {{$concurso->codigo_concurso}} </td>
               <td> {{date('d-m-Y', strtotime($concurso->created_at))}} </td>
               <td> {{$concurso->cliente->nome}} </td>
+              <td> {{number_format($concurso->valor_total, 2, '.', ',')}} </td>
               <td> {{number_format($concurso->valor_iva, 2, '.', ',')}} </td>
               {{ Form::open(['route'=>['concurso.destroy', $concurso->id], 'method'=>'DELETE']) }}
               <td>

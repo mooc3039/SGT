@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Requests\CotacaoStoreUpdateFormRequest;
-// use Illuminate\Database\Eloquent\ModelNotFoundException;
-// use Illuminate\Database\QueryException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\QueryException;
 use DB;
 use Session;
 use App\Model\Produto;
@@ -171,7 +171,7 @@ class CotacaoController extends Controller
   {
     //
     $empresa = Empresa::with('enderecos', 'telefones', 'emails', 'contas')->findOrFail(1);
-    $cotacao = $this->cotacao->with('itensCotacao.produto', 'cliente')->find($id); // Tras a cotacao. Tras os Itens da cotacao e dentro da relacao Itenscotacao eh possivel pegar a relacao Prodtuo atraves do dot ou ponto. NOTA: a relacao produto nao esta na cotacao e sim na itenscotacao, mas eh possivel ter os seus dados partido da cotacao como se pode ver.
+    $cotacao = $this->cotacao->with('itensCotacao.produto', 'cliente')->findOrFail($id); // Tras a cotacao. Tras os Itens da cotacao e dentro da relacao Itenscotacao eh possivel pegar a relacao Prodtuo atraves do dot ou ponto. NOTA: a relacao produto nao esta na cotacao e sim na itenscotacao, mas eh possivel ter os seus dados partido da cotacao como se pode ver.
 
     return view('cotacoes.show_cotacao', compact('cotacao', 'empresa'));
   }
@@ -179,7 +179,7 @@ class CotacaoController extends Controller
   public function showRelatorio($id)
   {
         //
-    $cotacao = $this->cotacao->with('itensCotacao.produto', 'cliente')->find($id); 
+    $cotacao = $this->cotacao->with('itensCotacao.produto', 'cliente')->findOrFail($id); 
     $empresa = Empresa::with('enderecos', 'telefones', 'emails', 'contas')->findOrFail(1); 
     $pdf = PDF::loadView('cotacoes.relatorio', compact('cotacao','empresa'));
     return $pdf->download('cotacao.pdf');
@@ -197,7 +197,7 @@ class CotacaoController extends Controller
     //
    $empresa = Empresa::with('enderecos', 'telefones', 'emails', 'contas')->findOrFail(1);
    $produtos = DB::table('produtos')->pluck('descricao', 'id')->all();
-    $cotacao = $this->cotacao->with('itensCotacao.produto', 'cliente')->find($id); // Tras a cotacao. Tras os Itens da cotacao e dentro da relacao Itenscotacao eh possivel pegar a relacao Prodtuo atraves do dot ou ponto. NOTA: a relacao produto nao esta na cotacao e sim na itenscotacao, mas eh possivel ter os seus dados partido da cotacao como se pode ver.
+    $cotacao = $this->cotacao->with('itensCotacao.produto', 'cliente')->findOrFail($id); // Tras a cotacao. Tras os Itens da cotacao e dentro da relacao Itenscotacao eh possivel pegar a relacao Prodtuo atraves do dot ou ponto. NOTA: a relacao produto nao esta na cotacao e sim na itenscotacao, mas eh possivel ter os seus dados partido da cotacao como se pode ver.
 
     return view('cotacoes.itens_cotacao.create_edit_itens_cotacao', compact('cotacao', 'produtos', 'empresa'));
 

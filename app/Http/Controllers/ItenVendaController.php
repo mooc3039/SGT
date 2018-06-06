@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
+use Illuminate\Database\QueryException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Http\Requests\ItenVendaStoreUpdateFormRequest;
 use Illuminate\Http\Request;
 use App\Model\ItenVenda;
@@ -44,13 +46,15 @@ class ItenVendaController extends Controller
     {
         //
         //dd($request->all());
+        $bad_symbols = array(",");
+
         $dataForm = [
             'venda_id' => $request->venda_id,
             'produto_id' => $request->produto_id,
             'quantidade' => $request->quantidade,
-            'valor' => $request->valor,
-            'desconto' => $request->desconto,
-            'subtotal' => $request->subtotal,
+            'valor' => str_replace($bad_symbols, "", $request->valor),
+            'desconto' => str_replace($bad_symbols, "", $request->desconto),
+            'subtotal' => str_replace($bad_symbols, "", $request->subtotal),
         ];
 
         if($request->quantidade > $request->new_qtd_dispo_referencial){
@@ -116,13 +120,14 @@ class ItenVendaController extends Controller
     public function update(ItenVendaStoreUpdateFormRequest $request, $id)
     {
         //dd($request->all());
+        $bad_symbols = array(",");
         
         $dataForm = [
             'produto_id' => $request->produto_id,
             'quantidade' => $request->quantidade,
-            'valor' => $request->valor,
-            'desconto' => $request->desconto,
-            'subtotal' => $request->subtotal,
+            'valor' => str_replace($bad_symbols, "", $request->valor),
+            'desconto' => str_replace($bad_symbols, "", $request->desconto),
+            'subtotal' => str_replace($bad_symbols, "", $request->subtotal),
             'venda_id' => $request->venda_id,
         ];
         
@@ -177,7 +182,7 @@ class ItenVendaController extends Controller
     public function destroy($id)
     {
         //
-        $iten_venda = $this->iten_venda->find($id);
+        $iten_venda = $this->iten_venda->findOrFail($id);
 
         try {
 

@@ -13,6 +13,7 @@ use App\Model\ItenGuiaentrega;
 class Produto extends Model
 {
     protected $fillable = [
+        'referencia',
         'descricao',
         'quantidade_dispo',
         'quantidade_min',

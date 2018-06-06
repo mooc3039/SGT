@@ -46,7 +46,7 @@
 					</div>
 					<div class="row">
 						<div class="col-md-6"> MAPUTO</div>
-						<div class="col-md-6 text-right"> Data: {{$cotacao->data}} </div>
+						<div class="col-md-6 text-right"> Data: {{date('d-m-Y', strtotime($cotacao->created_at))}} </div>
 					</div>
 				</div>
 
@@ -116,17 +116,17 @@
 								<tr>
 									<td>Sub-Total:</td>
 									<td style="width: 10px"></td>
-									<td>{{$cotacao->valor_total}}</td>
+									<td>{{number_format($cotacao->valor_total, 2, '.', ',')}} Mtn</td>
 								</tr>
 								<tr>
 									<td>IVA(17%):</td>
 									<td></td>
-									<td>{{(($cotacao->valor_total)*17)/100}}</td>
+									<td>{{number_format($cotacao->iva, 2, '.', ',')}} Mtn</td>
 								</tr>
 								<tr>
 									<td>Valor Total:</td>
 									<td></td>
-									<td><b>{{$cotacao->valor_iva}}</b></td>
+									<td><b>{{number_format($cotacao->valor_iva, 2, '.', ',')}} Mtn</b></td>
 								</tr>
 							</table>
 
@@ -202,13 +202,13 @@
 							</div>
 							<div class="col-md-3">
 								<div class="form-group">
-									{{Form::label('preco_venda', 'Preço Unitário', ['class'=>'control-lable'])}}
+									{{Form::label('preco_venda', 'Preço Unitário (Mtn)', ['class'=>'control-lable'])}}
 									{{Form::text('preco_venda', null, ['placeholder' => 'Preço Unitário', 'class' => 'form-control', 'id'=>'preco_venda', 'disabled'])}}
 								</div>
 							</div>
 							<div class="col-md-3">
 								<div class="form-group">
-									{{Form::label('valor', 'Valor', ['class'=>'control-lable'])}}
+									{{Form::label('valor', 'Valor (Mtn)', ['class'=>'control-lable'])}}
 									{{Form::text('valor', null, ['placeholder' => 'Valor', 'class' => 'form-control', 'id'=>'valor', 'readonly'])}}
 
 									{{ Form::hidden('cotacao_id', null, ['id'=>'cotacao_id']) }}
@@ -220,19 +220,14 @@
 						<div class="row">
 							<div class="col-md-3">
 								<div class="form-group">
-									{{Form::label('desconto', 'Desconto', ['class'=>'control-lable'])}}
+									{{Form::label('desconto', 'Desconto (%)', ['class'=>'control-lable'])}}
 									{{Form::text('desconto', null, ['placeholder' => 'Desconto', 'class' => 'form-control', 'id'=>'desconto'])}}
 								</div>
 							</div>
 							<div class="col-md-3">
 								<div class="form-group">
-									{{Form::label('subtotal', 'Subtotal', ['class'=>'control-lable'])}}
+									{{Form::label('subtotal', 'Subtotal (Mtn)', ['class'=>'control-lable'])}}
 									{{Form::text('subtotal', null, ['placeholder' => 'Subtotal', 'class' => 'form-control', 'id'=>'subtotal', 'readonly'])}}
-								</div>
-							</div>
-							<div class="col-md-3">
-								<div class="form-group">
-									{{ Form::hidden('valor_total', null, ['id'=>'valor_total']) }}
 								</div>
 							</div>
 						</div>
@@ -240,9 +235,24 @@
 					</div>
 					<div class="modal-footer">
 						<div class="row">
-							<div class="col-md-6 text-left">
-								<h5>Montante Geral da Cotação: <b><span id="val_temp"></span></b></h5>
-								<h5>Montante Geral da Cotação: <b><span class="valor_total_iva"></span></b></h5>
+							<div class="col-md-6 text-left">	
+								<table>
+									<tr>
+										<td><h5>Montante Geral da Cotação </h5></td>
+										<td></td>
+										<td> <h5><b>: <span class="val_total_sem_iva"></span></b></h5></td>
+									</tr>
+									<tr>
+										<td><h5>IVA(17%) </h5> </td>
+										<td></td>
+										<td><h5><b>: <span class="iva"></span></b></h5> </td>
+									</tr>
+									<tr>
+										<td><h5> Montante Geral da Cotação </h5></td>
+										<td></td>
+										<td><h5><b>: <span class="valor_total_iva"></span></b></h5></td>
+									</tr>
+								</table>
 							</div>
 							<div class="col-md-6 text-right">
 								{{Form::button('Fechar', ['class'=>'btn btn-default', 'data-dismiss'=>'modal'])}}
@@ -287,13 +297,13 @@
 								</div>
 								<div class="col-md-3">
 									<div class="form-group">
-										{{Form::label('preco_venda', 'Preço Unitário', ['class'=>'control-lable'])}}
+										{{Form::label('preco_venda', 'Preço Unitário (Mtn)', ['class'=>'control-lable'])}}
 										{{Form::text('preco_venda', null, ['placeholder' => 'Preço Unitário', 'class' => 'form-control', 'id'=>'new_preco_venda', 'disabled'])}}
 									</div>
 								</div>
 								<div class="col-md-3">
 									<div class="form-group">
-										{{Form::label('valor', 'Valor', ['class'=>'control-lable'])}}
+										{{Form::label('valor', 'Valor (Mtn)', ['class'=>'control-lable'])}}
 										{{Form::text('valor', null, ['placeholder' => 'Valor', 'class' => 'form-control', 'id'=>'new_valor', 'readonly'])}}
 
 										{{ Form::hidden('cotacao_id', null, ['id'=>'new_cotacao_id']) }}
@@ -303,13 +313,13 @@
 							<div class="row">
 								<div class="col-md-3">
 									<div class="form-group">
-										{{Form::label('desconto', 'Desconto', ['class'=>'control-lable'])}}
+										{{Form::label('desconto', 'Desconto (%)', ['class'=>'control-lable'])}}
 										{{Form::text('desconto', 0, ['placeholder' => 'Desconto', 'class' => 'form-control', 'id'=>'new_desconto'])}}
 									</div>
 								</div>
 								<div class="col-md-3">
 									<div class="form-group">
-										{{Form::label('subtotal', 'Subtotal', ['class'=>'control-lable'])}}
+										{{Form::label('subtotal', 'Subtotal (Mtn)', ['class'=>'control-lable'])}}
 										{{Form::text('subtotal', null, ['placeholder' => 'Subtotal', 'class' => 'form-control', 'id'=>'new_subtotal', 'readonly'])}}
 									</div>
 								</div>
@@ -319,8 +329,23 @@
 						<div class="modal-footer">
 							<div class="row">
 								<div class="col-md-6 text-left">
-									<h5>Montante Geral da Cotação: <b><span id="new_val_temp"></span></b></h5>
-									<h5>Montante Geral da Cotação: <b><span class="new_valor_total_iva"></span></b></h5>
+									<table>
+										<tr>
+											<td><h5>Montante Geral da Cotação </h5></td>
+											<td></td>
+											<td> <h5><b>: <span class="new_valor_total_sem_iva"></span></b></h5></td>
+										</tr>
+										<tr>
+											<td><h5>IVA(17%) </h5> </td>
+											<td></td>
+											<td><h5><b>: <span class="new_iva"></span></b></h5> </td>
+										</tr>
+										<tr>
+											<td><h5> Montante Geral da Cotação </h5></td>
+											<td></td>
+											<td><h5><b>: <span class="new_valor_total_iva"></span></b></h5></td>
+										</tr>
+									</table>
 								</div>
 								<div class="col-md-6 text-right">
 									{{Form::button('Fechar', ['class'=>'btn btn-default', 'data-dismiss'=>'modal'])}}
@@ -344,71 +369,71 @@
 			<script>
 
 				 // DataTables Inicio
-  $(document).ready(function() {
+				 $(document).ready(function() {
 
-    var codigo_cotacao = $('#codigo_cotacao').val();
-    var titulo = "Itens da Venda "+codigo_cotacao;   
-    var msg_bottom = "Papelaria Agenda & Serviços";
+				 	var codigo_cotacao = $('#codigo_cotacao').val();
+				 	var titulo = "Itens da Venda "+codigo_cotacao;   
+				 	var msg_bottom = "Papelaria Agenda & Serviços";
 
-    var oTable = $('#tbl_create_edit_itens_cotacoes').DataTable( {
-      "processing": true,
-      "pagingType": "full_numbers",
-      "dom": 'Brtpl',
-      buttons: [
+				 	var oTable = $('#tbl_create_edit_itens_cotacoes').DataTable( {
+				 		"processing": true,
+				 		"pagingType": "full_numbers",
+				 		"dom": 'Brtpl',
+				 		buttons: [
             // 'print',
             // 'excelHtml5',
             // 'pdfHtml5'
             {
-              text: 'Imprimir',
-              extend: 'print',
-              title: titulo,
-              messageBottom: msg_bottom,
-              className: 'btn btn-defaul btn-sm'
+            	text: 'Imprimir',
+            	extend: 'print',
+            	title: titulo,
+            	messageBottom: msg_bottom,
+            	className: 'btn btn-defaul btn-sm'
             },
             {
-              text: 'Excel',
-              extend: 'excelHtml5',
-              title: titulo,
-              messageBottom: msg_bottom,
-              className: 'btn btn-defaul btn-sm'
+            	text: 'Excel',
+            	extend: 'excelHtml5',
+            	title: titulo,
+            	messageBottom: msg_bottom,
+            	className: 'btn btn-defaul btn-sm'
             },
             {
-              text: 'PDF',
-              extend: 'pdfHtml5',
-              title: titulo,
-              messageBottom: msg_bottom,
-              className: 'btn btn-defaul btn-sm'
+            	text: 'PDF',
+            	extend: 'pdfHtml5',
+            	title: titulo,
+            	messageBottom: msg_bottom,
+            	className: 'btn btn-defaul btn-sm'
             }
             ]
-          });
+        });
 
-    $('#pesq').keyup(function(){
-      oTable.search($(this).val()).draw();
-    });
+				 	$('#pesq').keyup(function(){
+				 		oTable.search($(this).val()).draw();
+				 	});
 
-  } );
+				 } );
   // DataTables Fim
 
 
-				$(document).ready(function(){
-					$('.submit_iten').on('click',function(){
-						$(".wait").css("display", "block");
-					});
-				});
+  $(document).ready(function(){
+  	$('.submit_iten').on('click',function(){
+  		$(".wait").css("display", "block");
+  	});
+  });
 
-				$(document).ready(function(){
-					$(document).ajaxStart(function(){
-						$(".wait").css("display", "block");
-						document.getElementById("new_quantidade").disabled = true;
-					});
-					$(document).ajaxComplete(function(){
-						$(".wait").css("display", "none");
-						document.getElementById("new_quantidade").disabled = false;
-						$('#new_quantidade').focus();
-					});
-				});
+  $(document).ready(function(){
+  	$(document).ajaxStart(function(){
+  		$(".wait").css("display", "block");
+  		document.getElementById("new_quantidade").disabled = true;
+  	});
+  	$(document).ajaxComplete(function(){
+  		$(".wait").css("display", "none");
+  		document.getElementById("new_quantidade").disabled = false;
+  		$('#new_quantidade').focus();
+  	});
+  });
 
-				$('#modalProdutoIten').on('show.bs.modal', function (event) {
+  $('#modalProdutoIten').on('show.bs.modal', function (event) {
 				var button = $(event.relatedTarget) // Button that triggered the modal
 				var dta_cotacao_id = button.data('cotacao_id')
 				var dta_produto_id = button.data('produto_id')
@@ -427,26 +452,40 @@
 				modal.find('.modal-body #produto_id').val(dta_produto_id);
 				modal.find('.modal-body #descricao').val(dta_descricao);
 				modal.find('.modal-body #quantidade').val(dta_quantidade);
-				modal.find('.modal-body #preco_venda').val(dta_preco_venda);
-				modal.find('.modal-body #valor').val(dta_valor);
+				modal.find('.modal-body #preco_venda').val(Number.parseFloat(dta_preco_venda).formatMoney());
+				modal.find('.modal-body #valor').val(Number.parseFloat(dta_valor).formatMoney());
 				modal.find('.modal-body #desconto').val(dta_desconto);
-				modal.find('.modal-body #subtotal').val(dta_subtotal);
-				modal.find('.modal-body #valor_total').val(dta_valor_total);
+				modal.find('.modal-body #subtotal').val(Number.parseFloat(dta_subtotal).formatMoney());
+				// modal.find('.modal-body #valor_total').val(Number.parseFloat(dta_valor_total).formatMoney());
 				modal.find('.modal-body #user_id').val(dta_user_id);
+
+				calcularIten();
 
 				$('#modalProdutoIten').delegate('#quantidade,#preco_venda,#desconto','keyup',function(){
 					numberOnly('#quantidade'); // Validacao. Campos aceitam numeros e pontos apenas
 					numberOnly('#desconto');
 
-					var mdl_quantidade = $('#quantidade').val();
-					var mdl_preco_venda = $('#preco_venda').val();
-					var mdl_desconto = $('#desconto').val();
-					var mdl_subtotal = ((mdl_quantidade*mdl_preco_venda)-(mdl_quantidade*mdl_preco_venda*mdl_desconto)/100);
-					var mdl_valor = (mdl_quantidade*mdl_preco_venda);
+					calcularIten();
 
-					var mdl_valor_total = (dta_valor_total*1);
+				});
 
-					var valor_incre_decre = 0;
+				function calcularIten(){
+
+					var mdl_quantidade = Number.parseInt(0);
+					if( ($('#quantidade').val()) === "" || ($('#quantidade').val()) === null){
+						mdl_quantidade = Number.parseInt(0);
+					}else{
+						mdl_quantidade = Number.parseInt($('#quantidade').val());
+					}
+
+					var mdl_preco_venda = Number.parseFloat(($('#preco_venda').val()).replace(/[^0-9-.]/g, ''));
+					var mdl_desconto = Number.parseInt($('#desconto').val());
+					var mdl_subtotal = Number.parseFloat(((mdl_quantidade*mdl_preco_venda)-(mdl_quantidade*mdl_preco_venda*mdl_desconto)/100));
+					var mdl_valor = Number.parseFloat((mdl_quantidade*mdl_preco_venda));
+
+					var mdl_valor_total = Number.parseFloat(dta_valor_total);
+
+					var valor_incre_decre = Number.parseFloat(0);
 
 					if(mdl_subtotal > dta_subtotal){
 
@@ -460,16 +499,16 @@
 
 					}
 
-					var valor_total_iva = (mdl_valor_total + (mdl_valor_total*17)/100);
+					var iva = Number.parseFloat(Number.parseFloat((mdl_valor_total*17)/100).toFixed(2));
+					var valor_total_iva = (mdl_valor_total + iva);
 
-					$('#subtotal').val(mdl_subtotal);
-					$('#valor').val(mdl_valor);
+					$('#subtotal').val(mdl_subtotal.formatMoney());
+					$('#valor').val(mdl_valor.formatMoney());
 					$('#valor_total').val(mdl_valor_total);
-					$('.valor_total_iva').html(valor_total_iva.formatMoney(2,',','.')+ " Mtn");
-					$('#val_temp').html(mdl_valor_total.formatMoney(2,',','.')+ " Mtn");
-
-
-				});
+					$('.val_total_sem_iva').html(mdl_valor_total.formatMoney()+ " Mtn");
+					$('.iva').html(iva.formatMoney()+ " Mtn");
+					$('.valor_total_iva').html(valor_total_iva.formatMoney()+ " Mtn");
+				}
 			});
 
 			// MODAL NOVO ITEM
@@ -512,23 +551,30 @@
 
 				function calcularValores(){
 
-					var new_quantidade = $('#new_quantidade').val();
-					var new_preco_venda = $('#new_preco_venda').val();
-					var new_desconto = $('#new_desconto').val();
-					var new_subtotal = ((new_quantidade*new_preco_venda)-(new_quantidade*new_preco_venda*new_desconto)/100);
-					var new_valor = (new_quantidade*new_preco_venda);
+					var new_quantidade = Number.parseInt(0);
+					if( ($('#new_quantidade').val()) === "" || ($('#new_quantidade').val()) === null){
+						new_quantidade = Number.parseInt(0);
+					}else{
+						new_quantidade = Number.parseInt($('#new_quantidade').val());
+					}
 
-					var new_valor_total = (new_dta_valor_total*1);
+					var new_preco_venda = Number.parseFloat(($('#new_preco_venda').val()).replace(/[^0-9-.]/g, ''));
+					var new_desconto = Number.parseInt($('#new_desconto').val());
+					var new_subtotal = Number.parseFloat((new_quantidade*new_preco_venda)-(new_quantidade*new_preco_venda*new_desconto)/100);
+					var new_valor = Number.parseFloat(new_quantidade*new_preco_venda);
+
+					var new_valor_total = Number.parseFloat(new_dta_valor_total);
 
 					new_valor_total = new_valor_total + new_subtotal;
+					var new_iva = Number.parseFloat(Number.parseFloat((new_valor_total*17)/100).toFixed(2));
 
-					var new_valor_total_iva = (new_valor_total + (new_valor_total*17)/100);
+					var new_valor_total_iva = (new_valor_total + new_iva);
 
-					$('#new_subtotal').val(new_subtotal);
-					$('#new_valor').val(new_valor);
-					$('#new_valor_total').val(new_valor_total);
-					$('.new_valor_total_iva').html(new_valor_total_iva.formatMoney(2,',','.')+ " Mtn");
-					$('#new_val_temp').html(new_valor_total.formatMoney(2,',','.')+ " Mtn");
+					$('#new_subtotal').val(new_subtotal.formatMoney());
+					$('#new_valor').val(new_valor.formatMoney());
+					$('.new_valor_total_sem_iva').html(new_valor_total.formatMoney() + "Mtn");
+					$('.new_iva').html(new_iva.formatMoney() + "Mtn");
+					$('.new_valor_total_iva').html(new_valor_total_iva.formatMoney() + " Mtn");
 				}
 
 			});

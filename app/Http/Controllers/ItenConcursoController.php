@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-// use Illuminate\Database\QueryException;
+use Illuminate\Database\QueryException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Http\Requests\ItenConcursoStoreUpdateFormRequest;
 use Illuminate\Http\Request;
 use App\Model\ItenConcurso;
@@ -160,7 +161,7 @@ class ItenConcursoController extends Controller
     public function destroy($id)
     {
         //
-        $iten_concurso = $this->iten_concurso->find($id);
+        $iten_concurso = $this->iten_concurso->findOrFail($id);
 
         try {
 

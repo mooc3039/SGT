@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Database\QueryException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use App\Http\Requests\ItenCotacaoStoreUpdateFormRequest;
 use App\Model\ItenCotacao;
@@ -43,12 +44,20 @@ class ItenCotacaoController extends Controller
   */
   public function store(ItenCotacaoStoreUpdateFormRequest $request)
   {
-    //
-    $dataForm = $request->all();
+    // dd($request->all());
+    $bad_symbols = array(",");
+    $iten_cotacao = $this->iten_cotacao;
+
+    $iten_cotacao->cotacao_id = $request['cotacao_id'];
+    $iten_cotacao->produto_id = $request['produto_id'];
+    $iten_cotacao->quantidade = str_replace($bad_symbols, "", $request['quantidade']);
+    $iten_cotacao->valor = str_replace($bad_symbols, "", $request['valor']);
+    $iten_cotacao->desconto = str_replace($bad_symbols, "", $request['desconto']);
+    $iten_cotacao->subtotal = str_replace($bad_symbols, "", $request['subtotal']);
 
     try {
 
-      if($this->iten_cotacao->create($dataForm)){
+      if($iten_cotacao->save()){
 
         $sucess = 'Item inserido com sucesso!';
         return redirect()->back()->with('success', $sucess);
@@ -100,7 +109,7 @@ class ItenCotacaoController extends Controller
   */
   public function update(ItenCotacaoStoreUpdateFormRequest $request, $id)
   {
-    $dataForm = $request->all();
+    $bad_symbols = array(",");
     $cotacao_id = $request->cotacao_id;
     $produto_id = $request->produto_id;
 
@@ -108,7 +117,14 @@ class ItenCotacaoController extends Controller
 
       $iten_cotacao = ItenCotacao::where('cotacao_id', $cotacao_id)->where('produto_id', $produto_id)->first();
 
-      if($iten_cotacao->update($dataForm)){
+      $iten_cotacao->cotacao_id = $request['cotacao_id'];
+      $iten_cotacao->produto_id = $request['produto_id'];
+      $iten_cotacao->quantidade = str_replace($bad_symbols, "", $request['quantidade']);
+      $iten_cotacao->valor = str_replace($bad_symbols, "", $request['valor']);
+      $iten_cotacao->desconto = str_replace($bad_symbols, "", $request['desconto']);
+      $iten_cotacao->subtotal = str_replace($bad_symbols, "", $request['subtotal']);
+
+      if($iten_cotacao->update()){
 
         $sucess = 'Item actualizado com sucesso!';
         return redirect()->back()->with('success', $sucess);
@@ -140,7 +156,7 @@ class ItenCotacaoController extends Controller
   public function destroy($id)
   {
     //
-    $iten_cotacao = $this->iten_cotacao->find($id);
+    $iten_cotacao = $this->iten_cotacao->findOrFail($id);
 
     try {
 

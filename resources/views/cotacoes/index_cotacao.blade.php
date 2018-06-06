@@ -40,6 +40,7 @@
                   <th> Data de Vencimento </th>
                   <th> Cliente </th>
                   <th> Valor Total (Mtn)</th>
+                  <th> Valor Total - IVA (Mtn)</th>
                   <th class="text-right"><i class="icon_cogs"></i> Operações </th>
                 </tr>
               </thead>
@@ -68,6 +69,7 @@
                 <td> {{date('d-m-Y', strtotime($cotacao->data_vencimento))}} </td>
                 <td> {{$cotacao->cliente->nome}} </td>
                 <td> {{number_format($cotacao->valor_total, 2, '.', ',')}} </td>
+                <td> {{number_format($cotacao->valor_iva, 2, '.', ',')}} </td>
                 <td class="text-right">
                   {{ Form::open(['route'=>['cotacao.destroy', $cotacao->id], 'method'=>'DELETE']) }}
                   <div class="btn-group btn-group-sm">

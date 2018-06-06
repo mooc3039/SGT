@@ -260,7 +260,7 @@ class SaidaController extends Controller
     {
         //
 
-        $saida = $this->saida->with('itensSaida.produto', 'cliente')->find($id); // Tras a saida. Tras os Itens da Saida e dentro da relacao ItensSaida eh possivel pegar a relacao Prodtuo atraves do dot ou ponto. NOTA: a relacao produto nao esta na saida e sim na itensSaida, mas eh possivel ter os seus dados partido da saida como se pode ver.
+        $saida = $this->saida->with('itensSaida.produto', 'cliente')->findOrFail($id); // Tras a saida. Tras os Itens da Saida e dentro da relacao ItensSaida eh possivel pegar a relacao Prodtuo atraves do dot ou ponto. NOTA: a relacao produto nao esta na saida e sim na itensSaida, mas eh possivel ter os seus dados partido da saida como se pode ver.
         $empresa = Empresa::with('enderecos', 'telefones', 'emails', 'contas')->findOrFail(1); 
         
         return view('saidas.show_saida', compact('saida', 'empresa'));
@@ -278,7 +278,7 @@ class SaidaController extends Controller
     {
         //
       $produtos = DB::table('produtos')->pluck('descricao', 'id')->all();
-      $saida = $this->saida->with('itensSaida.produto', 'cliente')->find($id); 
+      $saida = $this->saida->with('itensSaida.produto', 'cliente')->findOrFail($id); 
         // Tras a saida. Tras os Itens da Saida e dentro da relacao ItensSaida eh possivel pegar a relacao Prodtuo atraves do dot ou ponto. NOTA: a relacao produto nao esta na saida e sim na itensSaida, mas eh possivel ter os seus dados partido da saida como se pode ver.
       $empresa = Empresa::with('enderecos', 'telefones', 'emails', 'contas')->findOrFail(1);
 
@@ -379,7 +379,7 @@ class SaidaController extends Controller
 
       
 
-      $saida = $this->saida->find($saida_id);
+      $saida = $this->saida->findOrFail($saida_id);
 
       if($request['pago'] == 0){
 // dd($request->all());
@@ -432,7 +432,7 @@ class SaidaController extends Controller
 
               for($i = 0; $i < sizeof($pagamento_saida_ids); $i++){
 
-                $pagamento_saida = PagamentoSaida::find($pagamento_saida_ids[$i]->id);
+                $pagamento_saida = PagamentoSaida::findOrFail($pagamento_saida_ids[$i]->id);
                 $pagamento_saida->valor_pago = $valor_pago;
                 $pagamento_saida->forma_pagamento_id = $forma_pagamento_id;
                 $pagamento_saida->nr_documento_forma_pagamento = $nr_documento_forma_pagamento;
@@ -490,7 +490,7 @@ class SaidaController extends Controller
     public function report($id){
 
         // Relatorio em pdf
-      $saida = $this->saida->with('itensSaida.produto', 'cliente')->find($id);
+      $saida = $this->saida->with('itensSaida.produto', 'cliente')->findOrFail($id);
 
       $view = view('reports.saidas.report_saida', compact('saida'));
       $pdf = \App::make('dompdf.wrapper');
@@ -512,7 +512,7 @@ class SaidaController extends Controller
       public function showRelatorio($id)
       {
         //
-        $saida = $this->saida->with('itensSaida.produto', 'cliente')->find($id); 
+        $saida = $this->saida->with('itensSaida.produto', 'cliente')->findOrFail($id); 
         $empresa = Empresa::with('enderecos', 'telefones', 'emails', 'contas')->findOrFail(1);
         $pdf = PDF::loadView('saidas.relatorio', compact('saida','empresa'));
         return $pdf->download('saida.pdf');
@@ -585,7 +585,7 @@ class SaidaController extends Controller
 
      public function findConcursoDados(Request $request)
      {
-      $concurso = $this->concurso->with('itensConcurso.produto', 'pagamentosConcurso.formaPagamento', 'cliente', 'formaPagamento')->find($request->id);
+      $concurso = $this->concurso->with('itensConcurso.produto', 'pagamentosConcurso.formaPagamento', 'cliente', 'formaPagamento')->findOrFail($request->id);
       return response()->json($concurso);
     }
   }

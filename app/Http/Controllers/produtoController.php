@@ -1,7 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Database\QueryException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use App\Http\Requests\ProdutoStoreUpdateFormRequest;
 use DB;
@@ -53,7 +54,7 @@ class produtoController extends Controller
      */
     public function store(ProdutoStoreUpdateFormRequest $request)
     {
-
+        // dd($request->all());
         $dataForm = $request->all();
 
         $cadastro = $this->produto->create($dataForm);
@@ -91,7 +92,7 @@ class produtoController extends Controller
     public function edit($id)
     {
         //echo $id;
-        $produto = Produto::find($id);
+        $produto = Produto::findOrFail($id);
         $categoria =DB::table('categorias')->pluck('nome','id')->all();
         $fornecedor =DB::table('fornecedors')->pluck('nome','id')->all();
         return view('parametrizacao.produto.create_edit_produto', compact('categoria','fornecedor'))->with('produto', $produto);
@@ -107,26 +108,26 @@ class produtoController extends Controller
     public function update(ProdutoStoreUpdateFormRequest $request, $id)
     {
 
-          $dataForm = $request->all();
+      $dataForm = $request->all();
 
-          $produto = $this->produto->find($id);
+      $produto = $this->produto->findOrFail($id);
 
-          $update = $produto->update($dataForm);
+      $update = $produto->update($dataForm);
 
-          $dataForm = $request->all();
+      $dataForm = $request->all();
 
-          if($update){
+      if($update){
 
-            $success = "Produto actualizado com sucesso.";
-            return redirect()->route('produtos.index')->with('success', $success);
-        }
-        else{
-
-            $error = "Não foi possível actualizar o Produto.";
-            return redirect()->route('produtos.index')->with('error', $error);
-        }
-
+        $success = "Produto actualizado com sucesso.";
+        return redirect()->route('produtos.index')->with('success', $success);
     }
+    else{
+
+        $error = "Não foi possível actualizar o Produto.";
+        return redirect()->route('produtos.index')->with('error', $error);
+    }
+
+}
 
     /**
      * Remove the specified resource from storage.
@@ -137,46 +138,67 @@ class produtoController extends Controller
     public function destroy($id)
     {
 
-        $produto = Produto::find($id);
-        $produto->delete();
-        return redirect('/produtos')->with('success', 'Produto eliminado com sucesso!');
-    }
+        $produto = Produto::findOrFail($id);
+        // $produto->delete();
+        // return redirect('/produtos')->with('success', 'Produto eliminado com sucesso!');
 
-    public function listarTodos()
-    {
-        
-        $produtos = $this->produto->with('categoria', 'fornecedor')->get();
+        try {
 
-        $categorias = DB::table('categorias')->select('nome', 'id')->get();
+          if($produto->delete()){
 
-        $fornecedores = DB::table('fornecedors')->select('nome', 'id')->get();
+            $sucess = 'Produto removido com sucesso!';
+            return redirect()->back()->with('success', $sucess);
 
-        return view('reports.produtos.report_geal_produto', compact('produtos','fornecedores', 'categorias'));
-    }
+        }else{
+
+            $error = 'Erro ao remover o Produto!';
+            return redirect()->back()->with('error', $error);
+
+        }
+
+    } catch (QueryException $e) {
+
+      $error = "Erro ao remover o Produto! Erro relacionado ao DB. Necessária a intervenção do Administrador da Base de Dados.!";
+      return redirect()->back()->with('error', $error);
+
+  }
+}
+
+public function listarTodos()
+{
+
+    $produtos = $this->produto->with('categoria', 'fornecedor')->get();
+
+    $categorias = DB::table('categorias')->select('nome', 'id')->get();
+
+    $fornecedores = DB::table('fornecedors')->select('nome', 'id')->get();
+
+    return view('reports.produtos.report_geal_produto', compact('produtos','fornecedores', 'categorias'));
+}
 
 
-    public function listarPorCategoria($id){
+public function listarPorCategoria($id){
 
-        $produtos = $this->produto->with('fornecedor', 'categoria')->where('categoria_id', $id)->orderBy('descricao', 'asc')->get();
+    $produtos = $this->produto->with('fornecedor', 'categoria')->where('categoria_id', $id)->orderBy('descricao', 'asc')->get();
 
-        return response()->json($produtos);
+    return response()->json($produtos);
 
-    }
-    
+}
 
-    public function listarPorFornecedor($id){
 
-        $produtos = $this->produto->with('fornecedor', 'categoria')->where('fornecedor_id', $id)->orderBy('descricao', 'asc')->get();
+public function listarPorFornecedor($id){
 
-        return response()->json($produtos);
+    $produtos = $this->produto->with('fornecedor', 'categoria')->where('fornecedor_id', $id)->orderBy('descricao', 'asc')->get();
 
-    }
+    return response()->json($produtos);
 
-    public function findPrice(Request $request)
-    {
-      $data = Produto::select('preco_venda', 'preco_aquisicao', 'quantidade_dispo', 'quantidade_min')->where('id',$request->id)->first();
-      return response()->json($data);
-    }
+}
+
+public function findPrice(Request $request)
+{
+  $data = Produto::select('preco_venda', 'preco_aquisicao', 'quantidade_dispo', 'quantidade_min')->where('id',$request->id)->first();
+  return response()->json($data);
+}
 
 
 }

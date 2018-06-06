@@ -211,7 +211,7 @@ class EntradaController extends Controller
     public function show($id)
     {
         //
-      $entrada = $this->entrada->with('itensEntrada.produto', 'user')->find($id);
+      $entrada = $this->entrada->with('itensEntrada.produto', 'user')->findOrFail($id);
       $empresa = Empresa::with('enderecos', 'telefones', 'emails', 'contas')->findOrFail(1);
 
       return view('entradas.show_entrada', compact('entrada', 'empresa'));
@@ -219,7 +219,7 @@ class EntradaController extends Controller
     public function showRelatorio($id)
     {
         //
-      $entrada = $this->entrada->with('itensEntrada.produto', 'user')->find($id);
+      $entrada = $this->entrada->with('itensEntrada.produto', 'user')->findOrFail($id);
       $empresa = Empresa::with('enderecos', 'telefones', 'emails', 'contas')->findOrFail(1);
       $pdf = PDF::loadView('entradas.relatorio', compact('entrada','empresa'));
       return $pdf->download('entrada.pdf');
@@ -236,7 +236,7 @@ class EntradaController extends Controller
         //
       $produtos = DB::table('produtos')->pluck('descricao', 'id')->all();
       $formas_pagamento = DB::table('forma_pagamentos')->pluck('descricao', 'id')->all();
-      $entrada = $this->entrada->with('itensEntrada.produto', 'formaPagamento', 'fornecedor')->find($id);
+      $entrada = $this->entrada->with('itensEntrada.produto', 'formaPagamento', 'fornecedor')->findOrFail($id);
         // Tras a entrada. Tras os Itens da entrada e dentro da relacao Itensentrada eh possivel pegar a relacao Prodtuo atraves do dot ou ponto. NOTA: a relacao produto nao esta na entrada e sim na itensentrada, mas eh possivel ter os seus dados partido da entrada como se pode ver.
       $empresa = Empresa::with('enderecos', 'telefones', 'emails', 'contas')->findOrFail(1);
 
@@ -311,7 +311,7 @@ class EntradaController extends Controller
 
 
 
-      $entrada = $this->entrada->find($entrada_id);
+      $entrada = $this->entrada->findOrFail($entrada_id);
 
       if($request['pago'] == 0){
 
@@ -359,7 +359,7 @@ class EntradaController extends Controller
 
               for($i = 0; $i < sizeof($pagamento_entrada_ids); $i++){
 
-                $pagamento_entrada = Pagamentoentrada::find($pagamento_entrada_ids[$i]->id);
+                $pagamento_entrada = Pagamentoentrada::findOrFail($pagamento_entrada_ids[$i]->id);
                 $pagamento_entrada->valor_pago = $valor_pago;
                 $pagamento_entrada->forma_pagamento_id = $forma_pagamento_id;
                 $pagamento_entrada->nr_documento_forma_pagamento = $nr_documento_forma_pagamento;
