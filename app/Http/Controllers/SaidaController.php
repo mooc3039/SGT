@@ -159,6 +159,7 @@ class SaidaController extends Controller
 
           $saida->cliente_id = $request['cliente_id'];
           $saida->user_id = $request['user_id'];
+          $saida->motivo_justificativo_nao_iva = $request['texto_motivo_imposto'];
           $saida->valor_total = 0; 
           $saida->valor_iva = 0;
           $saida->iva = 0;
@@ -296,6 +297,30 @@ class SaidaController extends Controller
     {
         //
     }
+
+    public function motivoNaoAplicacaoImposto(Request $request){
+    // dd($request->all());
+    $saida_id = $request->saida_id;
+
+    $dataForm = [
+      'motivo_justificativo_nao_iva' => $request->motivo_justificativo_nao_iva,
+    ];
+
+    $saida_motivo_justificativo = $this->saida->findOrFail($saida_id);
+
+    if($saida_motivo_justificativo->update($dataForm)){
+
+      $sucess = 'Motivo Justificativo da não aplicação de imposto actualizado com sucesso!';
+      return redirect()->back()->with('success', $sucess);
+
+
+    }else{
+      $error = 'Erro ao actualizar o Motivo Justificativo da não aplicação de imposto!';
+      return redirect()->back()->with('error', $error);
+
+
+    }
+  }
 
     /**
      * Remove the specified resource from storage.

@@ -103,8 +103,19 @@
 
 
               <div class="panel panel-default">
+                <div class="panel-heading">
+                  Motivo Justificativo da não aplicação de imposto 
+                  <button type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#modalMotivoJustificativo" data-venda_id={{ $venda->id }}>
+                    <span><i class="fa fa-pencil"></i></span> 
+                  </button>
+                </div>
                 <div class="panel-body">
-                  Motivo Justificativo da não aplicação de imposto:
+                  <!-- Formulario(arranjado) para conseguir levar o texto inteiro ao modal, o que nao eh possivel com o data-atributies do botao do modal -->
+                  {{Form::open()}}
+                  {{Form::hidden('motivo_justificativo_nao_iva', $venda->motivo_justificativo_nao_iva, ['disabled', 'id'=>'motivo_justificativo_nao_iva'])}}
+                  {{Form::close()}}
+
+                  {{$venda->motivo_justificativo_nao_iva}}
                 </div>
               </div>
 
@@ -183,6 +194,53 @@
   <!-- MODAL EDITAR ITEM -->
   @include('vendas.itens_venda.modals.frm_modal_editar_iten_venda')
   <!-- FIM MODAL EDITAR ITEM -->
+
+  <!-- MODAL EDITAR JUSTIFICATIVA -->
+      <div class="modal fade" tabindex="-1" role="dialog" id="modalMotivoJustificativo">
+        <div class="modal-dialog modal-lg" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title"><b>Motivo justificativo da não aplicação de imposto: </b>Editar<span id=""><span/></h4>
+              </div>
+              <div class="modal-body">
+
+                {{Form::open(['route'=>'editar_motivo_venda', 'method'=>'POST', 'onsubmit'=>'submitFormMotivoJustificativo.disabled = true; return true;'])}}
+
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="form-group">
+                      
+                      {{Form::textarea('motivo_justificativo_nao_iva', null, ['class' => 'form-control', 'id'=>'motivo_justificativo_nao_iva'])}}
+
+                      {{Form::hidden('venda_id', null, ['class' => 'form-control', 'id'=>'venda_id'])}}
+                    </div>
+                  </div>
+                </div>
+
+
+
+                <div class="modal-footer">
+                  <div class="row">
+                    <div class="col-md-6 text-left">
+
+                    </div>
+                    <div class="col-md-6 text-right">
+                      {{Form::button('Fechar', ['class'=>'btn btn-default', 'data-dismiss'=>'modal'])}}
+                      {{Form::submit('Salvar', ['class'=>'btn btn-primary submit_iten', 'name'=>'submitFormMotivoJustificativo'])}}
+                    </div>
+                  </div>
+
+
+
+                  {{Form::close()}}
+                </div>
+              </div>
+            </div><!-- /.modal-content -->
+          </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
+
+        <!-- FIM MODAL EDITAR JUSTIFICATIVA -->
 
   {{Form::hidden('codigo_venda', $venda->id, ['id'=>'codigo_venda', 'disabled'])}}
   @endsection
@@ -481,6 +539,19 @@
 
 
     // JAVASCRIPT FIM MODAL EDITAR ITEM
+
+    $('#modalMotivoJustificativo').on('show.bs.modal', function (event) {
+
+        var button = $(event.relatedTarget); // Button that triggered the modal
+        var dta_venda_id = button.data('venda_id')
+        var motivo_justificativo_nao_iva = $('#motivo_justificativo_nao_iva').val();
+
+        var modal = $(this);
+
+        modal.find('.modal-body #venda_id').val(dta_venda_id);
+        modal.find('.modal-body #motivo_justificativo_nao_iva').val(motivo_justificativo_nao_iva);
+        // console.log(dta_motivo_justificativo_nao_iva);
+      });
 
   </script>
 

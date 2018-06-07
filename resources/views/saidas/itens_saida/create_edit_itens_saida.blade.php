@@ -80,8 +80,8 @@
 
 									<td class="text-center"> <button type="button" class="btn btn-sm" data-toggle="modal" data-target="#modalProdutoIten" data-saida_id={{ $saida->id }} data-produto_id={{ $iten_saida->produto->id }} data-descricao={{ $iten_saida->produto->descricao }} data-quantidade={{ $iten_saida->quantidade }} data-quantidade_rest={{ $iten_saida->quantidade_rest }} data-qtd_referencial={{ $iten_saida->produto->quantidade_dispo }} data-qtd_min={{ $iten_saida->produto->quantidade_min }} data-preco_venda={{ $iten_saida->produto->preco_venda }} data-valor={{$iten_saida->valor }} data-desconto={{ $iten_saida->desconto }} data-subtotal={{ $iten_saida->subtotal }} data-valor_total={{ $saida->valor_total }} data-user_id={{ Auth::user()->id }}> {{$iten_saida->quantidade}} </button> </td>
 
-									<td> {{number_format($iten_saida->produto->preco_venda, 2, '.', ',')}} </td>
-									<td> {{number_format($iten_saida->valor, 2, '.', ',')}} </td>
+									<td class="text-right"> {{number_format($iten_saida->produto->preco_venda, 2, '.', ',')}} </td>
+									<td class="text-right"> {{number_format($iten_saida->valor, 2, '.', ',')}} </td>
 									{{ Form::open(['route'=>['iten_saida.destroy', $iten_saida->id], 'method'=>'DELETE']) }}
 									<td class="text-center">
 										{{ Form::button('<i class="icon_close_alt2"></i>', ['class'=>'btn btn-danger btn-sm submit_iten', 'type'=>'submit'] )}}
@@ -103,8 +103,19 @@
 
 
 						<div class="panel panel-default">
+							<div class="panel-heading">
+								Motivo Justificativo da não aplicação de imposto 
+								<button type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#modalMotivoJustificativo" data-saida_id={{ $saida->id }}>
+									<span><i class="fa fa-pencil"></i></span> 
+								</button>
+							</div>
 							<div class="panel-body">
-								Motivo Justificativo da não aplicação de imposto:
+								<!-- Formulario(arranjado) para conseguir levar o texto inteiro ao modal, o que nao eh possivel com o data-atributies do botao do modal -->
+								{{Form::open()}}
+								{{Form::hidden('motivo_justificativo_nao_iva', $saida->motivo_justificativo_nao_iva, ['disabled', 'id'=>'motivo_justificativo_nao_iva'])}}
+								{{Form::close()}}
+
+								{{$saida->motivo_justificativo_nao_iva}}
 							</div>
 						</div>
 
@@ -133,7 +144,7 @@
 					</div>
 
 				</div>
-				<br><br>
+				<br>
 				<div class="row">
 
 					<div class="col-md-6">
@@ -184,12 +195,60 @@
 @include('saidas.itens_saida.modals.frm_modal_editar_iten_saida')
 <!-- FIM MODAL EDITAR ITEM -->
 
-{{Form::hidden('codigo_saida', $saida->id, ['id'=>'codigo_saida', 'disabled'])}}
+<!-- MODAL EDITAR JUSTIFICATIVA -->
+<div class="modal fade" tabindex="-1" role="dialog" id="modalMotivoJustificativo">
+	<div class="modal-dialog modal-lg" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title"><b>Motivo justificativo da não aplicação de imposto: </b>Editar<span id=""><span/></h4>
+				</div>
+				<div class="modal-body">
 
-@endsection
+					{{Form::open(['route'=>'editar_motivo_saida', 'method'=>'POST', 'onsubmit'=>'submitFormMotivoJustificativo.disabled = true; return true;'])}}
 
-@section('script')
-<script>
+					<div class="row">
+						<div class="col-md-12">
+							<div class="form-group">
+
+								{{Form::textarea('motivo_justificativo_nao_iva', null, ['class' => 'form-control', 'id'=>'motivo_justificativo_nao_iva'])}}
+
+								{{Form::hidden('saida_id', null, ['class' => 'form-control', 'id'=>'saida_id'])}}
+							</div>
+						</div>
+					</div>
+
+
+
+					<div class="modal-footer">
+						<div class="row">
+							<div class="col-md-6 text-left">
+
+							</div>
+							<div class="col-md-6 text-right">
+								{{Form::button('Fechar', ['class'=>'btn btn-default', 'data-dismiss'=>'modal'])}}
+								{{Form::submit('Salvar', ['class'=>'btn btn-primary submit_iten', 'name'=>'submitFormMotivoJustificativo'])}}
+							</div>
+						</div>
+
+
+
+						{{Form::close()}}
+					</div>
+				</div>
+			</div><!-- /.modal-content -->
+		</div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
+
+	<!-- FIM MODAL EDITAR JUSTIFICATIVA -->
+
+
+	{{Form::hidden('codigo_saida', $saida->id, ['id'=>'codigo_saida', 'disabled'])}}
+
+	@endsection
+
+	@section('script')
+	<script>
 
 	// DataTables Inicio
 	$(document).ready(function() {
@@ -310,26 +369,26 @@
 						new_quantidade = Number.parseInt($('#new_quantidade').val());
 					}
 
-      				var new_preco_venda = Number.parseFloat(($('#new_preco_venda').val()).replace(/[^0-9-.]/g, ''));
-      				var new_desconto = Number.parseInt($('#new_desconto').val());
-      				var new_subtotal = Number.parseFloat((new_quantidade*new_preco_venda)-(new_quantidade*new_preco_venda*new_desconto)/100);
+					var new_preco_venda = Number.parseFloat(($('#new_preco_venda').val()).replace(/[^0-9-.]/g, ''));
+					var new_desconto = Number.parseInt($('#new_desconto').val());
+					var new_subtotal = Number.parseFloat((new_quantidade*new_preco_venda)-(new_quantidade*new_preco_venda*new_desconto)/100);
 
-      				var new_valor = Number.parseFloat(new_quantidade*new_preco_venda);
+					var new_valor = Number.parseFloat(new_quantidade*new_preco_venda);
 
-      				var new_valor_total = Number.parseFloat(new_dta_valor_total);
+					var new_valor_total = Number.parseFloat(new_dta_valor_total);
 
-      				new_valor_total = new_valor_total + new_subtotal;
-      				var new_iva = Number.parseFloat(Number.parseFloat((new_valor_total*17)/100).toFixed(2));
-      				var new_valor_total_iva = (new_valor_total + new_iva);
+					new_valor_total = new_valor_total + new_subtotal;
+					var new_iva = Number.parseFloat(Number.parseFloat((new_valor_total*17)/100).toFixed(2));
+					var new_valor_total_iva = (new_valor_total + new_iva);
 
-      				$('#new_subtotal').val(new_subtotal.formatMoney());
-      				$('#new_valor').val(new_valor.formatMoney());
-      				$('.new_valor_total_sem_iva').html(new_valor_total.formatMoney() + " Mtn");
-      				$('.new_iva').html(new_iva.formatMoney() + " Mtn");
-      				$('.new_valor_total_iva').html(new_valor_total_iva.formatMoney() + " Mtn");
-      				
+					$('#new_subtotal').val(new_subtotal.formatMoney());
+					$('#new_valor').val(new_valor.formatMoney());
+					$('.new_valor_total_sem_iva').html(new_valor_total.formatMoney() + " Mtn");
+					$('.new_iva').html(new_iva.formatMoney() + " Mtn");
+					$('.new_valor_total_iva').html(new_valor_total_iva.formatMoney() + " Mtn");
 
-      			}
+
+				}
 
 
 				function newValidarQuantidadeEspecificada(){
@@ -493,6 +552,19 @@
         	};
         });
 		// JAVASCRIPT FIM MODAL EDITAR ITEM
+
+		$('#modalMotivoJustificativo').on('show.bs.modal', function (event) {
+
+				var button = $(event.relatedTarget); // Button that triggered the modal
+				var dta_saida_id = button.data('saida_id')
+				var motivo_justificativo_nao_iva = $('#motivo_justificativo_nao_iva').val();
+
+				var modal = $(this);
+
+				modal.find('.modal-body #saida_id').val(dta_saida_id);
+				modal.find('.modal-body #motivo_justificativo_nao_iva').val(motivo_justificativo_nao_iva);
+				// console.log(dta_motivo_justificativo_nao_iva);
+			});
 
 	</script>
 

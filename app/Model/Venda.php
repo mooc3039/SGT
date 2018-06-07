@@ -20,6 +20,7 @@ class Venda extends Model
         'remanescente',
         'forma_pagamento_id',
     	'nr_documento_forma_pagamento',
+        'motivo_justificativo_nao_iva',
     ];
 
     public function cliente(){

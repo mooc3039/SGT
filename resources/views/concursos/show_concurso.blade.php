@@ -87,8 +87,11 @@
 
 
 							<div class="panel panel-default">
+								<div class="panel-heading">
+									Motivo justificativo da não aplicação de imposto
+								</div>
 								<div class="panel-body">
-									Motivo Justificativo da não aplicação de imposto:
+									{{$concurso->motivo_justificativo_nao_iva}}
 								</div>
 							</div>
 
@@ -99,24 +102,24 @@
 								<tr>
 									<td>Sub-Total:</td>
 									<td style="width: 10px"></td>
-									<td>{{number_format($concurso->valor_total, 2, '.', ',')}}</td>
+									<td>{{number_format($concurso->valor_total, 2, '.', ',')}} Mtn</td>
 								</tr>
 								<tr>
 									<td>IVA(17%):</td>
 									<td></td>
-									<td>{{number_format($concurso->iva, 2, '.', ',')}}</td>
+									<td>{{number_format($concurso->iva, 2, '.', ',')}} Mtn</td>
 								</tr>
 								<tr>
 									<td>Valor Total:</td>
 									<td></td>
-									<td><b>{{number_format($concurso->valor_iva, 2, '.', ',')}}</b></td>
+									<td><b>{{number_format($concurso->valor_iva, 2, '.', ',')}} Mtn</b></td>
 								</tr>
 							</table>
 
 						</div>
 
 					</div>
-					<br><br>
+					<br>
 					<div class="row">
 
 						<div class="col-md-6">

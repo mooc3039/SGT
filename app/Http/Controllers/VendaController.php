@@ -98,6 +98,7 @@ class VendaController extends Controller
 
         $venda->cliente_id = $request['cliente_id'];
         $venda->user_id = $request['user_id'];
+        $venda->motivo_justificativo_nao_iva = $request['texto_motivo_imposto'];
         $venda->valor_total = 0; 
         $venda->valor_iva = 0; 
         $venda->iva = 0; 
@@ -261,6 +262,30 @@ class VendaController extends Controller
     {
         //
     }
+
+    public function motivoNaoAplicacaoImposto(Request $request){
+    // dd($request->all());
+    $venda_id = $request->venda_id;
+
+    $dataForm = [
+      'motivo_justificativo_nao_iva' => $request->motivo_justificativo_nao_iva,
+    ];
+
+    $venda_motivo_justificativo = $this->venda->findOrFail($venda_id);
+
+    if($venda_motivo_justificativo->update($dataForm)){
+
+      $sucess = 'Motivo Justificativo da não aplicação de imposto actualizado com sucesso!';
+      return redirect()->back()->with('success', $sucess);
+
+
+    }else{
+      $error = 'Erro ao actualizar o Motivo Justificativo da não aplicação de imposto!';
+      return redirect()->back()->with('error', $error);
+
+
+    }
+  }
 
     public function pagamentoVenda(PagamentoVendaStoreUpdateFormRequest $request){
         //dd($request->all());

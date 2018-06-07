@@ -86,11 +86,11 @@
 						<div class="col-md-6 border">
 
 
-							<div class="panel panel-default">
+							<!-- <div class="panel panel-default">
 								<div class="panel-body">
 									Motivo Justificativo da não aplicação de imposto:
 								</div>
-							</div>
+							</div> -->
 
 						</div>
 

@@ -131,11 +131,11 @@
 
               <thead>
                 <tr>
-                  <th><i class="icon_profile"></i>Forma de Pagamento</th>
-                  <th><i class="icon_cogs"></i> Documento </th>
-                  <th><i class="icon_cogs"></i> Valor Pago </th>
-                  <th><i class="icon_cogs"></i> Data Pagamento </th>
-                  <th><i class="icon_cogs"></i> Data Actualizacao </th>
+                  <th>Forma de Pagamento</th>
+                  <th> Documento </th>
+                  <th> Valor Pago </th>
+                  <th> Data Pagamento </th>
+                  <th> Data Actualizacao </th>
                 </tr>
               </thead>
 
@@ -157,7 +157,7 @@
                     {{ date('d-m-Y', strtotime($pagamento_venda->created_at))}}
                   </td>
                   <td>
-                    {{ $pagamento_venda->updated_at}}
+                    {{ date('d-m-Y H:m:s', strtotime($pagamento_venda->updated_at))}}
                   </td>
                 </tr>
                 @endif

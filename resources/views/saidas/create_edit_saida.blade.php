@@ -14,74 +14,74 @@
 <div class="row">
 	<div class="col-lg-12">
 
-<section class="panel panel-default">
+    <section class="panel panel-default">
 
-  {{ Form::open(['route'=>'saida.store', 'method'=>'POST', 'id'=>'form_saida']) }}
+      {{ Form::open(['route'=>'saida.store', 'method'=>'POST', 'id'=>'form_saida']) }}
 
-  <div class="panel-body" style="border-bottom: 1px solid #ccc; ">
-   <div class="row" style="margin-bottom: 15px">
-    <div class="form-horizontal">
+      <div class="panel-body" style="border-bottom: 1px solid #ccc; ">
+       <div class="row" style="margin-bottom: 15px">
+        <div class="form-horizontal">
 
-     <div class="col-md-3">
-      {{Form::label('cliente_id', 'Cliente Privado')}}
-      <div class="input-group">
-       {{Form::select('cliente_id', [''=>'Cliente',] + $clientes, null, ['class'=>'form-control select_search'] )}}
-       {{Form::button('<i class="fa fa-plus"></i>', ['class'=>'input-group-addon', 'data-toggle'=>'modal', 'data-target'=>'#modalCliente', 'style'=>'width:auto; font-weight:lighter'])}}
-     </div>
-   </div>
-
-   <div class="col-md-3" style="display: none">
-     <legend>Referência: </legend>
-     <div class="row">
-       <div class="col-md-12">
-         {{ Form::label('nr_referencia', 'Referência da Factura')}}
-         {{ Form::text('nr_referencia', null, ['class'=>'form-control', 'placeholder'=>'Padrão: Não Aplicavel', 'id'=>'nr_referencia'])}}
+         <div class="col-md-3">
+          {{Form::label('cliente_id', 'Cliente Privado')}}
+          <div class="input-group">
+           {{Form::select('cliente_id', [''=>'Cliente',] + $clientes, null, ['class'=>'form-control select_search'] )}}
+           {{Form::button('<i class="fa fa-plus"></i>', ['class'=>'input-group-addon', 'data-toggle'=>'modal', 'data-target'=>'#modalCliente', 'style'=>'width:auto; font-weight:lighter'])}}
+         </div>
        </div>
-     </div>
-     <div class="row">
-       <div class="col-md-12">
-         {{ Form::label('confirmar_nr_referencia', 'Confirmar')}}
-         {{ Form::text('confirmar_nr_referencia', null, ['class'=>'form-control', 'placeholder'=>'Padrão: Não Aplicavel', 'id'=>'confirmar_nr_referencia'])}}
-         {{ Form::hidden('concurso_id', 0, ['class'=>'form-control', 'id'=>'concurso_id'])}}
+
+       <div class="col-md-3" style="display: none">
+         <legend>Referência: </legend>
+         <div class="row">
+           <div class="col-md-12">
+             {{ Form::label('nr_referencia', 'Referência da Factura')}}
+             {{ Form::text('nr_referencia', null, ['class'=>'form-control', 'placeholder'=>'Padrão: Não Aplicavel', 'id'=>'nr_referencia'])}}
+           </div>
+         </div>
+         <div class="row">
+           <div class="col-md-12">
+             {{ Form::label('confirmar_nr_referencia', 'Confirmar')}}
+             {{ Form::text('confirmar_nr_referencia', null, ['class'=>'form-control', 'placeholder'=>'Padrão: Não Aplicavel', 'id'=>'confirmar_nr_referencia'])}}
+             {{ Form::hidden('concurso_id', 0, ['class'=>'form-control', 'id'=>'concurso_id'])}}
+           </div>
+         </div>
+
        </div>
-     </div>
 
-   </div>
+       <div class="col-md-6 col-md-offset-3">
+        <legend>Pagamento: <b><span class="valor_total_iva_visual pull-right" style="border:none"> </span></b></legend>
+        <div class="row" style="display: block">
+          <div class="col-md-6">
+            {{ Form::label('valor_pago', 'Valor Pago')}}
+            <div class="input-group">
+              {{ Form::text('valor_pago', 0.00, ['class'=>'form-control'])}}
+              {{ Form::hidden('pago', 1)}}
+              <div class="input-group-addon">Mtn</div>
 
-   <div class="col-md-6 col-md-offset-3">
-    <legend>Pagamento: <b><span class="valor_total_iva_visual pull-right" style="border:none"> </span></b></legend>
-    <div class="row" style="display: block">
-      <div class="col-md-6">
-        {{ Form::label('valor_pago', 'Valor Pago')}}
-        <div class="input-group">
-          {{ Form::text('valor_pago', 0.00, ['class'=>'form-control'])}}
-          {{ Form::hidden('pago', 1)}}
-          <div class="input-group-addon">Mtn</div>
-          
-        </div>            
-      </div>
-      <div class="col-md-6">
-        {{ Form::label('remanescente', 'Remanescente')}}
-        <div class="input-group">
-          {{ Form::text('remanescente', 0.00, ['class'=>'form-control', 'readonly'])}}
-          <div class="input-group-addon">Mtn</div>
+            </div>            
+          </div>
+          <div class="col-md-6">
+            {{ Form::label('remanescente', 'Remanescente')}}
+            <div class="input-group">
+              {{ Form::text('remanescente', 0.00, ['class'=>'form-control', 'readonly'])}}
+              <div class="input-group-addon">Mtn</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6">
+            {{ Form::label('forma_pagamento_id', 'Forma Pgamento')}}
+            {{Form::select('forma_pagamento_id', [''=>'Forma Pgamento',] + $formas_pagamento, null, ['class'=>'form-control', 'id'=>'forma_pagamento_id'] )}}
+          </div>
+          <div class="col-md-6">
+            {{ Form::label('nr_documento_forma_pagamento', 'Documento')}}
+            {{ Form::text('nr_documento_forma_pagamento', null, ['class'=>'form-control', 'id'=>'nr_documento_forma_pagamento', 'placeholder'=>'Padrão: Não Aplicavel'])}}
+          </div>
         </div>
       </div>
     </div>
-
-    <div class="row">
-      <div class="col-md-6">
-        {{ Form::label('forma_pagamento_id', 'Forma Pgamento')}}
-        {{Form::select('forma_pagamento_id', [''=>'Forma Pgamento',] + $formas_pagamento, null, ['class'=>'form-control', 'id'=>'forma_pagamento_id'] )}}
-      </div>
-      <div class="col-md-6">
-        {{ Form::label('nr_documento_forma_pagamento', 'Documento')}}
-        {{ Form::text('nr_documento_forma_pagamento', null, ['class'=>'form-control', 'id'=>'nr_documento_forma_pagamento', 'placeholder'=>'Padrão: Não Aplicavel'])}}
-      </div>
-    </div>
   </div>
-</div>
-</div>
 </div>
 
 <div class="panel-footer">
@@ -100,13 +100,13 @@
   <table class="table table-striped table-advance table-hover">
     <thead>
       <tr>
-        <th> Nome do Produto</th>
-        <th> Qtd/Unidades</th>
-        <th> Qtd-Restante</th>
-        <th> Preço (Mtn)</th>
-        <th> Valor (Mtn)</th>
-        <th> Desconto (%)</th>
-        <th> Subtotal (Mtn)</th>
+        <th class="text-left"> Nome do Produto</th>
+        <th class="text-left"> Qtd/Unidades</th>
+        <th class="text-left"> Qtd-Restante</th>
+        <th class="text-left"> Preço (Mtn)</th>
+        <th class="text-left"> Valor (Mtn)</th>
+        <th class="text-left"> Desconto (%)</th>
+        <th class="text-left"> Subtotal (Mtn)</th>
         <th><a class="btn btn-primary addRow" href="#"><i class="icon_plus_alt2"></i></a></th>
       </tr>
     </thead>
@@ -120,45 +120,59 @@
           @endforeach
         </select>
       </td>
-      <td><input type="text" name="quantidade[]" class="form-control quantidade"></td>
-      <td><input type="text" name="quantidade_dispo[]" class="form-control quantidade_dispo" readonly><input type="hidden" name="qtd_dispo_original[]" class="form-control qtd_dispo_original"></td>
-      <td><input type="text" name="preco_venda[]" class="form-control preco_venda" readonly></td>
-      <td><input type="text" name="valor[]" class="form-control valor" value="0" readonly></td>
-      <td><input type="text" name="desconto[]" class="form-control desconto" value="0"></td>
-      <td><input type="text" name="subtotal[]" class="form-control subtotal" readonly></td>
+      <td><input type="text" name="quantidade[]" class="form-control quantidade text-right"></td>
+      <td><input type="text" name="quantidade_dispo[]" class="form-control quantidade_dispo text-right" readonly><input type="hidden" name="qtd_dispo_original[]" class="form-control qtd_dispo_original"></td>
+      <td><input type="text" name="preco_venda[]" class="form-control preco_venda text-right" readonly></td>
+      <td><input type="text" name="valor[]" class="form-control valor text-right" value="0" readonly></td>
+      <td><input type="text" name="desconto[]" class="form-control desconto text-right" value="0"></td>
+      <td><input type="text" name="subtotal[]" class="form-control subtotal text-right" readonly></td>
       <td><a class="btn btn-danger remove" href="#"><i class="icon_close_alt2"></i></a></td>
     </tr>
 
   </tbody>
   <tfoot>
    <tr>
-        <td style="border:none"></td>
-        <td style="border:none"></td>
-        <td style="border:none"></td>
-        <td></td>
-        <td></td>
-        <td><b>Subtotal</b></td>
-        <td><b><div class="valor_total" style="border:none"> </div></b></td>
-        <td></td>
-      </tr><tr>
-        <td style="border:none"></td>
-        <td style="border:none"></td>
-        <td style="border:none"></td>
-        <td></td>
-        <td></td>
-        <td><b>IVA(17%)</b></td>
-        <td><b><div class="iva" style="border:none"> </div></b></td>
-        <td></td>
-      </tr><tr>
-        <td style="border:none"></td>
-        <td style="border:none"></td>
-        <td style="border:none"></td>
-        <td></td>
-        <td></td>
-        <td><b>Total</b></td>
-        <td><b><div class="valor_total_iva_visual" style="border:none"> </div></b></td>
-        <td></td>
-      </tr>
+    <td style="border:none"></td>
+    <td style="border:none"></td>
+    <td style="border:none"></td>
+    <td style="border:none"></td>
+    <td></td>
+    <td><b>Subtotal</b></td>
+    <td><b><div class="valor_total" style="border:none"> </div></b></td>
+    <td></td>
+  </tr><tr>
+    <td style="border:none"></td>
+    <td style="border:none"></td>
+    <td style="border:none"></td>
+    <td style="border:none"></td>
+    <td></td>
+    <td><b>IVA(17%)</b></td>
+    <td><b><div class="iva" style="border:none"> </div></b></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td colspan="2" style="border:none">
+      <div class="checkbox">
+        <label>
+          <h5><b> <input name="checkbox_motivo_imposto" id="checkbox_motivo_imposto" type="checkbox" onclick="javascript:motivoDaNaoAPlicacaoDoImposto();"> Motivo Justificativo da não aplicação de imposto</b></h5>
+        </label>
+      </div>
+    </td>
+
+    <td style="border:none"></td>
+    <td style="border:none"></td>
+    <td></td>
+    <td><b>Total</b></td>
+    <td><b><div class="valor_total_iva_visual" style="border:none"> </div></b></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td style="border:none" colspan="7">
+      <div id="mostra_texto">
+        <textarea class="form-control" rows="3" cols="7" name="texto_motivo_imposto" id="texto_motivo_imposto"></textarea>
+      </div>
+    </td>
+  </tr>
 </tfoot>
 </table>
 </div>
@@ -210,69 +224,75 @@
                         <div class="radio-inline">
                           <input type="radio" name="activo" value="0" id="inactivo"> <label for="inactivo">Inactivo</label>
                         </div>
-											</div>
-										</div>
-									</div>
-									<hr style="border: 1px solid #ccc;">
-									<div class="form-horizontal">
-										<div class="row" style="margin-bottom: 15px;">
-											<div class="col-md-4">
-												{{ Form::label('nome', 'Nome', ['class'=>'control-label']) }}
-												{{ Form::text('nome', null, ['placeholder'=>'Nome','class'=>'form-control', 'id'=>'mdl_cli_nome']) }}
-											</div>
-											<div class="col-md-4">
-												{{ Form::label('endereco', 'Endereço', ['class'=>'control-label']) }}
-												{{ Form::text('endereco', null, ['placeholder'=>'Endereço','class'=>'form-control', 'id'=>'mdl_cli_endereco']) }}
-											</div>
-											<div class="col-md-4">
-												{{ Form::label('telefone', 'Telefone', ['class'=>'control-label']) }}
-												{{ Form::text('telefone', null, ['placeholder'=>'telefone','class'=>'form-control', 'id'=>'mdl_cli_telefone']) }}
-											</div>
-										</div>
-									</div>
-									<div class="form-horizontal">
-										<div class="row" style="margin-bottom: 15px;">
-											<div class="col-md-4">
-												{{ Form::label('email', 'Email', ['class'=>'control-label']) }}
-												{{ Form::text('email', null, ['placeholder'=>'Email','class'=>'form-control', 'id'=>'mdl_cli_email']) }}
-											</div>
-											<div class="col-md-4">
-												{{ Form::label('nuit', 'NUIT', ['class'=>'control-label']) }}
-												{{ Form::text('nuit', null, ['placeholder'=>'NUIT','class'=>'form-control', 'id'=>'mdl_cli_nuit']) }}
-											</div>
-										</div>
-									</div>
+                      </div>
+                    </div>
+                  </div>
+                  <hr style="border: 1px solid #ccc;">
+                  <div class="form-horizontal">
+                    <div class="row" style="margin-bottom: 15px;">
+                     <div class="col-md-4">
+                      {{ Form::label('nome', 'Nome', ['class'=>'control-label']) }}
+                      {{ Form::text('nome', null, ['placeholder'=>'Nome','class'=>'form-control', 'id'=>'mdl_cli_nome']) }}
+                    </div>
+                    <div class="col-md-4">
+                      {{ Form::label('endereco', 'Endereço', ['class'=>'control-label']) }}
+                      {{ Form::text('endereco', null, ['placeholder'=>'Endereço','class'=>'form-control', 'id'=>'mdl_cli_endereco']) }}
+                    </div>
+                    <div class="col-md-4">
+                      {{ Form::label('telefone', 'Telefone', ['class'=>'control-label']) }}
+                      {{ Form::text('telefone', null, ['placeholder'=>'telefone','class'=>'form-control', 'id'=>'mdl_cli_telefone']) }}
+                    </div>
+                  </div>
+                </div>
+                <div class="form-horizontal">
+                  <div class="row" style="margin-bottom: 15px;">
+                   <div class="col-md-4">
+                    {{ Form::label('email', 'Email', ['class'=>'control-label']) }}
+                    {{ Form::text('email', null, ['placeholder'=>'Email','class'=>'form-control', 'id'=>'mdl_cli_email']) }}
+                  </div>
+                  <div class="col-md-4">
+                    {{ Form::label('nuit', 'NUIT', ['class'=>'control-label']) }}
+                    {{ Form::text('nuit', null, ['placeholder'=>'NUIT','class'=>'form-control', 'id'=>'mdl_cli_nuit']) }}
+                  </div>
+                </div>
+              </div>
 
 
-								</div>
-							</div>
-						</div>
-						<div class="modal-footer">
-							{{Form::button('Fechar', ['class'=>'btn btn-default', 'data-dismiss'=>'modal'])}}
-							{{Form::submit('Salvar', ['class'=>'btn btn-primary submit_cliente', 'name'=>'submitFormCliente', 'id'=>'submitFormCliente'])}}
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+         {{Form::button('Fechar', ['class'=>'btn btn-default', 'data-dismiss'=>'modal'])}}
+         {{Form::submit('Salvar', ['class'=>'btn btn-primary submit_cliente', 'name'=>'submitFormCliente', 'id'=>'submitFormCliente'])}}
 
-							{{Form::close()}}
-						</div>
-					</div>
-				</div>
+         {{Form::close()}}
+       </div>
+     </div>
+   </div>
 
-			</div><!-- /.modal-content -->
-		</div><!-- /.modal-dialog -->
-	</div><!-- /.modal -->
+ </div><!-- /.modal-content -->
+</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 
-	<!-- FIM MODAL CLIENTE -->
+<!-- FIM MODAL CLIENTE -->
 
-	@endsection
-	@section('script')
-	<script text="text/javascript">
+@endsection
+@section('script')
+<script text="text/javascript">
 
-    $('.submit_cliente').on('click',function(){
+  $(document).ready(function() {
+    document.getElementById('mostra_texto').style.display = 'none';
+    $('#texto_motivo_imposto').val("");
+
+  });
+
+  $('.submit_cliente').on('click',function(){
+    $(".wait").css("display", "block");
+  });
+
+  $(document).ready(function(){
+    $('.submit_iten').on('click',function(){
       $(".wait").css("display", "block");
-    });
-
-    $(document).ready(function(){
-      $('.submit_iten').on('click',function(){
-        $(".wait").css("display", "block");
 
         // if($('#nr_referencia').val() === "" || $('#nr_referencia').val() === null){
         //   alert('Informe o Número de Referência para a Factura, ou o valor padrao (Não Aplicavel)');
@@ -303,11 +323,11 @@
         }
         
       });
-      remanescenteRed();
-      formataValoresMonetariosAoCarregarAPagina();
-    });
+    remanescenteRed();
+    formataValoresMonetariosAoCarregarAPagina();
+  });
 
-    function formataValoresMonetariosAoCarregarAPagina(){
+  function formataValoresMonetariosAoCarregarAPagina(){
      $('#remanescente').val(Number.parseFloat(0).formatMoney()); // O remanescente eh zero porq ainda nao ha valores
      $('#valor_pago').val(Number.parseFloat(0).toFixed(2));
    }
@@ -385,15 +405,15 @@
 
     function alertaremanescentePagamento(){
 
-      
+
       var valor_pago = Number.parseFloat(($('#valor_pago').val()).replace(/[^0-9-.]/g, ''));
       var valor_total_iva = Number.parseFloat($('#valor_total_iva').val());
       var remanescente = valor_total_iva - valor_pago;
 
       if($('#valor_pago').val() === "" || $('#valor_pago').val() === null){
-          $('#remanescente').val(Number.parseFloat(valor_total_iva).formatMoney());
-        }
-        
+        $('#remanescente').val(Number.parseFloat(valor_total_iva).formatMoney());
+      }
+
 
       if(remanescente >= 0){
        $('#remanescente').val(remanescente.formatMoney());
@@ -425,13 +445,13 @@
     	'@endforeach'+
     	'</select>'+
     	'</td>'+
-      '<td><input type="text" name="quantidade[]" class="form-control quantidade"></td>'+
-      '<td><input type="text" name="quantidade_dispo[]" class="form-control quantidade_dispo" readonly>'+
+      '<td><input type="text" name="quantidade[]" class="form-control quantidade text-right"></td>'+
+      '<td><input type="text" name="quantidade_dispo[]" class="form-control quantidade_dispo text-right" readonly>'+
       ' <input type="hidden" name="qtd_dispo_original[]" class="form-control qtd_dispo_original"></td>'+
-      '<td><input type="text" name="preco_venda[]" class="form-control preco_venda" readonly></td>'+
-      '<td><input type="text" name="valor[]" class="form-control valor" value="0" readonly></td>'+
-      '<td><input type="text" name="desconto[]" class="form-control desconto" value="0"></td>'+
-      '<td><input type="text" name="subtotal[]" class="form-control subtotal" readonly></td>'+
+      '<td><input type="text" name="preco_venda[]" class="form-control preco_venda text-right" readonly></td>'+
+      '<td><input type="text" name="valor[]" class="form-control valor text-right" value="0" readonly></td>'+
+      '<td><input type="text" name="desconto[]" class="form-control desconto text-right" value="0"></td>'+
+      '<td><input type="text" name="subtotal[]" class="form-control subtotal text-right" readonly></td>'+
       '<td><a class="btn btn-danger remove" href="#"><i class="icon_close_alt2"></i></a></td>'+
       ' </tr>';
       $('tbody').append(tr);
@@ -470,14 +490,14 @@
         quantidade = Number.parseInt(tr.find('.quantidade').val());
       }
 
-    	var id = tr.find('.descricao').val();
-    	var dataId={'id':id};
-    	$.ajax({
-    		type  : 'GET',
-    		url   : '{!!URL::route('findPrice')!!}',
-    		dataType: 'json',
-    		data  : dataId,
-    		success:function(data){
+      var id = tr.find('.descricao').val();
+      var dataId={'id':id};
+      $.ajax({
+        type  : 'GET',
+        url   : '{!!URL::route('findPrice')!!}',
+        dataType: 'json',
+        data  : dataId,
+        success:function(data){
           var quantidade_disponivel = ((Number.parseInt(data.quantidade_dispo)) - (Number.parseInt(data.quantidade_min)));
 
           tr.find('.preco_venda').val((Number.parseFloat(data.preco_venda)).formatMoney());
@@ -625,11 +645,11 @@
     {
     	var total = Number.parseFloat(0);
       var total_iva = Number.parseFloat(0);
-    	$('.subtotal').each(function(i,e){
-    		var subtotal_string = $(this).val();
+      $('.subtotal').each(function(i,e){
+        var subtotal_string = $(this).val();
         var subtotal_float = Number.parseFloat(subtotal_string.replace(/[^0-9-.]/g, ''));
-    		total +=subtotal_float;
-    	})
+        total +=subtotal_float;
+      })
 
       iva = Number.parseFloat(Number.parseFloat((total*17)/100).toFixed(2)); // o parseFloat interno gera uma string e garante duas casas decimas, o parseFloat externo garante que seja um float para posteriores operacoes artime.
       total_iva = (total + iva);
@@ -638,6 +658,18 @@
       $('.iva').html(iva.formatMoney()+ " Mtn");
       $('.valor_total_iva_visual').html(total_iva.formatMoney()+ " Mtn");
       $('#valor_total_iva').val(total_iva); //cuidado, input importante para calculos
+    };
+
+    function motivoDaNaoAPlicacaoDoImposto() {
+      if (document.getElementById('checkbox_motivo_imposto').checked) {
+        document.getElementById('mostra_texto').style.display = 'block';
+        $('#texto_motivo_imposto').val("");
+        
+      }
+      else {
+        document.getElementById('mostra_texto').style.display = 'none';
+        $('#texto_motivo_imposto').val("");
+      }
     };
 
 

@@ -26,6 +26,7 @@ class Saida extends Model
         'nr_documento_forma_pagamento',
         'nr_referencia',
         'concurso_id',
+        'motivo_justificativo_nao_iva',
     ];
     public $timestamps = false;
 

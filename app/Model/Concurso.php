@@ -19,6 +19,7 @@ class Concurso extends Model
         'forma_pagamento_id',
         'nr_documento_forma_pagamento',
         'codigo_concurso',
+        'motivo_justificativo_nao_iva',
     ];
 
     public function cliente(){

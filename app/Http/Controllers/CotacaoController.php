@@ -95,6 +95,7 @@ class CotacaoController extends Controller
       $cotacao->cliente_id = $request['cliente_id'];
       $cotacao->validade = $request['validade'];
       $cotacao->user_id = $request['user_id'];
+      $cotacao->motivo_justificativo_nao_iva = $request['texto_motivo_imposto'];
       $cotacao->valor_total = 0; 
       $cotacao->valor_iva = 0; 
       $cotacao->iva = 0; 
@@ -226,25 +227,25 @@ class CotacaoController extends Controller
   public function destroy($id)
   {
 
-  
+
       //
-      $cotacao = $this->cotacao->findOrFail($id);
-  
-      DB::beginTransaction();
-      try {
-  
-  
-          $cotacao->delete();
-          DB::commit();
-  
-          $sucess = 'Cotação removida com sucesso!';
-          return redirect()->route('cotacao.index')->with('success', $sucess);
-  
-      } catch (QueryException $e) {
-        DB::rollback();
-        $error = "Erro ao remover Cotação. Possivelmente Registo em uso. Necess�ria a interven��o do Administrador da Base de Dados.!";
-        return redirect()->back()->with('error', $error);
-      }
+    $cotacao = $this->cotacao->findOrFail($id);
+
+    DB::beginTransaction();
+    try {
+
+
+      $cotacao->delete();
+      DB::commit();
+
+      $sucess = 'Cotação removida com sucesso!';
+      return redirect()->route('cotacao.index')->with('success', $sucess);
+
+    } catch (QueryException $e) {
+      DB::rollback();
+      $error = "Erro ao remover Cotação. Possivelmente Registo em uso. Necess�ria a interven��o do Administrador da Base de Dados.!";
+      return redirect()->back()->with('error', $error);
+    }
     
     //
 /*     $cotacao = $this->cotacao->findOrFail($id);
@@ -271,6 +272,30 @@ class CotacaoController extends Controller
       $error = "Erro ao remover Cotação. Possivelmente Registo em uso. Necessária a intervenção do Administrador da Base de Dados.!";
       return redirect()->back()->with('error', $error);
     } */
+  }
+
+  public function motivoNaoAplicacaoImposto(Request $request){
+    // dd($request->all());
+    $cotacao_id = $request->cotacao_id;
+
+    $dataForm = [
+      'motivo_justificativo_nao_iva' => $request->motivo_justificativo_nao_iva,
+    ];
+
+    $cotacao_motivo_justificativo = $this->cotacao->findOrFail($cotacao_id);
+
+    if($cotacao_motivo_justificativo->update($dataForm)){
+
+      $sucess = 'Motivo Justificativo da não aplicação de imposto actualizado com sucesso!';
+      return redirect()->back()->with('success', $sucess);
+
+
+    }else{
+      $error = 'Erro ao actualizar o Motivo Justificativo da não aplicação de imposto!';
+      return redirect()->back()->with('error', $error);
+
+
+    }
   }
 
   public function reportGeralCotacoes(){

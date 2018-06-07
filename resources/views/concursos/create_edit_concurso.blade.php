@@ -13,7 +13,7 @@
 
 <div class="row">
   <div class="col-lg-12">
-    
+
     <section class="panel panel-default">
 
       {{ Form::open(['route'=>'concurso.store', 'method'=>'POST', 'id'=>'form_concurso']) }}
@@ -51,140 +51,152 @@
         <legend>Pagamento: 
           <b><span class="valor_total_iva_visual pull-right" style="border:none"> </span></b>
         </legend>
-          <div class="row" style="margin-bottom: 5px">
-            <div class="col-md-3">
-              <div class="row">
-                <div class="col-md-12">
-                  <div class="radio-inline">
-                    <!-- {{Form::radio('pago', '1', ['id'=>'pago', 'onclick'=>'javascript:pagoNaoPago();'])}} Pago -->
-                    <input type="radio" onclick="javascript:pagoNaoPago();" name="pago" value="1" id="pago" checked="true"> <label for="pago">Pago</label>
-                  </div>
-                </div>
-                <div class="col-md-12">
-                  <div class="radio-inline">
-                    <!-- {{Form::radio('pago', '0', ['id'=>'nao_pago', 'onclick'=>'javascript:pagoNaoPago();'])}} Não Pago -->
-                    <input type="radio" onclick="javascript:pagoNaoPago();" name="pago" value="0" id="nao_pago"> <label for="nao_pago">Não pago</label>
-                  </div>
+        <div class="row" style="margin-bottom: 5px">
+          <div class="col-md-3">
+            <div class="row">
+              <div class="col-md-12">
+                <div class="radio-inline">
+                  <!-- {{Form::radio('pago', '1', ['id'=>'pago', 'onclick'=>'javascript:pagoNaoPago();'])}} Pago -->
+                  <input type="radio" onclick="javascript:pagoNaoPago();" name="pago" value="1" id="pago" checked="true"> <label for="pago">Pago</label>
                 </div>
               </div>
-
-
-
-            </div>
-
-            <div class="col-md-9" id="div_forma_pagamento" style="display:block">
-              <div class="row" style="display: block">
-                <div class="col-md-6">
-                  {{ Form::label('valor_pago', 'Valor Pago')}}
-                  <div class="input-group">
-                    {{ Form::text('valor_pago', null, ['class'=>'form-control'])}}
-                    <div class="input-group-addon">Mtn</div>
-                  </div>            
-                </div>
-                <div class="col-md-6">
-                  {{ Form::label('remanescente', 'Remanescente')}}
-                  <div class="input-group">
-                    {{ Form::text('remanescente', null, ['class'=>'form-control', 'readonly'])}}
-                    <div class="input-group-addon">Mtn</div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="row">
-                <div class="col-md-6">
-                  {{ Form::label('forma_pagamento_id', 'Forma Pgamento')}}
-                  {{Form::select('forma_pagamento_id', [''=>'Forma Pgamento',] + $formas_pagamento, null, ['class'=>'form-control', 'id'=>'forma_pagamento_id'] )}}
-                </div>
-                <div class="col-md-6">
-                  {{ Form::label('nr_documento_forma_pagamento', 'Documento')}}
-                  {{ Form::text('nr_documento_forma_pagamento', null, ['class'=>'form-control'])}}
+              <div class="col-md-12">
+                <div class="radio-inline">
+                  <!-- {{Form::radio('pago', '0', ['id'=>'nao_pago', 'onclick'=>'javascript:pagoNaoPago();'])}} Não Pago -->
+                  <input type="radio" onclick="javascript:pagoNaoPago();" name="pago" value="0" id="nao_pago"> <label for="nao_pago">Não pago</label>
                 </div>
               </div>
             </div>
+
+
 
           </div>
 
+          <div class="col-md-9" id="div_forma_pagamento" style="display:block">
+            <div class="row" style="display: block">
+              <div class="col-md-6">
+                {{ Form::label('valor_pago', 'Valor Pago')}}
+                <div class="input-group">
+                  {{ Form::text('valor_pago', null, ['class'=>'form-control'])}}
+                  <div class="input-group-addon">Mtn</div>
+                </div>            
+              </div>
+              <div class="col-md-6">
+                {{ Form::label('remanescente', 'Remanescente')}}
+                <div class="input-group">
+                  {{ Form::text('remanescente', null, ['class'=>'form-control', 'readonly'])}}
+                  <div class="input-group-addon">Mtn</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6">
+                {{ Form::label('forma_pagamento_id', 'Forma Pgamento')}}
+                {{Form::select('forma_pagamento_id', [''=>'Forma Pgamento',] + $formas_pagamento, null, ['class'=>'form-control', 'id'=>'forma_pagamento_id'] )}}
+              </div>
+              <div class="col-md-6">
+                {{ Form::label('nr_documento_forma_pagamento', 'Documento')}}
+                {{ Form::text('nr_documento_forma_pagamento', null, ['class'=>'form-control'])}}
+              </div>
+            </div>
+          </div>
+
         </div>
+
       </div>
     </div>
+  </div>
 
-    <div class="panel-footer">
-     {{Form::submit('Salvar Concurso', ['class'=>'btn btn-primary submit_iten'])}}
-   </div>
+  <div class="panel-footer">
+   {{Form::submit('Salvar Concurso', ['class'=>'btn btn-primary submit_iten'])}}
+ </div>
 
 
-   <!-- começa a secção de cotacao na tabela-->
+ <!-- começa a secção de cotacao na tabela-->
 
-   <section class="panel">
-     <header class="panel-heading">
-      Produtos / Itens
-    </header>
+ <section class="panel">
+   <header class="panel-heading">
+    Produtos / Itens
+  </header>
 
-    <div class="panel-body">
-      <table class="table table-striped table-advance table-hover">
-        <thead>
-          <tr>
-            <th> Nome do Produto</th>
-            <th> Qtd/Unidades</th>
-            <th> Qtd-Restante</th>
-            <th> Preço (Mtn)</th>
-            <th> Valor (Mtn)</th>
-            <th> Desconto (%)</th>
-            <th> Subtotal (Mtn)</th>
-            <th><a class="btn btn-primary addRow" href="#"><i class="icon_plus_alt2"></i></a></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>
-             <select class="form-control descricao" name="produto_id[]">
-              <option value="0" selected="true" disabled="true">Selecione Produto</option>
-              @foreach($produtos as $produto)
-              <option value="{!!$produto->id!!}">{!!$produto->descricao!!}</option>
-              @endforeach
-            </select>
-          </td>
-          <td><input type="text" name="quantidade[]" class="form-control quantidade"></td>
-          <td><input type="text" name="quantidade_dispo[]" class="form-control quantidade_dispo" readonly><input type="hidden" name="qtd_dispo_original[]" class="form-control qtd_dispo_original"></td>
-          <td><input type="text" name="preco_venda[]" class="form-control preco_venda" readonly></td>
-          <td><input type="text" name="valor[]" class="form-control valor" value="0" readonly></td>
-          <td><input type="text" name="desconto[]" class="form-control desconto" value="0"></td>
-          <td><input type="text" name="subtotal[]" class="form-control subtotal" readonly></td>
-          <td><a class="btn btn-danger remove" href="#"><i class="icon_close_alt2"></i></a></td>
+  <div class="panel-body">
+    <table class="table table-striped table-advance table-hover">
+      <thead>
+        <tr>
+          <th> Nome do Produto</th>
+          <th> Qtd/Unidades</th>
+          <th> Qtd-Restante</th>
+          <th> Preço (Mtn)</th>
+          <th> Valor (Mtn)</th>
+          <th> Desconto (%)</th>
+          <th> Subtotal (Mtn)</th>
+          <th><a class="btn btn-primary addRow" href="#"><i class="icon_plus_alt2"></i></a></th>
         </tr>
-
-      </tbody>
-      <tfoot>
-       <tr>
-        <td style="border:none"></td>
-        <td style="border:none"></td>
-        <td style="border:none"></td>
-        <td></td>
-        <td></td>
-        <td><b>Subtotal</b></td>
-        <td><b><div class="valor_total" style="border:none"> </div></b></td>
-        <td></td>
-      </tr><tr>
-        <td style="border:none"></td>
-        <td style="border:none"></td>
-        <td style="border:none"></td>
-        <td></td>
-        <td></td>
-        <td><b>IVA(17%)</b></td>
-        <td><b><div class="iva" style="border:none"> </div></b></td>
-        <td></td>
-      </tr><tr>
-        <td style="border:none"></td>
-        <td style="border:none"></td>
-        <td style="border:none"></td>
-        <td></td>
-        <td></td>
-        <td><b>Total</b></td>
-        <td><b><div class="valor_total_iva_visual" style="border:none"> </div></b></td>
-        <td></td>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+           <select class="form-control descricao" name="produto_id[]">
+            <option value="0" selected="true" disabled="true">Selecione Produto</option>
+            @foreach($produtos as $produto)
+            <option value="{!!$produto->id!!}">{!!$produto->descricao!!}</option>
+            @endforeach
+          </select>
+        </td>
+        <td><input type="text" name="quantidade[]" class="form-control quantidade"></td>
+        <td><input type="text" name="quantidade_dispo[]" class="form-control quantidade_dispo" readonly><input type="hidden" name="qtd_dispo_original[]" class="form-control qtd_dispo_original"></td>
+        <td><input type="text" name="preco_venda[]" class="form-control preco_venda" readonly></td>
+        <td><input type="text" name="valor[]" class="form-control valor" value="0" readonly></td>
+        <td><input type="text" name="desconto[]" class="form-control desconto" value="0"></td>
+        <td><input type="text" name="subtotal[]" class="form-control subtotal" readonly></td>
+        <td><a class="btn btn-danger remove" href="#"><i class="icon_close_alt2"></i></a></td>
       </tr>
-    </tfoot>
-  </table>
+
+    </tbody>
+    <tfoot>
+     <tr>
+      <td style="border:none"></td>
+      <td style="border:none"></td>
+      <td style="border:none"></td>
+      <td></td>
+      <td></td>
+      <td><b>Subtotal</b></td>
+      <td><b><div class="valor_total" style="border:none"> </div></b></td>
+      <td></td>
+    </tr><tr>
+      <td style="border:none"></td>
+      <td style="border:none"></td>
+      <td style="border:none"></td>
+      <td></td>
+      <td></td>
+      <td><b>IVA(17%)</b></td>
+      <td><b><div class="iva" style="border:none"> </div></b></td>
+      <td></td>
+    </tr><tr>
+      <td colspan="2" style="border:none">
+        <div class="checkbox">
+          <label>
+            <h5><b> <input name="checkbox_motivo_imposto" id="checkbox_motivo_imposto" type="checkbox" onclick="javascript:motivoDaNaoAPlicacaoDoImposto();"> Motivo Justificativo da não aplicação de imposto</b></h5>
+          </label>
+        </div>
+      </td>
+      <td style="border:none"></td>
+      <td></td>
+      <td></td>
+      <td><b>Total</b></td>
+      <td><b><div class="valor_total_iva_visual" style="border:none"> </div></b></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td style="border:none" colspan="7">
+        <div id="mostra_texto">
+          <textarea class="form-control" rows="3" cols="7" name="texto_motivo_imposto" id="texto_motivo_imposto"></textarea>
+        </div>
+      </td>
+    </tr>
+  </tfoot>
+</table>
 </div>
 <div class="panel-footer">
   <div class="row">
@@ -229,11 +241,11 @@
                     <div class="row">
                       <div class="col-md-4">
                         <div class="radio-inline">
-                            <input type="radio" name="activo" value="1" id="activo"> <label for="activo">Activo</label>
+                          <input type="radio" name="activo" value="1" id="activo"> <label for="activo">Activo</label>
                         </div>
-                         <div class="radio-inline">
-                            <input type="radio" name="activo" value="0" id="inactivo"> <label for="inactivo">Inactivo</label>
-                         </div>
+                        <div class="radio-inline">
+                          <input type="radio" name="activo" value="0" id="inactivo"> <label for="inactivo">Inactivo</label>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -290,6 +302,12 @@
   @section('script')
   <script text="text/javascript">
 
+    $(document).ready(function() {
+      document.getElementById('mostra_texto').style.display = 'none';
+      $('#texto_motivo_imposto').val("");
+
+  } );
+
     $('.submit_cliente').on('click',function(){
       $(".wait").css("display", "block");
     });
@@ -337,26 +355,26 @@
      $('#valor_pago').val(Number.parseFloat(0).toFixed(2));
    }
 
-    $('#confirmar_codigo_concurso, #codigo_concurso').keyup(function(){
-      var codigo_concurso = $('#codigo_concurso').val();
-      if( $('#confirmar_codigo_concurso').val() === codigo_concurso){
-        document.getElementById('codigo_concurso').style.borderColor ='green';
-        document.getElementById('confirmar_codigo_concurso').style.borderColor ='green';
-      }else{
-        document.getElementById('codigo_concurso').style.borderColor ='rgba(81, 203, 238, 1)';
-        document.getElementById('confirmar_codigo_concurso').style.borderColor ='red';
-      }
-    });
+   $('#confirmar_codigo_concurso, #codigo_concurso').keyup(function(){
+    var codigo_concurso = $('#codigo_concurso').val();
+    if( $('#confirmar_codigo_concurso').val() === codigo_concurso){
+      document.getElementById('codigo_concurso').style.borderColor ='green';
+      document.getElementById('confirmar_codigo_concurso').style.borderColor ='green';
+    }else{
+      document.getElementById('codigo_concurso').style.borderColor ='rgba(81, 203, 238, 1)';
+      document.getElementById('confirmar_codigo_concurso').style.borderColor ='red';
+    }
+  });
 
 
-    $(document).ready(function(){
-      $(document).ajaxStart(function(){
-        $(".wait").css("display", "block");
-      });
-      $(document).ajaxComplete(function(){
-        $(".wait").css("display", "none");
-      });
+   $(document).ready(function(){
+    $(document).ajaxStart(function(){
+      $(".wait").css("display", "block");
     });
+    $(document).ajaxComplete(function(){
+      $(".wait").css("display", "none");
+    });
+  });
 
 
     //Pagamento da Concurso
@@ -400,8 +418,8 @@
       var remanescente = valor_total_iva - valor_pago;
 
       if($('#valor_pago').val() === "" || $('#valor_pago').val() === null){
-          $('#remanescente').val(Number.parseFloat(valor_total_iva).formatMoney());
-        }
+        $('#remanescente').val(Number.parseFloat(valor_total_iva).formatMoney());
+      }
 
       if(remanescente >= 0){
        $('#remanescente').val(remanescente.formatMoney());
@@ -557,6 +575,18 @@
       $('.valor_total_iva_visual').html(total_iva.formatMoney()+ " Mtn");
       $('#valor_total_iva').val(total_iva); //cuidado, input importante para calculos
     };
+
+    function motivoDaNaoAPlicacaoDoImposto() {
+    if (document.getElementById('checkbox_motivo_imposto').checked) {
+      document.getElementById('mostra_texto').style.display = 'block';
+      $('#texto_motivo_imposto').val("");
+      
+    }
+    else {
+      document.getElementById('mostra_texto').style.display = 'none';
+      $('#texto_motivo_imposto').val("");
+    }
+  };
 
     //---começam aqui as funçoes que filtram somente números
     //---find element by row--

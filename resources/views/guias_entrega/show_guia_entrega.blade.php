@@ -88,11 +88,13 @@
 						<div class="col-md-6 border">
 
 
-							<div class="panel panel-default">
-								<div class="panel-body">
-									Motivo Justificativo da não aplicação de imposto:
+							<!-- <div class="panel panel-default">
+								<div class="panel-heading">
+									Motivo justificativo da não aplicação de imposto
 								</div>
-							</div>
+								<div class="panel-body">
+								</div>
+							</div> -->
 
 						</div>
 
@@ -101,7 +103,7 @@
 								<tr>
 									<td>Valor Total:</td>
 									<td style="width: 10px"></td>
-									<td><b>{{number_format($guia_entrega->valor_total, 2, '.', ',')}}</b></td>
+									<td><b>{{number_format($guia_entrega->valor_total, 2, '.', ',')}} Mtn</b></td>
 								</tr>
 							</table>
 

@@ -13,7 +13,7 @@
 
 <div class="row">
 	<div class="col-lg-12">
-    
+
     <section class="panel panel-default">
 
       {{ Form::open(['route'=>'venda.store', 'method'=>'POST', 'id'=>'form_venda']) }}
@@ -157,14 +157,26 @@
       <td><b><div class="iva" style="border:none"> </div></b></td>
       <td></td>
     </tr><tr>
-      <td style="border:none"></td>
-      <td style="border:none"></td>
+      <td colspan="2" style="border:none">
+        <div class="checkbox">
+          <label>
+            <h5><b> <input name="checkbox_motivo_imposto" id="checkbox_motivo_imposto" type="checkbox" onclick="javascript:motivoDaNaoAPlicacaoDoImposto();"> Motivo Justificativo da não aplicação de imposto</b></h5>
+          </label>
+        </div>
+      </td>
       <td style="border:none"></td>
       <td></td>
       <td></td>
       <td><b>Total</b></td>
       <td><b><div class="valor_total_iva_visual" style="border:none"> </div></b></td>
       <td></td>
+    </tr>
+    <tr>
+      <td style="border:none" colspan="7">
+        <div id="mostra_texto">
+          <textarea class="form-control" rows="3" cols="7" name="texto_motivo_imposto" id="texto_motivo_imposto"></textarea>
+        </div>
+      </td>
     </tr>
   </tfoot>
 </table>
@@ -217,121 +229,127 @@
                         <div class="radio-inline">
                           <input type="radio" name="activo" value="0" id="inactivo"> <label for="inactivo">Inactivo</label>
                         </div>
-											</div>
-										</div>
-									</div>
-									<hr style="border: 1px solid #ccc;">
-									<div class="form-horizontal">
-										<div class="row" style="margin-bottom: 15px;">
-											<div class="col-md-4">
-												{{ Form::label('nome', 'Nome', ['class'=>'control-label']) }}
-												{{ Form::text('nome', null, ['placeholder'=>'Nome','class'=>'form-control', 'id'=>'mdl_cli_nome']) }}
-											</div>
-											<div class="col-md-4">
-												{{ Form::label('endereco', 'Endereço', ['class'=>'control-label']) }}
-												{{ Form::text('endereco', null, ['placeholder'=>'Endereço','class'=>'form-control', 'id'=>'mdl_cli_endereco']) }}
-											</div>
-											<div class="col-md-4">
-												{{ Form::label('telefone', 'Telefone', ['class'=>'control-label']) }}
-												{{ Form::text('telefone', null, ['placeholder'=>'telefone','class'=>'form-control', 'id'=>'mdl_cli_telefone']) }}
-											</div>
-										</div>
-									</div>
-									<div class="form-horizontal">
-										<div class="row" style="margin-bottom: 15px;">
-											<div class="col-md-4">
-												{{ Form::label('email', 'Email', ['class'=>'control-label']) }}
-												{{ Form::text('email', null, ['placeholder'=>'Email','class'=>'form-control', 'id'=>'mdl_cli_email']) }}
-											</div>
-											<div class="col-md-4">
-												{{ Form::label('nuit', 'NUIT', ['class'=>'control-label']) }}
-												{{ Form::text('nuit', null, ['placeholder'=>'NUIT','class'=>'form-control', 'id'=>'mdl_cli_nuit']) }}
-											</div>
-										</div>
-									</div>
+                      </div>
+                    </div>
+                  </div>
+                  <hr style="border: 1px solid #ccc;">
+                  <div class="form-horizontal">
+                    <div class="row" style="margin-bottom: 15px;">
+                     <div class="col-md-4">
+                      {{ Form::label('nome', 'Nome', ['class'=>'control-label']) }}
+                      {{ Form::text('nome', null, ['placeholder'=>'Nome','class'=>'form-control', 'id'=>'mdl_cli_nome']) }}
+                    </div>
+                    <div class="col-md-4">
+                      {{ Form::label('endereco', 'Endereço', ['class'=>'control-label']) }}
+                      {{ Form::text('endereco', null, ['placeholder'=>'Endereço','class'=>'form-control', 'id'=>'mdl_cli_endereco']) }}
+                    </div>
+                    <div class="col-md-4">
+                      {{ Form::label('telefone', 'Telefone', ['class'=>'control-label']) }}
+                      {{ Form::text('telefone', null, ['placeholder'=>'telefone','class'=>'form-control', 'id'=>'mdl_cli_telefone']) }}
+                    </div>
+                  </div>
+                </div>
+                <div class="form-horizontal">
+                  <div class="row" style="margin-bottom: 15px;">
+                   <div class="col-md-4">
+                    {{ Form::label('email', 'Email', ['class'=>'control-label']) }}
+                    {{ Form::text('email', null, ['placeholder'=>'Email','class'=>'form-control', 'id'=>'mdl_cli_email']) }}
+                  </div>
+                  <div class="col-md-4">
+                    {{ Form::label('nuit', 'NUIT', ['class'=>'control-label']) }}
+                    {{ Form::text('nuit', null, ['placeholder'=>'NUIT','class'=>'form-control', 'id'=>'mdl_cli_nuit']) }}
+                  </div>
+                </div>
+              </div>
 
 
-								</div>
-							</div>
-						</div>
-						<div class="modal-footer">
-							{{Form::button('Fechar', ['class'=>'btn btn-default', 'data-dismiss'=>'modal'])}}
-							{{Form::submit('Salvar', ['class'=>'btn btn-primary submit_cliente', 'name'=>'submitFormCliente', 'id'=>'submitFormCliente'])}}
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+         {{Form::button('Fechar', ['class'=>'btn btn-default', 'data-dismiss'=>'modal'])}}
+         {{Form::submit('Salvar', ['class'=>'btn btn-primary submit_cliente', 'name'=>'submitFormCliente', 'id'=>'submitFormCliente'])}}
 
-							{{Form::close()}}
-						</div>
-					</div>
-				</div>
+         {{Form::close()}}
+       </div>
+     </div>
+   </div>
 
-			</div><!-- /.modal-content -->
-		</div><!-- /.modal-dialog -->
-	</div><!-- /.modal -->
+ </div><!-- /.modal-content -->
+</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 
-	<!-- FIM MODAL CLIENTE -->
+<!-- FIM MODAL CLIENTE -->
 
-	@endsection
-	@section('script')
-	<script text="text/javascript">
+@endsection
+@section('script')
+<script text="text/javascript">
 
-    $('.submit_cliente').on('click',function(){
+  $(document).ready(function() {
+    document.getElementById('mostra_texto').style.display = 'none';
+    $('#texto_motivo_imposto').val("");
+
+  });
+
+  $('.submit_cliente').on('click',function(){
+    $(".wait").css("display", "block");
+  });
+
+  $(document).ready(function(){
+    $(document).ajaxStart(function(){
       $(".wait").css("display", "block");
     });
+    $(document).ajaxComplete(function(){
+      $(".wait").css("display", "none");
+    });
+  });
 
-    $(document).ready(function(){
-      $(document).ajaxStart(function(){
-        $(".wait").css("display", "block");
-      });
-      $(document).ajaxComplete(function(){
+  $(document).ready(function(){
+    $('#salvar_venda').on('click',function(){
+      $(".wait").css("display", "block");
+
+
+      if($('#forma_pagamento_id').val() === "" || $('#forma_pagamento_id').val() === null){
+        alert('Selecione a Forma de Pagamento');
         $(".wait").css("display", "none");
-      });
+        $('#forma_pagamento_id').focus();
+        return false;
+      }
+
+      if($('#nr_documento_forma_pagamento').val() === "" || $('#nr_documento_forma_pagamento').val() === null){
+        alert('Informe o Número do Documento para o Pagamento da Factura, ou o valor padrao (Não Aplicavel)');
+        $(".wait").css("display", "none");
+        $('#nr_documento_forma_pagamento').focus();
+        return false;
+      }
     });
 
-    $(document).ready(function(){
-      $('#salvar_venda').on('click',function(){
-        $(".wait").css("display", "block");
+    remanescenteRed();
+    formataValoresMonetariosAoCarregarAPagina();
+  });
 
-
-        if($('#forma_pagamento_id').val() === "" || $('#forma_pagamento_id').val() === null){
-          alert('Selecione a Forma de Pagamento');
-          $(".wait").css("display", "none");
-          $('#forma_pagamento_id').focus();
-          return false;
-        }
-
-        if($('#nr_documento_forma_pagamento').val() === "" || $('#nr_documento_forma_pagamento').val() === null){
-          alert('Informe o Número do Documento para o Pagamento da Factura, ou o valor padrao (Não Aplicavel)');
-          $(".wait").css("display", "none");
-          $('#nr_documento_forma_pagamento').focus();
-          return false;
-        }
-      });
-
-      remanescenteRed();
-      formataValoresMonetariosAoCarregarAPagina();
-    });
-
-    function formataValoresMonetariosAoCarregarAPagina(){
+  function formataValoresMonetariosAoCarregarAPagina(){
      $('#remanescente').val(Number.parseFloat(0).formatMoney()); // O remanescente eh zero porq ainda nao ha valores
      $('#valor_pago').val(Number.parseFloat(0).toFixed(2));
    }
 
-    $('#forma_pagamento_id').change(function(){
-      var frm_pagamento = document.getElementById('forma_pagamento_id').options[document.getElementById('forma_pagamento_id').selectedIndex].text;
-      var resul_frm_pagamento = frm_pagamento.toLowerCase();
+   $('#forma_pagamento_id').change(function(){
+    var frm_pagamento = document.getElementById('forma_pagamento_id').options[document.getElementById('forma_pagamento_id').selectedIndex].text;
+    var resul_frm_pagamento = frm_pagamento.toLowerCase();
 
-      if(resul_frm_pagamento == "dinheiro"){
-        $('#nr_documento_forma_pagamento').val('Nao Aplicavel');
-      }else{
-        $('#nr_documento_forma_pagamento').focus();
-        $('#nr_documento_forma_pagamento').val('');
-      }
-      
-    });
-
-    function remanescenteRed(){
-      document.getElementById('remanescente').style.backgroundColor = "red";
-      document.getElementById('remanescente').style.color = "white";
+    if(resul_frm_pagamento == "dinheiro"){
+      $('#nr_documento_forma_pagamento').val('Nao Aplicavel');
+    }else{
+      $('#nr_documento_forma_pagamento').focus();
+      $('#nr_documento_forma_pagamento').val('');
     }
+
+  });
+
+   function remanescenteRed(){
+    document.getElementById('remanescente').style.backgroundColor = "red";
+    document.getElementById('remanescente').style.color = "white";
+  }
 
     //função que adiciona a linha
     function addRow()
@@ -388,14 +406,14 @@
         quantidade = Number.parseInt(tr.find('.quantidade').val());
       }
 
-    	var id = tr.find('.descricao').val();
-    	var dataId={'id':id};
-    	$.ajax({
-    		type  : 'GET',
-    		url   : '{!!URL::route('findPrice')!!}',
-    		dataType: 'json',
-    		data  : dataId,
-    		success:function(data){
+      var id = tr.find('.descricao').val();
+      var dataId={'id':id};
+      $.ajax({
+        type  : 'GET',
+        url   : '{!!URL::route('findPrice')!!}',
+        dataType: 'json',
+        data  : dataId,
+        success:function(data){
           var quantidade_disponivel = ((Number.parseInt(data.quantidade_dispo)) - (Number.parseInt(data.quantidade_min)));
 
           tr.find('.preco_venda').val((Number.parseFloat(data.preco_venda)).formatMoney());
@@ -484,6 +502,18 @@
       $('.iva').html(iva.formatMoney()+ " Mtn");
       $('.valor_total_iva_visual').html(total_iva.formatMoney()+ " Mtn");
       $('#valor_total_iva').val(total_iva); //cuidado, input importante para calculos
+    };
+
+    function motivoDaNaoAPlicacaoDoImposto() {
+      if (document.getElementById('checkbox_motivo_imposto').checked) {
+        document.getElementById('mostra_texto').style.display = 'block';
+        $('#texto_motivo_imposto').val("");
+        
+      }
+      else {
+        document.getElementById('mostra_texto').style.display = 'none';
+        $('#texto_motivo_imposto').val("");
+      }
     };
 
 

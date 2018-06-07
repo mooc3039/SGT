@@ -87,8 +87,11 @@
 
 
 							<div class="panel panel-default">
+								<div class="panel-heading">
+									Motivo justificativo da não aplicação de imposto
+								</div>
 								<div class="panel-body">
-									Motivo Justificativo da não aplicação de imposto:
+									{{$venda->motivo_justificativo_nao_iva}}
 								</div>
 							</div>
 

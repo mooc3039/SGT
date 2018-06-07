@@ -113,19 +113,25 @@
                 <td></td>
               </tr>
               <tr>
-                <td style="border:none">
-                  <div class="motivo_imposto">
+                <td colspan="2" style="border:none">
+                  <div class="checkbox">
                     <label>
-                      <input type="motivo_imposto"> Motivo Justificativo da não aplicação de imposto
+                      <h5><b> <input name="checkbox_motivo_imposto" id="checkbox_motivo_imposto" type="checkbox" onclick="javascript:motivoDaNaoAPlicacaoDoImposto();"> Motivo Justificativo da não aplicação de imposto</b></h5>
                     </label>
                   </div>
                 </td>
-                <td style="border:none"></td>
                 <td style="border:none"></td>
                 <td></td>
                 <td><b>Total</b></td>
                 <td><b><div class="valor_total_iva_visual" style="border:none"> </div></b></td>
                 <td></td>
+              </tr>
+              <tr>
+                <td style="border:none" colspan="7">
+                  <div id="mostra_texto">
+                    <textarea class="form-control" rows="3" cols="7" name="texto_motivo_imposto" id="texto_motivo_imposto"></textarea>
+                  </div>
+                </td>
               </tr>
             </tfoot>
           </table>
@@ -271,6 +277,12 @@
   @section('script')
   <script text="text/javascript">
 
+    $(document).ready(function() {
+      document.getElementById('mostra_texto').style.display = 'none';
+      $('#texto_motivo_imposto').val("");
+
+  } );
+
     $('.submit_cliente').on('click',function(){
       $(".wait").css("display", "block");
     });
@@ -402,6 +414,18 @@
       $('.valor_total_iva_visual').html(total_iva.formatMoney()+ " Mtn");
       
     };
+
+    function motivoDaNaoAPlicacaoDoImposto() {
+    if (document.getElementById('checkbox_motivo_imposto').checked) {
+      document.getElementById('mostra_texto').style.display = 'block';
+      $('#texto_motivo_imposto').val("");
+      
+    }
+    else {
+      document.getElementById('mostra_texto').style.display = 'none';
+      $('#texto_motivo_imposto').val("");
+    }
+  };
 
 
     // Extend the default Number object with a formatMoney() method:

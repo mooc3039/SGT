@@ -145,6 +145,7 @@ class ConcursoController extends Controller
 
           $concurso->cliente_id = $request['cliente_id'];
           $concurso->user_id = $request['user_id'];
+          $concurso->motivo_justificativo_nao_iva = $request['texto_motivo_imposto'];
           $concurso->valor_total = 0; 
           $concurso->valor_iva = 0; 
           $concurso->iva = 0; 
@@ -274,6 +275,30 @@ class ConcursoController extends Controller
     {
         //
     }
+
+    public function motivoNaoAplicacaoImposto(Request $request){
+    // dd($request->all());
+    $concurso_id = $request->concurso_id;
+
+    $dataForm = [
+      'motivo_justificativo_nao_iva' => $request->motivo_justificativo_nao_iva,
+    ];
+
+    $venda_motivo_justificativo = $this->concurso->findOrFail($concurso_id);
+
+    if($concurso_motivo_justificativo->update($dataForm)){
+
+      $sucess = 'Motivo justificativo da não aplicação de imposto actualizado com sucesso!';
+      return redirect()->back()->with('success', $sucess);
+
+
+    }else{
+      $error = 'Erro ao actualizar o Motivo justificativo da não aplicação de imposto!';
+      return redirect()->back()->with('error', $error);
+
+
+    }
+  }
 
     /**
      * Remove the specified resource from storage.
