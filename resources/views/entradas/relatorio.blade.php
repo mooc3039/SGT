@@ -123,23 +123,18 @@ Usuário do Sistema</span></em></strong><br />
 <table class="total wena" style="height: 84px; width: 748px;">
 <tbody>
 <tr style="height: 18px;">
-<td class="linha" style="width: 409px; height: 18px; text-align: center;">Motivo justicado da n&atilde;o aplica&ccedil;&atilde;o do imposto</td>
+<td class="" style="width: 409px; height: 18px; text-align: center;">&nbsp;</td>
 <td class="linha" style="width: 118px; height: 18px;text-align: right;"><strong>&nbsp;TOTAL</strong></td>
 <td class="linha" style="width: 148px; text-align: center;">{{number_format($entrada->valor_total,2)}}Mtn</td>
 </tr>
 <tr style="height: 18px;">
 
-<td class="linha" style="width: ; height: 18px;">&nbsp;</td>
+<td class="" style="width: ; height: 18px;">&nbsp;</td>
 <td class="" style="width: 118px; height: 18px;text-align: right;">
 <strong>&nbsp;</strong></td>
 <td class="" style="width: 148px; text-align: center;"></td>
 </tr>
-<tr style="height: 18px;">
 
-<td class="linha" style="width: ; height: 18px;">&nbsp;</td>
-<td class="" style="width:; height: 18px;text-align: right;"><strong>&nbsp;</strong></td>
-<td class="" style="width: 148px; text-align: center;"></td>
-</tr>
 <tr style="height: 18px;">
 
 <td  style="width: ; height: 18px;">&nbsp;</td>
