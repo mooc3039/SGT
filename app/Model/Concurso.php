@@ -12,12 +12,14 @@ class Concurso extends Model
     	'user_id',
     	'valor_total',
         'valor_iva',
+        'iva',
         'pago',
         'valor_pago',
         'remanescente',
         'forma_pagamento_id',
         'nr_documento_forma_pagamento',
         'codigo_concurso',
+        'motivo_justificativo_nao_iva',
     ];
 
     public function cliente(){

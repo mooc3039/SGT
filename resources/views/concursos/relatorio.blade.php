@@ -115,8 +115,8 @@ Dados do Cliente</span></em></strong><br />
 <tr>
 <td style="text-align: center;" class="linha">{{$iten_concurso->quantidade}}</td>
 <td style="width: 300px; text-align: center;" class="linha">{{$iten_concurso->produto->descricao}}</td>
-<td style="width: 129px; text-align: center;" class="linha">{{$iten_concurso->preco_venda}}</td>
-<td style="width: 161px; text-align: center;" class="linha">{{$iten_concurso->valor}} </td>
+<td style="width: 129px; text-align: center;" class="linha">{{number_format($iten_concurso->preco_venda,2)}}</td>
+<td style="width: 161px; text-align: center;" class="linha">{{number_format($iten_concurso->valor,2)}} </td>
 </tr>
 @endforeach
 </tbody>
@@ -127,19 +127,19 @@ Dados do Cliente</span></em></strong><br />
 <td class="linha" style="width: 409px; height: 18px; text-align: center;">Motivo justicado da n&atilde;o aplica&ccedil;&atilde;o do imposto</td>
 <td class="linha" style="width: 118px; height: 18px;text-align: right;">
 <strong>&nbsp;SUB-TOTAL</strong></td>
-<td class="linha" style="width: 148px; text-align: center;">{{$concurso->valor_total}}Mtn</td>
+<td class="linha" style="width: 148px; text-align: center;">{{number_format($concurso->valor_total,2)}}Mtn</td>
 </tr>
 <tr style="height: 17px;">
 
-<td class="linha" style="width: ; height: 18px;">&nbsp;</td>
+<td class="linha" style="width: ; height: 18px;">{{$concurso->motivo_justificativo_nao_iva}}</td>
 <td class="linha" style="width:; height: 18px;text-align: right;"><strong>&nbsp;IVA 17%</strong></td>
-<td class="linha" style="width: 148px; text-align: center;">{{(($concurso->valor_total)*17)/100}}</td>
+<td class="linha" style="width: 148px; text-align: center;">{{number_format((($concurso->valor_total)*17)/100, 2)}}</td>
 </tr>
 <tr style="height: 18px;">
 
 <td class="linha" style="width: ; height: 18px;">&nbsp;</td>
 <td class="linha" style="width: ; height: 18px;text-align: right;"><strong>&nbsp;TOTAL</strong></td>
-<td class="linha" style="width: 148px; text-align: center;">{{$concurso->valor_iva}}Mtn</td>
+<td class="linha" style="width: 148px; text-align: center;">{{number_format($concurso->valor_iva,2)}}Mtn</td>
 </tr>
 <tr style="height: 18px;">
 

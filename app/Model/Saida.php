@@ -17,6 +17,7 @@ class Saida extends Model
     	'cliente_id',
     	'user_id',
         'valor_total',
+        'iva',
     	'valor_iva',
         'pago',
         'valor_pago',
@@ -25,6 +26,7 @@ class Saida extends Model
         'nr_documento_forma_pagamento',
         'nr_referencia',
         'concurso_id',
+        'motivo_justificativo_nao_iva',
     ];
     public $timestamps = false;
 

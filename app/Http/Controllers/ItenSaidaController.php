@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Database\QueryException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use App\Http\Requests\ItenSaidaStoreUpdateFormRequest;
 use App\Model\ItenSaida;
@@ -50,16 +51,19 @@ class ItenSaidaController extends Controller
     public function store(ItenSaidaStoreUpdateFormRequest $request)
     {
         //
+        // dd($request->all());
+        $bad_symbols = array(",");
+
         $dataForm = [
             'produto_id' => $request->produto_id,
-            'quantidade' => $request->quantidade,
-            'valor' => $request->valor,
-            'desconto' => $request->desconto,
-            'subtotal' => $request->subtotal,
+            'quantidade' => str_replace($bad_symbols, "", $request->quantidade),
+            'valor' => str_replace($bad_symbols, "", $request->valor),
+            'desconto' => str_replace($bad_symbols, "", $request->desconto),
+            'subtotal' => str_replace($bad_symbols, "", $request->subtotal),
             'saida_id' => $request->saida_id,
-            'quantidade_rest' => $request->quantidade,
-            'valor_rest' => $request->valor,
-            'subtotal_rest' => $request->subtotal,
+            'quantidade_rest' => str_replace($bad_symbols, "", $request->quantidade),
+            'valor_rest' => str_replace($bad_symbols, "", $request->valor),
+            'subtotal_rest' => str_replace($bad_symbols, "", $request->subtotal),
         ];
 
         if($request->quantidade > $request->new_qtd_referencial){
@@ -125,17 +129,18 @@ class ItenSaidaController extends Controller
      */
     public function update(ItenSaidaStoreUpdateFormRequest $request, $id)
     {//dd($request->all());
-        $new_quantidade = $request->quantidade;
-        $old_quantidade = $request->old_quantidade;
+        $bad_symbols = array(",");
+        $new_quantidade = str_replace($bad_symbols, "", $request->quantidade);
+        $old_quantidade = str_replace($bad_symbols, "", $request->old_quantidade);
         $qtd_mais = 0;
         $qtd_menos = 0;
         
         $dataForm = [
             'produto_id' => $request->produto_id,
-            'quantidade' => $request->quantidade,
-            'valor' => $request->valor,
-            'desconto' => $request->desconto,
-            'subtotal' => $request->subtotal,
+            'quantidade' => str_replace($bad_symbols, "", $request->quantidade),
+            'valor' => str_replace($bad_symbols, "", $request->valor),
+            'desconto' => str_replace($bad_symbols, "", $request->desconto),
+            'subtotal' => str_replace($bad_symbols, "", $request->subtotal),
             'saida_id' => $request->saida_id,
             // 'quantidade_rest' => $request->quantidade_rest,
             // 'valor_rest' => $request->valor_rest,
@@ -211,7 +216,7 @@ class ItenSaidaController extends Controller
     public function destroy($id)
     {
         //
-        $iten_saida = $this->iten_saida->find($id);
+        $iten_saida = $this->iten_saida->findOrFail($id);
 
         try {
 

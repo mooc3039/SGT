@@ -31,23 +31,25 @@
             <table class="table table-striped table-advance table-hover" id="tbl_index_vendas" data-order='[[ 0, "desc" ]]'>
               <thead>
                 <tr>
-                  <th class="text-right"><i class="icon_profile"></i>Código da Venda </th>
-                  <th class="text-right"><i class="icon_mobile"></i> Data de Emissão </th>
-                  <th class="text-right"><i class="icon_mail_alt"></i> Cliente </th>
-                  <th class="text-right"><i class="icon_mail_alt"></i> Valor Total </th>
-                  <th class="text-right"><i class="icon_mail_alt"></i> Pagamento </th>
-                  <th class="text-right"><i class="icon_cogs"></i> Operações </th>
+                  <th> Código da Venda </th>
+                  <th> Data de Emissão </th>
+                  <th> Cliente </th>
+                  <th> Valor Total (Mtn)</th>
+                  <th> Valor Total - IVA (Mtn)</th>
+                  <th> Pagamento </th>
+                  <th><i class="icon_cogs"></i> Operações </th>
                 </tr>
               </thead>
               <tbody>
                 @foreach($vendas as $venda)
                 <tr>
-                  <td class="text-right"> {{$venda->id}} </td>
-                  <td class="text-right"> {{date('d-m-Y', strtotime($venda->created_at))}} </td>
-                  <td class="text-right"> {{$venda->cliente->nome}} </td>
-                  <td class="text-right"> {{$venda->valor_iva}} </td>
+                  <td> {{$venda->id}} </td>
+                  <td> {{date('d-m-Y', strtotime($venda->created_at))}} </td>
+                  <td> {{$venda->cliente->nome}} </td>
+                  <td> {{number_format($venda->valor_total, 2, '.', ',')}} </td>
+                  <td> {{number_format($venda->valor_iva, 2, '.', ',')}} </td>
                   {{ Form::open(['route'=>['venda.destroy', $venda->id], 'method'=>'DELETE']) }}
-                  <td class="text-right"> 
+                  <td> 
                     <!-- <button type="button" data-toggle="modal" data-target="#modalPagamentoVenda" data-venda_id={{ $venda->id }} data-valor_total={{ $venda->valor_total }} data-valor_pago={{ $venda->valor_pago }} data-troco={{ $venda->troco }} data-forma_pagamento_id={{ $venda->forma_pagamento_id }} data-nr_documento_forma_pagamento={{ $venda->nr_documento_forma_pagamento }} -->
                       <a href="{{route('createPagamentoVenda', $venda->id)}}"
 

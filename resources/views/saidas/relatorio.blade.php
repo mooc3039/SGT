@@ -132,7 +132,7 @@ Dados do Cliente</span></em></strong><br />
 <td class="linha" style="width: 148px; text-align: center;">{{number_format("$saida->valor_total",2)}}Mtn</td>
 </tr>
 <tr style="height: 18px;">
-<td class="linha" style="width: ; height: 18px;">&nbsp;</td>
+<td class="linha" style="width: ; height: 18px;">{{$saida->motivo_justificativo_nao_iva}}</td>
 <td class="linha" style="width:; height: 18px;text-align: right;"><strong>&nbsp;IVA 17%</strong></td>
 <td class="linha" style="width: 148px; text-align: center;">{{number_format((($saida->valor_total)*17)/100, 2)}}</td>
 </tr>

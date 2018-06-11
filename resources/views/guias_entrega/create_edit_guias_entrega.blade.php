@@ -51,12 +51,12 @@
             <table class="table table-striped table-advance table-hover">
               <thead>
                 <tr>
-                  <th><i class="icon_profile"></i> Nome do Produto</th>
-                  <th><i class="icon_calendar"></i> Qtd</th>
-                  <th><i class="icon_calendar"></i> Qtd/Saida</th>
-                  <th><i class="icon_mail_alt"></i> Preço</th>
-                  <th><i class="icon_pin_alt"></i> Valor</th>
-                  <th><i class="icon_mobile"></i> Desconto</th>
+                  <th> Nome do Produto</th>
+                  <th> Qtd</th>
+                  <th> Qtd/Saida</th>
+                  <th> Preço</th>
+                  <th> Valor</th>
+                  <th> Desconto</th>
                   <th><i class="icon_mobile"></i> Subtotal</th>
                 </tr>
               </thead>
@@ -77,7 +77,7 @@
 
 
                   </td>
-                  <td>{{ Form::text('preco_venda[]', $iten_saida->produto->preco_venda, ['class'=>'form-control', 'id'=>'preco_venda', 'disabled'])}}</td>
+                  <td>{{ Form::text('preco_venda[]', number_format($iten_saida->produto->preco_venda, 2, '.', ','), ['class'=>'form-control', 'id'=>'preco_venda', 'disabled'])}}</td>
                   <td>{{ Form::text('valor[]', null, ['class'=>'form-control', 'id'=>'valor', 'readonly'])}}</td>
                   <td>{{ Form::text('desconto[]', $iten_saida->desconto, ['class'=>'form-control', 'id'=>'desconto', 'readonly'])}}</td>
                   <td>
@@ -89,16 +89,17 @@
                 @endforeach
 
               </tbody>
-              <tfoot>
+             <!--  <tfoot>
                 <tr>
                   <td style="border:none"></td>
                   <td style="border:none"></td>
                   <td style="border:none"></td>
+                  <td style="border:none"></td>
                   <td><b>Total</b></td>
-                  <td><b><div id="valor_visual" style="border:none"> </div></b></td>
+                  <td><b><div class="valor_total_visual" style="border:none"> </div></b></td>
                   <td></td>
                 </tr>
-              </tfoot>
+              </tfoot> -->
             </table>
           </div>
           <div class="panel-footer">
@@ -135,39 +136,44 @@
 
       numberOnly(tr.find('#quantidade')); // Campo aceita apenas numeros
 
-      var quantidade = tr.find('#quantidade').val();
-      var qtd_original_saida = tr.find('#qtd_original_saida').val();
-      var preco_venda = tr.find('#preco_venda').val();
-      var valor = (quantidade*preco_venda);
-      var desconto = tr.find('#desconto').val();
-      var subtotal = (quantidade*preco_venda)-(quantidade*preco_venda*desconto)/100;
-      tr.find('#subtotal').val(subtotal);
-      tr.find('#valor').val(valor);
+      var quantidade = Number.parseInt(0);
+      if( (tr.find('#quantidade').val()) === "" || (tr.find('#quantidade').val()) === null){
+        quantidade = Number.parseInt(0);
+      }else{
+        quantidade = Number.parseInt(tr.find('#quantidade').val());
+      }
 
-      var qtd_org_sai = qtd_original_saida*1;
+      var preco_venda = Number.parseFloat((tr.find('#preco_venda').val()).replace(/[^0-9-.]/g, ''));
+      var valor = Number.parseFloat((quantidade*preco_venda));
+      var desconto = tr.find('#desconto').val();
+      var subtotal = Number.parseFloat((quantidade*preco_venda)-(quantidade*preco_venda*desconto)/100);
+      tr.find('#subtotal').val(subtotal.formatMoney());
+      tr.find('#valor').val(valor.formatMoney());
+
+      var qtd_org_sai = Number.parseInt(tr.find('#qtd_original_saida').val());
       // Se a quantidade especificada for maior que a quantidade disponivel, mostra um alerta impedindo de avancar e reseta a quantidade escolhida para a quantidade disponivel no iten_saida. Neste processo actualiza o valor e o subtotal de acordoo com a quantidade, tanto ao exceder o limite como nao
       if(quantidade > qtd_org_sai){
         alert('A quantidade especificada excedeu o limite');
         tr.find('#quantidade').val(qtd_org_sai);
         //
 
-        var qtd_after_validation_fail = tr.find('#quantidade').val();
+        var qtd_after_validation_fail = Number.parseInt(tr.find('#quantidade').val());
         var qtd_rest_after_validation_fail = qtd_org_sai-qtd_after_validation_fail;
         
 
-        var valor_after_validation_fail = (qtd_org_sai*preco_venda);
-        var subtotal_after_validation_fail = (qtd_org_sai*preco_venda)-(qtd_org_sai*preco_venda*desconto)/100;
+        var valor_after_validation_fail = Number.parseFloat((qtd_org_sai*preco_venda));
+        var subtotal_after_validation_fail = Number.parseFloat( (qtd_org_sai*preco_venda)-(qtd_org_sai*preco_venda*desconto)/100);
 
         tr.find('#quantidade_rest_iten_saida').val(qtd_rest_after_validation_fail);
-        tr.find('#valor').val(valor_after_validation_fail);
-        tr.find('#subtotal').val(subtotal_after_validation_fail);
+        tr.find('#valor').val(valor_after_validation_fail.formatMoney());
+        tr.find('#subtotal').val(subtotal_after_validation_fail.formatMoney());
 
       }else{
         tr.find('#quantidade').val(quantidade);
         var quantidade_rest_iten_saida = (qtd_org_sai-quantidade);
         tr.find('#quantidade_rest_iten_saida').val(quantidade_rest_iten_saida);
       }
-      //total();
+      // total();
 
 
 

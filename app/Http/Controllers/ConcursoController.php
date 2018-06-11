@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-// use Illuminate\Database\QueryException;
+use Illuminate\Database\QueryException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use App\Http\Requests\ConcursoStoreUpdateFormRequest;
@@ -92,6 +92,7 @@ class ConcursoController extends Controller
       // dd($request->all());
       $acronimo_forma_pagamento_naoaplicavel = FormaPagamento::select('id')->where('acronimo', 'naoaplicavel')->first();
       $acronimo_forma_pagamento_naoaplicavel_id = $acronimo_forma_pagamento_naoaplicavel->id;
+      $bad_symbols = array(",");
 
         // dd($request->all());
       if($request->all()){
@@ -107,8 +108,8 @@ class ConcursoController extends Controller
         if($request['pago'] == 0){
 
           $pago = $pago;
-          $valor_pago = $valor_pago;
-          $remanescente = $request['valor_total_iva'];
+          $valor_pago = str_replace($bad_symbols, "", $valor_pago);
+          $remanescente = str_replace($bad_symbols, "", $request['valor_total_iva']);
           $forma_pagamento_id = $acronimo_forma_pagamento_naoaplicavel_id;
           $nr_documento_forma_pagamento = 'Nao Aplicavel';
 
@@ -117,11 +118,11 @@ class ConcursoController extends Controller
           $pago = $request['pago'];
 
           if(!empty($request['valor_pago'])){
-            $valor_pago = $request['valor_pago'];
+            $valor_pago = str_replace($bad_symbols, "", $request['valor_pago']);
           }
 
           if(!empty($request['remanescente'])){
-            $remanescente = $request['remanescente'];
+            $remanescente = str_replace($bad_symbols, "", $request['remanescente']);
           }
 
           if(!empty($request['forma_pagamento_id'])){
@@ -144,8 +145,10 @@ class ConcursoController extends Controller
 
           $concurso->cliente_id = $request['cliente_id'];
           $concurso->user_id = $request['user_id'];
+          $concurso->motivo_justificativo_nao_iva = $request['texto_motivo_imposto'];
           $concurso->valor_total = 0; 
           $concurso->valor_iva = 0; 
+          $concurso->iva = 0; 
 
           $concurso->pago = $pago;
           $concurso->codigo_concurso = $codigo_concurso;
@@ -167,14 +170,14 @@ class ConcursoController extends Controller
                 $iten_concurso =  new ItenConcurso;
 
                 $iten_concurso->produto_id = $request['produto_id'][$i];
-                $iten_concurso->quantidade = $request['quantidade'][$i];
-                $iten_concurso->quantidade_rest = $request['quantidade'][$i];
-                $iten_concurso->preco_venda = $request['preco_venda'][$i];
-                $iten_concurso->valor = $request['valor'][$i];
-                $iten_concurso->valor_rest = $request['valor'][$i];
-                $iten_concurso->desconto = $request['desconto'][$i];
-                $iten_concurso->subtotal = $request['subtotal'][$i];
-                $iten_concurso->subtotal_rest = $request['subtotal'][$i];
+                $iten_concurso->quantidade = str_replace($bad_symbols, "", $request['quantidade'][$i]);
+                $iten_concurso->quantidade_rest = str_replace($bad_symbols, "", $request['quantidade'][$i]);
+                $iten_concurso->preco_venda = str_replace($bad_symbols, "", $request['preco_venda'][$i]);
+                $iten_concurso->valor = str_replace($bad_symbols, "", $request['valor'][$i]);
+                $iten_concurso->valor_rest = str_replace($bad_symbols, "", $request['valor'][$i]);
+                $iten_concurso->desconto = str_replace($bad_symbols, "", $request['desconto'][$i]);
+                $iten_concurso->subtotal = str_replace($bad_symbols, "", $request['subtotal'][$i]);
+                $iten_concurso->subtotal_rest = str_replace($bad_symbols, "", $request['subtotal'][$i]);
                 $iten_concurso->concurso_id = $concurso_id[$i];
                 $iten_concurso->user_id = $usr_id[$i];
 
@@ -228,7 +231,7 @@ class ConcursoController extends Controller
     public function show($id)
     {
         //
-      $concurso = $this->concurso->with('itensConcurso.produto', 'cliente')->find($id);
+      $concurso = $this->concurso->with('itensConcurso.produto', 'cliente')->findOrFail($id);
       $empresa = Empresa::with('enderecos', 'telefones', 'emails', 'contas')->findOrFail(1); 
 
       return view('concursos.show_concurso', compact('concurso', 'empresa'));
@@ -237,7 +240,7 @@ class ConcursoController extends Controller
     public function showRelatorio($id)
     {
       //
-      $concurso = $this->concurso->with('itensConcurso.produto', 'cliente')->find($id); 
+      $concurso = $this->concurso->with('itensConcurso.produto', 'cliente')->findOrFail($id); 
       $empresa = Empresa::with('enderecos', 'telefones', 'emails', 'contas')->findOrFail(1); 
       $pdf = PDF::loadView('concursos.relatorio', compact('concurso','empresa'));
       return $pdf->download('concursos.pdf');
@@ -255,7 +258,7 @@ class ConcursoController extends Controller
         //
       $produtos = DB::table('produtos')->pluck('descricao', 'id')->all();
       $formas_pagamento = DB::table('forma_pagamentos')->pluck('descricao', 'id')->all();
-      $concurso = $this->concurso->with('itensConcurso.produto', 'formaPagamento', 'cliente')->find($id); 
+      $concurso = $this->concurso->with('itensConcurso.produto', 'formaPagamento', 'cliente')->findOrFail($id); 
         // Tras a concurso. Tras os Itens da concurso e dentro da relacao Itensconcurso eh possivel pegar a relacao Prodtuo atraves do dot ou ponto. NOTA: a relacao produto nao esta na concurso e sim na itensconcurso, mas eh possivel ter os seus dados partido da concurso como se pode ver.
 
       return view('concursos.itens_concurso.create_edit_itens_concurso', compact('produtos', 'concurso', 'formas_pagamento'));
@@ -272,6 +275,30 @@ class ConcursoController extends Controller
     {
         //
     }
+
+    public function motivoNaoAplicacaoImposto(Request $request){
+    // dd($request->all());
+    $concurso_id = $request->concurso_id;
+
+    $dataForm = [
+      'motivo_justificativo_nao_iva' => $request->motivo_justificativo_nao_iva,
+    ];
+
+    $venda_motivo_justificativo = $this->concurso->findOrFail($concurso_id);
+
+    if($concurso_motivo_justificativo->update($dataForm)){
+
+      $sucess = 'Motivo justificativo da não aplicação de imposto actualizado com sucesso!';
+      return redirect()->back()->with('success', $sucess);
+
+
+    }else{
+      $error = 'Erro ao actualizar o Motivo justificativo da não aplicação de imposto!';
+      return redirect()->back()->with('error', $error);
+
+
+    }
+  }
 
     /**
      * Remove the specified resource from storage.
@@ -504,6 +531,7 @@ public function pagamentoConcurso(PagamentoConcursoStoreUpdateFormRequest $reque
         //dd($request->all());
   $acronimo_forma_pagamento_naoaplicavel = FormaPagamento::select('id')->where('acronimo', 'naoaplicavel')->first();
   $acronimo_forma_pagamento_naoaplicavel_id = $acronimo_forma_pagamento_naoaplicavel->id;
+  $bad_symbols = array(",");
 
   $concurso_id = $request->concurso_id;
 
@@ -516,13 +544,13 @@ public function pagamentoConcurso(PagamentoConcursoStoreUpdateFormRequest $reque
 
 
 
-  $concurso = $this->concurso->find($concurso_id);
+  $concurso = $this->concurso->findOrFail($concurso_id);
 
   if($request['pago'] == 0){
 
     $pago = $pago;
-    $valor_pago = $valor_pago;
-    $remanescente = $request['valor_iva'];
+    $valor_pago = str_replace($bad_symbols, "", $valor_pago);
+    $remanescente = str_replace($bad_symbols, "", $request['valor_iva']);
     $forma_pagamento_id = $forma_pagamento_id;
     $nr_documento_forma_pagamento = $nr_documento_forma_pagamento;
 
@@ -531,11 +559,11 @@ public function pagamentoConcurso(PagamentoConcursoStoreUpdateFormRequest $reque
     $pago = $request['pago'];
 
     if(!empty($request['valor_pago'])){
-      $valor_pago = $request['valor_pago'];
+      $valor_pago = str_replace($bad_symbols, "", $request['valor_pago']);
     }
 
     if(!empty($request['remanescente'])){
-      $remanescente = $request['remanescente'];
+      $remanescente = str_replace($bad_symbols, "", $request['remanescente']);
     }
 
     if(!empty($request['forma_pagamento_id'])){
@@ -564,7 +592,7 @@ public function pagamentoConcurso(PagamentoConcursoStoreUpdateFormRequest $reque
 
           for($i = 0; $i < sizeof($pagamento_concurso_ids); $i++){
 
-            $pagamento_concurso = PagamentoConcurso::find($pagamento_concurso_ids[$i]->id);
+            $pagamento_concurso = PagamentoConcurso::findOrFail($pagamento_concurso_ids[$i]->id);
             $pagamento_concurso->valor_pago = $valor_pago;
             $pagamento_concurso->forma_pagamento_id = $forma_pagamento_id;
             $pagamento_concurso->nr_documento_forma_pagamento = $nr_documento_forma_pagamento;

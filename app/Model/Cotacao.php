@@ -16,7 +16,9 @@ class Cotacao extends Model
     	'user_id',
         'valor_total',
         'valor_iva',
-    	'validade',
+        'iva',
+        'validade',
+    	'motivo_justificativo_nao_iva',
     ];
     public $timestamps = true;
 

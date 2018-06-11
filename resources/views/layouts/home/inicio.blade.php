@@ -5,9 +5,9 @@
 
     <div class="info-box blue-bg">
       <i class="fa fa-sign-in"></i>
-      <div class="count">{{$valor_entrada}}</div>
+      <div class="count">{{number_format($valor_entrada, 2, '.', ',')}} Mtn</div>
       <div class="title">Valor Entradas / Mês</div>
-      <div class="count">{{$valor_entrada_pago}}</div>
+      <div class="count">{{number_format($valor_entrada_pago, 2, '.', ',')}} Mtn</div>
       <div class="title">Valor Pago</div>
     </div>
     <!--/.info-box-->
@@ -16,9 +16,9 @@
    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
     <div class="info-box brown-bg">
       <i class="fa fa-share-square-o"></i>
-      <div class="count">{{$valor_saida}}</div>
+      <div class="count">{{number_format($valor_saida, 2, '.', ',')}} Mtn</div>
       <div class="title">Valor Facturacoes / Mês</div>
-      <div class="count">{{$valor_saida_pago}}</div>
+      <div class="count">{{number_format($valor_saida_pago, 2, '.', ',')}} Mtn</div>
       <div class="title">Valor Pago</div>
     </div>
   </div> 
@@ -26,9 +26,9 @@
   <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
     <div class="info-box green-bg">
       <i class="fa fa-shopping-cart"></i>
-      <div class="count">{{$valor_venda}}</div>
+      <div class="count">{{number_format($valor_venda, 2, '.', ',')}} Mtn</div>
       <div class="title">Valor Vendas / Mês</div>
-      <div class="count">{{$valor_venda_pago}}</div>
+      <div class="count">{{number_format($valor_venda_pago, 2, '.', ',')}} Mtn</div>
       <div class="title">Valor Pago</div>
     </div>
   </div>

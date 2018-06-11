@@ -13,12 +13,14 @@ class Venda extends Model
     	'cliente_id',
     	'user_id',
         'valor_total',
-    	'valor_iva',
+        'valor_iva',
+    	'iva',
         'pago',
         'valor_pago',
         'remanescente',
         'forma_pagamento_id',
     	'nr_documento_forma_pagamento',
+        'motivo_justificativo_nao_iva',
     ];
 
     public function cliente(){

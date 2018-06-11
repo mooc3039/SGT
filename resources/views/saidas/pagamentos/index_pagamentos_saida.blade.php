@@ -130,11 +130,11 @@
 
               <thead>
                 <tr>
-                  <th><i class="icon_profile"></i>Forma de Pagamento</th>
-                  <th><i class="icon_cogs"></i> Documento </th>
-                  <th><i class="icon_cogs"></i> Valor Pago </th>
-                  <th><i class="icon_cogs"></i> Data Pagamento </th>
-                  <th><i class="icon_cogs"></i> Data Actualizacao </th>
+                  <th> Forma de Pagamento</th>
+                  <th> Documento </th>
+                  <th> Valor Pago (Mtn) </th>
+                  <th> Data Pagamento </th>
+                  <th> Data Actualizacao </th>
                 </tr>
               </thead>
 
@@ -150,13 +150,13 @@
                     {{ $pagamento_saida->nr_documento_forma_pagamento}}
                   </td>
                   <td>
-                    {{ $pagamento_saida->valor_pago}}
+                    {{ number_format($pagamento_saida->valor_pago, 2, '.', ',')}}
                   </td>
                   <td>
                     {{ date('d-m-Y', strtotime($pagamento_saida->created_at))}}
                   </td>
                   <td>
-                    {{ $pagamento_saida->updated_at}}
+                    {{ date('d-m-Y H:m:s', strtotime($pagamento_saida->updated_at))}}
                   </td>
                 </tr>
                 @endif
@@ -267,15 +267,15 @@
       }
     });
 
-    var valor_total_visual = ($('#valor_total_iva').val()*1);
-    $('.valor_total_visual').html(valor_total_visual.formatMoney(2,',','.')+ " Mtn");
+    var valor_total_visual = Number.parseFloat($('#valor_total_iva').val());
+    $('.valor_total_visual').html(valor_total_visual.formatMoney()+ " Mtn");
     resetPagamento(); // Faz o reset dos campos "pagamento" ao carregar a pagina para permitir o alertaremanescentePagamento()...correcto
     alertaremanescentePagamento();
     remanescenteRed();
 
     var pago = $('#pago').val();
-    var pago_total_iva_info = $('#pago_total_iva_info').val()*1;
-    var valor_pago_soma = $('#valor_pago_soma').val()*1;
+    var pago_total_iva_info = Number.parseFloat(($('#pago_total_iva_info').val()).replace(/[^0-9-.]/g, ''));
+    var valor_pago_soma = Number.parseFloat(($('#valor_pago_soma').val()).replace(/[^0-9-.]/g, ''));
 
     if(pago==1){
       if(valor_pago_soma >= pago_total_iva_info){
@@ -289,7 +289,7 @@
       $('.info_pagamento').css("color", "red");
       $('.info_pagamento').html('Nao Paga');
     }
-    console.log(valor_pago_soma);
+    // console.log(valor_pago_soma);
   });
 
 
@@ -307,7 +307,7 @@
   };
 
   function resetPagoChecked(){
-    $('#valor_pago').val(0);
+    $('#valor_pago').val(Number.parseFloat(0).toFixed(2));
     $('#forma_pagamento_id').val('');
     $('#nr_documento_forma_pagamento').val('');
   }
@@ -315,8 +315,8 @@
   function resetPagamento(){
      $('#forma_pagamento_id').val(1); // codigo da forma de pagamento (Nao Aplicavel=>DB)
      $('#nr_documento_forma_pagamento').val('Nao Aplicavel');
-     $('#remanescente').val($('#valor_remanescente_ref').val()*1);
-     $('#valor_pago').val(0);
+     $('#remanescente').val(Number.parseFloat($('#valor_remanescente_ref').val()).formatMoney()); // sem necessidade, o tratamento do remanesc.. eh feito no controler com o valor_iva quando o reset eh feto
+     $('#valor_pago').val(Number.parseFloat(0).toFixed(2));
    }
 
    $('#valor_pago').keyup(function(){
@@ -324,20 +324,25 @@
   });
 
    function alertaremanescentePagamento(){
-    var valor_remanescente_ref = ($('#valor_remanescente_ref').val()*1);
-    var valor_pago = $('#valor_pago').val()*1;
-    var remanescente = valor_remanescente_ref - valor_pago;
+    var valor_remanescente_ref = Number.parseFloat(($('#valor_remanescente_ref').val()));
+    var valor_pago = Number.parseFloat(($('#valor_pago').val()).replace(/[^0-9-.]/g, '')); // input editavel
+    var remanescente = Number.parseFloat((valor_remanescente_ref - valor_pago));
+
+    if($('#valor_pago').val() === "" || $('#valor_pago').val() === null){
+          $('#remanescente').val(Number.parseFloat(valor_remanescente_ref).formatMoney());
+          $('.remanescente_visual').html(valor_remanescente_ref.formatMoney()+ " Mtn");
+        }
 
     if(remanescente >= 0){
-     $('#remanescente').val(remanescente);
-     $('.remanescente_visual').html(remanescente.formatMoney(2,',','.')+ " Mtn");
+     $('#remanescente').val(remanescente.formatMoney());
+     $('.remanescente_visual').html(remanescente.formatMoney()+ " Mtn");
    }else{
     if(valor_pago > valor_remanescente_ref){ 
       // ou remanscente < 0, significa q o valor pago eh maior q o remanescente_ref
       alert('O Valor informado e maior do que o valor remanescente(Divida)');
-      $('#valor_pago').val(0);
-      $('#remanescente').val(valor_remanescente_ref);
-      $('.remanescente_visual').html(valor_remanescente_ref.formatMoney(2,',','.')+ " Mtn");
+      $('#valor_pago').val(Number.parseFloat(0).formatMoney());
+      $('#remanescente').val(valor_remanescente_ref.formatMoney());
+      $('.remanescente_visual').html(valor_remanescente_ref.formatMoney()+ " Mtn");
     }
   }
 }
@@ -366,18 +371,30 @@ $('#forma_pagamento_id').change(function(){
 });
 
   // ==== formatando os numeros ====
-  Number.prototype.formatMoney = function(decPlaces, thouSeparator, decSeparator){
-    var n = this,
-    decPlaces = isNaN(decPlaces = Math.abs(decPlaces)) ? 2 : decPlaces,
-    decSeparator = decSeparator == undefined ? ".": decSeparator,
-    thouSeparator = thouSeparator == undefined ? ",": thouSeparator,
-    sign = n < 0 ? "-" : "",
-    i = parseInt(n = Math.abs(+n || 0).toFixed(decPlaces)) + "",
-    j = (j = i.length) > 3 ? j % 3 : 0;
-    return sign + (j ? i.substr(0,j) + thouSeparator : "")
-    + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thouSeparator)
-    + (decPlaces ? decSeparator + Math.abs(n-i).toFixed(decPlaces).slice(2) : "");
-  };
+  // Number.prototype.formatMoney = function(decPlaces, thouSeparator, decSeparator){
+  //   var n = this,
+  //   decPlaces = isNaN(decPlaces = Math.abs(decPlaces)) ? 2 : decPlaces,
+  //   decSeparator = decSeparator == undefined ? ".": decSeparator,
+  //   thouSeparator = thouSeparator == undefined ? ",": thouSeparator,
+  //   sign = n < 0 ? "-" : "",
+  //   i = parseInt(n = Math.abs(+n || 0).toFixed(decPlaces)) + "",
+  //   j = (j = i.length) > 3 ? j % 3 : 0;
+  //   return sign + (j ? i.substr(0,j) + thouSeparator : "")
+  //   + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thouSeparator)
+  //   + (decPlaces ? decSeparator + Math.abs(n-i).toFixed(decPlaces).slice(2) : "");
+  // };
+
+//   Number.prototype.formatMoney = function(places, symbol, thousand, decimal) {
+//   places = !isNaN(places = Math.abs(places)) ? places : 2;
+//   symbol = symbol !== undefined ? symbol : "";
+//   thousand = thousand || ",";
+//   decimal = decimal || ".";
+//   var number = this, 
+//       negative = number < 0 ? "-" : "",
+//       i = parseInt(number = Math.abs(+number || 0).toFixed(places), 10) + "",
+//       j = (j = i.length) > 3 ? j % 3 : 0;
+//   return symbol + negative + (j ? i.substr(0, j) + thousand : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thousand) + (places ? decimal + Math.abs(number - i).toFixed(places).slice(2) : "");
+// };
 
   function number(input){
     $(input).keypress(function (evt){

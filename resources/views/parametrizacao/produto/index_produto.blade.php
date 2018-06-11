@@ -33,13 +33,13 @@
 
           <thead>
             <tr>
-              <th><i class="icon_profile"></i>Referência</th>
-              <th><i class="icon_profile"></i>Descrição</th>
-              <th><i class="icon_mobile"></i> Preço de Venda</th>
-              <th><i class="icon_mail_alt"></i> Preço de Aquisição</th>
-              <th><i class="icon_pin_alt"></i> Quantidade Disponível</th>
-              <th><i class="icon_calendar"></i> Quantidade Minima</th>
-              <th><i class="icon_cogs"></i> Operações</th>
+              <th>Referência</th>
+              <th>Descrição</th>
+              <th>Preço de Venda (Mtn)</th>
+              <th>Preço de Aquisição (Mtn)</th>
+              <th>Quantidade Disponível</th>
+              <th>Quantidade Minima</th>
+              <th style="width: 12%"><i class="icon_cogs"></i> Operações</th>
             </tr>
           </thead>
 
@@ -48,11 +48,11 @@
             <tr>
             <td> {{$produto->referencia}}</td>
               <td> {{$produto->descricao}}</td>
-              <td>{{$produto->preco_venda}}</td>
-              <td>{{$produto->preco_aquisicao}}</td>
+              <td>{{number_format($produto->preco_venda, 2, '.', ',')}}</td>
+              <td>{{number_format($produto->preco_aquisicao, 2, '.', ',')}}</td>
               <td>{{$produto->quantidade_dispo}}</td>
               <td>{{$produto->quantidade_min}}</td>
-              <td>
+              <td style="width: 12%x">
                 <div class="btn-group btn-group-sm">
                   <a class="btn btn-primary" href="#"><i class="icon_plus_alt2"></i></a>
                   <a class="btn btn-success" href="{{route('produtos.edit', $produto->id)}}"><i class="fa fa-pencil"></i></a>

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Database\QueryException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\DB;
 use App\User;
 use App\Role;
@@ -83,7 +85,7 @@ class UsuarioController extends Controller
      */
     public function edit($id)
     {
-        $usuario = User::find($id);
+        $usuario = User::findOrFail($id);
         $papel =Role::all();
       return view('parametrizacao.usuarios.usuario', compact('usuario','papel'));
     }
@@ -99,7 +101,7 @@ class UsuarioController extends Controller
     {
         $dataForm = $request->all();
 
-        $usuario = $this->usuario->find($id);
+        $usuario = $this->usuario->findOrFail($id);
   
         $update = $usuario->update($dataForm);
   
@@ -123,7 +125,7 @@ class UsuarioController extends Controller
      */
     public function destroy($id)
     {
-        $user = User::find($id);
+        $user = User::findOrFail($id);
         $user->delete();
         return redirect('/usuarios')->with('success', 'Usuario eliminado com sucesso!');
     }

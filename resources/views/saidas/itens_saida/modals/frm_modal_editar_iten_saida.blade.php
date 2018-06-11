@@ -31,7 +31,7 @@
 						</div>
 						<div class="col-md-3">
 							<div class="form-group">
-								{{Form::label('preco_venda', 'Preço Unitário', ['class'=>'control-lable'])}}
+								{{Form::label('preco_venda', 'Preço Unitário (Mtn)', ['class'=>'control-lable'])}}
 								{{Form::text('preco_venda', null, ['placeholder' => 'Preço Unitário', 'class' => 'form-control', 'id'=>'preco_venda', 'disabled'])}}
 							</div>
 						</div>
@@ -40,7 +40,7 @@
 					<div class="row">
 						<div class="col-md-3">
 							<div class="form-group">
-								{{Form::label('valor', 'Valor', ['class'=>'control-lable'])}}
+								{{Form::label('valor', 'Valor (Mtn)', ['class'=>'control-lable'])}}
 								{{Form::text('valor', null, ['placeholder' => 'Valor', 'class' => 'form-control', 'id'=>'valor', 'readonly'])}}
 
 								{{ Form::hidden('saida_id', null, ['id'=>'saida_id']) }}
@@ -51,13 +51,13 @@
 						</div>
 						<div class="col-md-3">
 							<div class="form-group">
-								{{Form::label('desconto', 'Desconto', ['class'=>'control-lable'])}}
+								{{Form::label('desconto', 'Desconto (%)', ['class'=>'control-lable'])}}
 								{{Form::text('desconto', null, ['placeholder' => 'Desconto', 'class' => 'form-control', 'id'=>'desconto'])}}
 							</div>
 						</div>
 						<div class="col-md-3">
 							<div class="form-group">
-								{{Form::label('subtotal', 'Subtotal', ['class'=>'control-lable'])}}
+								{{Form::label('subtotal', 'Subtotal (Mtn)', ['class'=>'control-lable'])}}
 								{{Form::text('subtotal', null, ['placeholder' => 'Subtotal', 'class' => 'form-control', 'id'=>'subtotal', 'readonly'])}}
 
 
@@ -73,8 +73,23 @@
 				<div class="modal-footer">
 					<div class="row">
 						<div class="col-md-6 text-left">
-							<h5>Subtotal Geral da Factura: <b><span id="val_temp"></span></b></h5>
-							<h5>Montante Geral da Factura: <b><span class="valor_total_iva"></span></b></h5>
+							<table>
+								<tr>
+									<td><h5>Montante Geral da Cotação </h5></td>
+									<td></td>
+									<td> <h5><b>: <span class="valor_total_sem_iva"></span></b></h5></td>
+								</tr>
+								<tr>
+									<td><h5>IVA(17%) </h5> </td>
+									<td></td>
+									<td><h5><b>: <span class="iva"></span></b></h5> </td>
+								</tr>
+								<tr>
+									<td><h5> Montante Geral da Cotação </h5></td>
+									<td></td>
+									<td><h5><b>: <span class="valor_total_iva"></span></b></h5></td>
+								</tr>
+							</table>
 						</div>
 						<div class="col-md-6 text-right">
 							{{Form::button('Fechar', ['class'=>'btn btn-default', 'data-dismiss'=>'modal'])}}

@@ -24,6 +24,7 @@ class ProdutoStoreUpdateFormRequest extends FormRequest
     public function rules()
     {
         return [
+            'referencia' => 'required',
             'descricao' => 'required',
             'preco_venda' => 'required|numeric ',
             'preco_aquisicao' => 'required | numeric',
@@ -36,6 +37,7 @@ class ProdutoStoreUpdateFormRequest extends FormRequest
 
     public function messages(){
         return [
+            'descricao.required' => 'A Referência é obrigatória!',
             'descricao.required' => 'A Descrição é obrigatória!',
             'preco_venda.required' => 'O Preço de Venda é obrigatório!',
             'preco_venda.numeric' => 'Apenas valores númericos permitidos para o Preço de Venda!',

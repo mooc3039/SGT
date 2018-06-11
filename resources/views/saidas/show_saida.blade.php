@@ -4,24 +4,22 @@
 <!-- <div class="container"> -->
 	<div class="row">
 		<div class="col-md-12">
-			
+
 			<div class="panel panel-default">
 				<div class="panel-heading">
 					<div class="row">
 						<div class="col-md-5 border">
 							<div class="panel panel-default">
-								
+
 								<div class="panel-body">
 									@include('layouts.empresa.dados_empresa')
 								</div>
 							</div>
 
-							
-
 						</div>
 
 						<div class="col-md-4">
-							
+
 							<div class="panel panel-default">
 								<div class="panel-body text-center">
 									<h2> <b> Dados do Cliente </b></h2> <hr>
@@ -59,18 +57,18 @@
 								<tbody>
 
 									<tr>
-										<th><i class="icon_profile"></i>Quantidade</th>
-										<th><i class="icon_mobile"></i> Designação </th>
-										<th><i class="icon_mail_alt"></i> Preço Unitário </th>
-										<th><i class="icon_cogs"></i> Valor Total </th>
+										<th> Quantidade</th>
+										<th> Designação </th>
+										<th> Preço Unitário (Mtn)</th>
+										<th> Valor Total (Mtn)</th>
 									</tr>
 
 									@foreach($saida->itensSaida as $iten_saida)
 									<tr>
 										<td> {{$iten_saida->quantidade}} </td>
 										<td> {{$iten_saida->produto->descricao}} </td>
-										<td> {{$iten_saida->produto->preco_venda}} </td>
-										<td> {{$iten_saida->valor}} </td>
+										<td> {{number_format($iten_saida->produto->preco_venda, 2, '.', ',')}} </td>
+										<td> {{number_format($iten_saida->valor, 2, '.', ',')}} </td>
 
 									</tr>
 									@endforeach
@@ -87,36 +85,39 @@
 
 
 							<div class="panel panel-default">
+								<div class="panel-heading">
+									Motivo Justificativo da não aplicação de imposto
+								</div>
 								<div class="panel-body">
-									Motivo Justificativo da não aplicação de imposto:
+									{{$saida->motivo_justificativo_nao_iva}}
 								</div>
 							</div>
 
 						</div>
 
 						<div class="col-md-6 text-right">
-							<table class="pull-right"> 
+							<table class="pull-right">
 								<tr>
 									<td>Sub-Total:</td>
 									<td style="width: 10px"></td>
-									<td>{{$saida->valor_total}}</td>
+									<td>{{number_format($saida->valor_total, 2, '.', ',')}} Mtn</td>
 								</tr>
 								<tr>
 									<td>IVA(17%):</td>
 									<td></td>
-									<td>{{(($saida->valor_total)*17)/100}}</td>
+									<td>{{number_format($saida->iva, 2, '.', ',')}} Mtn</td>
 								</tr>
 								<tr>
 									<td>Valor Total:</td>
 									<td></td>
-									<td><b>{{$saida->valor_iva}}</b></td>
+									<td><b>{{number_format($saida->valor_iva, 2, '.', ',')}} Mtn</b></td>
 								</tr>
 							</table>
 
 						</div>
 
 					</div>
-					<br><br>
+					<br>
 					<div class="row">
 
 						<div class="col-md-6">
@@ -134,7 +135,7 @@
 
 						<div class="col-md-6">
 
-							
+
 
 						</div>
 
@@ -158,6 +159,3 @@
 	</div>
 	<!-- </div> -->
 	@endsection
-
-
-

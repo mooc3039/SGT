@@ -1,27 +1,25 @@
 @extends('layouts.master')
 @section('content')
 
-<!-- <div class="container"> -->	
+<!-- <div class="container"> -->
 	<div class="row">
-		
+
 		<div class="col-md-12">
 			<div class="panel panel-default">
 				<div class="panel-heading">
 					<div class="row">
 						<div class="col-md-5 border">
 							<div class="panel panel-default">
-								
+
 								<div class="panel-body">
 									@include('layouts.empresa.dados_empresa')
 								</div>
 							</div>
 
-							
-
 						</div>
 
 						<div class="col-md-4">
-							
+
 							<div class="panel panel-default">
 								<div class="panel-body text-center">
 									<h2> <b> Dados do Cliente </b></h2> <hr>
@@ -61,18 +59,18 @@
 								<tbody>
 
 									<tr>
-										<th><i class="icon_profile"></i>Quantidade</th>
-										<th><i class="icon_mobile"></i> Designação </th>
-										<th><i class="icon_mail_alt"></i> Preço Unitário </th>
-										<th><i class="icon_cogs"></i> Valor Total </th>
+										<th>Quantidade</th>
+										<th> Designação </th>
+										<th> Preço Unitário (Mtn)</th>
+										<th> Valor Total (Mtn)</th>
 									</tr>
 
 									@foreach($guia_entrega->itensGuiantrega as $iten_guia_entrega)
 									<tr>
 										<td> {{$iten_guia_entrega->quantidade}} </td>
 										<td> {{$iten_guia_entrega->produto->descricao}} </td>
-										<td> {{$iten_guia_entrega->produto->preco_venda}} </td>
-										<td> {{$iten_guia_entrega->valor}} </td>
+										<td> {{number_format($iten_guia_entrega->produto->preco_venda, 2, '.', ',')}} </td>
+										<td> {{number_format($iten_guia_entrega->valor, 2, '.', ',')}} </td>
 
 									</tr>
 									@endforeach
@@ -88,11 +86,13 @@
 						<div class="col-md-6 border">
 
 
-							<div class="panel panel-default">
-								<div class="panel-body">
-									Motivo Justificativo da não aplicação de imposto:
+							<!-- <div class="panel panel-default">
+								<div class="panel-heading">
+									Motivo justificativo da não aplicação de imposto
 								</div>
-							</div>
+								<div class="panel-body">
+								</div>
+							</div> -->
 
 						</div>
 
@@ -101,7 +101,7 @@
 								<tr>
 									<td>Valor Total:</td>
 									<td style="width: 10px"></td>
-									<td><b>{{$guia_entrega->valor_total}}</b></td>
+									<td><b>{{number_format($guia_entrega->valor_total, 2, '.', ',')}} Mtn</b></td>
 								</tr>
 							</table>
 
@@ -148,7 +148,3 @@
 	</div>
 	<!-- </div> -->
 	@endsection
-
-
-
- 

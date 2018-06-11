@@ -31,7 +31,7 @@
 						</div>
 						<div class="col-md-3">
 							<div class="form-group">
-								{{Form::label('preco_venda', 'Preço Unitário', ['class'=>'control-lable'])}}
+								{{Form::label('preco_venda', 'Preço Unitário (Mtn)', ['class'=>'control-lable'])}}
 								{{Form::text('preco_venda', null, ['placeholder' => 'Preço Unitário', 'class' => 'form-control', 'id'=>'preco_venda', 'disabled'])}}
 							</div>
 						</div>
@@ -40,20 +40,20 @@
 					<div class="row">
 						<div class="col-md-3">
 							<div class="form-group">
-								{{Form::label('valor', 'Valor', ['class'=>'control-lable'])}}
+								{{Form::label('valor', 'Valor (Mtn)', ['class'=>'control-lable'])}}
 								{{Form::text('valor', null, ['placeholder' => 'Valor', 'class' => 'form-control', 'id'=>'valor', 'readonly'])}}
 
 							</div>
 						</div>
 						<div class="col-md-3">
 							<div class="form-group">
-								{{Form::label('desconto', 'Desconto', ['class'=>'control-lable'])}}
+								{{Form::label('desconto', 'Desconto (%)', ['class'=>'control-lable'])}}
 								{{Form::text('desconto', null, ['placeholder' => 'Desconto', 'class' => 'form-control', 'id'=>'desconto', 'readonly'])}}
 							</div>
 						</div>
 						<div class="col-md-3">
 							<div class="form-group">
-								{{Form::label('subtotal', 'Subtotal', ['class'=>'control-lable'])}}
+								{{Form::label('subtotal', 'Subtotal (Mtn)', ['class'=>'control-lable'])}}
 								{{Form::text('subtotal', null, ['placeholder' => 'Subtotal', 'class' => 'form-control', 'id'=>'subtotal', 'readonly'])}}
 							</div>
 						</div>

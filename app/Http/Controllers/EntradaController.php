@@ -85,6 +85,7 @@ class EntradaController extends Controller
         // dd($request->all());
       $acronimo_forma_pagamento_naoaplicavel = FormaPagamento::select('id')->where('acronimo', 'naoaplicavel')->first();
       $acronimo_forma_pagamento_naoaplicavel_id = $acronimo_forma_pagamento_naoaplicavel->id;
+      $bad_symbols = array(",");
         //dd($request->all());
 
       if($request->all()){
@@ -106,8 +107,8 @@ class EntradaController extends Controller
         if($request['pago'] == 0){
 
           $pago = $request['pago'];
-          $valor_pago = 0.00;
-          $remanescente = $request['valor_total'];
+          $valor_pago = str_replace($bad_symbols, "", $valor_pago);
+          $remanescente = str_replace($bad_symbols, "", $request['valor_total']);
           $forma_pagamento_id = $acronimo_forma_pagamento_naoaplicavel_id;
           $nr_documento_forma_pagamento = 'Nao Aplicavel';
 
@@ -116,11 +117,11 @@ class EntradaController extends Controller
           $pago = $request['pago'];
 
           if(!empty($request['valor_pago'])){
-            $valor_pago = $request['valor_pago'];
+            $valor_pago = str_replace($bad_symbols, "", $request['valor_pago']);
           }
 
           if(!empty($request['remanescente'])){
-            $remanescente = $request['remanescente'];
+            $remanescente = str_replace($bad_symbols, "", $request['remanescente']);
           }
 
           if(!empty($request['forma_pagamento_id'])){
@@ -158,10 +159,10 @@ class EntradaController extends Controller
                 $iten_entrada =  new ItenEntrada;
 
                 $iten_entrada->produto_id = $request['produto_id'][$i];
-                $iten_entrada->quantidade = $request['quantidade'][$i];
-                $iten_entrada->valor = $request['valor'][$i];
-                $iten_entrada->desconto = $request['desconto'][$i];
-                $iten_entrada->subtotal = $request['subtotal'][$i];
+                $iten_entrada->quantidade = str_replace($bad_symbols, "", $request['quantidade'][$i]);
+                $iten_entrada->valor = str_replace($bad_symbols, "", $request['valor'][$i]);
+                $iten_entrada->desconto = str_replace($bad_symbols, "", $request['desconto'][$i]);
+                $iten_entrada->subtotal = str_replace($bad_symbols, "", $request['subtotal'][$i]);
                 $iten_entrada->entrada_id = $entrada_id[$i];
 
                 $iten_entrada->save();
@@ -210,7 +211,7 @@ class EntradaController extends Controller
     public function show($id)
     {
         //
-      $entrada = $this->entrada->with('itensEntrada.produto', 'user')->find($id);
+      $entrada = $this->entrada->with('itensEntrada.produto', 'user')->findOrFail($id);
       $empresa = Empresa::with('enderecos', 'telefones', 'emails', 'contas')->findOrFail(1);
 
       return view('entradas.show_entrada', compact('entrada', 'empresa'));
@@ -218,7 +219,7 @@ class EntradaController extends Controller
     public function showRelatorio($id)
     {
         //
-      $entrada = $this->entrada->with('itensEntrada.produto', 'user')->find($id);
+      $entrada = $this->entrada->with('itensEntrada.produto', 'user')->findOrFail($id);
       $empresa = Empresa::with('enderecos', 'telefones', 'emails', 'contas')->findOrFail(1);
       $pdf = PDF::loadView('entradas.relatorio', compact('entrada','empresa'));
       return $pdf->download('entrada.pdf');
@@ -235,7 +236,7 @@ class EntradaController extends Controller
         //
       $produtos = DB::table('produtos')->pluck('descricao', 'id')->all();
       $formas_pagamento = DB::table('forma_pagamentos')->pluck('descricao', 'id')->all();
-      $entrada = $this->entrada->with('itensEntrada.produto', 'formaPagamento', 'fornecedor')->find($id);
+      $entrada = $this->entrada->with('itensEntrada.produto', 'formaPagamento', 'fornecedor')->findOrFail($id);
         // Tras a entrada. Tras os Itens da entrada e dentro da relacao Itensentrada eh possivel pegar a relacao Prodtuo atraves do dot ou ponto. NOTA: a relacao produto nao esta na entrada e sim na itensentrada, mas eh possivel ter os seus dados partido da entrada como se pode ver.
       $empresa = Empresa::with('enderecos', 'telefones', 'emails', 'contas')->findOrFail(1);
 
@@ -296,6 +297,7 @@ class EntradaController extends Controller
 
       $acronimo_forma_pagamento_naoaplicavel = FormaPagamento::select('id')->where('acronimo', 'naoaplicavel')->first();
       $acronimo_forma_pagamento_naoaplicavel_id = $acronimo_forma_pagamento_naoaplicavel->id;
+      $bad_symbols = array(",");
 
 
       $entrada_id = $request->entrada_id;
@@ -309,13 +311,13 @@ class EntradaController extends Controller
 
 
 
-      $entrada = $this->entrada->find($entrada_id);
+      $entrada = $this->entrada->findOrFail($entrada_id);
 
       if($request['pago'] == 0){
 
         $pago = $pago;
-        $valor_pago = $valor_pago;
-        $remanescente = $request['valor_iva'];
+        $valor_pago = str_replace($bad_symbols, "", $valor_pago);
+        $remanescente = str_replace($bad_symbols, "", $request['valor_total']);
         $forma_pagamento_id = $forma_pagamento_id;
         $nr_documento_forma_pagamento = $nr_documento_forma_pagamento;
 
@@ -324,11 +326,11 @@ class EntradaController extends Controller
         $pago = $request['pago'];
 
         if(!empty($request['valor_pago'])){
-          $valor_pago = $request['valor_pago'];
+          $valor_pago = str_replace($bad_symbols, "", $request['valor_pago']);
         }
 
         if(!empty($request['remanescente'])){
-          $remanescente = $request['remanescente'];
+          $remanescente = str_replace($bad_symbols, "", $request['remanescente']);
         }
 
         if(!empty($request['forma_pagamento_id'])){
@@ -357,7 +359,7 @@ class EntradaController extends Controller
 
               for($i = 0; $i < sizeof($pagamento_entrada_ids); $i++){
 
-                $pagamento_entrada = Pagamentoentrada::find($pagamento_entrada_ids[$i]->id);
+                $pagamento_entrada = Pagamentoentrada::findOrFail($pagamento_entrada_ids[$i]->id);
                 $pagamento_entrada->valor_pago = $valor_pago;
                 $pagamento_entrada->forma_pagamento_id = $forma_pagamento_id;
                 $pagamento_entrada->nr_documento_forma_pagamento = $nr_documento_forma_pagamento;

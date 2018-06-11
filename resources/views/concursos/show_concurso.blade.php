@@ -4,24 +4,22 @@
 <!-- <div class="container"> -->
 	<div class="row">
 		<div class="col-md-12">
-			
+
 			<div class="panel panel-default">
 				<div class="panel-heading">
 					<div class="row">
 						<div class="col-md-5 border">
 							<div class="panel panel-default">
-								
+
 								<div class="panel-body">
 									@include('layouts.empresa.dados_empresa')
 								</div>
 							</div>
 
-							
-
 						</div>
 
 						<div class="col-md-4">
-							
+
 							<div class="panel panel-default">
 								<div class="panel-body text-center">
 									<h2> <b> Dados do Cliente </b></h2> <hr>
@@ -59,18 +57,18 @@
 								<tbody>
 
 									<tr>
-										<th><i class="icon_profile"></i>Quantidade</th>
-										<th><i class="icon_mobile"></i> Designação </th>
-										<th><i class="icon_mail_alt"></i> Preço Unitário </th>
-										<th><i class="icon_cogs"></i> Valor Total </th>
+										<th> Quantidade</th>
+										<th> Designação </th>
+										<th> Preço Unitário </th>
+										<th> Valor Total </th>
 									</tr>
 
 									@foreach($concurso->itensConcurso as $iten_concurso)
 									<tr>
 										<td> {{$iten_concurso->quantidade}} </td>
 										<td> {{$iten_concurso->produto->descricao}} </td>
-										<td> {{$iten_concurso->preco_venda}} </td>
-										<td> {{$iten_concurso->valor}} </td>
+										<td> {{number_format($iten_concurso->preco_venda, 2, '.', ',')}} </td>
+										<td> {{number_format($iten_concurso->valor, 2, '.', ',')}} </td>
 
 									</tr>
 									@endforeach
@@ -87,8 +85,11 @@
 
 
 							<div class="panel panel-default">
+								<div class="panel-heading">
+									Motivo justificativo da não aplicação de imposto
+								</div>
 								<div class="panel-body">
-									Motivo Justificativo da não aplicação de imposto:
+									{{$concurso->motivo_justificativo_nao_iva}}
 								</div>
 							</div>
 
@@ -99,24 +100,24 @@
 								<tr>
 									<td>Sub-Total:</td>
 									<td style="width: 10px"></td>
-									<td>{{$concurso->valor_total}}</td>
+									<td>{{number_format($concurso->valor_total, 2, '.', ',')}} Mtn</td>
 								</tr>
 								<tr>
 									<td>IVA(17%):</td>
 									<td></td>
-									<td>{{(($concurso->valor_total)*17)/100}}</td>
+									<td>{{number_format($concurso->iva, 2, '.', ',')}} Mtn</td>
 								</tr>
 								<tr>
 									<td>Valor Total:</td>
 									<td></td>
-									<td><b>{{$concurso->valor_iva}}</b></td>
+									<td><b>{{number_format($concurso->valor_iva, 2, '.', ',')}} Mtn</b></td>
 								</tr>
 							</table>
 
 						</div>
 
 					</div>
-					<br><br>
+					<br>
 					<div class="row">
 
 						<div class="col-md-6">
@@ -134,7 +135,7 @@
 
 						<div class="col-md-6">
 
-							
+
 
 						</div>
 
@@ -158,6 +159,3 @@
 	</div>
 	<!-- </div> -->
 	@endsection
-
-
-

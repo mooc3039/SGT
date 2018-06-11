@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Database\QueryException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use App\Http\Requests\GuiaEntregaStoreUpdateFormRequest;
 use App\Model\Empresa;
@@ -16,7 +17,7 @@ use App\User;
 use DB;
 use Session;
 use PDF;
- 
+
 class GuiaEntregaController extends Controller
 {
     private $guia_entrega;
@@ -70,7 +71,8 @@ class GuiaEntregaController extends Controller
     public function store(GuiaEntregaStoreUpdateFormRequest $request)
     {
         //
-        if($request->all()){
+      $bad_symbols = array(",");
+      if($request->all()){
 
           $guia_entrega = new GuiaEntrega;
 
@@ -103,9 +105,9 @@ class GuiaEntregaController extends Controller
 
                 $iten_guiaentrega->produto_id = $request['produto_id'][$i];
                 $iten_guiaentrega->quantidade = $request['quantidade'][$i];
-                $iten_guiaentrega->valor = $request['subtotal'][$i];
-                $iten_guiaentrega->desconto = $request['desconto'][$i];
-                $iten_guiaentrega->subtotal = $request['subtotal'][$i];
+                $iten_guiaentrega->valor = str_replace($bad_symbols, "", $request['valor'][$i]);
+                $iten_guiaentrega->desconto = str_replace($bad_symbols, "", $request['desconto'][$i]);
+                $iten_guiaentrega->subtotal = str_replace($bad_symbols, "", $request['subtotal'][$i]);
                 $iten_guiaentrega->guia_entrega_id = $guia_entrega_id[$i];
                 $iten_guiaentrega->iten_saida_id = $request['iten_saida_id'][$i];
 
@@ -155,7 +157,7 @@ class GuiaEntregaController extends Controller
     public function show($id)
     {
         //
-        $guia_entrega = $this->guia_entrega->with('itensGuiantrega.produto', 'cliente')->find($id); 
+        $guia_entrega = $this->guia_entrega->with('itensGuiantrega.produto', 'cliente')->findOrFail($id); 
             // Tras a saida. Tras os Itens da Saida e dentro da relacao ItensSaida eh possivel pegar a relacao Prodtuo atraves do dot ou ponto. NOTA: a relacao produto nao esta na saida e sim na itensSaida, mas eh possivel ter os seus dados partido da saida como se pode ver.
         $empresa = Empresa::with('enderecos', 'telefones', 'emails', 'contas')->findOrFail(1);
         
@@ -167,8 +169,8 @@ class GuiaEntregaController extends Controller
         //
         $guia_entrega = $this->guia_entrega->with('itensGuiantrega.produto', 'cliente')->find($id); 
         $empresa = Empresa::with('enderecos', 'telefones', 'emails', 'contas')->findOrFail(1); 
-         $pdf = PDF::loadView('guias_entrega.relatorio', compact('guia_entrega','empresa'));
-         return $pdf->download('guia_entrega.pdf');
+        $pdf = PDF::loadView('guias_entrega.relatorio', compact('guia_entrega','empresa'));
+        return $pdf->download('guia_entrega.pdf');
         // return view('guias_entrega.relatorio', compact('guia_entrega'));
         
     }
@@ -195,7 +197,7 @@ class GuiaEntregaController extends Controller
 
 
         $produtos = DB::table('produtos')->pluck('descricao', 'id')->all();
-        $guia_entrega = $this->guia_entrega->with('itensGuiantrega.itenSaida.produto', 'saida.itensSaida', 'cliente')->find($id);
+        $guia_entrega = $this->guia_entrega->with('itensGuiantrega.itenSaida.produto', 'saida.itensSaida', 'cliente')->findOrFail($id);
         //dd($guia_entrega);
         // Tras a saida. Tras os Itens da Saida e dentro da relacao ItensSaida eh possivel pegar a relacao Prodtuo atraves do dot ou ponto. NOTA: a relacao produto nao esta na saida e sim na itensSaida, mas eh possivel ter os seus dados partido da saida como se pode ver.
         $empresa = Empresa::with('enderecos', 'telefones', 'emails', 'contas')->findOrFail(1);
@@ -230,7 +232,7 @@ class GuiaEntregaController extends Controller
 
             if($this->iten_guiaentrega->where('guia_entrega_id', $id)->delete()){
 
-                $guia_entrega = $this->guia_entrega->find($id);
+                $guia_entrega = $this->guia_entrega->findOrFail($id);
 
 
 
@@ -251,10 +253,10 @@ class GuiaEntregaController extends Controller
 
             } else{
 
-                    DB::rollback();
-                    $error = 'Erro ao Cancelar a Guia de Entrega!';
-                    return redirect()->back()->with('error', $error);
-                }
+                DB::rollback();
+                $error = 'Erro ao Cancelar a Guia de Entrega!';
+                return redirect()->back()->with('error', $error);
+            }
 
         }catch (QueryException $e) {
             DB::rollback();
@@ -267,7 +269,7 @@ class GuiaEntregaController extends Controller
 
     public function createGuia($id){
 
-        $saida = $this->saida->with('itensSaida.produto', 'cliente')->find($id);
+        $saida = $this->saida->with('itensSaida.produto', 'cliente')->findOrFail($id);
         return view('guias_entrega.create_edit_guias_entrega', compact('saida'));
     }
 }

@@ -73,17 +73,15 @@
         <div class="form-horizontal">
 
           <div class="col-sm-4">
+            {{Form::label('referencia', 'Referência')}}
+            {{Form::text('referencia', null, ['class' => 'form-control', 'placeholder' => 'Referência'])}}
+          </div>
+
+          <div class="col-sm-4">
             {{Form::label('descricao', 'Descrição')}}
             {{Form::text('descricao', null, ['class' => 'form-control', 'placeholder' => 'Descrição do Produto'])}}
           </div>
 
-          <div class="col-sm-4">
-            {{Form::label('preco_venda', 'Preço de Venda')}}
-            <div class="input-group">
-              {{Form::text('preco_venda', null, ['class' => 'form-control', 'placeholder' => '0.00 - 999999.99'])}}
-              <div class="input-group-addon">Mtn</div>
-            </div>
-          </div>
 
           <div class="col-sm-4">
             {{Form::label('preco_aquisicao', 'Preço de Aquisição')}}
@@ -100,6 +98,14 @@
       <div class="row">
 
         <div class="form-horizontal">
+
+          <div class="col-sm-4">
+            {{Form::label('preco_venda', 'Preço de Venda')}}
+            <div class="input-group">
+              {{Form::text('preco_venda', null, ['class' => 'form-control', 'placeholder' => '0.00 - 999999.99'])}}
+              <div class="input-group-addon">Mtn</div>
+            </div>
+          </div>
 
           <div class="col-sm-4">
             {{Form::label('quantidade_dispo', 'Quantidade Disponível')}}
@@ -208,14 +214,18 @@
           {{Form::text('email', null, ['placeholder' => 'Email', 'class' => 'form-control'])}}
         </div>
         <div class="form-group">
+          {{Form::label('nuit', 'NUIT', ['class'=>'control-lable'])}}
+          {{Form::text('nuit', null, ['placeholder' => 'NUIT', 'class' => 'form-control'])}}
+        </div>
+        <div class="form-group">
           {{Form::label('rubrica', 'Rubrica', ['class'=>'control-lable'])}}
           {{Form::text('rubrica', null, ['placeholder' => 'Rubrica', 'class' => 'form-control'])}}
         </div>
         <div class="radio-inline">
-          {{Form::radio('activo', '1')}} Activo
+          <input type="radio" name="activo" value="1" id="activo"> <label for="activo">Activo</label>
         </div>
         <div class="radio-inline">
-          {{Form::radio('activo', '0')}} Inactivo
+          <input type="radio" name="activo" value="0" id="inactivo"> <label for="inactivo">Inactivo</label>
         </div>
 
       </div>

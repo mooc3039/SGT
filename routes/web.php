@@ -25,8 +25,8 @@ Route::group(['middleware'=>['authen']],function(){
   Route::get('/dashboard',['as'=>'dashboard','uses'=>'DashboardController@dashboard']);
   Route::get('/dashboard/inicio',['as'=>'paginainicial','uses'=>'DashboardController@paginaInicial']);
 
-  Route::get('/produto/find', ['as'=>'findPrice','uses'=>'ProdutoController@findPrice']); 
-  Route::get('/facturas/preco', ['as'=>'findPrice','uses'=>'FacturacaoController@findPrice']);
+  Route::get('/produto/find', ['as'=>'findPrice','uses'=>'ProdutoController@findPrice']);
+  // Route::get('/facturas/preco', ['as'=>'findPrice','uses'=>'FacturacaoController@findPrice']);
 
 
   //======================= Profile ============================
@@ -60,6 +60,8 @@ Route::group(['middleware'=>['authen']],function(){
   Route::post('/venda/report_geral/listar_vend_ano', 'VendaController@listarVendaPorAno')->name('listar_vend_ano');
   // Impressao Venda
   Route::get('/venda/{id}/relatorio', ['as'=>'vendaRelatorio','uses'=>'VendaController@showRelatorio']);
+  // EDITAR O MODTIVO JUSTIFICATIVO DA NAO APLICACAO DO IMPOSTO
+  Route::post('/venda/editar_motivo_justificativo_imposto', 'VendaController@motivoNaoAplicacaoImposto')->name('editar_motivo_venda');
   //======================= FIM Venda ============================
 
   //======================= Saida ============================
@@ -74,6 +76,8 @@ Route::group(['middleware'=>['authen']],function(){
   Route::get('/saida/{id}/relatorio', ['as'=>'saidaRelatorio','uses'=>'SaidaController@showRelatorio']);
   //Rotas get para gerar impressao em formato pdf => Malache
   Route::get('/saida/pdf/{id}', ['as'=>'saida_pdf', 'uses'=>'SaidaController@report']);
+  // EDITAR O MODTIVO JUSTIFICATIVO DA NAO APLICACAO DO IMPOSTO
+  Route::post('/saida/editar_motivo_justificativo_imposto', 'SaidaController@motivoNaoAplicacaoImposto')->name('editar_motivo_saida');
   //======================= FIM Saida ============================
 
   //======================= Concurso ============================
@@ -84,8 +88,11 @@ Route::group(['middleware'=>['authen']],function(){
   // GERIR PAGAMENTO DO CONCURSO => Malache
   Route::get('/concurso/create_pagamento/{id}', 'ConcursoController@createPagamentoConcurso')->name('createPagamentoConcurso');
   Route::post('/concurso/pagamento', 'ConcursoController@pagamentoConcurso')->name('pagamentoConcurso');
+  Route::get('/concurso/{id}/relatorio', ['as'=>'concursoRelatorio','uses'=>'ConcursoController@showRelatorio']);
   // FACTURAS DO CONCURSO
   Route::get('/concurso/facturas_concurso/{id}', 'ConcursoController@facturasConcurso')->name('facturasConcurso');
+  // EDITAR O MODTIVO JUSTIFICATIVO DA NAO APLICACAO DO IMPOSTO
+  Route::post('/concurso/editar_motivo_justificativo_imposto', 'ConcursoController@motivoNaoAplicacaoImposto')->name('editar_motivo_concurso');
   //======================= FIM Concurso ============================
 
   //======================= Cotacao ============================
@@ -192,6 +199,8 @@ Route::group(['middleware'=>['authen','roles'],'roles'=>['Administrador']],funct
   Route::get('/cotacoes/report_geral_cotacoes', ['as'=>'rg_cotacoes', 'uses'=>'CotacaoController@reportGeralCotacoes']);
   // CADSTRAR TIPO DE COTACAO FAZENDO o redirect()->back() => Malache
   Route::post('/tipo_cotacao/tipo_cotacao_salvar_rback', 'TipoCotacaoController@storeRedirectBack')->name('tipo_cotacao_salvar_rback');
+  // EDITAR O MODTIVO JUSTIFICATIVO DA NAO APLICACAO DO IMPOSTO
+  Route::post('/cotacao/editar_motivo_justificativo_imposto', 'CotacaoController@motivoNaoAplicacaoImposto')->name('editar_motivo_cotacao');
 
   //======================= FIM Cotacao ============================
 

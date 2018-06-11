@@ -96,6 +96,7 @@ class SaidaController extends Controller
         //
       $acronimo_forma_pagamento_naoaplicavel = FormaPagamento::select('id')->where('acronimo', 'naoaplicavel')->first();
       $acronimo_forma_pagamento_naoaplicavel_id = $acronimo_forma_pagamento_naoaplicavel->id;
+      $bad_symbols = array(",");
 
       if($request->all()){
 
@@ -112,8 +113,8 @@ class SaidaController extends Controller
         if($request['pago'] == 0){
 
           $pago = $pago;
-          $valor_pago = $valor_pago;
-          $remanescente = $request['valor_total_iva'];
+          $valor_pago = str_replace($bad_symbols, "", $valor_pago);
+          $remanescente = str_replace($bad_symbols, "", $request['valor_total_iva']);
           $forma_pagamento_id = $forma_pagamento_id;
           $nr_documento_forma_pagamento = $nr_documento_forma_pagamento;
 
@@ -122,11 +123,11 @@ class SaidaController extends Controller
           $pago = $request['pago'];
 
           if(!empty($request['valor_pago'])){
-            $valor_pago = $request['valor_pago'];
+            $valor_pago = str_replace($bad_symbols, "", $request['valor_pago']);
           }
 
           if(!empty($request['remanescente'])){
-            $remanescente = $request['remanescente'];
+            $remanescente = str_replace($bad_symbols, "", $request['remanescente']);
           }
 
           if(!empty($request['forma_pagamento_id'])){
@@ -158,8 +159,10 @@ class SaidaController extends Controller
 
           $saida->cliente_id = $request['cliente_id'];
           $saida->user_id = $request['user_id'];
+          $saida->motivo_justificativo_nao_iva = $request['texto_motivo_imposto'];
           $saida->valor_total = 0; 
-          $saida->valor_iva = 0; 
+          $saida->valor_iva = 0;
+          $saida->iva = 0;
           // Eh necessario que o valor total seja zero, uma vez que este campo na tabela cotacaos eh actualizado pelo trigger apos o "insert" bem como o "update" na tabela itens_cotacaos de acordo com o codigo da cotacao. Nao pode ser o valor_total vindo do formulario, pois este valor sera acrescido a cada insercao abaixo quando executar o iten_cotacao->save().
 
           $saida->pago = $pago;
@@ -188,13 +191,13 @@ class SaidaController extends Controller
                 $iten_saida =  new ItenSaida;
 
                 $iten_saida->produto_id = $request['produto_id'][$i];
-                $iten_saida->quantidade = $request['quantidade'][$i];
-                $iten_saida->quantidade_rest = $request['quantidade'][$i];
-                $iten_saida->valor = $request['valor'][$i];
-                $iten_saida->valor_rest = $request['valor'][$i];
-                $iten_saida->desconto = $request['desconto'][$i];
-                $iten_saida->subtotal = $request['subtotal'][$i];
-                $iten_saida->subtotal_rest = $request['subtotal'][$i];
+                $iten_saida->quantidade = str_replace($bad_symbols, "", $request['quantidade'][$i]);
+                $iten_saida->quantidade_rest = str_replace($bad_symbols, "", $request['quantidade'][$i]);
+                $iten_saida->valor = str_replace($bad_symbols, "", $request['valor'][$i]);
+                $iten_saida->valor_rest = str_replace($bad_symbols, "", $request['valor'][$i]);
+                $iten_saida->desconto = str_replace($bad_symbols, "", $request['desconto'][$i]);
+                $iten_saida->subtotal = str_replace($bad_symbols, "", $request['subtotal'][$i]);
+                $iten_saida->subtotal_rest = str_replace($bad_symbols, "", $request['subtotal'][$i]) ;
                 $iten_saida->saida_id = $array_saida_id[$i];
 
                 $iten_saida->save();
@@ -236,7 +239,7 @@ class SaidaController extends Controller
 
           } catch (QueryException $e){
 
-            $error = "Erro ao cadastrar a Cotacao! => Possível redundância de um item/produto à mesma cotação ou preenchimento incorrecto dos campos!";
+            $error = "Erro ao cadastrar a Cotacao! => Possível redundância de um item/produto à mesma Factura ou preenchimento incorrecto dos campos!";
             DB::rollback();
             return redirect()->back()->with('error', $error);
 
@@ -258,7 +261,7 @@ class SaidaController extends Controller
     {
         //
 
-        $saida = $this->saida->with('itensSaida.produto', 'cliente')->find($id); // Tras a saida. Tras os Itens da Saida e dentro da relacao ItensSaida eh possivel pegar a relacao Prodtuo atraves do dot ou ponto. NOTA: a relacao produto nao esta na saida e sim na itensSaida, mas eh possivel ter os seus dados partido da saida como se pode ver.
+        $saida = $this->saida->with('itensSaida.produto', 'cliente')->findOrFail($id); // Tras a saida. Tras os Itens da Saida e dentro da relacao ItensSaida eh possivel pegar a relacao Prodtuo atraves do dot ou ponto. NOTA: a relacao produto nao esta na saida e sim na itensSaida, mas eh possivel ter os seus dados partido da saida como se pode ver.
         $empresa = Empresa::with('enderecos', 'telefones', 'emails', 'contas')->findOrFail(1); 
         
         return view('saidas.show_saida', compact('saida', 'empresa'));
@@ -276,7 +279,7 @@ class SaidaController extends Controller
     {
         //
       $produtos = DB::table('produtos')->pluck('descricao', 'id')->all();
-      $saida = $this->saida->with('itensSaida.produto', 'cliente')->find($id); 
+      $saida = $this->saida->with('itensSaida.produto', 'cliente')->findOrFail($id); 
         // Tras a saida. Tras os Itens da Saida e dentro da relacao ItensSaida eh possivel pegar a relacao Prodtuo atraves do dot ou ponto. NOTA: a relacao produto nao esta na saida e sim na itensSaida, mas eh possivel ter os seus dados partido da saida como se pode ver.
       $empresa = Empresa::with('enderecos', 'telefones', 'emails', 'contas')->findOrFail(1);
 
@@ -294,6 +297,30 @@ class SaidaController extends Controller
     {
         //
     }
+
+    public function motivoNaoAplicacaoImposto(Request $request){
+    // dd($request->all());
+    $saida_id = $request->saida_id;
+
+    $dataForm = [
+      'motivo_justificativo_nao_iva' => $request->motivo_justificativo_nao_iva,
+    ];
+
+    $saida_motivo_justificativo = $this->saida->findOrFail($saida_id);
+
+    if($saida_motivo_justificativo->update($dataForm)){
+
+      $sucess = 'Motivo Justificativo da não aplicação de imposto actualizado com sucesso!';
+      return redirect()->back()->with('success', $sucess);
+
+
+    }else{
+      $error = 'Erro ao actualizar o Motivo Justificativo da não aplicação de imposto!';
+      return redirect()->back()->with('error', $error);
+
+
+    }
+  }
 
     /**
      * Remove the specified resource from storage.
@@ -365,6 +392,7 @@ class SaidaController extends Controller
         // dd($request->all());
       $acronimo_forma_pagamento_naoaplicavel = FormaPagamento::select('id')->where('acronimo', 'naoaplicavel')->first();
       $acronimo_forma_pagamento_naoaplicavel_id = $acronimo_forma_pagamento_naoaplicavel->id;
+      $bad_symbols = array(",");
 
       $saida_id = $request->saida_id;
 
@@ -376,13 +404,13 @@ class SaidaController extends Controller
 
       
 
-      $saida = $this->saida->find($saida_id);
+      $saida = $this->saida->findOrFail($saida_id);
 
       if($request['pago'] == 0){
 // dd($request->all());
         $pago = $pago;
-        $valor_pago = $valor_pago;
-        $remanescente = $request['valor_iva'];
+        $valor_pago = str_replace($bad_symbols, "", $valor_pago);
+        $remanescente = str_replace($bad_symbols, "", $request['valor_iva']);
         $forma_pagamento_id = $forma_pagamento_id;
         $nr_documento_forma_pagamento = $nr_documento_forma_pagamento;
 
@@ -391,11 +419,11 @@ class SaidaController extends Controller
         $pago = $request['pago'];
 
         if(!empty($request['valor_pago'])){
-          $valor_pago = $request['valor_pago'];
+          $valor_pago = str_replace($bad_symbols, "", $request['valor_pago']);
         }
 
         if(!empty($request['remanescente'])){
-          $remanescente = $request['remanescente'];
+          $remanescente = str_replace($bad_symbols, "", $request['remanescente']);
         }
 
         if(!empty($request['forma_pagamento_id'])){
@@ -429,7 +457,7 @@ class SaidaController extends Controller
 
               for($i = 0; $i < sizeof($pagamento_saida_ids); $i++){
 
-                $pagamento_saida = PagamentoSaida::find($pagamento_saida_ids[$i]->id);
+                $pagamento_saida = PagamentoSaida::findOrFail($pagamento_saida_ids[$i]->id);
                 $pagamento_saida->valor_pago = $valor_pago;
                 $pagamento_saida->forma_pagamento_id = $forma_pagamento_id;
                 $pagamento_saida->nr_documento_forma_pagamento = $nr_documento_forma_pagamento;
@@ -487,7 +515,7 @@ class SaidaController extends Controller
     public function report($id){
 
         // Relatorio em pdf
-      $saida = $this->saida->with('itensSaida.produto', 'cliente')->find($id);
+      $saida = $this->saida->with('itensSaida.produto', 'cliente')->findOrFail($id);
 
       $view = view('reports.saidas.report_saida', compact('saida'));
       $pdf = \App::make('dompdf.wrapper');
@@ -509,7 +537,7 @@ class SaidaController extends Controller
       public function showRelatorio($id)
       {
         //
-        $saida = $this->saida->with('itensSaida.produto', 'cliente')->find($id); 
+        $saida = $this->saida->with('itensSaida.produto', 'cliente')->findOrFail($id); 
         $empresa = Empresa::with('enderecos', 'telefones', 'emails', 'contas')->findOrFail(1);
         $pdf = PDF::loadView('saidas.relatorio', compact('saida','empresa'));
         return $pdf->download('saida.pdf');
@@ -582,7 +610,7 @@ class SaidaController extends Controller
 
      public function findConcursoDados(Request $request)
      {
-      $concurso = $this->concurso->with('itensConcurso.produto', 'pagamentosConcurso.formaPagamento', 'cliente', 'formaPagamento')->find($request->id);
+      $concurso = $this->concurso->with('itensConcurso.produto', 'pagamentosConcurso.formaPagamento', 'cliente', 'formaPagamento')->findOrFail($request->id);
       return response()->json($concurso);
     }
   }

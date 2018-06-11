@@ -31,7 +31,7 @@
 					</div>
 					<div class="col-md-3">
 						<div class="form-group">
-							{{Form::label('preco_aquisicao', 'Preço Unitário', ['class'=>'control-lable'])}}
+							{{Form::label('preco_aquisicao', 'Preço Unitário (Mtn)', ['class'=>'control-lable'])}}
 							{{Form::text('preco_aquisicao', null, ['placeholder' => 'Preço Unitário', 'class' => 'form-control', 'id'=>'preco_aquisicao', 'disabled'])}}
 						</div>
 					</div>
@@ -40,7 +40,7 @@
 				<div class="row">
 					<div class="col-md-3">
 						<div class="form-group">
-							{{Form::label('valor', 'Valor', ['class'=>'control-lable'])}}
+							{{Form::label('valor', 'Valor (Mtn)', ['class'=>'control-lable'])}}
 							{{Form::text('valor', null, ['placeholder' => 'Valor', 'class' => 'form-control', 'id'=>'valor', 'readonly'])}}
 
 							{{ Form::hidden('entrada_id', null, ['id'=>'entrada_id']) }}
@@ -50,13 +50,13 @@
 					</div>
 					<div class="col-md-3">
 						<div class="form-group">
-							{{Form::label('desconto', 'Desconto', ['class'=>'control-lable'])}}
+							{{Form::label('desconto', 'Desconto (%)', ['class'=>'control-lable'])}}
 							{{Form::text('desconto', null, ['placeholder' => 'Desconto', 'class' => 'form-control', 'id'=>'desconto'])}}
 						</div>
 					</div>
 					<div class="col-md-3">
 						<div class="form-group">
-							{{Form::label('subtotal', 'Subtotal', ['class'=>'control-lable'])}}
+							{{Form::label('subtotal', 'Subtotal (Mtn)', ['class'=>'control-lable'])}}
 							{{Form::text('subtotal', null, ['placeholder' => 'Subtotal', 'class' => 'form-control', 'id'=>'subtotal', 'readonly'])}}
 							
 
@@ -73,7 +73,7 @@
 			<div class="modal-footer">
 				<div class="row">
 					<div class="col-md-6 text-left">
-						<h5>Montante Geral da Cotação: <b><span id="val_temp"></span></b></h5>
+						<h5>Montante Geral da Cotação: <b><span class="valor_visual"></span></b></h5>
 					</div>
 					<div class="col-md-6 text-right">
 						{{Form::button('Fechar', ['class'=>'btn btn-default', 'data-dismiss'=>'modal'])}}

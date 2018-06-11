@@ -131,11 +131,11 @@
 
               <thead>
                 <tr>
-                  <th><i class="icon_profile"></i>Forma de Pagamento</th>
-                  <th><i class="icon_cogs"></i> Documento </th>
-                  <th><i class="icon_cogs"></i> Valor Pago </th>
-                  <th><i class="icon_cogs"></i> Data Pagamento </th>
-                  <th><i class="icon_cogs"></i> Data Actualizacao </th>
+                  <th>Forma de Pagamento</th>
+                  <th> Documento </th>
+                  <th> Valor Pago </th>
+                  <th> Data Pagamento </th>
+                  <th> Data Actualizacao </th>
                 </tr>
               </thead>
 
@@ -151,13 +151,13 @@
                     {{ $pagamento_venda->nr_documento_forma_pagamento}}
                   </td>
                   <td>
-                    {{ $pagamento_venda->valor_pago}}
+                    {{ number_format($pagamento_venda->valor_pago, 2, '.', ',')}}
                   </td>
                   <td>
                     {{ date('d-m-Y', strtotime($pagamento_venda->created_at))}}
                   </td>
                   <td>
-                    {{ $pagamento_venda->updated_at}}
+                    {{ date('d-m-Y H:m:s', strtotime($pagamento_venda->updated_at))}}
                   </td>
                 </tr>
                 @endif
@@ -269,9 +269,9 @@
       }
     });
 
-    var valor_total_visual = ($('#valor_total_iva').val()*1);
-    $('.valor_total_visual').html(valor_total_visual.formatMoney(2,',','.')+ " Mtn");
-    $('.remanescente_visual').html(($('#valor_remanescente_ref').val()*1).formatMoney(2,',','.')+ " Mtn");
+    var valor_total_visual = Number.parseFloat($('#valor_total_iva').val());
+    $('.valor_total_visual').html(valor_total_visual.formatMoney()+ " Mtn");
+    $('.remanescente_visual').html(Number.parseFloat($('#valor_remanescente_ref').val()).formatMoney()+ " Mtn");
     
     remanescenteRed();
 
@@ -291,7 +291,6 @@
       $('.info_pagamento').css("color", "red");
       $('.info_pagamento').html('Nao Paga');
     }
-    console.log(pago);
   });
 
 
@@ -313,17 +312,17 @@
     $('#forma_pagamento_id').val('');
     $('#nr_documento_forma_pagamento').val('');
 
-    var valor_total_iva = ($('#valor_total_iva').val()*1);
-    var remanescente = 0;
-    $('#valor_pago').val(valor_total_iva);
-    $('#remanescente').val(remanescente);
+    var valor_total_iva = Number.parseFloat($('#valor_total_iva').val());
+    var remanescente = Number.parseFloat(0);
+    $('#valor_pago').val(valor_total_iva.formatMoney());
+    $('#remanescente').val(remanescente.formatMoney());
   }
 
   function resetPagamentoTotal(){
-    var valor_total_iva = 0;
-    var remanescente = ($('#valor_total_iva').val()*1);
-    $('#valor_pago').val(0);
-    $('#remanescente').val(remanescente);
+    var valor_total_iva = Number.parseFloat(0);
+    var remanescente = Number.parseFloat($('#valor_total_iva').val());
+    $('#valor_pago').val(Number.parseFloat(0).formatMoney());
+    $('#remanescente').val(remanescente.formatMoney());
     $('#forma_pagamento_id').val(1); // codigo da forma de pagamento (Nao Aplicavel=>DB)
     $('#nr_documento_forma_pagamento').val('Nao Aplicavel');
   }
