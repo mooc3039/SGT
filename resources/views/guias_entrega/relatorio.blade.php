@@ -80,7 +80,7 @@ Dados do Cliente</span></em></strong><br />
 </div>
 <br />
 <div style="border: 2px solid black; border-radius: 10px; height: 95px;"><br />
-<h2 style="color: red; text-align: center;">N&ordm; {{$guia_entrega->id}}</h2>
+<h2 style="color: red; text-align: center;">N&ordm; {{$guia_entrega->id}}/{{date('Y', strtotime($guia_entrega->data))}}</h2>
 </div>
 </td>
 </tr>
