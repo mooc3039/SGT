@@ -52,7 +52,7 @@
         </div>
 
         <div class="panel-footer">
-          {{Form::submit('Salvar Cotação', ['class'=>'btn btn-primary', 'name'=>'submitFormCotacao', 'id'=>'submitFormCotacao'])}}
+          {{Form::submit('Salvar Cotação', ['class'=>'btn btn-primary submit_iten', 'name'=>'submitFormCotacao', 'id'=>'submitFormCotacao'])}}
         </div>
 
 
@@ -99,7 +99,8 @@
                 <td style="border:none"></td>
                 <td style="border:none"></td>
                 <td></td>
-                <td><b>Subtotal</b></td>
+                <td class="hide_iva"><b>Subtotal</b></td>
+                <td style="display: none" class="show_iva"><b>Total</b></td>
                 <td><b><div class="valor_total_visual" style="border:none"> </div></b></td>
                 <td></td>
               </tr>
@@ -108,8 +109,8 @@
                 <td style="border:none"></td>
                 <td style="border:none"></td>
                 <td></td>
-                <td><b>IVA(17%)</b></td>
-                <td><b><div class="iva" style="border:none"> </div></b></td>
+                <td class="hide_iva"><b>IVA(17%)</b></td>
+                <td><b><div class="iva hide_iva" style="border:none"> </div></b></td>
                 <td></td>
               </tr>
               <tr>
@@ -122,14 +123,21 @@
                 </td>
                 <td style="border:none"></td>
                 <td></td>
-                <td><b>Total</b></td>
-                <td><b><div class="valor_total_iva_visual" style="border:none"> </div></b></td>
+                <td class="hide_iva"><b>Total</b></td>
+                <td><b><div class="valor_total_iva_visual hide_iva" style="border:none"> </div></b></td>
                 <td></td>
               </tr>
               <tr>
                 <td style="border:none" colspan="7">
-                  <div id="mostra_texto">
-                    <textarea class="form-control" rows="3" cols="7" name="texto_motivo_imposto" id="texto_motivo_imposto"></textarea>
+                  <div id="mostra_motivo">
+                    <label for="motivo_iva_id"> Selecione o motivo </label>
+                    <select class="form-control" name="motivo_iva_id" id="motivo_iva_id">
+                      <option value="0" selected="true" disabled="true">Selecione o motivo</option>
+                      @foreach($motivos_iva as $motivo_iva)
+                      <option value="{!!$motivo_iva->id!!}">{!!$motivo_iva->motivo_nao_aplicacao!!}</option>
+                      @endforeach
+                    </select>
+                    <input type="hidden" name="aplicacao_motivo_iva" id="aplicacao_motivo_iva" value="0">
                   </div>
                 </td>
               </tr>
@@ -278,10 +286,24 @@
   <script text="text/javascript">
 
     $(document).ready(function() {
-      document.getElementById('mostra_texto').style.display = 'none';
-      $('#texto_motivo_imposto').val("");
+      document.getElementById('mostra_motivo').style.display = 'none';
+      $('#aplicacao_motivo_iva').val(0);
+      $('#motivo_iva_id').val("");
 
-  } );
+    } );
+
+    $(document).ready(function(){
+      $('.submit_iten').on('click',function(){
+
+        if (document.getElementById('checkbox_motivo_imposto').checked) {
+          if($('#motivo_iva_id').val() === "" || $('#motivo_iva_id').val() === null){
+            alert('Selecione o Motivo da nao aplicação do IVA!');
+            return false;
+          }
+        }
+
+      });
+    });
 
     $('.submit_cliente').on('click',function(){
       $(".wait").css("display", "block");
@@ -416,16 +438,47 @@
     };
 
     function motivoDaNaoAPlicacaoDoImposto() {
-    if (document.getElementById('checkbox_motivo_imposto').checked) {
-      document.getElementById('mostra_texto').style.display = 'block';
-      $('#texto_motivo_imposto').val("");
-      
+      if (document.getElementById('checkbox_motivo_imposto').checked) {
+        document.getElementById('mostra_motivo').style.display = 'block';
+        $('#aplicacao_motivo_iva').val(1);
+        hideIva();
+
+      }
+      else {
+        document.getElementById('mostra_motivo').style.display = 'none';
+        $('#aplicacao_motivo_iva').val(0);
+        $('#motivo_iva_id').val("");
+        showIva();
+      }
+    };
+
+    function hideIva(){
+
+      var hide_iva = document.getElementsByClassName('hide_iva');
+      var show_iva = document.getElementsByClassName('show_iva');
+
+      for(i=0; i<hide_iva.length; i++){
+        hide_iva[i].style.display = "none";
+      }
+
+      for(i=0; i<show_iva.length; i++){
+        show_iva[i].style.display = "block";
+      }
+
     }
-    else {
-      document.getElementById('mostra_texto').style.display = 'none';
-      $('#texto_motivo_imposto').val("");
+
+    function showIva(){
+      var hide_iva = document.getElementsByClassName('hide_iva');
+      var show_iva = document.getElementsByClassName('show_iva');
+
+      for(i=0; i<hide_iva.length; i++){
+        hide_iva[i].style.display = "block";
+      }
+
+      for(i=0; i<show_iva.length; i++){
+        show_iva[i].style.display = "none";
+      }
     }
-  };
 
 
     // Extend the default Number object with a formatMoney() method:

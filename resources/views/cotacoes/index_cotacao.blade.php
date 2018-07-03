@@ -69,7 +69,13 @@
                 <td> {{date('d-m-Y', strtotime($cotacao->data_vencimento))}} </td>
                 <td> {{$cotacao->cliente->nome}} </td>
                 <td> {{number_format($cotacao->valor_total, 2, '.', ',')}} </td>
-                <td> {{number_format($cotacao->valor_iva, 2, '.', ',')}} </td>
+                <td>  
+                  @if($cotacao->aplicacao_motivo_iva == 1)
+                  {{""}}
+                  @else
+                  {{number_format($cotacao->valor_iva, 2, '.', ',')}}
+                  @endif
+                </td>
                 <td class="text-right">
                   {{ Form::open(['route'=>['cotacao.destroy', $cotacao->id], 'method'=>'DELETE']) }}
                   <div class="btn-group btn-group-sm">

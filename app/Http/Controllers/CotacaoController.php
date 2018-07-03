@@ -9,6 +9,7 @@ use Illuminate\Database\QueryException;
 use DB;
 use Session;
 use App\Model\Produto;
+use App\Model\MotivoIva;
 use App\Model\Cliente;
 use App\User;
 use App\Model\Cotacao;
@@ -29,15 +30,17 @@ class CotacaoController extends Controller
   private $iten_cotacao;
   private $tipo_cotacao;
   private $produto;
+  private $motivo_iva;
   private $cliente;
   private $user;
 
-  public function __construct(Cotacao $cotacao, TipoCotacao $tipo_cotacao, ItenCotacao $iten_cotacao, Produto $produto, Cliente $cliente, User $user){
+  public function __construct(Cotacao $cotacao, TipoCotacao $tipo_cotacao, ItenCotacao $iten_cotacao, Produto $produto, MotivoIva $motivo_iva , Cliente $cliente, User $user){
 
     $this->cotacao = $cotacao;
     $this->iten_cotacao;
     $this->tipo_cotacao = $tipo_cotacao;
     $this->produto = $produto;
+    $this->motivo_iva = $motivo_iva;
     $this->cliente = $cliente;
     $this->user = $user;
   }
@@ -67,10 +70,11 @@ class CotacaoController extends Controller
     //
     $tipos_cliente = DB::table('tipo_clientes')->pluck('tipo_cliente', 'id')->all();
     $tipos_cotacao = DB::table('tipo_cotacaos')->pluck('nome', 'id')->all();
+    $motivos_iva = $this->motivo_iva->select('id', 'motivo_nao_aplicacao')->get();
     $clientes = DB::table('clientes')->pluck('nome', 'id')->all();
     $produtos = $this->produto->select('id', 'descricao')->get();
 
-    return view('cotacoes.create_edit_cotacao', compact('clientes', 'tipos_cotacao', 'produtos', 'tipos_cliente'));
+    return view('cotacoes.create_edit_cotacao', compact('clientes', 'tipos_cotacao', 'produtos', 'tipos_cliente', 'motivos_iva'));
 
   }
 
@@ -95,7 +99,8 @@ class CotacaoController extends Controller
       $cotacao->cliente_id = $request['cliente_id'];
       $cotacao->validade = $request['validade'];
       $cotacao->user_id = $request['user_id'];
-      $cotacao->motivo_justificativo_nao_iva = $request['texto_motivo_imposto'];
+      $cotacao->aplicacao_motivo_iva = $request['aplicacao_motivo_iva'];
+      $cotacao->motivo_iva_id = $request['motivo_iva_id'];      
       $cotacao->valor_total = 0; 
       $cotacao->valor_iva = 0; 
       $cotacao->iva = 0; 
@@ -172,7 +177,7 @@ class CotacaoController extends Controller
   {
     //
     $empresa = Empresa::with('enderecos', 'telefones', 'emails', 'contas')->findOrFail(1);
-    $cotacao = $this->cotacao->with('itensCotacao.produto', 'cliente')->findOrFail($id); // Tras a cotacao. Tras os Itens da cotacao e dentro da relacao Itenscotacao eh possivel pegar a relacao Prodtuo atraves do dot ou ponto. NOTA: a relacao produto nao esta na cotacao e sim na itenscotacao, mas eh possivel ter os seus dados partido da cotacao como se pode ver.
+    $cotacao = $this->cotacao->with('itensCotacao.produto', 'motivoIva', 'cliente')->findOrFail($id); // Tras a cotacao. Tras os Itens da cotacao e dentro da relacao Itenscotacao eh possivel pegar a relacao Prodtuo atraves do dot ou ponto. NOTA: a relacao produto nao esta na cotacao e sim na itenscotacao, mas eh possivel ter os seus dados partido da cotacao como se pode ver.
 
     return view('cotacoes.show_cotacao', compact('cotacao', 'empresa'));
   }

@@ -18,7 +18,8 @@ class Cotacao extends Model
         'valor_iva',
         'iva',
         'validade',
-    	'motivo_justificativo_nao_iva',
+        'aplicacao_motivo_iva',
+    	'motivo_iva_id',
     ];
     public $timestamps = true;
 
@@ -37,6 +38,12 @@ class Cotacao extends Model
     public function tipoCotacao()
     {
       return $this->belongsTo('App\Model\TipoCotacao');
+
+    }
+
+    public function motivoIva()
+    {
+      return $this->belongsTo('App\Model\MotivoIva');
 
     }
 

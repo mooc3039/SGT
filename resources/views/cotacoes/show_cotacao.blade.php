@@ -92,7 +92,11 @@
 									Motivo justificativo da não aplicação de imposto
 								</div>
 								<div class="panel-body">
-									{{$cotacao->motivo_justificativo_nao_iva}}
+									@if($cotacao->motivo_iva_id == null)
+									{{""}}
+									@else
+									{{$cotacao->motivoIva->motivo_nao_aplicacao}}
+									@endif
 								</div>
 							</div>
 
@@ -101,6 +105,13 @@
 						<div class="col-md-6 text-right">
 							
 							<table class="pull-right">
+								@if($cotacao->aplicacao_motivo_iva == 1)
+								<tr>
+									<td>Valor Total:</td>
+									<td style="width: 10px"></td>
+									<td>{{number_format($cotacao->valor_total, 2, '.', ',')}} Mtn</td>
+								</tr>
+								@else
 								<tr>
 									<td>Sub-Total:</td>
 									<td style="width: 10px"></td>
@@ -116,6 +127,7 @@
 									<td></td>
 									<td><b>{{number_format($cotacao->valor_iva, 2, '.', ',')}} Mtn</b></td>
 								</tr>
+								@endif
 							</table>
 
 						</div>

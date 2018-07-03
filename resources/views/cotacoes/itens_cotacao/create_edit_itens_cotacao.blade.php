@@ -115,7 +115,11 @@
 									{{Form::hidden('motivo_justificativo_nao_iva', $cotacao->motivo_justificativo_nao_iva, ['disabled', 'id'=>'motivo_justificativo_nao_iva'])}}
 									{{Form::close()}}
 
-									{{$cotacao->motivo_justificativo_nao_iva}}
+									@if($cotacao->motivo_iva_id == null)
+									{{""}}
+									@else
+									{{$cotacao->motivoIva->motivo_nao_aplicacao}}
+									@endif
 								</div>
 							</div>
 
