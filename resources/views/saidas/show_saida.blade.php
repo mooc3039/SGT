@@ -4,24 +4,22 @@
 <!-- <div class="container"> -->
 	<div class="row">
 		<div class="col-md-12">
-			
+
 			<div class="panel panel-default">
 				<div class="panel-heading">
 					<div class="row">
 						<div class="col-md-5 border">
 							<div class="panel panel-default">
-								
+
 								<div class="panel-body">
 									@include('layouts.empresa.dados_empresa')
 								</div>
 							</div>
 
-							
-
 						</div>
 
 						<div class="col-md-4">
-							
+
 							<div class="panel panel-default">
 								<div class="panel-body text-center">
 									<h2> <b> Dados do Cliente </b></h2> <hr>
@@ -98,7 +96,7 @@
 						</div>
 
 						<div class="col-md-6 text-right">
-							<table class="pull-right"> 
+							<table class="pull-right">
 								<tr>
 									<td>Sub-Total:</td>
 									<td style="width: 10px"></td>
@@ -137,7 +135,7 @@
 
 						<div class="col-md-6">
 
-							
+
 
 						</div>
 
@@ -161,6 +159,3 @@
 	</div>
 	<!-- </div> -->
 	@endsection
-
-
-

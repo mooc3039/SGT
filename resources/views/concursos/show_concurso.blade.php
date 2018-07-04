@@ -4,24 +4,22 @@
 <!-- <div class="container"> -->
 	<div class="row">
 		<div class="col-md-12">
-			
+
 			<div class="panel panel-default">
 				<div class="panel-heading">
 					<div class="row">
 						<div class="col-md-5 border">
 							<div class="panel panel-default">
-								
+
 								<div class="panel-body">
 									@include('layouts.empresa.dados_empresa')
 								</div>
 							</div>
 
-							
-
 						</div>
 
 						<div class="col-md-4">
-							
+
 							<div class="panel panel-default">
 								<div class="panel-body text-center">
 									<h2> <b> Dados do Cliente </b></h2> <hr>
@@ -137,7 +135,7 @@
 
 						<div class="col-md-6">
 
-							
+
 
 						</div>
 
@@ -161,6 +159,3 @@
 	</div>
 	<!-- </div> -->
 	@endsection
-
-
-

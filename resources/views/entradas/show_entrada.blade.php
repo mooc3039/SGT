@@ -4,24 +4,22 @@
 <div class="container">
 	<div class="row">
 		<div class="col-md-12">
-			
+
 			<div class="panel panel-default">
 				<div class="panel-heading">
 					<div class="row">
 						<div class="col-md-5 border">
 							<div class="panel panel-default">
-								
+
 								<div class="panel-body">
 									@include('layouts.empresa.dados_empresa')
 								</div>
 							</div>
 
-							
-
 						</div>
 
 						<div class="col-md-4">
-							
+
 							<div class="panel panel-default">
 								<div class="panel-body text-center">
 
@@ -62,7 +60,7 @@
 										<th> Quantidade</th>
 										<th> Designação </th>
 										<th> Preço Aquisição (Mtn)</th>
-										
+
 									</tr>
 
 									@foreach($entrada->itensEntrada as $iten_entrada)
@@ -70,9 +68,9 @@
 										<td> {{$iten_entrada->quantidade}} </td>
 										<td> {{$iten_entrada->produto->descricao}} </td>
 										<td> {{number_format($iten_entrada->produto->preco_aquisicao, 2, '.', ',')}} </td>
-										
 
-									</tr> 
+
+									</tr>
 									@endforeach
 								</tbody>
 							</table>
@@ -96,7 +94,7 @@
 
 						<div class="col-md-6 text-right">
 							<table class="pull-right">
-								
+
 								<tr>
 									<td>Valor Total:</td>
 									<td style="width: 10px"></td>
@@ -125,7 +123,7 @@
 
 						<div class="col-md-6">
 
-							
+
 
 						</div>
 
@@ -149,6 +147,3 @@
 	</div>
 </div>
 @endsection
-
-
-

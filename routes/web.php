@@ -25,7 +25,7 @@ Route::group(['middleware'=>['authen']],function(){
   Route::get('/dashboard',['as'=>'dashboard','uses'=>'DashboardController@dashboard']);
   Route::get('/dashboard/inicio',['as'=>'paginainicial','uses'=>'DashboardController@paginaInicial']);
 
-  Route::get('/produto/find', ['as'=>'findPrice','uses'=>'ProdutoController@findPrice']); 
+  Route::get('/produto/find', ['as'=>'findPrice','uses'=>'ProdutoController@findPrice']);
   // Route::get('/facturas/preco', ['as'=>'findPrice','uses'=>'FacturacaoController@findPrice']);
 
 
@@ -88,6 +88,7 @@ Route::group(['middleware'=>['authen']],function(){
   // GERIR PAGAMENTO DO CONCURSO => Malache
   Route::get('/concurso/create_pagamento/{id}', 'ConcursoController@createPagamentoConcurso')->name('createPagamentoConcurso');
   Route::post('/concurso/pagamento', 'ConcursoController@pagamentoConcurso')->name('pagamentoConcurso');
+  Route::get('/concurso/{id}/relatorio', ['as'=>'concursoRelatorio','uses'=>'ConcursoController@showRelatorio']);
   // FACTURAS DO CONCURSO
   Route::get('/concurso/facturas_concurso/{id}', 'ConcursoController@facturasConcurso')->name('facturasConcurso');
   // EDITAR O MODTIVO JUSTIFICATIVO DA NAO APLICACAO DO IMPOSTO

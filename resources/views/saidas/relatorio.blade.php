@@ -66,7 +66,7 @@
 <small> {{$email->email}}</small><br />
 @endforeach
  <small> <strong>NUIT {{$empresa->nuit}}</strong></small></div>
-&nbsp;</td>
+</td>
 <td style="width: 197px; text-align: center; height: 188px;">&nbsp;
 <div style="border: 2px solid black; border-radius: 10px; height: 160px;">
 <strong><em><span style="text-decoration: underline; font-size: 16px;"><br>
@@ -74,14 +74,14 @@ Dados do Cliente</span></em></strong><br />
 <strong>Exmo (s)</strong>: {{$saida->cliente->nome}}<br />
 <strong>Morada</strong>: {{$saida->cliente->endereco}}<br />
 <strong>NUIT</strong>: {{$saida->cliente->nuit}}</div>
-&nbsp;</td>
-<td style="width: 153px; height: 188px;">
-<div class="" style="border: 2px solid black; border-radius: 10px; height: 45px;">
+</td>
+<td style="width: 153px; height: 188px;">&nbsp;
+<div class="" style="border: 2px solid black; border-radius: 10px; height: 43px;">
 <h3 style="text-align: center;"><strong>SAÍDA</strong></h3>
 </div>
 <br />
-<div style="border: 2px solid black; border-radius: 10px; height: 95px;"><br />
-<h2 style="color: red; text-align: center;">N&ordm; {{$saida->id}}</h2>
+<div style="border: 2px solid black; border-radius: 10px; height: 93px;"><br />
+<h2 style="color: red; text-align: center;">N&ordm; {{$saida->id}}/{{date('Y', strtotime($saida->data))}}</h2>
 </div>
 </td>
 </tr>
@@ -100,11 +100,13 @@ Dados do Cliente</span></em></strong><br />
 </tr>
 </tbody>
 </table>
+
+
 </td>
 </tr>
 </tbody>
 </table>
-<table style="height: 51px; width: 750px;" class="wena linha">
+<table style="height: 51px; width: 750px; padding-left: 5px;" class="wena linha">
 <tbody>
 <tr>
 <td style="text-align: center;" class="linha"><strong>QUANTIDADE</strong></td>
@@ -117,33 +119,33 @@ Dados do Cliente</span></em></strong><br />
 <tr>
 <td style="text-align: center;" class="linha">{{$iten_saida->quantidade}}</td>
 <td style="width: 300px; text-align: center;" class="linha">{{$iten_saida->produto->descricao}}</td>
-<td style="width: 129px; text-align: center;" class="linha">{{$iten_saida->produto->preco_venda}}</td>
-<td style="width: 161px; text-align: center;" class="linha">{{$iten_saida->valor}}</td>
+<td style="width: 129px; text-align: right;" class="linha">{{number_format($iten_saida->produto->preco_venda, 2)}}</td>
+<td style="width: 161px; text-align: right;" class="linha">{{number_format("$iten_saida->valor",2)}}</td>
 </tr>
 @endforeach
 </tbody>
 </table>
-<table class="total wena" style="height: 84px; width: 748px;">
+<table class="total wena" style="height: 84px; width: 748px; align: right;padding-left: 7px;">
 <tbody>
 <tr style="height: 18px;">
-<td class="linha" style="width: 409px; height: 18px; text-align: center;">Motivo justicado da n&atilde;o aplica&ccedil;&atilde;o do imposto</td>
-<td class="linha" style="width: 118px; height: 18px;text-align: right;">
-<strong>&nbsp;SUB-TOTAL</strong></td>
-<td class="linha" style="width: 148px; text-align: center;">{{$saida->valor_total}}Mtn</td>
+<td class="linha" style="width: 409px; height: 18px; text-align: center; font-size: 10;">Motivo justicado da n&atilde;o aplica&ccedil;&atilde;o do imposto</td>
+<td class="linha" style="width: 118px; height: 18px;text-align: ">
+<strong>SUB-TOTAL</strong></td>
+<td class="linha" style="width: 148px; text-align: right;">{{number_format("$saida->valor_total",2)}}Mtn</td>
 </tr>
 <tr style="height: 18px;">
-<td class="linha" style="width: ; height: 18px;">&nbsp;</td>
-<td class="linha" style="width:; height: 18px;text-align: right;"><strong>&nbsp;IVA 17%</strong></td>
-<td class="linha" style="width: 148px; text-align: center;">{{(($saida->valor_total)*17)/100}}</td>
+<td class="linha" style="width: ; height: 18px;font-size: 10;">{{$saida->motivo_justificativo_nao_iva}}</td>
+<td class="linha" style="width:; height: 18px;text-align: "><strong>IVA 17%</strong></td>
+<td class="linha" style="width: 148px; text-align: right;">{{number_format((($saida->valor_total)*17)/100, 2)}}</td>
 </tr>
 <tr style="height: 18px;">
-<td class="linha" style="width: ; height: 18px;">&nbsp;</td>
-<td class="linha" style="width: ; height: 18px;text-align: right;"><strong>&nbsp;TOTAL</strong></td>
-<td class="linha" style="width: 148px; text-align: center;">{{$saida->valor_iva}}Mtn</td>
+<td class="" style="width: ; height: 18px;"></td>
+<td class="linha" style="width: ; height: 18px;text-align: "><strong>TOTAL</strong></td>
+<td class="linha" style="width: 148px; text-align: right;">{{number_format("$saida->valor_iva",2)}}Mtn</td>
 </tr>
 <tr style="height: 18px;">
-<td  style="width: ; height: 18px;">&nbsp;</td>
-<td class="" style="width: ; height: 18px;text-align: right;"><strong>&nbsp;</strong></td>
+<td  style="width: ; height: 18px;"></td>
+<td class="" style="width: ; height: 18px;text-align: right;"><strong></strong></td>
 <td class="" style="width: 148px; text-align: center;"></td>
 </tr>
 
@@ -153,22 +155,22 @@ Dados do Cliente</span></em></strong><br />
 
 </div>
 <br>
-<footer style="margin-bottom: 30px;">
-<table style=" width: 750px;">
+
+<table style=" width: 740px;">
 
 	<tr>
 	<td style="width: 450px;text-align: center;">&nbsp;</td>
 	<td style="width: 280px; text-align: left;">
 	<div >
     @foreach($empresa->contas as $conta)
-    <strong>{{$conta->banco}}</strong>(MZN) {{$conta->numero}}&nbsp;<br />
+    <strong>{{$conta->banco}}</strong>(MZN) {{$conta->numero}}<br />
      @endforeach
      </div>
 	</td>
 	</tr>
 
 </table>
-</footer>
-<div class="footer"> <small>Processado por computador</small>.</div>
+
+<div class="footer"><small>Processado por computador</small>.</div>
 </body>
 </html>

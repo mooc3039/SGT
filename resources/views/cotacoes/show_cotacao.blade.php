@@ -16,8 +16,6 @@
 								</div>
 							</div>
 
-
-
 						</div>
 
 						<div class="col-md-4">
@@ -103,7 +101,7 @@
 						</div>
 
 						<div class="col-md-6 text-right">
-							
+
 							<table class="pull-right">
 								@if($cotacao->aplicacao_motivo_iva == 1)
 								<tr>
