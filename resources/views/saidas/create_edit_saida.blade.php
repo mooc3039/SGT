@@ -49,7 +49,12 @@
        </div>
 
        <div class="col-md-6 col-md-offset-3">
-        <legend>Pagamento: <b><span class="valor_total_iva_visual pull-right" style="border:none"> </span></b></legend>
+        <legend>Pagamento: 
+          <b>
+            <span class="valor_total_iva_visual hide_iva pull-right" style="border:none"> </span>
+            <span style="display: none;" class="valor_total show_iva pull-right" style="border:none"> </span>
+          </b>
+        </legend>
         <div class="row" style="display: block">
           <div class="col-md-6">
             {{ Form::label('valor_pago', 'Valor Pago')}}
