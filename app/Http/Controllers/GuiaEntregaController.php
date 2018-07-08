@@ -46,7 +46,7 @@ class GuiaEntregaController extends Controller
     public function index()
     {
         //
-        $guias_entrega = $this->guia_entrega->orderBy('created_at', 'desc')->paginate(10);
+        $guias_entrega = $this->guia_entrega->get();
         return view('guias_entrega.index_guias_entrega', compact('guias_entrega'));
     }
 
@@ -157,7 +157,7 @@ class GuiaEntregaController extends Controller
     public function show($id)
     {
         //
-        $guia_entrega = $this->guia_entrega->with('itensGuiantrega.produto', 'cliente')->findOrFail($id); 
+        $guia_entrega = $this->guia_entrega->with('itensGuiantrega.produto', 'cliente', 'saida')->findOrFail($id); 
             // Tras a saida. Tras os Itens da Saida e dentro da relacao ItensSaida eh possivel pegar a relacao Prodtuo atraves do dot ou ponto. NOTA: a relacao produto nao esta na saida e sim na itensSaida, mas eh possivel ter os seus dados partido da saida como se pode ver.
         $empresa = Empresa::with('enderecos', 'telefones', 'emails', 'contas')->findOrFail(1);
         
@@ -177,9 +177,9 @@ class GuiaEntregaController extends Controller
 
     public function showGuiasEntrega($saida_id){
 
-        $saida_id = $saida_id;
+        $saida = $this->saida->findOrFail($saida_id);
         $guias_entrega = $this->guia_entrega->where('saida_id', $saida_id)->get();
-        return view('guias_entrega.index_saida_guias_entrega', compact('guias_entrega', 'saida_id'));
+        return view('guias_entrega.index_saida_guias_entrega', compact('guias_entrega', 'saida'));
 
     }
 

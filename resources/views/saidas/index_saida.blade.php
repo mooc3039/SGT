@@ -41,11 +41,17 @@
               <tbody>
                 @foreach($saidas as $saida)
                 <tr>
-                  <td> <a href="{{ route('show_guia_entrega', $saida->id) }}" data-toggle="tooltip" data-placement="right" title="Guias de Entrega">{{$saida->id}}</a> </td>
+                  <td> <a href="{{ route('show_guia_entrega', $saida->id) }}" data-toggle="tooltip" data-placement="right" title="Guias de Entrega">{{$saida->codigo}}</a> </td>
                   <td> {{date('d-m-Y', strtotime($saida->data))}} </td>
                   <td> {{$saida->cliente->nome}} </td>
                   <td class="text-right"> {{number_format($saida->valor_total, 2, '.', ',')}} </td>
-                  <td class="text-right"> {{number_format($saida->valor_iva, 2, '.', ',')}} </td>
+                  <td class="text-right">
+                    @if($saida->aplicacao_motivo_iva == 1)
+                    {{""}}
+                    @else
+                    {{number_format($saida->valor_iva, 2, '.', ',')}}
+                    @endif
+                  </td>
                   <!-- Abertura para o form destroy. Aberto aqui e nao mais abaixo para melhor estetica do btn-group. Existe apenas um submit dentro deste codigo, como nao eh apenas o ofrmulario aqui -->
                   {{ Form::open(['route'=>['saida.destroy', $saida->id], 'method'=>'DELETE']) }}
                   <td>
@@ -54,8 +60,13 @@
                         <a href="{{route('createPagamentoSaida', $saida->id)}}"
 
                           <?php
+                          $valor_total = $saida->valor_iva;
                           $valor_pago_soma = 0;
                           $arry_valor_pago_soma = array();
+
+                          if($saida->aplicacao_motivo_iva == 1){
+                            $valor_total = $saida->valor_total;
+                          }
 
                           foreach($saida->pagamentosSaida as $pagamento){
                             $arry_valor_pago_soma[] = $pagamento->valor_pago;
@@ -73,7 +84,7 @@
                             echo 'class="btn btn-default btn-sm"';
                             echo 'disabled';
                           }else{
-                            if(($saida->pago==1 && ($valor_pago_soma >= $saida->valor_iva))){
+                            if(($saida->pago==1 && ($valor_pago_soma >= $valor_total))){
                               echo 'class="btn btn-success btn-sm"';
                             }else{
                               echo 'class="btn btn-danger btn-sm"';
@@ -90,7 +101,7 @@
                           if($saida->concurso_id != 0){
                             echo '<i class="fa fa-warning"></i>';
                           }else{
-                            if(($saida->pago==1 && ($valor_pago_soma >= $saida->valor_iva))){
+                            if(($saida->pago==1 && ($valor_pago_soma >= $valor_total))){
 
                               echo '<i class="fa fa-check"></i>';
                             }else{
@@ -264,7 +275,7 @@
 <script type="text/javascript">
 
    // DataTables Inicio
-  $(document).ready(function() {
+   $(document).ready(function() {
 
     var titulo = "Facturas";
     var msg_bottom = "Papelaria Agenda & Serviços";

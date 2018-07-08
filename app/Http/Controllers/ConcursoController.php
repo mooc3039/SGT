@@ -18,6 +18,7 @@ use App\Model\ItenConcurso;
 use App\Model\FormaPagamento;
 use App\Model\PagamentoConcurso;
 use App\Model\Produto;
+use App\Model\MotivoIva;
 use App\Model\Cliente;
 use DB;
 use Session;
@@ -28,15 +29,17 @@ class ConcursoController extends Controller
   private $concurso;
   private $iten_concurso;
   private $produto;
+  private $motivo_iva;
   private $cliente;
   private $tipo_cliente;
   private $user;
 
-  public function __construct(Concurso $concurso, ItenConcurso $iten_concurso, Produto $produto, Cliente $cliente, TipoCliente $tipo_cliente, User $user){
+  public function __construct(Concurso $concurso, ItenConcurso $iten_concurso, Produto $produto, MotivoIva $motivo_iva, Cliente $cliente, TipoCliente $tipo_cliente, User $user){
 
     $this->concurso = $concurso;
     $this->iten_concurso = $iten_concurso;
     $this->produto = $produto;
+    $this->motivo_iva = $motivo_iva;
     $this->cliente = $cliente;
     $this->tipo_cliente = $tipo_cliente;
     $this->user = $user;
@@ -67,8 +70,9 @@ class ConcursoController extends Controller
       $tipos_cliente = DB::table('tipo_clientes')->pluck('tipo_cliente', 'id')->all();
       $formas_pagamento = DB::table('forma_pagamentos')->pluck('descricao', 'id')->all();
       $produtos = $this->produto->select('id', 'descricao')->get();
+      $motivos_iva = $this->motivo_iva->select('id', 'motivo_nao_aplicacao')->get();
 
-      return view('concursos.create_edit_concurso', compact('clientes', 'tipos_cliente', 'formas_pagamento' , 'produtos'));
+      return view('concursos.create_edit_concurso', compact('clientes', 'tipos_cliente', 'formas_pagamento' , 'produtos', 'motivos_iva'));
     }
 
     public function createPagamentoConcurso($id){
@@ -99,17 +103,24 @@ class ConcursoController extends Controller
 
         $pago = 0;
         $valor_pago = 0.00;
-        $remanescente = $request['remanescente'];
+        $remanescente = 0.00;
         $forma_pagamento_id = $acronimo_forma_pagamento_naoaplicavel_id;
         $nr_documento_forma_pagamento = "Nao Aplicavel";
         $codigo_concurso = $request['codigo_concurso'];
+
+        if($request['aplicacao_motivo_iva'] == 1){
+          $remanescente = str_replace($bad_symbols, "", $request['subtotal_sem_iva']);
+        }
+        else{
+          $remanescente = str_replace($bad_symbols, "", $request['valor_total_iva']);
+        }
 
 
         if($request['pago'] == 0){
 
           $pago = $pago;
           $valor_pago = str_replace($bad_symbols, "", $valor_pago);
-          $remanescente = str_replace($bad_symbols, "", $request['valor_total_iva']);
+          $remanescente = $remanescente;;
           $forma_pagamento_id = $acronimo_forma_pagamento_naoaplicavel_id;
           $nr_documento_forma_pagamento = 'Nao Aplicavel';
 
@@ -145,7 +156,8 @@ class ConcursoController extends Controller
 
           $concurso->cliente_id = $request['cliente_id'];
           $concurso->user_id = $request['user_id'];
-          $concurso->motivo_justificativo_nao_iva = $request['texto_motivo_imposto'];
+          $concurso->aplicacao_motivo_iva = $request['aplicacao_motivo_iva'];
+          $concurso->motivo_iva_id = $request['motivo_iva_id'];
           $concurso->valor_total = 0; 
           $concurso->valor_iva = 0; 
           $concurso->iva = 0; 
@@ -550,7 +562,7 @@ public function pagamentoConcurso(PagamentoConcursoStoreUpdateFormRequest $reque
 
     $pago = $pago;
     $valor_pago = str_replace($bad_symbols, "", $valor_pago);
-    $remanescente = str_replace($bad_symbols, "", $request['valor_iva']);
+    $remanescente = str_replace($bad_symbols, "", $request['valor_total']);
     $forma_pagamento_id = $forma_pagamento_id;
     $nr_documento_forma_pagamento = $nr_documento_forma_pagamento;
 

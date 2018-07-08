@@ -9,7 +9,7 @@
     </ol>
   </div>
   <div class="col-lg-4 text-right">
-    <h3>Entrada: <b>{{ $entrada->id }}</b></h3>
+    <h3>Entrada: <b>{{ $entrada->codigo }}</b></h3>
     <h4>Status: <b><span class="info_pagamento"></span></b></h4>
     <h4>Montante Geral da entrada: <b><span class="valor_total_iva_visual" style="color: blue"></span></b></h4>
     <h4>Remanescente: <b><span class="remanescente_visual" style="color: red"></span></b></h4>

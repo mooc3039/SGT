@@ -64,7 +64,7 @@
 
                 >
                 
-                <td> {{$cotacao->id}} </td>
+                <td> {{$cotacao->codigo}} </td>
                 <td> {{date('d-m-Y', strtotime($cotacao->created_at))}} </td>
                 <td> {{date('d-m-Y', strtotime($cotacao->data_vencimento))}} </td>
                 <td> {{$cotacao->cliente->nome}} </td>
@@ -99,7 +99,6 @@
     <div class="panel-footer">
       <div class="row">
         <div class="col-md-12">
-          {{ $cotacoes->links() }}
         </div>
       </div>
     </div>

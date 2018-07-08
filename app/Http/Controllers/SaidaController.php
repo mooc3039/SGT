@@ -18,6 +18,7 @@ use App\Model\ItenSaida;
 use App\Model\PagamentoSaida;
 use App\Model\FormaPagamento;
 use App\Model\Produto;
+use App\Model\MotivoIva;
 use App\Model\Cliente;
 use App\User;
 use DB;
@@ -33,16 +34,18 @@ class SaidaController extends Controller
   private $concurso;
   private $iten_concurso;
   private $produto;
+  private $motivo_iva;
   private $cliente;
   private $tipo_cliente;
   private $user;
 
-  public function __construct(Saida $saida, Concurso $concurso, ItenConcurso $iten_concurso, Produto $produto, Cliente $cliente, TipoCliente $tipo_cliente, User $user){
+  public function __construct(Saida $saida, Concurso $concurso, ItenConcurso $iten_concurso, Produto $produto, MotivoIva $motivo_iva, Cliente $cliente, TipoCliente $tipo_cliente, User $user){
 
     $this->saida = $saida;
     $this->concurso = $concurso;
     $this->iten_concurso = $iten_concurso;
     $this->produto = $produto;
+    $this->motivo_iva = $motivo_iva;
     $this->cliente = $cliente;
     $this->tipo_cliente = $tipo_cliente;
     $this->user = $user;
@@ -80,8 +83,9 @@ class SaidaController extends Controller
       $tipos_cliente = DB::table('tipo_clientes')->pluck('tipo_cliente', 'id')->all();
       $formas_pagamento = DB::table('forma_pagamentos')->pluck('descricao', 'id')->all();
       $produtos = $this->produto->select('id', 'descricao')->get();
+      $motivos_iva = $this->motivo_iva->select('id', 'motivo_nao_aplicacao')->get();
 
-      return view('saidas.create_edit_saida', compact('clientes', 'tipos_cliente', 'formas_pagamento' , 'produtos'));
+      return view('saidas.create_edit_saida', compact('clientes', 'tipos_cliente', 'formas_pagamento' , 'produtos', 'motivos_iva'));
     }
 
     /**
@@ -109,12 +113,19 @@ class SaidaController extends Controller
         $nr_referencia = "Nao Aplivael";
         $concurso_id = 0;
 
+        if($request['aplicacao_motivo_iva'] == 1){
+          $remanescente = str_replace($bad_symbols, "", $request['subtotal_sem_iva']);
+        }
+        else{
+          $remanescente = str_replace($bad_symbols, "", $request['valor_total_iva']);
+        }
+
 
         if($request['pago'] == 0){
 
           $pago = $pago;
           $valor_pago = str_replace($bad_symbols, "", $valor_pago);
-          $remanescente = str_replace($bad_symbols, "", $request['valor_total_iva']);
+          $remanescente = $remanescente;
           $forma_pagamento_id = $forma_pagamento_id;
           $nr_documento_forma_pagamento = $nr_documento_forma_pagamento;
 
@@ -159,7 +170,8 @@ class SaidaController extends Controller
 
           $saida->cliente_id = $request['cliente_id'];
           $saida->user_id = $request['user_id'];
-          $saida->motivo_justificativo_nao_iva = $request['texto_motivo_imposto'];
+          $saida->aplicacao_motivo_iva = $request['aplicacao_motivo_iva'];
+          $saida->motivo_iva_id = $request['motivo_iva_id'];
           $saida->valor_total = 0; 
           $saida->valor_iva = 0;
           $saida->iva = 0;
@@ -365,8 +377,9 @@ class SaidaController extends Controller
       $tipos_cliente = DB::table('tipo_clientes')->pluck('tipo_cliente', 'id')->all();
       $formas_pagamento = DB::table('forma_pagamentos')->pluck('descricao', 'id')->all();
       $produtos = $this->produto->select('id', 'descricao')->get();
+      $motivos_iva = $this->motivo_iva->select('id', 'motivo_nao_aplicacao')->get();
 
-      return view('saidas.publicos.create_edit_saida_publico', compact('clientes', 'tipos_cliente', 'formas_pagamento' , 'produtos'));
+      return view('saidas.publicos.create_edit_saida_publico', compact('clientes', 'tipos_cliente', 'formas_pagamento' , 'produtos', 'motivos_iva'));
     }
 
     public function saidaConcursoCreate(){
@@ -410,7 +423,7 @@ class SaidaController extends Controller
 // dd($request->all());
         $pago = $pago;
         $valor_pago = str_replace($bad_symbols, "", $valor_pago);
-        $remanescente = str_replace($bad_symbols, "", $request['valor_iva']);
+        $remanescente = str_replace($bad_symbols, "", $request['valor_total']);
         $forma_pagamento_id = $forma_pagamento_id;
         $nr_documento_forma_pagamento = $nr_documento_forma_pagamento;
 

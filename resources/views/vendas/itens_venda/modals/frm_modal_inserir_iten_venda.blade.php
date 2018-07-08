@@ -73,14 +73,14 @@
 									<td> <h5><b>: <span class="new_valor_total_sem_iva"></span></b></h5></td>
 								</tr>
 								<tr>
-									<td><h5>IVA(17%) </h5> </td>
+									<td class="hide_iva"><h5>IVA(17%) </h5> </td>
 									<td></td>
-									<td><h5><b>: <span class="new_iva"></span></b></h5> </td>
+									<td class="hide_iva"><h5><b>: <span class="new_iva"></span></b></h5> </td>
 								</tr>
 								<tr>
-									<td><h5> Montante Geral da Cotação </h5></td>
+									<td class="hide_iva"><h5> Montante Geral da Cotação </h5></td>
 									<td></td>
-									<td><h5><b>: <span class="new_valor_total_iva"></span></b></h5></td>
+									<td class="hide_iva"><h5><b>: <span class="new_valor_total_iva"></span></b></h5></td>
 								</tr>
 							</table>
 						</div>

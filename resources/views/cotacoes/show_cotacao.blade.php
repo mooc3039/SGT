@@ -35,7 +35,7 @@
 							<div class="panel panel-default">
 								<div class="panel-body text-center">
 									<h2> <b> Numero de Cotação / Factura </b> </h2> <hr>
-									<h1>{{$cotacao->id}}</h1>
+									<h1>{{$cotacao->codigo}}</h1>
 								</div>
 							</div>
 

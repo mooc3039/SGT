@@ -13,6 +13,7 @@ use App\Model\Me;
 use App\Model\Venda;
 use App\Model\ItenVenda;
 use App\Model\Produto;
+use App\Model\MotivoIva;
 use App\Model\Cliente;
 use App\Model\FormaPagamento;
 use App\Model\PagamentoVenda;
@@ -27,14 +28,16 @@ class VendaController extends Controller
   private $venda;
   private $iten_venda;
   private $produto;
+  private $motivo_iva;
   private $cliente;
   private $user;
 
-  public function __construct(Venda $venda, ItenVenda $iten_venda, Produto $produto, Cliente $cliente, User $user){
+  public function __construct(Venda $venda, ItenVenda $iten_venda, Produto $produto, MotivoIva $motivo_iva, Cliente $cliente, User $user){
 
     $this->venda = $venda;
     $this->iten_venda = $iten_venda;
     $this->produto = $produto;
+    $this->motivo_iva = $motivo_iva;
     $this->cliente = $cliente;
     $this->user = $user;
   }
@@ -64,8 +67,9 @@ class VendaController extends Controller
       $tipos_cliente = DB::table('tipo_clientes')->pluck('tipo_cliente', 'id')->all();
       $formas_pagamento = DB::table('forma_pagamentos')->pluck('descricao', 'id')->all();
       $produtos = $this->produto->select('id', 'descricao')->get();
+      $motivos_iva = $this->motivo_iva->select('id', 'motivo_nao_aplicacao')->get();
 
-      return view('vendas.create_edit_venda', compact('clientes', 'tipos_cliente', 'formas_pagamento' , 'produtos'));
+      return view('vendas.create_edit_venda', compact('clientes', 'tipos_cliente', 'formas_pagamento' , 'produtos', 'motivos_iva'));
     }
 
     public function createPagamentoVenda($id){
@@ -98,7 +102,8 @@ class VendaController extends Controller
 
         $venda->cliente_id = $request['cliente_id'];
         $venda->user_id = $request['user_id'];
-        $venda->motivo_justificativo_nao_iva = $request['texto_motivo_imposto'];
+        $venda->aplicacao_motivo_iva = $request['aplicacao_motivo_iva'];
+        $venda->motivo_iva_id = $request['motivo_iva_id'];
         $venda->valor_total = 0; 
         $venda->valor_iva = 0; 
         $venda->iva = 0; 
@@ -109,6 +114,13 @@ class VendaController extends Controller
         $remanescente = 0.00;
         $forma_pagamento_id = $acronimo_forma_pagamento_naoaplicavel_id;
         $nr_documento_forma_pagamento = "Nao Aplicavel";
+
+        if($request['aplicacao_motivo_iva'] == 1){
+          $remanescente = str_replace($bad_symbols, "", $request['subtotal_sem_iva']);
+        }
+        else{
+          $remanescente = str_replace($bad_symbols, "", $request['valor_total_iva']);
+        }
 
         if($request['pago'] == 0){
 
@@ -265,30 +277,30 @@ class VendaController extends Controller
 
     public function motivoNaoAplicacaoImposto(Request $request){
     // dd($request->all());
-    $venda_id = $request->venda_id;
+      $venda_id = $request->venda_id;
 
-    $dataForm = [
-      'motivo_justificativo_nao_iva' => $request->motivo_justificativo_nao_iva,
-    ];
+      $dataForm = [
+        'motivo_justificativo_nao_iva' => $request->motivo_justificativo_nao_iva,
+      ];
 
-    $venda_motivo_justificativo = $this->venda->findOrFail($venda_id);
+      $venda_motivo_justificativo = $this->venda->findOrFail($venda_id);
 
-    if($venda_motivo_justificativo->update($dataForm)){
+      if($venda_motivo_justificativo->update($dataForm)){
 
-      $sucess = 'Motivo Justificativo da não aplicação de imposto actualizado com sucesso!';
-      return redirect()->back()->with('success', $sucess);
-
-
-    }else{
-      $error = 'Erro ao actualizar o Motivo Justificativo da não aplicação de imposto!';
-      return redirect()->back()->with('error', $error);
+        $sucess = 'Motivo Justificativo da não aplicação de imposto actualizado com sucesso!';
+        return redirect()->back()->with('success', $sucess);
 
 
+      }else{
+        $error = 'Erro ao actualizar o Motivo Justificativo da não aplicação de imposto!';
+        return redirect()->back()->with('error', $error);
+
+
+      }
     }
-  }
 
     public function pagamentoVenda(PagamentoVendaStoreUpdateFormRequest $request){
-        //dd($request->all());
+        // dd($request->all());
      $acronimo_forma_pagamento_naoaplicavel = FormaPagamento::select('id')->where('acronimo', 'naoaplicavel')->first();
      $acronimo_forma_pagamento_naoaplicavel_id = $acronimo_forma_pagamento_naoaplicavel->id;
      $bad_symbols = array(",");
@@ -311,7 +323,7 @@ class VendaController extends Controller
 
       $pago = $pago;
       $valor_pago = str_replace($bad_symbols, "", $valor_pago);;
-      $remanescente = str_replace($bad_symbols, "", $request['valor_iva']);;
+      $remanescente = str_replace($bad_symbols, "", $request['valor_total']);;
       $forma_pagamento_id = $forma_pagamento_id;
       $nr_documento_forma_pagamento = $nr_documento_forma_pagamento;
 

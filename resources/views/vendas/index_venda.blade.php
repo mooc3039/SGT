@@ -43,19 +43,30 @@
               <tbody>
                 @foreach($vendas as $venda)
                 <tr>
-                  <td> {{$venda->id}} </td>
+                  <td> {{$venda->codigo}} </td>
                   <td> {{date('d-m-Y', strtotime($venda->created_at))}} </td>
                   <td> {{$venda->cliente->nome}} </td>
                   <td> {{number_format($venda->valor_total, 2, '.', ',')}} </td>
-                  <td> {{number_format($venda->valor_iva, 2, '.', ',')}} </td>
+                  <td> 
+                    @if($venda->aplicacao_motivo_iva == 1)
+                    {{""}}
+                    @else
+                    {{number_format($venda->valor_iva, 2, '.', ',')}}
+                    @endif
+                  </td>
                   {{ Form::open(['route'=>['venda.destroy', $venda->id], 'method'=>'DELETE']) }}
                   <td> 
                     <!-- <button type="button" data-toggle="modal" data-target="#modalPagamentoVenda" data-venda_id={{ $venda->id }} data-valor_total={{ $venda->valor_total }} data-valor_pago={{ $venda->valor_pago }} data-troco={{ $venda->troco }} data-forma_pagamento_id={{ $venda->forma_pagamento_id }} data-nr_documento_forma_pagamento={{ $venda->nr_documento_forma_pagamento }} -->
                       <a href="{{route('createPagamentoVenda', $venda->id)}}"
 
                         <?php
+                        $valor_total = $venda->valor_iva;
                         $valor_pago_soma = 0;
                         $arry_valor_pago_soma = array();
+
+                        if($venda->aplicacao_motivo_iva == 1){
+                            $valor_total = $venda->valor_total;
+                          }
 
                         foreach($venda->pagamentosVenda as $pagamento){
                           $arry_valor_pago_soma[] = $pagamento->valor_pago;
@@ -69,7 +80,7 @@
 
 
 
-                        if(($venda->pago==1 && ($valor_pago_soma >= $venda->valor_iva))){ 
+                        if(($venda->pago==1 && ($valor_pago_soma >= $valor_total))){ 
                           echo 'class="btn btn-success btn-sm"';
                         }else{
                           echo 'class="btn btn-danger btn-sm"';
@@ -83,7 +94,7 @@
 
                         <?php
 
-                        if(($venda->pago==1) && ($valor_pago_soma >= $venda->valor_iva) ){
+                        if(($venda->pago==1) && ($valor_pago_soma >= $valor_total) ){
                           echo '<i class="fa fa-check"></i>';
                         }else{
                           echo '<i class="icon_close_alt2"></i>';

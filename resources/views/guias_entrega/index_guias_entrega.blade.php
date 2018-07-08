@@ -44,8 +44,8 @@
               <tbody>
                 @foreach($guias_entrega as $guia_entrega)
                 <tr>
-                  <td> {{$guia_entrega->id}} </td>
-                  <td> {{$guia_entrega->saida_id}} </td>
+                  <td> {{$guia_entrega->codigo}} </td>
+                  <td> {{$guia_entrega->saida->codigo}} </td>
                   <td> {{date('d-m-Y', strtotime($guia_entrega->created_at))}} </td>
                   <td> {{$guia_entrega->cliente->nome}} </td>
                   <td> {{number_format($guia_entrega->valor_total, 2, '.', ',')}} </td>
@@ -70,7 +70,6 @@
       <div class="panel-footer">
         <div class="row">
           <div class="col-md-6">
-            {{ $guias_entrega->links() }}
           </div>
         </div>
       </div>

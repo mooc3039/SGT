@@ -89,7 +89,11 @@
 									Motivo justificativo da não aplicação de imposto
 								</div>
 								<div class="panel-body">
-									{{$concurso->motivo_justificativo_nao_iva}}
+									@if($concurso->motivo_iva_id == null)
+									{{""}}
+									@else
+									{{$concurso->motivoIva->motivo_nao_aplicacao}}
+									@endif
 								</div>
 							</div>
 
@@ -97,6 +101,13 @@
 
 						<div class="col-md-6 text-right">
 							<table class="pull-right">
+								@if($concurso->aplicacao_motivo_iva == 1)
+								<tr>
+									<td>Valor Total:</td>
+									<td style="width: 10px"></td>
+									<td>{{number_format($concurso->valor_total, 2, '.', ',')}} Mtn</td>
+								</tr>
+								@else
 								<tr>
 									<td>Sub-Total:</td>
 									<td style="width: 10px"></td>
@@ -112,6 +123,7 @@
 									<td></td>
 									<td><b>{{number_format($concurso->valor_iva, 2, '.', ',')}} Mtn</b></td>
 								</tr>
+								@endif
 							</table>
 
 						</div>

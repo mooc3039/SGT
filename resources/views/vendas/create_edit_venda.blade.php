@@ -31,7 +31,12 @@
        </div>
 
        <div class="col-md-6 col-md-offset-2">
-        <legend>Pagamento: <b><span class="valor_total_iva_visual pull-right" style="border:none"> </span></b></legend>
+        <legend>Pagamento:
+          <b>
+            <span class="valor_total_iva_visual hide_iva pull-right" style="border:none"> </span>
+            <span style="display: none;" class="valor_total show_iva pull-right" style="border:none"> </span>
+          </b>
+        </legend>
         <div class="row" style="margin-bottom: 5px">
           <div class="col-md-3" style="display: none">
             <div class="row">
@@ -144,7 +149,8 @@
       <td style="border:none"></td>
       <td></td>
       <td></td>
-      <td><b>Subtotal</b></td>
+      <td class="hide_iva"><b>Subtotal</b></td>
+      <td style="display: none" class="show_iva"><b>Total</b></td>
       <td><b><div class="valor_total" style="border:none"> </div></b></td>
       <td></td>
     </tr><tr>
@@ -153,8 +159,8 @@
       <td style="border:none"></td>
       <td></td>
       <td></td>
-      <td><b>IVA(17%)</b></td>
-      <td><b><div class="iva" style="border:none"> </div></b></td>
+      <td class="hide_iva"><b>IVA(17%)</b></td>
+      <td><b><div class="iva hide_iva" style="border:none"> </div></b></td>
       <td></td>
     </tr><tr>
       <td colspan="2" style="border:none">
@@ -167,14 +173,22 @@
       <td style="border:none"></td>
       <td></td>
       <td></td>
-      <td><b>Total</b></td>
-      <td><b><div class="valor_total_iva_visual" style="border:none"> </div></b></td>
+      <td class="hide_iva"><b>Total</b></td>
+      <td><b><div class="valor_total_iva_visual hide_iva" style="border:none"> </div></b></td>
       <td></td>
     </tr>
     <tr>
       <td style="border:none" colspan="7">
-        <div id="mostra_texto">
-          <textarea class="form-control" rows="3" cols="7" name="texto_motivo_imposto" id="texto_motivo_imposto"></textarea>
+        <div id="mostra_motivo">
+          <label for="motivo_iva_id"> Selecione o motivo </label>
+          <select class="form-control" name="motivo_iva_id" id="motivo_iva_id">
+            <option value="0" selected="true" disabled="true">Selecione o motivo</option>
+            @foreach($motivos_iva as $motivo_iva)
+            <option value="{!!$motivo_iva->id!!}">{!!$motivo_iva->motivo_nao_aplicacao!!}</option>
+            @endforeach
+          </select>
+          <input type="hidden" name="aplicacao_motivo_iva" id="aplicacao_motivo_iva" value="0">
+          <input type="hidden" name="subtotal_sem_iva" id="subtotal_sem_iva" value="0">
         </div>
       </td>
     </tr>
@@ -286,10 +300,11 @@
 <script text="text/javascript">
 
   $(document).ready(function() {
-    document.getElementById('mostra_texto').style.display = 'none';
-    $('#texto_motivo_imposto').val("");
+    document.getElementById('mostra_motivo').style.display = 'none';
+    $('#aplicacao_motivo_iva').val(0);
+    $('#motivo_iva_id').val("");
 
-  });
+  } );
 
   $('.submit_cliente').on('click',function(){
     $(".wait").css("display", "block");
@@ -322,13 +337,87 @@
         $('#nr_documento_forma_pagamento').focus();
         return false;
       }
+
+      if (document.getElementById('checkbox_motivo_imposto').checked) {
+        if($('#motivo_iva_id').val() === "" || $('#motivo_iva_id').val() === null){
+          alert('Selecione o Motivo da nao aplicação do IVA!');
+          $(".wait").css("display", "none");
+          return false;
+        }
+      }
     });
 
     remanescenteRed();
     formataValoresMonetariosAoCarregarAPagina();
   });
 
-  function formataValoresMonetariosAoCarregarAPagina(){
+  $(document).ready(function() {
+    document.getElementById('mostra_motivo').style.display = 'none';
+    $('#aplicacao_motivo_iva').val(0);
+    $('#motivo_iva_id').val("");
+  } );
+
+  // HIDE & SHOW IVA
+  function motivoDaNaoAPlicacaoDoImposto() {
+    if (document.getElementById('checkbox_motivo_imposto').checked) {
+      document.getElementById('mostra_motivo').style.display = 'block';
+      $('#aplicacao_motivo_iva').val(1);
+      hideIva();
+
+    }
+    else {
+      document.getElementById('mostra_motivo').style.display = 'none';
+      $('#aplicacao_motivo_iva').val(0);
+      $('#motivo_iva_id').val("");
+      showIva();
+    }
+  };
+
+  function hideIva(){
+
+    var hide_iva = document.getElementsByClassName('hide_iva');
+    var show_iva = document.getElementsByClassName('show_iva');
+
+    for(i=0; i<hide_iva.length; i++){
+      hide_iva[i].style.display = "none";
+    }
+
+    for(i=0; i<show_iva.length; i++){
+      show_iva[i].style.display = "block";
+    }
+
+    trocaValorPagoPorValorTotal();
+
+    }
+
+    function showIva(){
+      var hide_iva = document.getElementsByClassName('hide_iva');
+      var show_iva = document.getElementsByClassName('show_iva');
+
+      for(i=0; i<hide_iva.length; i++){
+        hide_iva[i].style.display = "block";
+      }
+
+      for(i=0; i<show_iva.length; i++){
+        show_iva[i].style.display = "none";
+      }
+
+      trocaValorPagoPorValorTotal();
+    }
+
+    function trocaValorPagoPorValorTotal(){
+      if($('#aplicacao_motivo_iva').val() == 1){
+        var valor_pago = $('#subtotal_sem_iva').val();
+      }else{
+        valor_pago = $('#valor_total_iva').val();
+      }
+      $('#valor_pago').val(Number.parseFloat(valor_pago).formatMoney());
+      $('#remanescente').val(Number.parseFloat(0).formatMoney());
+    }
+
+    // FIM HIDE & SHOW IVA
+
+    function formataValoresMonetariosAoCarregarAPagina(){
      $('#remanescente').val(Number.parseFloat(0).formatMoney()); // O remanescente eh zero porq ainda nao ha valores
      $('#valor_pago').val(Number.parseFloat(0).toFixed(2));
    }
@@ -496,24 +585,13 @@
       iva = Number.parseFloat(Number.parseFloat((total*17)/100).toFixed(2)); // o parseFloat interno gera uma string e garante duas casas decimas, o parseFloat externo garante que seja um float para posteriores operacoes artime.
       total_iva = (total + iva);
 
-      $('#valor_pago').val(total_iva.formatMoney());
-      $('#remanescente').val(Number.parseFloat(0).toFixed(2));
+      // $('#valor_pago').val(total_iva.formatMoney());
+      $('#subtotal_sem_iva').val(total);
       $('.valor_total').html(total.formatMoney()+ " Mtn");
       $('.iva').html(iva.formatMoney()+ " Mtn");
       $('.valor_total_iva_visual').html(total_iva.formatMoney()+ " Mtn");
       $('#valor_total_iva').val(total_iva); //cuidado, input importante para calculos
-    };
-
-    function motivoDaNaoAPlicacaoDoImposto() {
-      if (document.getElementById('checkbox_motivo_imposto').checked) {
-        document.getElementById('mostra_texto').style.display = 'block';
-        $('#texto_motivo_imposto').val("");
-        
-      }
-      else {
-        document.getElementById('mostra_texto').style.display = 'none';
-        $('#texto_motivo_imposto').val("");
-      }
+      trocaValorPagoPorValorTotal(); // mostra o valor pago correcto dependendo do hide_iva ou show_iva
     };
 
 

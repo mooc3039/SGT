@@ -51,15 +51,26 @@
               <td> {{date('d-m-Y', strtotime($concurso->created_at))}} </td>
               <td> {{$concurso->cliente->nome}} </td>
               <td> {{number_format($concurso->valor_total, 2, '.', ',')}} </td>
-              <td> {{number_format($concurso->valor_iva, 2, '.', ',')}} </td>
+              <td>
+                @if($concurso->aplicacao_motivo_iva == 1)
+                {{""}}
+                @else
+                {{number_format($concurso->valor_iva, 2, '.', ',')}}
+                @endif
+              </td>
               {{ Form::open(['route'=>['concurso.destroy', $concurso->id], 'method'=>'DELETE']) }}
               <td>
                 <!-- <button type="button" data-toggle="modal" data-target="#modalPagamentoConcurso" data-concurso_id={{ $concurso->id }} data-valor_concurso={{ $concurso->valor_concurso }} data-valor_total={{ $concurso->valor_total }} data-forma_pagamento_id={{ $concurso->forma_pagamento_id }} data-nr_documento_forma_pagamento={{ $concurso->nr_documento_forma_pagamento }} -->
                   <a href="{{route('createPagamentoConcurso', $concurso->id)}}"
 
                     <?php
+                    $valor_total = $concurso->valor_iva;
                     $valor_pago_soma = 0;
                     $arry_valor_pago_soma = array();
+
+                    if($concurso->aplicacao_motivo_iva == 1){
+                            $valor_total = $concurso->valor_total;
+                          }
 
                     foreach($concurso->pagamentosConcurso as $pagamento){
                       $arry_valor_pago_soma[] = $pagamento->valor_pago;
@@ -73,7 +84,7 @@
 
 
 
-                    if(($concurso->pago==1 && ($valor_pago_soma >= $concurso->valor_iva))){ 
+                    if(($concurso->pago==1 && ($valor_pago_soma >= $valor_total))){ 
                       echo 'class="btn btn-success btn-sm"';
                     }else{
                       echo 'class="btn btn-danger btn-sm"';
@@ -90,7 +101,7 @@
 
                     <?php
 
-                    if(($concurso->pago==1 && ($valor_pago_soma >= $concurso->valor_iva))){
+                    if(($concurso->pago==1 && ($valor_pago_soma >= $valor_total))){
 
                       echo '<i class="fa fa-check"></i>';
                     }else{
@@ -197,16 +208,16 @@
   <script type="text/javascript">
 
     // DataTables Inicio
-  $(document).ready(function() {
+    $(document).ready(function() {
 
-    var titulo = "Concursos";   
-    var msg_bottom = "Papelaria Agenda & Serviços";
+      var titulo = "Concursos";   
+      var msg_bottom = "Papelaria Agenda & Serviços";
 
-    var oTable = $('#tbl_index_concursos').DataTable( {
-      "processing": true,
-      "pagingType": "full_numbers",
-      "dom": 'Brtpl',
-      buttons: [
+      var oTable = $('#tbl_index_concursos').DataTable( {
+        "processing": true,
+        "pagingType": "full_numbers",
+        "dom": 'Brtpl',
+        buttons: [
             // 'print',
             // 'excelHtml5',
             // 'pdfHtml5'
@@ -234,48 +245,48 @@
             ]
           });
 
-    $('#pesq').keyup(function(){
-      oTable.search($(this).val()).draw();
-    });
+      $('#pesq').keyup(function(){
+        oTable.search($(this).val()).draw();
+      });
 
-  } );
+    } );
   // DataTables Fim
 
-    $(document).ready(function(){
-      $('.submit_iten').on('click',function(){
-        $(".wait").css("display", "block");
-      });
+  $(document).ready(function(){
+    $('.submit_iten').on('click',function(){
+      $(".wait").css("display", "block");
     });
+  });
 
-    $('#modalPagamentoConcurso').on('show.bs.modal', function (event) {
-      var button = $(event.relatedTarget); 
-      var dta_concurso_id = button.data('concurso_id');
-      var dta_valor_concurso = button.data('valor_concurso');
-      var dta_valor_total = button.data('valor_total');
-      var dta_forma_pagamento_id = button.data('forma_pagamento_id');
-      var dta_nr_documento_forma_pagamento = button.data('nr_documento_forma_pagamento');
-      var modal = $(this);
+  $('#modalPagamentoConcurso').on('show.bs.modal', function (event) {
+    var button = $(event.relatedTarget); 
+    var dta_concurso_id = button.data('concurso_id');
+    var dta_valor_concurso = button.data('valor_concurso');
+    var dta_valor_total = button.data('valor_total');
+    var dta_forma_pagamento_id = button.data('forma_pagamento_id');
+    var dta_nr_documento_forma_pagamento = button.data('nr_documento_forma_pagamento');
+    var modal = $(this);
 
-      modal.find('.modal-body #concurso_id').val(dta_concurso_id);
-      modal.find('.modal-body #valor_total').val(dta_valor_total);
-      modal.find('.modal-body #forma_pagamento_id').val(dta_forma_pagamento_id);
-      modal.find('.modal-body #nr_documento_forma_pagamento').val(dta_nr_documento_forma_pagamento);
-
-
-      var valor_concurso_visual = (dta_valor_concurso*1);
-      $('.valor_concurso_visual').html(valor_concurso_visual.formatMoney(2,',','.')+ " Mtn");
+    modal.find('.modal-body #concurso_id').val(dta_concurso_id);
+    modal.find('.modal-body #valor_total').val(dta_valor_total);
+    modal.find('.modal-body #forma_pagamento_id').val(dta_forma_pagamento_id);
+    modal.find('.modal-body #nr_documento_forma_pagamento').val(dta_nr_documento_forma_pagamento);
 
 
-    });
+    var valor_concurso_visual = (dta_valor_concurso*1);
+    $('.valor_concurso_visual').html(valor_concurso_visual.formatMoney(2,',','.')+ " Mtn");
 
 
-    function pagoNaoPago() {
-      if (document.getElementById('pago').checked) {
-        document.getElementById('div_forma_pagamento').style.display = 'block';
-        $('#forma_pagamento_id').val('');
-        $('#nr_documento_forma_pagamento').val('');
-      }else {
-        document.getElementById('div_forma_pagamento').style.display = 'none';
+  });
+
+
+  function pagoNaoPago() {
+    if (document.getElementById('pago').checked) {
+      document.getElementById('div_forma_pagamento').style.display = 'block';
+      $('#forma_pagamento_id').val('');
+      $('#nr_documento_forma_pagamento').val('');
+    }else {
+      document.getElementById('div_forma_pagamento').style.display = 'none';
         $('#forma_pagamento_id').val(1); // codigo da forma de pagamento (Nao Aplicavel=>DB)
         $('#nr_documento_forma_pagamento').val('Nao Aplicavel');
 

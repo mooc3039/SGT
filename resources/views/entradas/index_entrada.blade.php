@@ -38,7 +38,7 @@
           <tbody>
             @foreach($entradas as $entrada)
             <tr>
-              <td> {{$entrada->id}} </td>
+              <td> {{$entrada->codigo}} </td>
               <td> {{date('d-m-Y', strtotime($entrada->created_at))}} </td>
               <td> {{$entrada->fornecedor->nome}} </td>
               <td> {{number_format($entrada->valor_total, 2, '.', ',')}} </td>

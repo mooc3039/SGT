@@ -35,9 +35,9 @@
 							<div class="panel panel-default">
 								<div class="panel-body text-center">
 									<h2> <b> Numero de guia_entrega</b> </h2>
-									<h4>Da Factura nr: {{$guia_entrega->saida_id}}</h4>
+									<h4>Da Factura nr: {{$guia_entrega->saida->codigo}}</h4>
 									 <hr>
-									<h1>{{$guia_entrega->id}}</h1>
+									<h1>{{$guia_entrega->codigo}}</h1>
 								</div>
 							</div>
 
@@ -46,7 +46,7 @@
 					</div>
 					<div class="row">
 						<div class="col-md-6"> MAPUTO</div>
-						<div class="col-md-6 text-right"> Data: {{date('d-m-Y', strtotime($guia_entrega->data))}} </div>
+						<div class="col-md-6 text-right"> Data: {{date('d-m-Y', strtotime($guia_entrega->created_at))}} </div>
 					</div>
 				</div>
 

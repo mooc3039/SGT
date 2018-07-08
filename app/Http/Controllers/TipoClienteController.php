@@ -120,7 +120,7 @@ class TipoClienteController extends Controller
 
           }else{
 
-            $error = 'Tipo de Cliente actualizado com sucesso!';
+            $error = 'Erro ao remover o Tipo de Cliente!';
             return redirect()->back()->with('error', $error);
           }
 

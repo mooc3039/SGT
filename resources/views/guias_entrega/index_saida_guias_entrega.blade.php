@@ -2,7 +2,7 @@
 @section('content')
 <div class="row">
   <div class="col-lg-8">
-    <h3 class="page-header"><i class="fa fa-file-text-o"></i>Guias de Entrega  da Factura <span style="color: blue"><b>{{ $saida_id }}</b></span></h3>
+    <h3 class="page-header"><i class="fa fa-file-text-o"></i>Guias de Entrega  da Factura <span style="color: blue"><b>{{ $saida->codigo }}</b></span></h3>
     <ol class="breadcrumb">
       <li><i class="fa fa-home"></i><a href="#">Home</a></li>
       <li><i class="icon_document_alt"></i>Guias de Entrega</li>
@@ -43,8 +43,8 @@
               <tbody>
                 @foreach($guias_entrega as $guia_entrega)
                 <tr>
-                  <td> {{$guia_entrega->id}} </td>
-                  <td> {{$guia_entrega->saida_id}} </td>
+                  <td> {{$guia_entrega->codigo}} </td>
+                  <td> {{$guia_entrega->saida->codigo}} </td>
                   <td> {{date('d-m-Y', strtotime($guia_entrega->created_at))}} </td>
                   <td> {{$guia_entrega->cliente->nome}} </td>
                   <td> {{number_format($guia_entrega->valor_total, 2, '.', ',')}} </td>
@@ -79,7 +79,7 @@
     </section>
   </div>
 </div>
-{{Form::hidden('codigo_saida', $saida_id, ['id'=>'codigo_saida', 'disabled'])}}
+{{Form::hidden('codigo_saida', $saida->id, ['id'=>'codigo_saida', 'disabled'])}}
 @endsection
 @section('script')
 <script type="text/javascript">

@@ -26,7 +26,8 @@ class Saida extends Model
         'nr_documento_forma_pagamento',
         'nr_referencia',
         'concurso_id',
-        'motivo_justificativo_nao_iva',
+        'aplicacao_motivo_iva',
+        'motivo_iva_id',
     ];
     public $timestamps = false;
 
@@ -57,6 +58,12 @@ class Saida extends Model
     public function pagamentosSaida(){
 
         return $this->hasMany('App\Model\PagamentoSaida');
+
+    }
+
+    public function motivoIva()
+    {
+      return $this->belongsTo('App\Model\MotivoIva');
 
     }
 }

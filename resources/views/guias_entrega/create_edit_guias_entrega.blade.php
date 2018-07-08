@@ -10,7 +10,7 @@
     </ol>
   </div>
   <div class="col-lg-4 text-right">
-    <h3>Factura: <b>{{ $saida->id }}</b></h3>
+    <h3>Factura: <b>{{ $saida->codigo }}</b></h3>
   </div>
 </div>
 

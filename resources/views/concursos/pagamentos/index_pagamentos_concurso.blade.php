@@ -27,9 +27,14 @@
 
         <?php
 
+        $valor_total = $concurso->valor_iva;
         $valor_pago_soma = 0;
         $remanescente = 0;
         $arry_valor_pago_soma = array();
+
+        if($concurso->aplicacao_motivo_iva == 1){
+          $valor_total = $concurso->valor_total;
+        }
 
         foreach($concurso->pagamentosConcurso as $pagamento){
           $arry_valor_pago_soma[] = $pagamento->valor_pago;
@@ -37,10 +42,10 @@
 
         if(sizeof($arry_valor_pago_soma)<=0){
           $valor_pago_soma = 0;
-          $remanescente = $concurso->valor_iva - $valor_pago_soma;
+          $remanescente = $valor_total - $valor_pago_soma;
         }else{
           $valor_pago_soma = array_sum($arry_valor_pago_soma);
-          $remanescente = $concurso->valor_iva - $valor_pago_soma;
+          $remanescente = $valor_total - $valor_pago_soma;
         }
 
 
@@ -92,11 +97,11 @@
                     {{ Form::text('nr_documento_forma_pagamento', null, ['class'=>'form-control', 'id'=>'nr_documento_forma_pagamento'])}}
 
                     {{ Form::hidden('concurso_id', $concurso->id, ['class'=>'form-control', 'id'=>'concurso_id'])}}
-                    {{ Form::hidden('valor_iva', null, ['class'=>'form-control', 'id'=>'valor_iva'])}}
+                    {{ Form::hidden('valor_total', $valor_total, ['class'=>'form-control', 'id'=>'valor_total'])}}
 
                     {{ Form::hidden('pago', $concurso->pago, ['class'=>'form-control', 'id'=>'pago', 'disabled'])}}
 
-                    {{ Form::hidden('pago_total_iva_info', $concurso->valor_iva, ['class'=>'form-control', 'id'=>'pago_total_iva_info', 'disabled'])}}
+                    {{ Form::hidden('valor_total_iva_info', $valor_total, ['class'=>'form-control', 'id'=>'valor_total_iva_info', 'disabled'])}}
 
                     {{ Form::hidden('valor_pago_soma', $valor_pago_soma, ['class'=>'form-control', 'id'=>'valor_pago_soma', 'disabled'])}}
                   </div>
@@ -267,7 +272,7 @@
       }
     });
 
-    var valor_total_iva_visual = Number.parseFloat($('#valor_iva').val());
+    var valor_total_iva_visual = Number.parseFloat($('#valor_total').val());
     $('.valor_total_iva_visual').html(valor_total_iva_visual.formatMoney()+ " Mtn");
     resetPagamento(); // Faz o reset dos campos "pagamento" ao carregar a pagina para permitir o alertaremanescentePagamento()...correcto
     alertaremanescentePagamento();
@@ -275,11 +280,11 @@
 
 
     var pago = $('#pago').val();
-    var pago_total_iva_info = Number.parseFloat(($('#pago_total_iva_info').val()).replace(/[^0-9-.]/g, ''));
+    var valor_total_iva_info = Number.parseFloat(($('#valor_total_iva_info').val()).replace(/[^0-9-.]/g, ''));
     var valor_pago_soma = Number.parseFloat(($('#valor_pago_soma').val()).replace(/[^0-9-.]/g, ''));
 
     if(pago==1){
-      if(valor_pago_soma >= pago_total_iva_info){
+      if(valor_pago_soma >= valor_total_iva_info){
         $('.info_pagamento').css("color", "green");
         $('.info_pagamento').html('Pago na Totalidade');
       }else{

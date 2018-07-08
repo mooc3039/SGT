@@ -20,7 +20,8 @@ class Venda extends Model
         'remanescente',
         'forma_pagamento_id',
     	'nr_documento_forma_pagamento',
-        'motivo_justificativo_nao_iva',
+        'aplicacao_motivo_iva',
+        'motivo_iva_id',
     ];
 
     public function cliente(){
@@ -50,5 +51,11 @@ class Venda extends Model
 
         return $this->belongsTo('App\Model\FormaPagamento');
         
+    }
+
+    public function motivoIva()
+    {
+      return $this->belongsTo('App\Model\MotivoIva');
+
     }
 }

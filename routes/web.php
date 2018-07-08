@@ -240,6 +240,7 @@ Route::group(['middleware'=>['authen','roles'],'roles'=>['Administrador']],funct
   Route::resource('/categoria', 'CategoriaController');
   Route::resource('/cliente', 'ClienteController');
   Route::resource('/tipo_cliente', 'TipoClienteController');
+  Route::resource('/motivo_nao_aplicacao_iva', 'MotivoNaoAplicacaoIvaController');
   Route::resource('/usuarios', 'UsuarioController');
 
 

@@ -102,46 +102,51 @@
 
             </tbody>
             <tfoot>
+              <tr>
+                <td style="border:none"></td>
+                <td style="border:none"></td>
+                <td style="border:none"></td>
+                <td></td>
+                <td class="hide_iva"><b>Subtotal</b></td>
+                <td class="show_iva"><b>Total</b></td>
+                <td><b><div class="valor_visual" style="border:none"> </div></b></td>
+              </tr>
+              <tr>
+                <td style="border:none"></td>
+                <td style="border:none"></td>
+                <td style="border:none"></td>
+                <td></td>
+                <td class="hide_iva"><b>IVA(17%)</b></td>
+                <td><b><div class="iva hide_iva" style="border:none"> </div></b></td>
+              </tr>
+              <tr>
+                <td style="border:none"></td>
+                <td style="border:none"></td>
+                <td style="border:none"></td>
+                <td></td>
+                <td class="hide_iva"><b>Total</b></td>
+                <td><b><div class="valor_visual_iva hide_iva" style="border:none"> </div></b></td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+        <div class="panel-footer">
 
-            <tr>
-              <td style="border:none"></td>
-              <td style="border:none"></td>
-              <td style="border:none"></td>
-              <td></td>
-              <td><b>Subtotal</b></td>
-              <td><b><div class="valor_visual" style="border:none"> </div></b></td>
-            </tr><tr>
-              <td style="border:none"></td>
-              <td style="border:none"></td>
-              <td style="border:none"></td>
-              <td></td>
-              <td><b>IVA(17%)</b></td>
-              <td><b><div class="iva" style="border:none"> </div></b></td>
-            </tr><tr>
-              <td style="border:none"></td>
-              <td style="border:none"></td>
-              <td style="border:none"></td>
-              <td></td>
-              <td><b>Total</b></td>
-              <td><b><div class="valor_visual_iva" style="border:none"> </div></b></td>
-            </tr>
-          </tfoot>
-        </table>
-      </div>
-      <div class="panel-footer">
-
-      </div>
-    </section>
-    {{ Form::hidden('valor_total', 0, ['id'=>'valor_total']) }}
-    {{ Form::hidden('valor_total_iva', 0, ['id'=>'valor_total_iva']) }}
-    {{ Form::hidden('valor_pago', 0, ['id'=>'valor_pago']) }}
-    {{ Form::hidden('valor_pago_conc', 0, ['id'=>'valor_pago_conc']) }}
-    {{ Form::hidden('remanescente', 0, ['id'=>'remanescente']) }}
-    {{ Form::hidden('user_id', Auth::user()->id) }}
-    {!!Form::hidden('_token',csrf_token())!!}
-    {{ Form::close() }}
+        </div>
+      </section>
+      {{ Form::hidden('valor_total', 0, ['id'=>'valor_total']) }}
+      {{ Form::hidden('valor_total_iva', 0, ['id'=>'valor_total_iva']) }}
+      {{ Form::hidden('subtotal_sem_iva', 0, ['id'=>'subtotal_sem_iva']) }}
+      {{ Form::hidden('valor_pago', 0, ['id'=>'valor_pago']) }}
+      {{ Form::hidden('valor_pago_conc', 0, ['id'=>'valor_pago_conc']) }}
+      {{ Form::hidden('remanescente', 0, ['id'=>'remanescente']) }}
+      {{ Form::hidden('aplicacao_motivo_iva', 0, ['id'=>'aplicacao_motivo_iva']) }}
+      {{ Form::hidden('motivo_iva_id', null, ['id'=>'motivo_iva_id']) }}
+      {{ Form::hidden('user_id', Auth::user()->id) }}
+      {!!Form::hidden('_token',csrf_token())!!}
+      {{ Form::close() }}
+    </div>
   </div>
-</div>
 
 
 </section>
@@ -183,19 +188,18 @@
       }else{
 
         $('tbody').empty();
-      var id = $('#concurso_id').val();
-      var dataId={'id':id};
-      $.ajax({
-        type  : 'POST',
-        url   : '{!!URL::route('findConcursoDados')!!}',
-        dataType: 'json',
-        data  : dataId,
-        success:function(data){
-          $('#cliente_id').val(data.cliente.id);
-          $('#cliente_nome').val(data.cliente.nome);
-          $('#codigo_concurso').val(data.codigo_concurso);
-          $('#pago').val(data.pago);
-          $('#valor_total').val(data.valor_total);
+        var id = $('#concurso_id').val();
+        var dataId={'id':id};
+        $.ajax({
+          type  : 'POST',
+          url   : '{!!URL::route('findConcursoDados')!!}',
+          dataType: 'json',
+          data  : dataId,
+          success:function(data){
+            $('#cliente_id').val(data.cliente.id);
+            $('#cliente_nome').val(data.cliente.nome);
+            $('#codigo_concurso').val(data.codigo_concurso);
+            $('#pago').val(data.pago);
           // preenche o input valor_pago_conc, soma todos valores pagos do pagamentosConcurso
           $('#valor_pago_conc').val(
             valorPagoPagamentosConcurso(data.pagamentos_concurso)
@@ -210,9 +214,18 @@
           // $('#forma_pagamento_id').val(data.forma_pagamento_id);
           // $('#nr_documento_forma_pagamento').val(data.nr_documento_forma_pagamento);
           
+          var valor_total = data.valor_iva;
 
+          if(data.aplicacao_motivo_iva === 1){
+            valor_total = data.valor_total;
+            hideIva();
+          }
+          else{
+            showIva();
+          }
+          
           if(data.pago === 1){
-            if( ($('#valor_pago_conc').val()*1) < (data.valor_iva) ){
+            if( ($('#valor_pago_conc').val()*1) < valor_total ){
               $('#remanescente').val(0);
               btnNaoPago();
             }
@@ -225,6 +238,12 @@
             $('#remanescente').val(0);
             btnNaoPago();
           }
+
+          $('#valor_total').val(valor_total);
+          $('#valor_pago').val(valor_total);          
+          $('#aplicacao_motivo_iva').val(data.aplicacao_motivo_iva);          
+          $('#motivo_iva_id').val(data.motivo_iva_id);          
+          
 
         },
         error:function(data){
@@ -263,6 +282,34 @@
       return valor_pago_conc;
     }
 
+    function hideIva(){
+
+      var hide_iva = document.getElementsByClassName('hide_iva');
+      var show_iva = document.getElementsByClassName('show_iva');
+
+      for(i=0; i<hide_iva.length; i++){
+        hide_iva[i].style.display = "none";
+      }
+
+        for(i=0; i<show_iva.length; i++){
+        show_iva[i].style.display = "block";
+      }
+
+    }
+
+    function showIva(){
+      var hide_iva = document.getElementsByClassName('hide_iva');
+      var show_iva = document.getElementsByClassName('show_iva');
+
+      for(i=0; i<hide_iva.length; i++){
+        hide_iva[i].style.display = "block";
+      }
+
+      for(i=0; i<show_iva.length; i++){
+        show_iva[i].style.display = "none";
+      }
+
+    }
 
 
     function adicionarItensAtabela(itens){
@@ -295,8 +342,7 @@
       total_iva = (total + iva);
 
       $('#valor_total_iva').val(total_iva);
-      $('#valor_pago').val(total_iva);
-
+      $('#subtotal_sem_iva').val(total);
       $('.valor_visual').html(total.formatMoney()+ " Mtn");
       $('.iva').html(iva.formatMoney()+ " Mtn");
       $('.valor_visual_iva').html(total_iva.formatMoney()+ " Mtn");

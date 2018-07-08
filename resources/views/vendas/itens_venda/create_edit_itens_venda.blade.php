@@ -37,7 +37,7 @@
               <div class="panel panel-default">
                 <div class="panel-body text-center">
                   <h2> <b> Numero da Venda / Factura </b> </h2> <hr>
-                  <h1>{{$venda->id}}</h1>
+                  <h1>{{$venda->codigo}}</h1>
                 </div>
               </div>
 
@@ -46,7 +46,7 @@
           </div>
           <div class="row">
             <div class="col-md-6"> MAPUTO</div>
-            <div class="col-md-6 text-right"> Data: {{$venda->data}} </div>
+            <div class="col-md-6 text-right"> Data: {{date('d-m-Y', strtotime($venda->created_at))}} </div>
           </div>
         </div>
 
@@ -57,7 +57,7 @@
             <div class="col-md-12">
               <div class="row" >
                 <div class="col-md-8" style="margin-bottom: 10px">
-                  <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modalInserirItem" data-new_valor_total={{ $venda->valor_total }} data-new_venda_id={{ $venda->id }}><i class="fa fa-plus"></i></button>
+                  <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modalInserirItem" data-new_valor_total={{ $venda->valor_total }} data-new_venda_id={{ $venda->id }} data-new_aplicacao_motivo_iva={{ $venda->aplicacao_motivo_iva }}><i class="fa fa-plus"></i></button>
                 </div>
                 <div class="col-md-4">
                   <input type="text" id="pesq" class="form-control" placeholder="Pesquisa...">
@@ -78,7 +78,7 @@
                   <tr>
                     <td> {{$iten_venda->produto->descricao}} </td>
 
-                    <td class="text-center"> <button type="button" class="btn btn-sm" data-toggle="modal" data-target="#modalProdutoIten" data-venda_id={{ $venda->id }} data-produto_id={{ $iten_venda->produto->id }} data-descricao={{ $iten_venda->produto->descricao }} data-quantidade={{ $iten_venda->quantidade }} data-qtd_dispo={{ $iten_venda->produto->quantidade_dispo }} data-qtd_min={{ $iten_venda->produto->quantidade_min }} data-preco_venda={{ $iten_venda->produto->preco_venda }} data-valor={{$iten_venda->valor }} data-desconto={{ $iten_venda->desconto }} data-subtotal={{ $iten_venda->subtotal }} data-valor_total={{ $venda->valor_total }} data-user_id={{ Auth::user()->id }}> {{$iten_venda->quantidade}} </button> </td>
+                    <td class="text-center"> <button type="button" class="btn btn-sm" data-toggle="modal" data-target="#modalProdutoIten" data-venda_id={{ $venda->id }} data-produto_id={{ $iten_venda->produto->id }} data-descricao={{ $iten_venda->produto->descricao }} data-quantidade={{ $iten_venda->quantidade }} data-qtd_dispo={{ $iten_venda->produto->quantidade_dispo }} data-qtd_min={{ $iten_venda->produto->quantidade_min }} data-preco_venda={{ $iten_venda->produto->preco_venda }} data-valor={{$iten_venda->valor }} data-desconto={{ $iten_venda->desconto }} data-subtotal={{ $iten_venda->subtotal }} data-valor_total={{ $venda->valor_total }} data-aplicacao_motivo_iva={{ $venda->aplicacao_motivo_iva }} data-user_id={{ Auth::user()->id }}> {{$iten_venda->quantidade}} </button> </td>
 
                     <td> {{number_format($iten_venda->produto->preco_venda, 2, '.', ',')}}</td>
                     <td> {{number_format($iten_venda->valor, 2, '.', ',')}} </td>
@@ -115,7 +115,11 @@
                   {{Form::hidden('motivo_justificativo_nao_iva', $venda->motivo_justificativo_nao_iva, ['disabled', 'id'=>'motivo_justificativo_nao_iva'])}}
                   {{Form::close()}}
 
-                  {{$venda->motivo_justificativo_nao_iva}}
+                  @if($venda->motivo_iva_id == null)
+                  {{""}}
+                  @else
+                  {{$venda->motivoIva->motivo_nao_aplicacao}}
+                  @endif
                 </div>
               </div>
 
@@ -124,6 +128,13 @@
             <div class="col-md-6 text-right">
 
               <table class="pull-right">
+                @if($venda->aplicacao_motivo_iva == 1)
+                <tr>
+                  <td>Valor Total:</td>
+                  <td style="width: 10px"></td>
+                  <td>{{number_format($venda->valor_total, 2, '.', ',')}} Mtn</td>
+                </tr>
+                @else
                 <tr>
                   <td>Sub-Total:</td>
                   <td style="width: 10px"></td>
@@ -139,6 +150,7 @@
                   <td></td>
                   <td><b>{{number_format($venda->valor_iva, 2, '.', ',')}} Mtn</b></td>
                 </tr>
+                @endif
               </table>
 
             </div>
@@ -196,57 +208,57 @@
   <!-- FIM MODAL EDITAR ITEM -->
 
   <!-- MODAL EDITAR JUSTIFICATIVA -->
-      <div class="modal fade" tabindex="-1" role="dialog" id="modalMotivoJustificativo">
-        <div class="modal-dialog modal-lg" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-              <h4 class="modal-title"><b>Motivo justificativo da não aplicação de imposto: </b>Editar<span id=""><span/></h4>
-              </div>
-              <div class="modal-body">
+  <div class="modal fade" tabindex="-1" role="dialog" id="modalMotivoJustificativo">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title"><b>Motivo justificativo da não aplicação de imposto: </b>Editar<span id=""><span/></h4>
+          </div>
+          <div class="modal-body">
 
-                {{Form::open(['route'=>'editar_motivo_venda', 'method'=>'POST', 'onsubmit'=>'submitFormMotivoJustificativo.disabled = true; return true;'])}}
+            {{Form::open(['route'=>'editar_motivo_venda', 'method'=>'POST', 'onsubmit'=>'submitFormMotivoJustificativo.disabled = true; return true;'])}}
 
-                <div class="row">
-                  <div class="col-md-12">
-                    <div class="form-group">
-                      
-                      {{Form::textarea('motivo_justificativo_nao_iva', null, ['class' => 'form-control', 'id'=>'motivo_justificativo_nao_iva'])}}
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
 
-                      {{Form::hidden('venda_id', null, ['class' => 'form-control', 'id'=>'venda_id'])}}
-                    </div>
-                  </div>
-                </div>
+                  {{Form::textarea('motivo_justificativo_nao_iva', null, ['class' => 'form-control', 'id'=>'motivo_justificativo_nao_iva'])}}
 
-
-
-                <div class="modal-footer">
-                  <div class="row">
-                    <div class="col-md-6 text-left">
-
-                    </div>
-                    <div class="col-md-6 text-right">
-                      {{Form::button('Fechar', ['class'=>'btn btn-default', 'data-dismiss'=>'modal'])}}
-                      {{Form::submit('Salvar', ['class'=>'btn btn-primary submit_iten', 'name'=>'submitFormMotivoJustificativo'])}}
-                    </div>
-                  </div>
-
-
-
-                  {{Form::close()}}
+                  {{Form::hidden('venda_id', null, ['class' => 'form-control', 'id'=>'venda_id'])}}
                 </div>
               </div>
-            </div><!-- /.modal-content -->
-          </div><!-- /.modal-dialog -->
-        </div><!-- /.modal -->
+            </div>
 
-        <!-- FIM MODAL EDITAR JUSTIFICATIVA -->
 
-  {{Form::hidden('codigo_venda', $venda->id, ['id'=>'codigo_venda', 'disabled'])}}
-  @endsection
 
-  @section('script')
-  <script>
+            <div class="modal-footer">
+              <div class="row">
+                <div class="col-md-6 text-left">
+
+                </div>
+                <div class="col-md-6 text-right">
+                  {{Form::button('Fechar', ['class'=>'btn btn-default', 'data-dismiss'=>'modal'])}}
+                  {{Form::submit('Salvar', ['class'=>'btn btn-primary submit_iten', 'name'=>'submitFormMotivoJustificativo'])}}
+                </div>
+              </div>
+
+
+
+              {{Form::close()}}
+            </div>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+    <!-- FIM MODAL EDITAR JUSTIFICATIVA -->
+
+    {{Form::hidden('codigo_venda', $venda->id, ['id'=>'codigo_venda', 'disabled'])}}
+    @endsection
+
+    @section('script')
+    <script>
 
     // DataTables Inicio
     $(document).ready(function() {
@@ -319,6 +331,7 @@
         var button = $(event.relatedTarget) // Button that triggered the modal
         var new_dta_valor_total = button.data('new_valor_total')
         var new_dta_venda_id = button.data('new_venda_id')
+        var new_aplicacao_motivo_iva = button.data('new_aplicacao_motivo_iva')
         var modal = $(this)
 
         modal.find('.modal-body #new_venda_id').val(new_dta_venda_id);
@@ -339,6 +352,10 @@
               $('#new_quantidade_dispo').val(data.quantidade_dispo - data.quantidade_min);
               $('#new_qtd_dispo_referencial').val(data.quantidade_dispo - data.quantidade_min);
               newCalcularValores();
+
+              if(new_aplicacao_motivo_iva == 1){
+                hideIva();
+              }
             },
             complete:function(data){
               $('#new_quantidade').focus();
@@ -353,7 +370,11 @@
           numberOnly('#new_desconto');
 
           //calcular os valores de acordo com a qtd e o preco para o NovoItem antes e apos as validacoes feitas;
-          newCalcularValores();         
+          newCalcularValores();  
+
+          if(new_aplicacao_motivo_iva == 1){
+                hideIva();
+              }       
 
         });
 
@@ -435,6 +456,7 @@
         var dta_desconto = button.data('desconto');
         var dta_subtotal = button.data('subtotal');
         var dta_valor_total = button.data('valor_total');
+        var dta_aplicacao_motivo_iva = button.data('aplicacao_motivo_iva')
         var dta_user_id = button.data('user_id');
         var modal = $(this);
 
@@ -455,6 +477,11 @@
 
         editCalcularValores();
 
+        if(dta_aplicacao_motivo_iva == 1){
+          hideIva();
+
+        }
+
 
         $('#modalProdutoIten').delegate('#quantidade,#preco_venda,#desconto','keyup',function(){
 
@@ -462,6 +489,11 @@
           numberOnly('#desconto');
           
           editCalcularValores();
+
+          if(dta_aplicacao_motivo_iva == 1){
+          hideIva();
+
+        }
           
         });
 
@@ -553,6 +585,22 @@
         // console.log(dta_motivo_justificativo_nao_iva);
       });
 
-  </script>
+    function hideIva(){
 
-  @endsection
+      var hide_iva = document.getElementsByClassName('hide_iva');
+      var show_iva = document.getElementsByClassName('show_iva');
+
+      for(i=0; i<hide_iva.length; i++){
+        hide_iva[i].style.display = "none";
+      }
+
+      for(i=0; i<show_iva.length; i++){
+        show_iva[i].style.display = "block";
+      }
+
+    }
+
+
+    </script>
+
+    @endsection

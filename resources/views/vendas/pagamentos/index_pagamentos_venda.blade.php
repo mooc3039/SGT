@@ -9,7 +9,7 @@
     </ol>
   </div>
   <div class="col-lg-4 text-right">
-    <h3>Factura: <b>{{ $venda->id }}</b></h3>
+    <h3>Factura: <b>{{ $venda->codigo }}</b></h3>
     <h4>Status: <b><span class="info_pagamento"></span></b></h4>
     <h4>Montante Geral da Venda: <b><span class="valor_total_visual" style="color: blue"></span></b></h4>
     <h4>Remanescente: <b><span class="remanescente_visual"  style="color: red"></span></b></h4>
@@ -27,9 +27,14 @@
 
         <?php
 
+        $valor_total = $venda->valor_iva;
         $valor_pago_soma = 0;
         $remanescente = 0;
         $arry_valor_pago_soma = array();
+
+        if($venda->aplicacao_motivo_iva == 1){
+          $valor_total = $venda->valor_total;
+        }
 
         foreach($venda->pagamentosVenda as $pagamento){
           $arry_valor_pago_soma[] = $pagamento->valor_pago;
@@ -37,10 +42,10 @@
 
         if(sizeof($arry_valor_pago_soma)<=0){
           $valor_pago_soma = 0;
-          $remanescente = $venda->valor_iva - $valor_pago_soma;
+          $remanescente = $valor_total - $valor_pago_soma;
         }else{
           $valor_pago_soma = array_sum($arry_valor_pago_soma);
-          $remanescente = $venda->valor_iva - $valor_pago_soma;
+          $remanescente = $valor_total - $valor_pago_soma;
         }
 
         ?>
@@ -50,10 +55,12 @@
             <legend>Valor a Pagar: <span class="valor_remanescente_visual pull-right" style="color: blue"></span></legend>
             <div class="row" style="margin-bottom: 5px">
               <div class="col-md-4">
+                @if($valor_pago_soma < $valor_total)
                 <div class="radio-inline">
                   <!-- {{Form::radio('pago', '1', ['id'=>'pago', 'onclick'=>'javascript:pagoNaoPago();'])}} Pago -->
                   <input type="radio" onclick="javascript:pagoNaoPago();" name="pago" value="1" id="pago"><label for="pago">Pago</label>
                 </div>
+                @endif
                 <div class="radio-inline">
                   <!-- {{Form::radio('pago', '0', ['id'=>'nao_pago', 'onclick'=>'javascript:pagoNaoPago();'])}} Não Pago -->
                   <input type="radio" onclick="javascript:pagoNaoPago();" name="pago" value="0" id="nao_pago"> <label for="nao_pago">Não Pago</label>
@@ -91,11 +98,11 @@
                     {{ Form::text('nr_documento_forma_pagamento', null, ['class'=>'form-control', 'id'=>'nr_documento_forma_pagamento'])}}
 
                     {{ Form::hidden('venda_id', $venda->id, ['class'=>'form-control', 'id'=>'venda_id'])}}
-                    {{ Form::hidden('valor_iva', null, ['class'=>'form-control', 'id'=>'valor_total_iva'])}}
+                    {{ Form::hidden('valor_total', $valor_total, ['class'=>'form-control', 'id'=>'valor_total'])}}
 
                     {{ Form::hidden('pago', $venda->pago, ['class'=>'form-control', 'id'=>'pago', 'disabled'])}}
 
-                    {{ Form::hidden('pago_total_iva_info', $venda->valor_iva, ['class'=>'form-control', 'id'=>'pago_total_iva_info', 'disabled'])}}
+                    {{ Form::hidden('valor_total_info', $valor_total, ['class'=>'form-control', 'id'=>'valor_total_info', 'disabled'])}}
 
                     {{ Form::hidden('valor_pago_soma', $valor_pago_soma, ['class'=>'form-control', 'id'=>'valor_pago_soma', 'disabled'])}}
                   </div>
@@ -269,18 +276,18 @@
       }
     });
 
-    var valor_total_visual = Number.parseFloat($('#valor_total_iva').val());
+    var valor_total_visual = Number.parseFloat($('#valor_total').val());
     $('.valor_total_visual').html(valor_total_visual.formatMoney()+ " Mtn");
     $('.remanescente_visual').html(Number.parseFloat($('#valor_remanescente_ref').val()).formatMoney()+ " Mtn");
     
     remanescenteRed();
 
     var pago = $('#pago').val();
-    var pago_total_iva_info = $('#pago_total_iva_info').val()*1;
-    var valor_pago_soma = $('#valor_pago_soma').val()*1;
+    var valor_total_info = Number.parseFloat(($('#valor_total_info').val()).replace(/[^0-9-.]/g, ''));
+    var valor_pago_soma = Number.parseFloat(($('#valor_pago_soma').val()).replace(/[^0-9-.]/g, ''));
 
     if(pago==1){
-      if(valor_pago_soma >= pago_total_iva_info){
+      if(valor_pago_soma >= valor_total_info){
         $('.info_pagamento').css("color", "green");
         $('.info_pagamento').html('Paga na Totalidade');
       }else{
@@ -312,15 +319,15 @@
     $('#forma_pagamento_id').val('');
     $('#nr_documento_forma_pagamento').val('');
 
-    var valor_total_iva = Number.parseFloat($('#valor_total_iva').val());
+    var valor_total = Number.parseFloat($('#valor_total').val());
     var remanescente = Number.parseFloat(0);
-    $('#valor_pago').val(valor_total_iva.formatMoney());
+    $('#valor_pago').val(valor_total.formatMoney());
     $('#remanescente').val(remanescente.formatMoney());
   }
 
   function resetPagamentoTotal(){
-    var valor_total_iva = Number.parseFloat(0);
-    var remanescente = Number.parseFloat($('#valor_total_iva').val());
+    var valor_total = Number.parseFloat(0);
+    var remanescente = Number.parseFloat($('#valor_total').val());
     $('#valor_pago').val(Number.parseFloat(0).formatMoney());
     $('#remanescente').val(remanescente.formatMoney());
     $('#forma_pagamento_id').val(1); // codigo da forma de pagamento (Nao Aplicavel=>DB)

@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Requests\CotacaoStoreUpdateFormRequest;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Database\QueryException;
+// use Illuminate\Database\Eloquent\ModelNotFoundException;
+// use Illuminate\Database\QueryException;
 use DB;
 use Session;
 use App\Model\Produto;
@@ -54,7 +54,7 @@ class CotacaoController extends Controller
   public function index()
   {
     //
-    $cotacoes = $this->cotacao->orderBy('created_at', 'desc')->paginate(10);
+    $cotacoes = $this->cotacao->get();
 
     return view('cotacoes.index_cotacao', compact('cotacoes'));
 

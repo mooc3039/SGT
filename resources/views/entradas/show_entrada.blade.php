@@ -35,7 +35,7 @@
 							<div class="panel panel-default">
 								<div class="panel-body text-center">
 									<h2> <b> Numero da Entrada / Factura </b> </h2> <hr>
-									<h1>{{$entrada->id}}</h1>
+									<h1>{{$entrada->codigo}}</h1>
 								</div>
 							</div>
 
@@ -44,7 +44,7 @@
 					</div>
 					<div class="row">
 						<div class="col-md-6"> MAPUTO</div>
-						<div class="col-md-6 text-right"> Data: {{date('d-m-Y', strtotime($entrada->data))}} </div>
+						<div class="col-md-6 text-right"> Data: {{date('d-m-Y', strtotime($entrada->created_at))}} </div>
 					</div>
 				</div>
 

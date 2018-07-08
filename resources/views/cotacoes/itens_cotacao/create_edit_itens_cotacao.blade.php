@@ -37,7 +37,7 @@
 							<div class="panel panel-default">
 								<div class="panel-body text-center">
 									<h2> <b> Numero de Cotação / Factura </b> </h2> <hr>
-									<h1>{{$cotacao->id}}</h1>
+									<h1>{{$cotacao->codigo}}</h1>
 								</div>
 							</div>
 
@@ -57,7 +57,7 @@
 						<div class="col-md-12">
 							<div class="row" style="margin-bottom: 10px">
 								<div class="col-md-8">
-									<button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modalInserirItem" data-new_valor_total={{ $cotacao->valor_total }} data-new_cotacao_id={{ $cotacao->id }}><i class="fa fa-plus"></i></button>
+									<button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modalInserirItem" data-new_valor_total={{ $cotacao->valor_total }} data-new_cotacao_id={{ $cotacao->id }} data-new_aplicacao_motivo_iva={{ $cotacao->aplicacao_motivo_iva }}><i class="fa fa-plus"></i></button>
 								</div>
 								<div class="col-md-4">
 									<input type="text" id="pesq" class="form-control" placeholder="Pesquisa...">
@@ -78,7 +78,7 @@
 									<tr>
 										<td> {{$iten_cotacao->produto->descricao}} </td>
 
-										<td class="text-center"> <button type="button" class="btn btn-sm" data-toggle="modal" data-target="#modalProdutoIten" data-cotacao_id={{ $cotacao->id }} data-produto_id={{ $iten_cotacao->produto->id }} data-descricao={{ $iten_cotacao->produto->descricao }} data-quantidade={{ $iten_cotacao->quantidade }} data-preco_venda={{ $iten_cotacao->produto->preco_venda }} data-valor={{$iten_cotacao->valor }} data-desconto={{ $iten_cotacao->desconto }} data-subtotal={{ $iten_cotacao->subtotal }} data-valor_total={{ $cotacao->valor_total }} data-user_id={{ Auth::user()->id }}> {{$iten_cotacao->quantidade}} </button> </td>
+										<td class="text-center"> <button type="button" class="btn btn-sm" data-toggle="modal" data-target="#modalProdutoIten" data-cotacao_id={{ $cotacao->id }} data-produto_id={{ $iten_cotacao->produto->id }} data-descricao={{ $iten_cotacao->produto->descricao }} data-quantidade={{ $iten_cotacao->quantidade }} data-preco_venda={{ $iten_cotacao->produto->preco_venda }} data-valor={{$iten_cotacao->valor }} data-desconto={{ $iten_cotacao->desconto }} data-subtotal={{ $iten_cotacao->subtotal }} data-valor_total={{ $cotacao->valor_total }} data-aplicacao_motivo_iva={{ $cotacao->aplicacao_motivo_iva }} data-user_id={{ Auth::user()->id }}> {{$iten_cotacao->quantidade}} </button> </td>
 
 										<td> {{number_format($iten_cotacao->produto->preco_venda, 2, '.', ',')}} </td>
 										<td> {{number_format($iten_cotacao->valor, 2, '.', ',')}} </td>
@@ -128,6 +128,13 @@
 						<div class="col-md-6 text-right">
 
 							<table class="pull-right">
+								@if($cotacao->aplicacao_motivo_iva == 1)
+								<tr>
+									<td>Valor Total:</td>
+									<td style="width: 10px"></td>
+									<td>{{number_format($cotacao->valor_total, 2, '.', ',')}} Mtn</td>
+								</tr>
+								@else
 								<tr>
 									<td>Sub-Total:</td>
 									<td style="width: 10px"></td>
@@ -143,6 +150,7 @@
 									<td></td>
 									<td><b>{{number_format($cotacao->valor_iva, 2, '.', ',')}} Mtn</b></td>
 								</tr>
+								@endif
 							</table>
 
 						</div>
@@ -258,14 +266,14 @@
 										<td> <h5><b>: <span class="val_total_sem_iva"></span></b></h5></td>
 									</tr>
 									<tr>
-										<td><h5>IVA(17%) </h5> </td>
+										<td class="hide_iva"><h5>IVA(17%) </h5> </td>
 										<td></td>
-										<td><h5><b>: <span class="iva"></span></b></h5> </td>
+										<td class="hide_iva"><h5><b>: <span class="iva"></span></b></h5> </td>
 									</tr>
 									<tr>
-										<td><h5> Montante Geral da Cotação </h5></td>
+										<td class="hide_iva"><h5> Montante Geral da Cotação </h5></td>
 										<td></td>
-										<td><h5><b>: <span class="valor_total_iva"></span></b></h5></td>
+										<td class="hide_iva"><h5><b>: <span class="valor_total_iva"></span></b></h5></td>
 									</tr>
 								</table>
 							</div>
@@ -351,14 +359,14 @@
 											<td> <h5><b>: <span class="new_valor_total_sem_iva"></span></b></h5></td>
 										</tr>
 										<tr>
-											<td><h5>IVA(17%) </h5> </td>
+											<td class="hide_iva"><h5>IVA(17%) </h5> </td>
 											<td></td>
-											<td><h5><b>: <span class="new_iva"></span></b></h5> </td>
+											<td class="hide_iva"><h5><b>: <span class="new_iva"></span></b></h5> </td>
 										</tr>
 										<tr>
-											<td><h5> Montante Geral da Cotação </h5></td>
+											<td class="hide_iva"><h5> Montante Geral da Cotação </h5></td>
 											<td></td>
-											<td><h5><b>: <span class="new_valor_total_iva"></span></b></h5></td>
+											<td class="hide_iva"><h5><b>: <span class="new_valor_total_iva"></span></b></h5></td>
 										</tr>
 									</table>
 								</div>
@@ -507,6 +515,7 @@
 				var dta_desconto = button.data('desconto')
 				var dta_subtotal = button.data('subtotal')
 				var dta_valor_total = button.data('valor_total')
+				var dta_aplicacao_motivo_iva = button.data('aplicacao_motivo_iva')
 
 				var dta_user_id = button.data('user_id')
 				var modal = $(this)
@@ -524,11 +533,20 @@
 
 				calcularIten();
 
+				if(dta_aplicacao_motivo_iva == 1){
+					hideIva();
+
+				}
+				
 				$('#modalProdutoIten').delegate('#quantidade,#preco_venda,#desconto','keyup',function(){
 					numberOnly('#quantidade'); // Validacao. Campos aceitam numeros e pontos apenas
 					numberOnly('#desconto');
 
 					calcularIten();
+					
+					if(dta_aplicacao_motivo_iva == 1){
+						hideIva();
+					}
 
 				});
 
@@ -572,6 +590,8 @@
 					$('.iva').html(iva.formatMoney()+ " Mtn");
 					$('.valor_total_iva').html(valor_total_iva.formatMoney()+ " Mtn");
 				}
+
+				
 			});
 
 			// MODAL NOVO ITEM
@@ -580,6 +600,7 @@
 				var button = $(event.relatedTarget) // Button that triggered the modal
 				var new_dta_valor_total = button.data('new_valor_total')
 				var new_dta_cotacao_id = button.data('new_cotacao_id')
+				var new_aplicacao_motivo_iva = button.data('new_aplicacao_motivo_iva')
 
 				var modal = $(this)
 				modal.find('.modal-body #new_cotacao_id').val(new_dta_cotacao_id);
@@ -588,6 +609,9 @@
 					numberOnly('#new_quantidade');
 					numberOnly('#new_desconto');
 					calcularValores(); // calcula e preenche todos campos dinamicos.
+					if(new_aplicacao_motivo_iva == 1){
+						hideIva();
+					}
 
 				});
 
@@ -605,6 +629,10 @@
 						success:function(data){
 							$('#new_preco_venda').val(data.preco_venda);
 							calcularValores();
+
+							if(new_aplicacao_motivo_iva == 1){
+								hideIva();
+							}
 						},
 						complete:function(data){
 							$('#new_quantidade').focus();
@@ -643,18 +671,34 @@
 			});
 			// FIM MODAL NOVO ITEM
 
-			$('#modalMotivoJustificativo').on('show.bs.modal', function (event) {
+			// $('#modalMotivoJustificativo').on('show.bs.modal', function (event) {
 
-				var button = $(event.relatedTarget); // Button that triggered the modal
-				var dta_cotacao_id = button.data('cotacao_id')
-				var motivo_justificativo_nao_iva = $('#motivo_justificativo_nao_iva').val();
+			// 	var button = $(event.relatedTarget); // Button that triggered the modal
+			// 	var dta_cotacao_id = button.data('cotacao_id')
+			// 	var motivo_justificativo_nao_iva = $('#motivo_justificativo_nao_iva').val();
 
-				var modal = $(this);
+			// 	var modal = $(this);
 
-				modal.find('.modal-body #cotacao_id').val(dta_cotacao_id);
-				modal.find('.modal-body #motivo_justificativo_nao_iva').val(motivo_justificativo_nao_iva);
-				// console.log(dta_motivo_justificativo_nao_iva);
-			});
+			// 	modal.find('.modal-body #cotacao_id').val(dta_cotacao_id);
+			// 	modal.find('.modal-body #motivo_justificativo_nao_iva').val(motivo_justificativo_nao_iva);
+			// 	// console.log(dta_motivo_justificativo_nao_iva);
+			// });
+
+			function hideIva(){
+
+				var hide_iva = document.getElementsByClassName('hide_iva');
+				var show_iva = document.getElementsByClassName('show_iva');
+
+				for(i=0; i<hide_iva.length; i++){
+					hide_iva[i].style.display = "none";
+				}
+
+				for(i=0; i<show_iva.length; i++){
+					show_iva[i].style.display = "block";
+				}
+
+			}
+
 		</script>
 
 		@endsection

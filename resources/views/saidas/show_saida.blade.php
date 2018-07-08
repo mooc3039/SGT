@@ -35,7 +35,7 @@
 							<div class="panel panel-default">
 								<div class="panel-body text-center">
 									<h2> <b> Numero Factura </b> </h2> <hr>
-									<h1>{{$saida->id}}</h1>
+									<h1>{{$saida->codigo}}</h1>
 								</div>
 							</div>
 
@@ -89,7 +89,11 @@
 									Motivo Justificativo da não aplicação de imposto
 								</div>
 								<div class="panel-body">
-									{{$saida->motivo_justificativo_nao_iva}}
+									@if($saida->motivo_iva_id == null)
+									{{""}}
+									@else
+									{{$saida->motivoIva->motivo_nao_aplicacao}}
+									@endif
 								</div>
 							</div>
 
@@ -97,6 +101,13 @@
 
 						<div class="col-md-6 text-right">
 							<table class="pull-right">
+								@if($saida->aplicacao_motivo_iva == 1)
+								<tr>
+									<td>Valor Total:</td>
+									<td style="width: 10px"></td>
+									<td>{{number_format($saida->valor_total, 2, '.', ',')}} Mtn</td>
+								</tr>
+								@else
 								<tr>
 									<td>Sub-Total:</td>
 									<td style="width: 10px"></td>
@@ -112,6 +123,7 @@
 									<td></td>
 									<td><b>{{number_format($saida->valor_iva, 2, '.', ',')}} Mtn</b></td>
 								</tr>
+								@endif
 							</table>
 
 						</div>

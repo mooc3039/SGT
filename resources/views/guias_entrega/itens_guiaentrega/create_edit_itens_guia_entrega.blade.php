@@ -39,8 +39,10 @@
 
 									<div class="panel panel-default">
 										<div class="panel-body text-center">
-											<h2> <b> Numero da Guia de Entrega / Factura </b> </h2> <hr>
-											<h1>{{$guia_entrega->id}}</h1>
+											<h2> <b> Numero de guia_entrega</b> </h2>
+											<h4>Da Factura nr: {{$guia_entrega->saida->codigo}}</h4>
+											<hr>
+											<h1>{{$guia_entrega->codigo}}</h1>
 										</div>
 									</div>
 

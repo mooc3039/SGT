@@ -37,7 +37,7 @@
 						<div class="panel panel-default">
 							<div class="panel-body text-center">
 								<h2> <b> Numero da Factura </b> </h2> <hr>
-								<h1>{{$saida->id}}</h1>
+								<h1>{{$saida->codigo}}</h1>
 							</div>
 						</div>
 
@@ -46,7 +46,7 @@
 				</div>
 				<div class="row">
 					<div class="col-md-6"> MAPUTO</div>
-					<div class="col-md-6 text-right"> Data: {{$saida->data}} </div>
+					<div class="col-md-6 text-right"> Data: {{date('d-m-Y', strtotime($saida->data))}} </div>
 				</div>
 			</div>
 
@@ -57,7 +57,7 @@
 					<div class="col-md-12">
 						<div class="row" >
 							<div class="col-md-8" style="margin-bottom: 10px">
-								<button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modalInserirItem" data-new_valor_total={{ $saida->valor_total }} data-new_saida_id={{ $saida->id }}><i class="fa fa-plus"></i></button>
+								<button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modalInserirItem" data-new_valor_total={{ $saida->valor_total }} data-new_saida_id={{ $saida->id }} data-new_aplicacao_motivo_iva={{ $saida->aplicacao_motivo_iva }}><i class="fa fa-plus"></i></button>
 							</div>
 							<div class="col-md-4">
 								<input type="text" id="pesq" class="form-control" placeholder="Pesquisa...">
@@ -78,7 +78,7 @@
 								<tr>
 									<td> {{$iten_saida->produto->descricao}} </td>
 
-									<td class="text-center"> <button type="button" class="btn btn-sm" data-toggle="modal" data-target="#modalProdutoIten" data-saida_id={{ $saida->id }} data-produto_id={{ $iten_saida->produto->id }} data-descricao={{ $iten_saida->produto->descricao }} data-quantidade={{ $iten_saida->quantidade }} data-quantidade_rest={{ $iten_saida->quantidade_rest }} data-qtd_referencial={{ $iten_saida->produto->quantidade_dispo }} data-qtd_min={{ $iten_saida->produto->quantidade_min }} data-preco_venda={{ $iten_saida->produto->preco_venda }} data-valor={{$iten_saida->valor }} data-desconto={{ $iten_saida->desconto }} data-subtotal={{ $iten_saida->subtotal }} data-valor_total={{ $saida->valor_total }} data-user_id={{ Auth::user()->id }}> {{$iten_saida->quantidade}} </button> </td>
+									<td class="text-center"> <button type="button" class="btn btn-sm" data-toggle="modal" data-target="#modalProdutoIten" data-saida_id={{ $saida->id }} data-produto_id={{ $iten_saida->produto->id }} data-descricao={{ $iten_saida->produto->descricao }} data-quantidade={{ $iten_saida->quantidade }} data-quantidade_rest={{ $iten_saida->quantidade_rest }} data-qtd_referencial={{ $iten_saida->produto->quantidade_dispo }} data-qtd_min={{ $iten_saida->produto->quantidade_min }} data-preco_venda={{ $iten_saida->produto->preco_venda }} data-valor={{$iten_saida->valor }} data-desconto={{ $iten_saida->desconto }} data-subtotal={{ $iten_saida->subtotal }} data-valor_total={{ $saida->valor_total }} data-aplicacao_motivo_iva={{ $saida->aplicacao_motivo_iva }} data-user_id={{ Auth::user()->id }}> {{$iten_saida->quantidade}} </button> </td>
 
 									<td class="text-right"> {{number_format($iten_saida->produto->preco_venda, 2, '.', ',')}} </td>
 									<td class="text-right"> {{number_format($iten_saida->valor, 2, '.', ',')}} </td>
@@ -115,7 +115,11 @@
 								{{Form::hidden('motivo_justificativo_nao_iva', $saida->motivo_justificativo_nao_iva, ['disabled', 'id'=>'motivo_justificativo_nao_iva'])}}
 								{{Form::close()}}
 
-								{{$saida->motivo_justificativo_nao_iva}}
+								@if($saida->motivo_iva_id == null)
+								{{""}}
+								@else
+								{{$saida->motivoIva->motivo_nao_aplicacao}}
+								@endif
 							</div>
 						</div>
 
@@ -124,6 +128,13 @@
 					<div class="col-md-6 text-right">
 
 						<table class="pull-right">
+							@if($saida->aplicacao_motivo_iva == 1)
+							<tr>
+								<td>Valor Total:</td>
+								<td style="width: 10px"></td>
+								<td>{{number_format($saida->valor_total, 2, '.', ',')}} Mtn</td>
+							</tr>
+							@else
 							<tr>
 								<td>Sub-Total:</td>
 								<td style="width: 10px"></td>
@@ -139,6 +150,7 @@
 								<td></td>
 								<td><b>{{number_format($saida->valor_iva, 2, '.', ',')}} Mtn</b></td>
 							</tr>
+							@endif
 						</table>
 
 					</div>
@@ -320,6 +332,7 @@
 				var button = $(event.relatedTarget) // Button that triggered the modal
 				var new_dta_valor_total = button.data('new_valor_total')
 				var new_dta_saida_id = button.data('new_saida_id')
+				var new_aplicacao_motivo_iva = button.data('new_aplicacao_motivo_iva')
 				var modal = $(this)
 
 				modal.find('.modal-body #new_saida_id').val(new_dta_saida_id);
@@ -341,6 +354,10 @@
 							$('#new_qtd_referencial').val(data.quantidade_dispo - data.quantidade_min);
 							newValidarQuantidadeEspecificada();
 							newCalcularValores();
+
+							if(new_aplicacao_motivo_iva == 1){
+								hideIva();
+							}
 						},
 						complete:function(data){
 							$('#new_quantidade').focus();
@@ -355,6 +372,10 @@
 					
 					//calcular os valores de acordo com a qtd e o preco para o NovoItem antes e apos as validacoes acima feitas;
 					newCalcularValores();
+
+					if(new_aplicacao_motivo_iva == 1){
+								hideIva();
+							}
 
 				});
 
@@ -440,6 +461,7 @@
 				var dta_desconto = button.data('desconto')
 				var dta_subtotal = button.data('subtotal')
 				var dta_valor_total = button.data('valor_total')
+				var dta_aplicacao_motivo_iva = button.data('aplicacao_motivo_iva')
 				var dta_user_id = button.data('user_id')
 				var modal = $(this)
 
@@ -462,6 +484,10 @@
 
 				editCalcularValores();
 
+				if(dta_aplicacao_motivo_iva == 1){
+					hideIva();
+
+				}
 
 				$('#modalProdutoIten').delegate('#quantidade,#preco_venda,#desconto','keyup',function(){
 					
@@ -469,6 +495,11 @@
 					numberOnly('#desconto');
 
 					editCalcularValores();
+
+					if(dta_aplicacao_motivo_iva == 1){
+						hideIva();
+
+					}
 				});
 
 				function editCalcularValores(){
@@ -565,6 +596,21 @@
 				modal.find('.modal-body #motivo_justificativo_nao_iva').val(motivo_justificativo_nao_iva);
 				// console.log(dta_motivo_justificativo_nao_iva);
 			});
+
+		function hideIva(){
+
+			var hide_iva = document.getElementsByClassName('hide_iva');
+			var show_iva = document.getElementsByClassName('show_iva');
+
+			for(i=0; i<hide_iva.length; i++){
+				hide_iva[i].style.display = "none";
+			}
+
+			for(i=0; i<show_iva.length; i++){
+				show_iva[i].style.display = "block";
+			}
+
+		}
 
 	</script>
 
