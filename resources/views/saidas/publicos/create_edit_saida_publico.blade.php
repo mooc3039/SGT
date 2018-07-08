@@ -49,7 +49,12 @@
          </div>
 
          <div class="col-md-6 col-md-offset-3">
-          <legend>Pagamento: <b><span class="valor_total_iva_visual pull-right" style="border:none"> </span></b></legend>
+          <legend>Pagamento: 
+            <b>
+              <span class="valor_total_iva_visual pull-right hide_iva" style="border:none"> </span>
+              <span style="display: none;" class="valor_total show_iva pull-right" style="border:none"> </span>
+            </b>
+          </legend>
           <div class="row" style="margin-bottom: 5px">
             <div class="col-md-3">
               <div class="row">
@@ -201,7 +206,7 @@
           @endforeach
         </select>
         <input type="hidden" name="aplicacao_motivo_iva" id="aplicacao_motivo_iva" value="0">
-        <input type="hidden" name="subtotal_sem_iva" id="subtotal_sem_iva" value="0" disabled="">
+        <input type="hidden" name="subtotal_sem_iva" id="subtotal_sem_iva" value="0">
       </div>
       </td>
     </tr>
