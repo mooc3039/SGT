@@ -105,22 +105,99 @@
               <div class="panel panel-default">
                 <div class="panel-heading">
                   Motivo Justificativo da não aplicação de imposto 
-                  <button type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#modalMotivoJustificativo" data-venda_id={{ $venda->id }}>
+                  @if($venda->aplicacao_motivo_iva == 1)
+                  <button type="button" class="btn btn-primary btn-xs" onclick="javascript:hideEditarMotivoNaoAplicacaoIva();">
                     <span><i class="fa fa-pencil"></i></span> 
                   </button>
+                  @else
+                  <button type="button" class="btn btn-primary btn-xs" onclick="javascript:hideNovoMotivoNaoAplicacaoIva();">
+                    <span><i class="fa fa-plus"></i></span> 
+                  </button>
+                  @endif
                 </div>
-                <div class="panel-body">
-                  <!-- Formulario(arranjado) para conseguir levar o texto inteiro ao modal, o que nao eh possivel com o data-atributies do botao do modal -->
-                  {{Form::open()}}
-                  {{Form::hidden('motivo_justificativo_nao_iva', $venda->motivo_justificativo_nao_iva, ['disabled', 'id'=>'motivo_justificativo_nao_iva'])}}
-                  {{Form::close()}}
-
+                <div class="panel-body" id="painel_motivo">
                   @if($venda->motivo_iva_id == null)
                   {{""}}
                   @else
                   {{$venda->motivoIva->motivo_nao_aplicacao}}
                   @endif
                 </div>
+                
+                <div class="panel-body" id="painel_editar_motivo" style="display: none">
+                  {{Form::model($venda, ['route'=>['venda.update', $venda->id], 'method'=>'PUT'])}}
+                  <div class="row" id="hide_select_editar_motivo">
+                    <div class="col-sm-12">
+                      {{Form::label('motivo_iva_id', 'Selecione Motivo Justificativo da não aplicação de imposto')}}
+                      <div class="input-group">
+                        {{Form::select('motivo_iva_id', $motivos_iva, null, ['class'=>'form-control', 'id'=>'motivo_iva_id'] )}}
+
+                        {{Form::text('aplicacao_motivo_iva', null, ['hidden', 'id'=>'aplicacao_motivo_iva'])}}
+
+                        {{Form::text('old_motivo_iva_id', $venda->motivo_iva_id, ['hidden', 'id'=>'old_motivo_iva_id', 'disabled'])}}
+
+                        
+                        {{Form::text('old_aplicacao_motivo_iva', $venda->aplicacao_motivo_iva, ['hidden', 'id'=>'old_aplicacao_motivo_iva', 'disabled'])}}
+                        
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-12">
+                      <div class="checkbox">
+                        <label>
+                          <h5><b> <input name="checkbox_motivo_imposto" id="checkbox_motivo_imposto" type="checkbox" onclick="javascript:anularMotivoDaNaoAPlicacaoDoImposto();"> Anular Motivo Justificativo da não aplicação de imposto</b></h5>
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-12">
+                      <div class="btn-group btn-group-xm">
+                        {{ Form::button('Salvar', ['type'=>'submit', 'class'=>'btn btn-xs btn-primary submit_iten']) }}
+
+                        {{ Form::reset('Limpar', ['class'=>'btn btn-xs btn-default']) }}
+
+                        <button type="button" class="btn btn-primary btn-xs" onclick="javascript:showMotivoIva();">
+                          Cancelar 
+                        </button>
+                      </div>
+                      
+                    </div>
+                  </div>
+                  {{Form::close()}}
+                </div>
+
+                <div class="panel-body" id="painel_novo_motivo" style="display: none">
+                  {{Form::open(['route'=>['venda.update', $venda->id], 'method'=>'PUT'])}}
+                  <div class="row">
+                    <div class="col-md-12">
+                      {{Form::label('motivo_iva_id', 'Selecione Motivo Justificativo da não aplicação de imposto')}}
+                      <div class="input-group">
+                        {{Form::select('motivo_iva_id', $motivos_iva, null, ['class'=>'form-control'] )}}
+
+                        {{Form::text('aplicacao_motivo_iva', 1, ['hidden'])}}
+                        
+                      </div>
+                    </div>
+                  </div>
+                  <br>
+                  <div class="row">
+                    <div class="col-md-12">
+                      <div class="btn-group btn-group-xm">
+                        {{ Form::button('Salvar', ['type'=>'submit', 'class'=>'btn btn-xs btn-primary submit_iten']) }}
+
+                        {{ Form::reset('Limpar', ['class'=>'btn btn-xs btn-default']) }}
+
+                        <button type="button" class="btn btn-primary btn-xs" onclick="javascript:showMotivoIva();">
+                          Cancelar 
+                        </button>
+                      </div>
+                      
+                    </div>
+                  </div>
+                  {{Form::close()}}
+                </div>
+
               </div>
 
             </div>
@@ -373,8 +450,8 @@
           newCalcularValores();  
 
           if(new_aplicacao_motivo_iva == 1){
-                hideIva();
-              }       
+            hideIva();
+          }       
 
         });
 
@@ -491,9 +568,9 @@
           editCalcularValores();
 
           if(dta_aplicacao_motivo_iva == 1){
-          hideIva();
+            hideIva();
 
-        }
+          }
           
         });
 
@@ -600,7 +677,61 @@
 
     }
 
+    function hideEditarMotivoNaoAplicacaoIva(){
 
-    </script>
+      var painel_motivo = document.getElementById('painel_motivo');
+      var painel_editar_motivo = document.getElementById('painel_editar_motivo');
 
-    @endsection
+      painel_motivo.style.display = "none";
+      painel_editar_motivo.style.display = "block";
+
+    }
+
+    function hideNovoMotivoNaoAplicacaoIva(){
+
+      var painel_motivo = document.getElementById('painel_motivo');
+      var painel_editar_motivo = document.getElementById('painel_editar_motivo');
+
+      painel_motivo.style.display = "none";
+      painel_novo_motivo.style.display = "block";
+
+    }
+    function showMotivoIva(){
+
+      var painel_motivo = document.getElementById('painel_motivo');
+      var painel_editar_motivo = document.getElementById('painel_editar_motivo');
+
+      painel_motivo.style.display = "block";
+      painel_editar_motivo.style.display = "none";
+      painel_novo_motivo.style.display = "none";
+
+    }
+
+    function hideSelectMotivo(){
+      var hide_select_editar_motivo = document.getElementById('hide_select_editar_motivo');
+      hide_select_editar_motivo.style.display = "none";
+    }
+    function showSelectMotivo(){
+      var hide_select_editar_motivo = document.getElementById('hide_select_editar_motivo');
+      hide_select_editar_motivo.style.display = "block";
+    }
+
+    function anularMotivoDaNaoAPlicacaoDoImposto(){
+      if (document.getElementById('checkbox_motivo_imposto').checked) {
+        hideSelectMotivo();
+        $('#aplicacao_motivo_iva').val(0);
+        $('#motivo_iva_id').val("");
+      }
+      else {
+        var old_aplicacao_motivo_iva = $('#old_aplicacao_motivo_iva').val();
+        var old_motivo_iva_id = $('#old_motivo_iva_id').val();
+        $('#aplicacao_motivo_iva').val(old_aplicacao_motivo_iva);
+        $('#motivo_iva_id').val(old_motivo_iva_id);
+        showSelectMotivo();
+      }
+    }
+
+
+  </script>
+
+  @endsection

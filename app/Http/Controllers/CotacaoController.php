@@ -203,9 +203,10 @@ class CotacaoController extends Controller
     //
    $empresa = Empresa::with('enderecos', 'telefones', 'emails', 'contas')->findOrFail(1);
    $produtos = DB::table('produtos')->pluck('descricao', 'id')->all();
+   $motivos_iva = DB::table('motivo_ivas')->pluck('motivo_nao_aplicacao', 'id')->all();
     $cotacao = $this->cotacao->with('itensCotacao.produto', 'cliente')->findOrFail($id); // Tras a cotacao. Tras os Itens da cotacao e dentro da relacao Itenscotacao eh possivel pegar a relacao Prodtuo atraves do dot ou ponto. NOTA: a relacao produto nao esta na cotacao e sim na itenscotacao, mas eh possivel ter os seus dados partido da cotacao como se pode ver.
 
-    return view('cotacoes.itens_cotacao.create_edit_itens_cotacao', compact('cotacao', 'produtos', 'empresa'));
+    return view('cotacoes.itens_cotacao.create_edit_itens_cotacao', compact('cotacao', 'produtos', 'motivos_iva', 'empresa'));
 
   }
 
@@ -218,8 +219,23 @@ class CotacaoController extends Controller
   */
   public function update(Request $request, $id)
   {
+    // dd($request->all());
+    $cotacao = $this->cotacao->findOrFail($id);
 
-    // }
+    $cotacao->aplicacao_motivo_iva = $request->aplicacao_motivo_iva;
+    $cotacao->motivo_iva_id = $request->motivo_iva_id;
+
+    if($cotacao->update()){
+
+        $sucess = 'Cotação actualizada com sucesso!';
+        return redirect()->back()->with('success', $sucess);
+
+      }else{
+
+        $error = 'Erro ao actualizar a Cotação!';
+        return redirect()->back()->with('error', $error);
+
+      }
 
   }
 

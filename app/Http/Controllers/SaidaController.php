@@ -291,11 +291,12 @@ class SaidaController extends Controller
     {
         //
       $produtos = DB::table('produtos')->pluck('descricao', 'id')->all();
+      $motivos_iva = DB::table('motivo_ivas')->pluck('motivo_nao_aplicacao', 'id')->all();
       $saida = $this->saida->with('itensSaida.produto', 'cliente')->findOrFail($id); 
         // Tras a saida. Tras os Itens da Saida e dentro da relacao ItensSaida eh possivel pegar a relacao Prodtuo atraves do dot ou ponto. NOTA: a relacao produto nao esta na saida e sim na itensSaida, mas eh possivel ter os seus dados partido da saida como se pode ver.
       $empresa = Empresa::with('enderecos', 'telefones', 'emails', 'contas')->findOrFail(1);
 
-      return view('saidas.itens_saida.create_edit_itens_saida', compact('produtos', 'saida', 'empresa'));
+      return view('saidas.itens_saida.create_edit_itens_saida', compact('produtos', 'motivos_iva', 'saida', 'empresa'));
     }
 
     /**
@@ -308,31 +309,47 @@ class SaidaController extends Controller
     public function update(Request $request, $id)
     {
         //
+      $saida = $this->saida->findOrFail($id);
+
+      $saida->aplicacao_motivo_iva = $request->aplicacao_motivo_iva;
+      $saida->motivo_iva_id = $request->motivo_iva_id;
+
+      if($saida->update()){
+
+        $sucess = 'Saída actualizada com sucesso!';
+        return redirect()->back()->with('success', $sucess);
+
+      }else{
+
+        $error = 'Erro ao actualizar a Saída!';
+        return redirect()->back()->with('error', $error);
+
+      }
     }
 
     public function motivoNaoAplicacaoImposto(Request $request){
     // dd($request->all());
-    $saida_id = $request->saida_id;
+      $saida_id = $request->saida_id;
 
-    $dataForm = [
-      'motivo_justificativo_nao_iva' => $request->motivo_justificativo_nao_iva,
-    ];
+      $dataForm = [
+        'motivo_justificativo_nao_iva' => $request->motivo_justificativo_nao_iva,
+      ];
 
-    $saida_motivo_justificativo = $this->saida->findOrFail($saida_id);
+      $saida_motivo_justificativo = $this->saida->findOrFail($saida_id);
 
-    if($saida_motivo_justificativo->update($dataForm)){
+      if($saida_motivo_justificativo->update($dataForm)){
 
-      $sucess = 'Motivo Justificativo da não aplicação de imposto actualizado com sucesso!';
-      return redirect()->back()->with('success', $sucess);
-
-
-    }else{
-      $error = 'Erro ao actualizar o Motivo Justificativo da não aplicação de imposto!';
-      return redirect()->back()->with('error', $error);
+        $sucess = 'Motivo Justificativo da não aplicação de imposto actualizado com sucesso!';
+        return redirect()->back()->with('success', $sucess);
 
 
+      }else{
+        $error = 'Erro ao actualizar o Motivo Justificativo da não aplicação de imposto!';
+        return redirect()->back()->with('error', $error);
+
+
+      }
     }
-  }
 
     /**
      * Remove the specified resource from storage.
@@ -559,7 +576,7 @@ class SaidaController extends Controller
 
       public function reportGeralSaidas(){
 
-      
+
         $valor_saida = Saida::sum('valor_iva');
         $valor_saida_pago = PagamentoSaida::sum('valor_pago');
         $mes = null;

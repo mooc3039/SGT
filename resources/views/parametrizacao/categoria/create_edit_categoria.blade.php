@@ -20,7 +20,7 @@
 
       @if(isset($categoria))
 
-      {{Form::model($categoria, ['route'=>['categoria.update', $categoria], 'method'=>'PUT'])}}
+      {{Form::model($categoria, ['route'=>['categoria.update', $categoria->id], 'method'=>'PUT'])}}
 
       @else
 

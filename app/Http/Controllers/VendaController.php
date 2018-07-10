@@ -255,12 +255,13 @@ class VendaController extends Controller
     {
         //
       $produtos = DB::table('produtos')->pluck('descricao', 'id')->all();
+      $motivos_iva = DB::table('motivo_ivas')->pluck('motivo_nao_aplicacao', 'id')->all();
       $formas_pagamento = DB::table('forma_pagamentos')->pluck('descricao', 'id')->all();
       $venda = $this->venda->with('itensVenda.produto', 'formaPagamento', 'cliente')->find($id); 
         // Tras a venda. Tras os Itens da venda e dentro da relacao Itensvenda eh possivel pegar a relacao Prodtuo atraves do dot ou ponto. NOTA: a relacao produto nao esta na venda e sim na itensvenda, mas eh possivel ter os seus dados partido da venda como se pode ver.
       $empresa = Empresa::with('enderecos', 'telefones', 'emails', 'contas')->findOrFail(1);
 
-      return view('vendas.itens_venda.create_edit_itens_venda', compact('produtos', 'venda', 'formas_pagamento', 'empresa'));
+      return view('vendas.itens_venda.create_edit_itens_venda', compact('produtos', 'motivos_iva', 'venda', 'formas_pagamento', 'empresa'));
     }
 
     /**
@@ -273,6 +274,23 @@ class VendaController extends Controller
     public function update(Request $request, $id)
     {
         //
+      // dd($request->all());
+      $venda = $this->venda->findOrFail($id);
+
+      $venda->aplicacao_motivo_iva = $request->aplicacao_motivo_iva;
+      $venda->motivo_iva_id = $request->motivo_iva_id;
+
+      if($venda->update()){
+
+        $sucess = 'Venda actualizada com sucesso!';
+        return redirect()->back()->with('success', $sucess);
+
+      }else{
+
+        $error = 'Erro ao actualizar a Venda!';
+        return redirect()->back()->with('error', $error);
+
+      }
     }
 
     public function motivoNaoAplicacaoImposto(Request $request){
