@@ -24,103 +24,104 @@
             <a href="{{ route('cliente.create') }}" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i></a>
           </div>
           <div class="col-md-4">
-                <input type="text" id="pesq" class="form-control" placeholder="Pesquisa...">
-              </div>
+            <input type="text" id="pesq" class="form-control" placeholder="Pesquisa...">
+          </div>
         </div>
 
         <div class="row">
           <div class="col-md-12">
             <table class="table table-striped table-advance table-hover" id="tbl_index_clientes" data-order='[[ 0, "asc" ]]'>
 
-          <thead>
-            <tr>
-              <th><i class="icon_profile"></i>Nome do Cliente</th>
-              <th><i class="icon_pin_alt"></i> Endereço</th>
-              <th><i class="icon_mobile"></i> Telefone</th>
-              <th><i class="icon_mail_alt"></i> Email</th>
-              <th><i class="fa fa-id-card"></i> NUIT</th>
-              <th><i class="fa fa-id-card"></i> Tipo Cliente</th>
-              <th><i class="fa fa-unlock-alt"></i> Activo</th>
-              <th class="text-center"><i class="icon_cogs"></i> Operações</th>
-            </tr>
-          </thead>
+              <thead>
+                <tr>
+                  <th>Nome do Cliente</th>
+                  <th>Endereço</th>
+                  <th>Telefone</th>
+                  <th>Email</th>
+                  <th>NUIT</th>
+                  <th>Tipo Cliente</th>
+                  <th>Activo</th>
+                  <th class="text-center"><i class="icon_cogs"></i> Operações</th>
+                </tr>
+              </thead>
 
-          <tbody>
+              <tbody>
 
-            @foreach($clientes as $cliente)
-            <tr>
-              <td> {{$cliente->nome}} </td>
-              <td> {{$cliente->endereco}} </td>
-              <td> {{$cliente->telefone}} </td>
-              <td> {{$cliente->email}}</td>
-              <td> {{$cliente->nuit}}</td>
-              <td> {{$cliente->tipo_cliente->tipo_cliente}}</td>
-              <td>{{Form::checkbox('activo', $cliente->activo, $cliente->activo, ['disabled'])}}
-              <td class="text-right">
-                <div class="btn-group btn-group-sm">
-                  <a class="btn btn-primary" href="#"><i class="icon_plus_alt2"></i></a>
-                  <a class="btn btn-success" href="{{route('cliente.edit', $cliente->id)}}"><i class="fa fa-pencil"></i></a>
-                  @if($cliente->activo == true)
-                  <a href="{{route('clientes_desactivar', $cliente->id)}}" class="btn btn-danger"><i class="fa fa-lock"></i></a>
-                  @else
-                  <a href="{{route('clientes_activar', $cliente->id)}}" class="btn btn-info"><i class="fa fa-unlock"></i></a>
-                  @endif
+                @foreach($clientes as $cliente)
+                <tr>
+                  <td> {{$cliente->nome}} </td>
+                  <td> {{$cliente->endereco}} </td>
+                  <td> {{$cliente->telefone}} </td>
+                  <td> {{$cliente->email}}</td>
+                  <td> {{$cliente->nuit}}</td>
+                  <td> {{$cliente->tipo_cliente->tipo_cliente}}</td>
+                  <td>{{Form::checkbox('activo', $cliente->activo, $cliente->activo, ['disabled'])}}
+                    <td class="text-right">
+                      <div class="btn-group btn-group-sm">
+                        <a class="btn btn-primary" href="#"><i class="icon_plus_alt2"></i></a>
+                        <a class="btn btn-success" href="{{route('cliente.edit', $cliente->id)}}"><i class="fa fa-pencil"></i></a>
+                        @if($cliente->activo == true)
+                        <a href="{{route('clientes_desactivar', $cliente->id)}}" class="btn btn-danger"><i class="fa fa-lock"></i></a>
+                        @else
+                        <a href="{{route('clientes_activar', $cliente->id)}}" class="btn btn-info"><i class="fa fa-unlock"></i></a>
+                        @endif
 
-                </div>
-              </td>
+                      </div>
+                    </td>
 
-            </tr>
-            @endforeach
-          </tbody>
-        </table>
+                  </tr>
+                  @endforeach
+                </tbody>
+              </table>
+            </div>
           </div>
+
         </div>
 
-      </div>
+        <div class="panel-footer">
+          <div class="row">
+            <div class="col-md-6 text-left">
+            </div>
+            <div class="col-md-6 text-right">
+              <div class="btn-group btn-group-sm">
+                <a href="{{route('cliente.index')}}" class="btn btn-info">
+                  Todos
+                </a>
+                <a href="{{route('clientes_inactivos')}}" class="btn btn-danger">
+                  Inactivos
+                </a>
 
-      <div class="panel-footer">
-        <div class="row">
-          <div class="col-md-6 text-left">
+                <a href="{{route('clientes_activos')}}" class="btn btn-info">
+                  Activos
+                </a>
+              </div>
+
+            </div>
+
           </div>
-          <div class="col-md-6 text-right">
-
-            @if($cliente->activo == true)
-
-            <a href="{{route('clientes_inactivos')}}" class="btn btn-primary pull-right"> Inactivos </a>
-
-            @else
-
-            <a href="{{route('cliente.index')}}" class="btn btn-primary pull-right"> Activos </a>
-
-            @endif
 
 
-          </div>
-          
         </div>
 
-
-      </div>
-
-    </section>
+      </section>
+    </div>
   </div>
-</div>
 
-@endsection
+  @endsection
 
-@section('script')
-<script type="text/javascript">
+  @section('script')
+  <script type="text/javascript">
     // DataTables Inicio
-  $(document).ready(function() {
+    $(document).ready(function() {
 
-    var titulo = "Clientes";   
-    var msg_bottom = "Papelaria Agenda & Serviços";
+      var titulo = "Clientes";   
+      var msg_bottom = "Papelaria Agenda & Serviços";
 
-    var oTable = $('#tbl_index_clientes').DataTable( {
-      "processing": true,
-      "pagingType": "full_numbers",
-      "dom": 'Brtpl',
-      buttons: [
+      var oTable = $('#tbl_index_clientes').DataTable( {
+        "processing": true,
+        "pagingType": "full_numbers",
+        "dom": 'Brtpl',
+        buttons: [
             // 'print',
             // 'excelHtml5',
             // 'pdfHtml5'
@@ -148,11 +149,11 @@
             ]
           });
 
-    $('#pesq').keyup(function(){
-      oTable.search($(this).val()).draw();
-    });
+      $('#pesq').keyup(function(){
+        oTable.search($(this).val()).draw();
+      });
 
-  } );
+    } );
   // DataTables Fim
 </script>
 @endsection

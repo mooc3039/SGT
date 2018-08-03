@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 use App\Model\Cliente;
 use App\Model\TipoCliente;
 use PDF;
+use Illuminate\Support\Facades\Gate;
 
 class ClienteController extends Controller
 {
@@ -27,8 +28,12 @@ class ClienteController extends Controller
      */
     public function index()
     {
-        //
-        $clientes = $this->cliente->with('tipo_cliente')->where('activo', 1)->get();
+        if (Gate::denies('listar_cliente'))
+            // abort(403, "Sem autorizacao");
+          return redirect()->route('noPermission');
+
+
+        $clientes = $this->cliente->all();
         return view('parametrizacao.cliente.index_cliente', compact('clientes'));
     }
 
@@ -39,7 +44,11 @@ class ClienteController extends Controller
      */
     public function create()
     {
-        //
+        if (Gate::denies('criar_cliente'))
+            // abort(403, "Sem autorizacao");
+          return redirect()->route('noPermission');
+
+
         $tipos_cliente = DB::table('tipo_clientes')->pluck('tipo_cliente', 'id')->all();
         return view('parametrizacao.Cliente.create_edit_cliente', compact('tipos_cliente'));
     }
@@ -52,7 +61,11 @@ class ClienteController extends Controller
      */
     public function store(ClienteStoreUpdateFormRequest $request)
     {
-        //
+        if (Gate::denies('criar_cliente'))
+            // abort(403, "Sem autorizacao");
+          return redirect()->route('noPermission');
+
+
         $dataForm = $request->all();
 
         try {
@@ -79,6 +92,11 @@ class ClienteController extends Controller
 
   public function storeRedirectBack(ClienteStoreUpdateFormRequest $request)
   {
+    if (Gate::denies('criar_cliente'))
+            // abort(403, "Sem autorizacao");
+          return redirect()->route('noPermission');
+
+
     $dataForm = $request->all();
 
     try {
@@ -121,7 +139,11 @@ class ClienteController extends Controller
      */
     public function edit($id)
     {
-        //
+        if (Gate::denies('editar_cliente'))
+            // abort(403, "Sem autorizacao");
+          return redirect()->route('noPermission');
+
+
         $tipos_cliente = DB::table('tipo_clientes')->pluck('tipo_cliente', 'id')->all();
         $cliente = $this->cliente->findOrFail($id);
 
@@ -137,7 +159,10 @@ class ClienteController extends Controller
      */
     public function update(ClienteStoreUpdateFormRequest $request, $id)
     {
-        //
+        if (Gate::denies('editar_cliente'))
+            // abort(403, "Sem autorizacao");
+          return redirect()->route('noPermission');
+
 
         $dataForm = $request->all();
 
@@ -168,7 +193,25 @@ class ClienteController extends Controller
         //
     }
 
+    public function activos(){
+
+      if (Gate::denies('listar_cliente'))
+            // abort(403, "Sem autorizacao");
+          return redirect()->route('noPermission');
+
+      $clientes = $this->cliente->where('activo', 1)->get();
+      
+      return view('parametrizacao.cliente.index_cliente', compact('clientes'));
+    }
+
+
     public function inactivos(){
+
+        if (Gate::denies('listar_cliente'))
+            // abort(403, "Sem autorizacao");
+          return redirect()->route('noPermission');
+
+
 
         $clientes = $this->cliente->where('activo', 0)->get();
 
@@ -178,6 +221,11 @@ class ClienteController extends Controller
     // Funcao para activar o Cliente
     public function activar($id){
 
+        if (Gate::denies('activar_cliente'))
+            // abort(403, "Sem autorizacao");
+          return redirect()->route('noPermission');
+
+
       DB::select('call SP_activar_cliente(?)', array($id));
 
       return redirect()->back();
@@ -185,6 +233,10 @@ class ClienteController extends Controller
   }
 
   public function desactivar($id){
+
+    if (Gate::denies('desactivar_cliente'))
+            // abort(403, "Sem autorizacao");
+          return redirect()->route('noPermission');
 
       DB::select('call SP_desactivar_cliente(?)', array($id));
 
@@ -194,6 +246,12 @@ class ClienteController extends Controller
 
 
   public function reportGeralCliente(){
+
+    if (Gate::denies('relatorio_geral_cliente'))
+            // abort(403, "Sem autorizacao");
+          return redirect()->route('noPermission');
+
+
     $acronimo_tipo_cliente = TipoCliente::select('id')->where('acronimo', 'publico')->firstOrFail();
     $acronimo_cli_publico_id = $acronimo_tipo_cliente->id;
     $array_acronimo_cli_publico_id = array('0', $acronimo_cli_publico_id);
@@ -217,6 +275,12 @@ public function pdf(){
 }
 
 public function indexClientePrivado(){
+
+    if (Gate::denies('relatorio_geral_cliente'))
+            // abort(403, "Sem autorizacao");
+          return redirect()->route('noPermission');
+
+
     $acronimo_tipo_cliente = TipoCliente::select('id')->where('acronimo', '<>', 'publico')->firstOrFail();
     $acronimo_cli_publico_id = $acronimo_tipo_cliente->id;
     $array_acronimo_cli_publico_id = array('0', $acronimo_cli_publico_id);
@@ -232,6 +296,12 @@ public function indexClientePrivado(){
 }
 
 public function indexClientePublico(){
+
+    if (Gate::denies('relatorio_geral_cliente'))
+            // abort(403, "Sem autorizacao");
+          return redirect()->route('noPermission');
+
+
     $acronimo_tipo_cliente = TipoCliente::select('id')->where('acronimo', 'publico')->firstOrFail();
     $acronimo_cli_publico_id = $acronimo_tipo_cliente->id;
     $array_acronimo_cli_publico_id = array('0', $acronimo_cli_publico_id);

@@ -79,7 +79,7 @@ Dados do Cliente</span></em></strong><br />
 </div>
 <br />
 <div style="border: 2px solid black; border-radius: 10px; height: 93px;"><br />
-<h2 style="color: red; text-align: center;">N&ordm; {{$concurso->codigo_concurso}}/{{date('Y', strtotime($concurso->created_at))}}</h2>
+<h2 style="color: red; text-align: center;">N&ordm; {{$concurso->codigo_concurso}}</h2>
 </div>
 </td>
 </tr>

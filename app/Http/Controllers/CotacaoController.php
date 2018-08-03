@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Requests\CotacaoStoreUpdateFormRequest;
-// use Illuminate\Database\Eloquent\ModelNotFoundException;
-// use Illuminate\Database\QueryException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\QueryException;
 use DB;
 use Session;
 use App\Model\Produto;
@@ -22,6 +22,7 @@ use App\Model\Conta;
 use App\Model\Email;
 use PDF;
 use Yajra\Datatables\Datatables;//yajira
+use Illuminate\Support\Facades\Gate;
 
 class CotacaoController extends Controller
 {
@@ -53,7 +54,11 @@ class CotacaoController extends Controller
   */
   public function index()
   {
-    //
+    if (Gate::denies('listar_cotacao'))
+            // abort(403, "Sem autorizacao");
+      return redirect()->route('noPermission');
+
+
     $cotacoes = $this->cotacao->get();
 
     return view('cotacoes.index_cotacao', compact('cotacoes'));
@@ -67,7 +72,11 @@ class CotacaoController extends Controller
   */
   public function create()
   {
-    //
+    if (Gate::denies('criar_cotacao'))
+            // abort(403, "Sem autorizacao");
+      return redirect()->route('noPermission');
+
+
     $tipos_cliente = DB::table('tipo_clientes')->pluck('tipo_cliente', 'id')->all();
     $tipos_cotacao = DB::table('tipo_cotacaos')->pluck('nome', 'id')->all();
     $motivos_iva = $this->motivo_iva->select('id', 'motivo_nao_aplicacao')->get();
@@ -86,8 +95,11 @@ class CotacaoController extends Controller
   */
   public function store(CotacaoStoreUpdateFormRequest $request)
   {
-    //
-    // dd($request->all());
+    if (Gate::denies('criar_cotacao'))
+            // abort(403, "Sem autorizacao");
+      return redirect()->route('noPermission');
+
+
     $bad_symbols = array(",");
 
     if($request->all()){
@@ -175,7 +187,11 @@ class CotacaoController extends Controller
   */
   public function show($id)
   {
-    //
+    if (Gate::denies('visualizar_cotacao'))
+            // abort(403, "Sem autorizacao");
+      return redirect()->route('noPermission');
+
+
     $empresa = Empresa::with('enderecos', 'telefones', 'emails', 'contas')->findOrFail(1);
     $cotacao = $this->cotacao->with('itensCotacao.produto', 'motivoIva', 'cliente')->findOrFail($id); // Tras a cotacao. Tras os Itens da cotacao e dentro da relacao Itenscotacao eh possivel pegar a relacao Prodtuo atraves do dot ou ponto. NOTA: a relacao produto nao esta na cotacao e sim na itenscotacao, mas eh possivel ter os seus dados partido da cotacao como se pode ver.
 
@@ -184,11 +200,15 @@ class CotacaoController extends Controller
 
   public function showRelatorio($id)
   {
-        //
+    if (Gate::denies('imprimir_cotacao'))
+            // abort(403, "Sem autorizacao");
+      return redirect()->route('noPermission');
+
+
     $cotacao = $this->cotacao->with('itensCotacao.produto', 'cliente')->findOrFail($id); 
     $empresa = Empresa::with('enderecos', 'telefones', 'emails', 'contas')->findOrFail(1); 
     $pdf = PDF::loadView('cotacoes.relatorio', compact('cotacao','empresa'));
-    return $pdf->download('cotacao.pdf');
+    return $pdf->download('cotação-'.$cotacao->codigo.'.pdf');
 
   }
 
@@ -200,10 +220,14 @@ class CotacaoController extends Controller
   */
   public function edit($id)
   {
-    //
-   $empresa = Empresa::with('enderecos', 'telefones', 'emails', 'contas')->findOrFail(1);
-   $produtos = DB::table('produtos')->pluck('descricao', 'id')->all();
-   $motivos_iva = DB::table('motivo_ivas')->pluck('motivo_nao_aplicacao', 'id')->all();
+    // if (Gate::denies('editar_cotacao'))
+    //         // abort(403, "Sem autorizacao");
+    //   return redirect()->route('noPermission');
+
+
+    $empresa = Empresa::with('enderecos', 'telefones', 'emails', 'contas')->findOrFail(1);
+    $produtos = DB::table('produtos')->pluck('descricao', 'id')->all();
+    $motivos_iva = DB::table('motivo_ivas')->pluck('motivo_nao_aplicacao', 'id')->all();
     $cotacao = $this->cotacao->with('itensCotacao.produto', 'cliente')->findOrFail($id); // Tras a cotacao. Tras os Itens da cotacao e dentro da relacao Itenscotacao eh possivel pegar a relacao Prodtuo atraves do dot ou ponto. NOTA: a relacao produto nao esta na cotacao e sim na itenscotacao, mas eh possivel ter os seus dados partido da cotacao como se pode ver.
 
     return view('cotacoes.itens_cotacao.create_edit_itens_cotacao', compact('cotacao', 'produtos', 'motivos_iva', 'empresa'));
@@ -219,7 +243,11 @@ class CotacaoController extends Controller
   */
   public function update(Request $request, $id)
   {
-    // dd($request->all());
+    if (Gate::denies('editar_cotacao'))
+            // abort(403, "Sem autorizacao");
+      return redirect()->route('noPermission');
+
+
     $cotacao = $this->cotacao->findOrFail($id);
 
     $cotacao->aplicacao_motivo_iva = $request->aplicacao_motivo_iva;
@@ -227,15 +255,15 @@ class CotacaoController extends Controller
 
     if($cotacao->update()){
 
-        $sucess = 'Cotação actualizada com sucesso!';
-        return redirect()->back()->with('success', $sucess);
+      $sucess = 'Cotação actualizada com sucesso!';
+      return redirect()->back()->with('success', $sucess);
 
-      }else{
+    }else{
 
-        $error = 'Erro ao actualizar a Cotação!';
-        return redirect()->back()->with('error', $error);
+      $error = 'Erro ao actualizar a Cotação!';
+      return redirect()->back()->with('error', $error);
 
-      }
+    }
 
   }
 
@@ -247,9 +275,11 @@ class CotacaoController extends Controller
   */
   public function destroy($id)
   {
+    if (Gate::denies('apagar_cotacao'))
+            // abort(403, "Sem autorizacao");
+      return redirect()->route('noPermission');
 
 
-      //
     $cotacao = $this->cotacao->findOrFail($id);
 
     DB::beginTransaction();
@@ -264,7 +294,7 @@ class CotacaoController extends Controller
 
     } catch (QueryException $e) {
       DB::rollback();
-      $error = "Erro ao remover Cotação. Possivelmente Registo em uso. Necess�ria a interven��o do Administrador da Base de Dados.!";
+      $error = "Erro ao remover Cotação. Possivelmente Registo em uso. Necessária a intervenção do Administrador da Base de Dados.!";
       return redirect()->back()->with('error', $error);
     }
     
@@ -296,7 +326,12 @@ class CotacaoController extends Controller
   }
 
   public function motivoNaoAplicacaoImposto(Request $request){
-    // dd($request->all());
+    
+    if (Gate::denies('editar_cotacao'))
+            // abort(403, "Sem autorizacao");
+          return redirect()->route('noPermission');
+
+
     $cotacao_id = $request->cotacao_id;
 
     $dataForm = [
@@ -320,6 +355,12 @@ class CotacaoController extends Controller
   }
 
   public function reportGeralCotacoes(){
+
+    if (Gate::denies('relatorio_geral_cotacao'))
+            // abort(403, "Sem autorizacao");
+          return redirect()->route('noPermission');
+
+
 
     $cotacoes = $this->cotacao->with('cliente')->orderBy('id', 'asc')->get();
 

@@ -5,17 +5,17 @@
     <ul class="sidebar-menu">
       <li class="active">
         <a class="" href="{{ route('dashboard' )}}">
-                      <i class="icon_house_alt"></i>
-                      <span>Páginal Inicial </span>
-                  </a>
+          <i class="icon_house_alt"></i>
+          <span>Páginal Inicial </span>
+        </a>
       </li>
 
       <li class="sub-menu">
         <a href="javascript:;" class="">
-                      <i class="fa fa-shopping-cart"></i>
-                      <span>Facturação</span>
-                      <span class="menu-arrow arrow_carrot-right"></span>
-                  </a>
+          <i class="fa fa-shopping-cart"></i>
+          <span>Facturação</span>
+          <span class="menu-arrow arrow_carrot-right"></span>
+        </a>
         <ul class="sub">
           <li><a class="" href="{{route('cotacao.index')}}"><i class="fa fa-file"></i>Proforma</a></li>
           <li><a class="" href="{{route('saida.index')}}"><i class="fa fa-shopping-cart"></i>Facturar</a></li>
@@ -26,10 +26,10 @@
       </li>
       <li class="sub-menu">
         <a href="javascript:;" class="">
-                      <i class="icon_table"></i>
-                      <span>Guia</span>
-                      <span class="menu-arrow arrow_carrot-right"></span>
-                  </a>
+          <i class="icon_table"></i>
+          <span>Guia</span>
+          <span class="menu-arrow arrow_carrot-right"></span>
+        </a>
         <ul class="sub">
           <li><a class="" href="{{ route('guia_entrega.index') }}">Guia de Entrega</a></li>
         </ul>
@@ -37,10 +37,10 @@
 
       <li class="sub-menu">
         <a href="javascript:;" class="">
-                      <i class="icon_documents_alt"></i>
-                      <span>Parametrização</span>
-                      <span class="menu-arrow arrow_carrot-right"></span>
-                  </a>
+          <i class="icon_documents_alt"></i>
+          <span>Parametrização</span>
+          <span class="menu-arrow arrow_carrot-right"></span>
+        </a>
         <ul class="sub">
           <li><a class="" href="{{ route('fornecedores.index') }}"><i class="fa fa-tag"></i>Fornecedores</a></li>
           
@@ -50,8 +50,6 @@
           <li><a class="" href="{{route('motivo_nao_aplicacao_iva.index')}}"><i class="fa fa-tag"></i>Não aplicação-IVA</a></li>
           <li><a class="" href="{{ route('produtos.index') }}"><i class="fa fa-tag"></i>Produtos</a></li>
           <li><a class="" href="{{ route('tipo_cliente.index') }}"><i class="fa fa-tag"></i><span>Tipos de Cliente</span></a></li>
-          <li><a class="" href="{{ route('tipo_cotacao.index') }}"><i class="fa fa-tag"></i><span>Tipos de Cotação</span></a></li>
-          <li><a class="" href="{{ route('indexUsuario') }}"><i class="fa fa-tag"></i>Usuários</a></li>
         </ul>
       </li>
       <!-- <li class="sub-menu">
@@ -67,10 +65,10 @@
 
       <li class="sub-menu">
         <a href="javascript:;" class="">
-                      <i class="fa fa-folder-open"></i>
-                      <span>Relatórios Gérais</span>
-                      <span class="menu-arrow arrow_carrot-right"></span>
-                  </a>
+          <i class="fa fa-folder-open"></i>
+          <span>Relatórios Gérais</span>
+          <span class="menu-arrow arrow_carrot-right"></span>
+        </a>
         <ul class="sub">
           <li><a class="" href="{{ route('rg_clientes') }}"><i class="fa fa-file-text"></i>Clientes</a></li>
           <li><a class="" href="{{ route('rg_concursos') }}"><i class="fa fa-file-text"></i>Concursos</a></li>
@@ -81,6 +79,18 @@
           <li><a class="" href="{{ route('report_geral_produto') }}"><i class="fa fa-file-text"></i>Produtos</a></li>
           <li><a class="" href="{{ route('rg_vendas') }}"><i class="fa fa-file-text"></i>Vendas</a></li>
           
+        </ul>
+      </li>
+
+      <li class="sub-menu">
+        <a href="javascript:;" class="">
+          <i class="fa fa-folder-open"></i>
+          <span>Configurações</span>
+          <span class="menu-arrow arrow_carrot-right"></span>
+        </a>
+        <ul class="sub">
+          <li><a class="" href="{{ route('indexUsuario') }}"><i class="fa fa-tag"></i>Usuários</a></li>
+          <li><a href="{{route('role.index')}}"><i class="fa fa-tag"></i>Tipo Usúario</a></li>
         </ul>
       </li>
 

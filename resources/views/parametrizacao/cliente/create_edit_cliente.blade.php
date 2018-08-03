@@ -35,11 +35,20 @@
             </div>
             <div class="col-sm-4">
               <div class="radio-inline" style="margin: 25px">
-                <input type="radio" name="activo" value="1" id="activo">
+                <input type="radio" name="activo" value="1" id="activo"
+               @if(isset($cliente))
+                @if($cliente->activo == 1)
+                {{'checked'}}
+                @endif
+                @endif>
                 <label for="activo">Activo</label>
               </div>
               <div class="radio-inline">
-                <input type="radio" name="activo" value="0" id="inactivo">
+                <input type="radio" name="activo" value="0" id="inactivo" @if(isset($cliente))
+                @if($cliente->activo == 0)
+                {{'checked'}}
+                @endif
+                @endif>
                 <label for="inactivo">Inactivo</label>
               </div>
             </div>

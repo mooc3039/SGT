@@ -11,6 +11,7 @@ class TipoCotacao extends Model
     protected $fillable = [
       'nome',
       'descricao',
+      'acronimo',
     ];
 
     public $timestamp = false;

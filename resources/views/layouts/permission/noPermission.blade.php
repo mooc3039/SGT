@@ -13,7 +13,7 @@
     <h1>Olá <strong>{{ Auth::user()->name }}</strong>, não está autorizado à aceder essa parte do sistema!</h1>
 
     <h2>Erro respectivo ao nivél de acesso</h2>
-    <p> Contacte o administrador do Sistema! <br><a href="{{route('/')}}">Página Inicial</a></p>
+    <p> Contacte o administrador do Sistema! <br><a href="{{route('dashboard')}}">Página Inicial</a></p>
   </div>
 
 @endsection

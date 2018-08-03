@@ -72,11 +72,21 @@
 
             <div class="col-md-3" >
               <div class="radio-inline" style="margin: 25px">
-                <input type="radio" name="activo" value="1" id="activo"><label for="activo">Activo</label>
+                <input type="radio" name="activo" value="1" id="activo" 
+                @if(isset($fornecedor))
+                @if($fornecedor->activo == 1)
+                {{'checked'}}
+                @endif
+                @endif><label for="activo">Activo</label>
                 <!-- {{Form::radio('activo', '1', ['class' => 'form-horizontal'])}} Activo -->
               </div>
               <div class="radio-inline">
-                <input type="radio" name="activo" value="1" id="inactivo"><label for="inactivo">Inactivo</label>
+                <input type="radio" name="activo" value="0" id="inactivo" 
+                @if(isset($fornecedor))
+                @if($fornecedor->activo == 0)
+                {{'checked'}}
+                @endif
+                @endif><label for="inactivo">Inactivo</label>
                 <!-- {{Form::radio('activo', '0', ['class' => 'form-horizontal'])}} Inactivo -->
               </div>
             </div>

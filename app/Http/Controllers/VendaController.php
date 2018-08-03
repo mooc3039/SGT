@@ -21,6 +21,7 @@ use App\User;
 use DB;
 use Session;
 use PDF;
+use Illuminate\Support\Facades\Gate;
 
 class VendaController extends Controller
 {
@@ -40,6 +41,8 @@ class VendaController extends Controller
     $this->motivo_iva = $motivo_iva;
     $this->cliente = $cliente;
     $this->user = $user;
+
+    
   }
     /**
      * Display a listing of the resource.
@@ -49,6 +52,10 @@ class VendaController extends Controller
     public function index()
     {
         //
+      if (Gate::denies('listar_venda'))
+            // abort(403, "Sem autorizacao");
+      return redirect()->route('noPermission');
+
       $vendas = $this->venda->with('itensVenda')->orderBy('created_at', 'desc')->paginate(10);
       $formas_pagamento = DB::table('forma_pagamentos')->pluck('descricao', 'id')->all();
 
@@ -63,6 +70,10 @@ class VendaController extends Controller
     public function create()
     {
         //
+      if (Gate::denies('criar_venda'))
+            // abort(403, "Sem autorizacao");
+      return redirect()->route('noPermission');
+
       $clientes = DB::table('clientes')->pluck('nome', 'id')->all();
       $tipos_cliente = DB::table('tipo_clientes')->pluck('tipo_cliente', 'id')->all();
       $formas_pagamento = DB::table('forma_pagamentos')->pluck('descricao', 'id')->all();
@@ -74,6 +85,11 @@ class VendaController extends Controller
 
     public function createPagamentoVenda($id){
       // dd($id);
+      if (Gate::denies('efectuar_pagamento_venda'))
+            // abort(403, "Sem autorizacao");
+      return redirect()->route('noPermission');
+
+
       $formas_pagamento = DB::table('forma_pagamentos')->pluck('descricao', 'id')->all();
       $venda = $this->venda->with('pagamentosVenda.formaPagamento')->where('id', $id)->first();
       // dd($venda);
@@ -89,6 +105,10 @@ class VendaController extends Controller
      */
     public function store(VendaStoreUpdateFormRequest $request)
     {
+      if (Gate::denies('criar_venda'))
+            // abort(403, "Sem autorizacao");
+      return redirect()->route('noPermission');
+
       // dd($request->all());
       $acronimo_forma_pagamento_naoaplicavel = FormaPagamento::select('id')->where('acronimo', 'naoaplicavel')->first();
       $acronimo_forma_pagamento_naoaplicavel_id = $acronimo_forma_pagamento_naoaplicavel->id;
@@ -230,6 +250,10 @@ class VendaController extends Controller
     public function show($id)
     {
         //
+      if (Gate::denies('visualizar_venda'))
+            // abort(403, "Sem autorizacao");
+      return redirect()->route('noPermission');
+
       $venda = $this->venda->with('itensVenda.produto', 'cliente')->find($id);
       $empresa = Empresa::with('enderecos', 'telefones', 'emails', 'contas')->findOrFail(1);
       return view('vendas.show_venda', compact('venda', 'empresa'));
@@ -242,7 +266,7 @@ class VendaController extends Controller
       $empresa = Empresa::with('enderecos', 'telefones', 'emails', 'contas')->findOrFail(1);
           // Tras a saida. Tras os Itens da Saida e dentro da relacao ItensSaida eh possivel pegar a relacao Prodtuo atraves do dot ou ponto. NOTA: a relacao produto nao esta na saida e sim na itensSaida, mas eh possivel ter os seus dados partido da saida como se pode ver.
       $pdf = PDF::loadView('vendas.relatorio', compact('venda','empresa'));
-      return $pdf->download('venda.pdf');
+      return $pdf->download('venda-'.$venda->codigo.'.pdf');
       
     }
     /**
@@ -254,6 +278,10 @@ class VendaController extends Controller
     public function edit($id)
     {
         //
+      if (Gate::denies('editar_venda'))
+            // abort(403, "Sem autorizacao");
+      return redirect()->route('noPermission');
+
       $produtos = DB::table('produtos')->pluck('descricao', 'id')->all();
       $motivos_iva = DB::table('motivo_ivas')->pluck('motivo_nao_aplicacao', 'id')->all();
       $formas_pagamento = DB::table('forma_pagamentos')->pluck('descricao', 'id')->all();
@@ -273,8 +301,11 @@ class VendaController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
-      // dd($request->all());
+      if (Gate::denies('editar_venda'))
+            // abort(403, "Sem autorizacao");
+      return redirect()->route('noPermission');
+
+
       $venda = $this->venda->findOrFail($id);
 
       $venda->aplicacao_motivo_iva = $request->aplicacao_motivo_iva;
@@ -319,6 +350,12 @@ class VendaController extends Controller
 
     public function pagamentoVenda(PagamentoVendaStoreUpdateFormRequest $request){
         // dd($request->all());
+
+      if (Gate::denies('efectuar_pagamento_venda'))
+            // abort(403, "Sem autorizacao");
+      return redirect()->route('noPermission');
+
+
      $acronimo_forma_pagamento_naoaplicavel = FormaPagamento::select('id')->where('acronimo', 'naoaplicavel')->first();
      $acronimo_forma_pagamento_naoaplicavel_id = $acronimo_forma_pagamento_naoaplicavel->id;
      $bad_symbols = array(",");
@@ -437,6 +474,12 @@ class VendaController extends Controller
     public function destroy($id)
     {
         //
+      if (Gate::denies('apagar_venda'))
+            // abort(403, "Sem autorizacao");
+      return redirect()->route('noPermission');
+
+
+
       DB::beginTransaction();
       try {
 
@@ -463,13 +506,21 @@ class VendaController extends Controller
     }
 
     public function reportGeralVendas(){
+      if (Gate::denies('relatorio_geral_venda'))
+            // abort(403, "Sem autorizacao");
+      return redirect()->route('noPermission');
 
-      $valor_venda = Venda::sum('valor_iva');
+
+      // $valor_venda = Venda::sum('valor_iva');
       $valor_venda_pago = PagamentoVenda::sum('valor_pago');
       $mes = null;
       $ano = null;
 
       $vendas = $this->venda->with('itensVenda', 'user', 'cliente')->get();
+      $valor_venda_sem_iva = $this->venda->where('aplicacao_motivo_iva', 1)->sum('valor_total');
+      $valor_venda_com_iva = $this->venda->where('aplicacao_motivo_iva', 0)->sum('valor_iva');
+     $valor_venda = $valor_venda_sem_iva + $valor_venda_com_iva;
+
       $anos = DB::table('anos')->pluck('ano', 'id')->all();
       $meses = DB::table('mes')->pluck('nome', 'id')->all();
       
@@ -478,6 +529,11 @@ class VendaController extends Controller
     }
 
     public function listarVendaPorMes(Request $request){
+      if (Gate::denies('relatorio_geral_venda'))
+            // abort(403, "Sem autorizacao");
+      return redirect()->route('noPermission');
+
+
       $mes_id = $request->mes_id;
       $mes_model = Me::select('nome')->where('id', $mes_id)->firstOrFail();
       $mes = $mes_model->nome;
@@ -486,7 +542,9 @@ class VendaController extends Controller
 
 
       $vendas = $this->venda->with('itensVenda', 'pagamentosVenda', 'user', 'cliente')->whereMonth('created_at', $mes_id)->get();
-      $valor_venda = Venda::whereMonth('created_at', $mes_id)->sum('valor_iva');
+      $valor_venda_sem_iva = Venda::whereMonth('created_at', $mes_id)->where('aplicacao_motivo_iva', 1)->sum('valor_total');
+      $valor_venda_com_iva = Venda::whereMonth('created_at', $mes_id)->where('aplicacao_motivo_iva', 0)->sum('valor_iva');
+      $valor_venda = $valor_venda_sem_iva + $valor_venda_com_iva;
       $valor_venda_pago = 0;
       $anos = DB::table('anos')->pluck('ano', 'id')->all();
       $meses = DB::table('mes')->pluck('nome', 'id')->all();
@@ -503,6 +561,11 @@ class VendaController extends Controller
 
    public function listarVendaPorAno(Request $request){
        //dd($request->all());
+    if (Gate::denies('relatorio_geral_venda'))
+            // abort(403, "Sem autorizacao");
+      return redirect()->route('noPermission');
+
+
      $ano_id = $request->ano_id;
      $ano_model = Ano::select('ano')->where('id', $ano_id)->firstOrFail();
      $ano = $ano_model->ano;
@@ -510,7 +573,9 @@ class VendaController extends Controller
 
 
      $vendas = $this->venda->with('itensVenda', 'pagamentosVenda', 'user', 'cliente')->whereYear('created_at', $ano)->get();
-     $valor_venda = Venda::whereYear('created_at', $ano)->sum('valor_iva');
+     $valor_venda_sem_iva = Venda::whereYear('created_at', $ano)->where('aplicacao_motivo_iva', 1)->sum('valor_total');
+     $valor_venda_com_iva = Venda::whereYear('created_at', $ano)->where('aplicacao_motivo_iva', 0)->sum('valor_iva');
+     $valor_venda = $valor_venda_sem_iva + $valor_venda_com_iva;
      $valor_venda_pago = 0;
      $anos = DB::table('anos')->pluck('ano', 'id')->all();
      $meses = DB::table('mes')->pluck('nome', 'id')->all();

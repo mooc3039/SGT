@@ -17,6 +17,7 @@ use App\User;
 use DB;
 use Session;
 use PDF;
+use Illuminate\Support\Facades\Gate;
 
 class GuiaEntregaController extends Controller
 {
@@ -45,7 +46,11 @@ class GuiaEntregaController extends Controller
      */
     public function index()
     {
-        //
+        if (Gate::denies('listar_guia_entrega'))
+            // abort(403, "Sem autorizacao");
+      return redirect()->route('noPermission');
+
+
         $guias_entrega = $this->guia_entrega->get();
         return view('guias_entrega.index_guias_entrega', compact('guias_entrega'));
     }
@@ -60,6 +65,17 @@ class GuiaEntregaController extends Controller
         //
     }
 
+    public function createGuia($id){
+
+      if (Gate::denies('criar_guia_entrega'))
+            // abort(403, "Sem autorizacao");
+      return redirect()->route('noPermission');
+
+
+        $saida = $this->saida->with('itensSaida.produto', 'cliente')->findOrFail($id);
+        return view('guias_entrega.create_edit_guias_entrega', compact('saida'));
+    }
+
     
 
     /**
@@ -70,7 +86,11 @@ class GuiaEntregaController extends Controller
      */
     public function store(GuiaEntregaStoreUpdateFormRequest $request)
     {
-        //
+      if (Gate::denies('criar_guia_entrega'))
+            // abort(403, "Sem autorizacao");
+      return redirect()->route('noPermission');
+
+
       $bad_symbols = array(",");
       if($request->all()){
 
@@ -156,7 +176,11 @@ class GuiaEntregaController extends Controller
      */
     public function show($id)
     {
-        //
+        if (Gate::denies('visualizar_guia_entrega'))
+            // abort(403, "Sem autorizacao");
+      return redirect()->route('noPermission');
+
+
         $guia_entrega = $this->guia_entrega->with('itensGuiantrega.produto', 'cliente', 'saida')->findOrFail($id); 
             // Tras a saida. Tras os Itens da Saida e dentro da relacao ItensSaida eh possivel pegar a relacao Prodtuo atraves do dot ou ponto. NOTA: a relacao produto nao esta na saida e sim na itensSaida, mas eh possivel ter os seus dados partido da saida como se pode ver.
         $empresa = Empresa::with('enderecos', 'telefones', 'emails', 'contas')->findOrFail(1);
@@ -166,16 +190,24 @@ class GuiaEntregaController extends Controller
 
     public function showRelatorio($id)
     {
-        //
+        if (Gate::denies('imprimir_guia_entrega'))
+            // abort(403, "Sem autorizacao");
+      return redirect()->route('noPermission');
+
+
         $guia_entrega = $this->guia_entrega->with('itensGuiantrega.produto', 'cliente')->find($id); 
         $empresa = Empresa::with('enderecos', 'telefones', 'emails', 'contas')->findOrFail(1); 
         $pdf = PDF::loadView('guias_entrega.relatorio', compact('guia_entrega','empresa'));
-        return $pdf->download('guia_entrega.pdf');
+        return $pdf->stream('guia_entrega-'.$guia_entrega->codigo.'.pdf');
         // return view('guias_entrega.relatorio', compact('guia_entrega'));
         
     }
 
     public function showGuiasEntrega($saida_id){
+
+      if (Gate::denies('visualizar_guia_entrega'))
+            // abort(403, "Sem autorizacao");
+      return redirect()->route('noPermission');
 
         $saida = $this->saida->findOrFail($saida_id);
         $guias_entrega = $this->guia_entrega->where('saida_id', $saida_id)->get();
@@ -191,7 +223,11 @@ class GuiaEntregaController extends Controller
      */
     public function edit($id)
     {
-        //
+      if (Gate::denies('editar_guia_entrega'))
+            // abort(403, "Sem autorizacao");
+        return redirect()->route('noPermission');
+
+
         $guia_entrega = $this->guia_entrega->where('id', $id)->first();
         $saida_id = $guia_entrega->saida_id;
 
@@ -225,7 +261,11 @@ class GuiaEntregaController extends Controller
      */
     public function destroy($id)
     {
-        //
+        if (Gate::denies('cancelar_guia_entrega'))
+            // abort(403, "Sem autorizacao");
+      return redirect()->route('noPermission');
+
+
         DB::beginTransaction();
 
         try {
@@ -267,9 +307,5 @@ class GuiaEntregaController extends Controller
 
     }
 
-    public function createGuia($id){
-
-        $saida = $this->saida->with('itensSaida.produto', 'cliente')->findOrFail($id);
-        return view('guias_entrega.create_edit_guias_entrega', compact('saida'));
-    }
+    
 }

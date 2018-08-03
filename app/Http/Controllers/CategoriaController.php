@@ -7,11 +7,12 @@ use Illuminate\Database\QueryException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Model\Categoria;
 use App\Http\Requests\CategoriaStoreUpdateFormRequest;
+use Illuminate\Support\Facades\Gate;
 
 
 class CategoriaController extends Controller
 {
-    
+
     protected $categoria;
 
     public function __construct(Categoria $categoria){
@@ -27,12 +28,17 @@ class CategoriaController extends Controller
      */
     public function index()
     {
-        //
-        $categorias = $this->categoria->get();
 
-        return view('parametrizacao.categoria.index_categoria', compact('categorias'));
+        if (Gate::denies('listar_categoria'))
+            // abort(403, "Sem autorizacao");
+          return redirect()->route('noPermission');
 
-    }
+
+      $categorias = $this->categoria->get();
+
+      return view('parametrizacao.categoria.index_categoria', compact('categorias'));
+
+  }
 
     /**
      * Show the form for creating a new resource.
@@ -41,10 +47,13 @@ class CategoriaController extends Controller
      */
     public function create()
     {
-        //
-        return view('parametrizacao.categoria.create_edit_categoria');
+        if (Gate::denies('criar_categoria'))
+            // abort(403, "Sem autorizacao");
+          return redirect()->route('noPermission');
 
-    }
+      return view('parametrizacao.categoria.create_edit_categoria');
+
+  }
 
     /**
      * Store a newly created resource in storage.
@@ -54,7 +63,11 @@ class CategoriaController extends Controller
      */
     public function store(CategoriaStoreUpdateFormRequest $request)
     {
-        //
+        if (Gate::denies('criar_categoria'))
+            // abort(403, "Sem autorizacao");
+          return redirect()->route('noPermission');
+
+
         $dataForm = $request->all();
 
         $cadastro = $this->categoria->create($dataForm);
@@ -80,6 +93,9 @@ class CategoriaController extends Controller
     public function show($id)
     {
         //
+        if (Gate::denies('visualizar_categoria'))
+            // abort(403, "Sem autorizacao");
+          return redirect()->route('noPermission');
     }
 
     /**
@@ -90,7 +106,11 @@ class CategoriaController extends Controller
      */
     public function edit($id)
     {
-        //
+        if (Gate::denies('editar_categoria'))
+            // abort(403, "Sem autorizacao");
+          return redirect()->route('noPermission');
+
+
         $categoria = $this->categoria->findOrFail($id);
 
         return view('parametrizacao.categoria.create_edit_categoria', compact('categoria'));
@@ -106,7 +126,11 @@ class CategoriaController extends Controller
      */
     public function update(CategoriaStoreUpdateFormRequest $request, $id)
     {
-        //
+        if (Gate::denies('editar_categoria'))
+            // abort(403, "Sem autorizacao");
+          return redirect()->route('noPermission');
+
+
         $dataForm = $request->all();
 
         $categoria = $this->categoria->findOrFail($id);
@@ -115,14 +139,14 @@ class CategoriaController extends Controller
 
         if($update){
 
-                $success = "Categoria actualizada com sucesso.";
-                return redirect()->route('categoria.index')->with('success', $success);
-            }
-            else{
+            $success = "Categoria actualizada com sucesso.";
+            return redirect()->route('categoria.index')->with('success', $success);
+        }
+        else{
 
-                $error = "Não foi possível actualizar a Categoria.";
-                return redirect()->route('categoria.index')->with('error', $error);
-            }
+            $error = "Não foi possível actualizar a Categoria.";
+            return redirect()->route('categoria.index')->with('error', $error);
+        }
 
     }
 
@@ -134,10 +158,14 @@ class CategoriaController extends Controller
      */
     public function destroy($id)
     {
-        //
+        if (Gate::denies('apagar_categoria'))
+            // abort(403, "Sem autorizacao");
+          return redirect()->route('noPermission');
+
+
         $categoria = $this->categoria->findOrFail($id);
 
-          try{
+        try{
 
             $delete = $categoria->delete();
 
@@ -175,6 +203,12 @@ class CategoriaController extends Controller
 
     public function storeRedirectBack(CategoriaStoreUpdateFormRequest $request)
     {
+
+        if (Gate::denies('criar_categoria'))
+            // abort(403, "Sem autorizacao");
+          return redirect()->route('noPermission');
+
+
 
         $dataForm = $request->all();
 

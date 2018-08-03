@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Http\Requests\ItenConcursoStoreUpdateFormRequest;
 use Illuminate\Http\Request;
 use App\Model\ItenConcurso;
+use Illuminate\Support\Facades\Gate;
 
 class ItenConcursoController extends Controller
 {
@@ -43,8 +44,11 @@ class ItenConcursoController extends Controller
      */
     public function store(ItenConcursoStoreUpdateFormRequest $request)
     {
-        //
-         // dd($request->all());
+        if (Gate::denies('editar_concurso'))
+            // abort(403, "Sem autorizacao");
+        return redirect()->route('noPermission');
+
+
         $dataForm = [
             'concurso_id' => $request->concurso_id,
             'produto_id' => $request->produto_id,
@@ -110,8 +114,11 @@ class ItenConcursoController extends Controller
      */
     public function update(ItenConcursoStoreUpdateFormRequest $request, $id)
     {
-        //
-        // dd($request->all());
+        if (Gate::denies('editar_concurso'))
+            // abort(403, "Sem autorizacao");
+        return redirect()->route('noPermission');
+
+
         $dataForm = [
             'produto_id' => $request->produto_id,
             'quantidade' => $request->quantidade,
@@ -160,7 +167,11 @@ class ItenConcursoController extends Controller
      */
     public function destroy($id)
     {
-        //
+        if (Gate::denies('editar_concurso'))
+            // abort(403, "Sem autorizacao");
+        return redirect()->route('noPermission');
+
+    
         $iten_concurso = $this->iten_concurso->findOrFail($id);
 
         try {

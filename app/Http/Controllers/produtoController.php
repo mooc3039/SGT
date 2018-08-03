@@ -9,6 +9,7 @@ use DB;
 use App\Model\Produto;
 use App\Model\Fornecedor;
 use App\Model\Categoria;
+use Illuminate\Support\Facades\Gate;
 
 class produtoController extends Controller
 {
@@ -29,10 +30,15 @@ class produtoController extends Controller
      */
     public function index()
     {
-        $produtos = $this->produto->with('categoria', 'fornecedor')->get();
+        if (Gate::denies('listar_produto'))
+            // abort(403, "Sem autorizacao");
+          return redirect()->route('noPermission');
 
-        return view('parametrizacao.produto.index_produto', compact('produtos'));
-    }
+
+      $produtos = $this->produto->with('categoria', 'fornecedor')->get();
+
+      return view('parametrizacao.produto.index_produto', compact('produtos'));
+  }
 
     /**
      * Show the form for creating a new resource.
@@ -41,6 +47,11 @@ class produtoController extends Controller
      */
     public function create()
     {
+        if (Gate::denies('criar_produto'))
+            // abort(403, "Sem autorizacao");
+          return redirect()->route('noPermission');
+
+
         $categoria =DB::table('categorias')->pluck('nome','id')->all();
         $fornecedor =DB::table('fornecedors')->pluck('nome','id')->all();
         return view('parametrizacao.produto.create_edit_produto',compact('fornecedor','categoria'));
@@ -54,7 +65,11 @@ class produtoController extends Controller
      */
     public function store(ProdutoStoreUpdateFormRequest $request)
     {
-        // dd($request->all());
+        if (Gate::denies('criar_produto'))
+            // abort(403, "Sem autorizacao");
+          return redirect()->route('noPermission');
+
+
         $dataForm = $request->all();
 
         $cadastro = $this->produto->create($dataForm);
@@ -91,7 +106,11 @@ class produtoController extends Controller
      */
     public function edit($id)
     {
-        //echo $id;
+        if (Gate::denies('editar_produto'))
+            // abort(403, "Sem autorizacao");
+          return redirect()->route('noPermission');
+
+
         $produto = Produto::findOrFail($id);
         $categoria =DB::table('categorias')->pluck('nome','id')->all();
         $fornecedor =DB::table('fornecedors')->pluck('nome','id')->all();
@@ -107,6 +126,11 @@ class produtoController extends Controller
      */
     public function update(ProdutoStoreUpdateFormRequest $request, $id)
     {
+        if (Gate::denies('editar_produto'))
+            // abort(403, "Sem autorizacao");
+          return redirect()->route('noPermission');
+
+
 
       $dataForm = $request->all();
 
@@ -137,6 +161,10 @@ class produtoController extends Controller
      */
     public function destroy($id)
     {
+        if (Gate::denies('apagar_produto'))
+            // abort(403, "Sem autorizacao");
+          return redirect()->route('noPermission');
+
 
         $produto = Produto::findOrFail($id);
         // $produto->delete();

@@ -81,7 +81,7 @@ Dados do Cliente</span></em></strong><br />
 </div>
 <br />
 <div style="border: 2px solid black; border-radius: 10px; height: 93px;"><br />
-<h2 style="color: red; text-align: center;">N&ordm; {{$saida->id}}/{{date('Y', strtotime($saida->data))}}</h2>
+<h2 style="color: red; text-align: center;">N&ordm; {{$saida->codigo}}</h2>
 </div>
 </td>
 </tr>

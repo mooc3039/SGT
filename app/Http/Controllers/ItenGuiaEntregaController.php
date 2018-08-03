@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use App\Http\Requests\ItenGuiaEntregaStoreUpdateFormRequest;
 use App\Model\ItenGuiaentrega;
+use Illuminate\Support\Facades\Gate;
 
 class ItenGuiaEntregaController extends Controller
 {
@@ -77,53 +78,56 @@ class ItenGuiaEntregaController extends Controller
      */
     public function update(ItenGuiaEntregaStoreUpdateFormRequest $request, $id)
     {
-        // dd($request->all());
-        //
-        $bad_symbols = array(",");
-
-        $dataForm = [
-            'quantidade' => $request->quantidade,
-            'valor' => str_replace($bad_symbols, "", $request->valor),
-            'desconto' => str_replace($bad_symbols, "", $request->desconto),
-            'subtotal' => str_replace($bad_symbols, "", $request->subtotal),
-        ];
+        if (Gate::denies('editar_guia_entrega'))
+            // abort(403, "Sem autorizacao");
+          return redirect()->route('noPermission');
 
 
-        $guia_entrega_id = $request->guia_entrega_id;
-        $produto_id = $request->produto_id;
+      $bad_symbols = array(",");
 
-        try {
+      $dataForm = [
+        'quantidade' => $request->quantidade,
+        'valor' => str_replace($bad_symbols, "", $request->valor),
+        'desconto' => str_replace($bad_symbols, "", $request->desconto),
+        'subtotal' => str_replace($bad_symbols, "", $request->subtotal),
+    ];
 
-            if($request->quantidade > $request->qtd_referencial){
+
+    $guia_entrega_id = $request->guia_entrega_id;
+    $produto_id = $request->produto_id;
+
+    try {
+
+        if($request->quantidade > $request->qtd_referencial){
             // Validar a qtd esecificada de acordo cm a max para o item.
 
-                $error = 'A quantidade especificada excedeu o limite!';
-                return redirect()->back()->with('error', $error);
+            $error = 'A quantidade especificada excedeu o limite!';
+            return redirect()->back()->with('error', $error);
+
+        }else{
+
+            $iten_guia_entrega = ItenGuiaentrega::where('guia_entrega_id', $guia_entrega_id)->where('produto_id', $produto_id)->first();
+
+            if($iten_guia_entrega->update($dataForm)){
+
+                $sucess = 'Item actualizado com sucesso!';
+                return redirect()->back()->with('success', $sucess);
 
             }else{
 
-                $iten_guia_entrega = ItenGuiaentrega::where('guia_entrega_id', $guia_entrega_id)->where('produto_id', $produto_id)->first();
+                $error = 'Erro ao actualizar o Item!';
+                return redirect()->back()->with('error', $error);
 
-                if($iten_guia_entrega->update($dataForm)){
-
-                    $sucess = 'Item actualizado com sucesso!';
-                    return redirect()->back()->with('success', $sucess);
-
-                }else{
-
-                    $error = 'Erro ao actualizar o Item!';
-                    return redirect()->back()->with('error', $error);
-
-                }
             }
+        }
 
-        } catch (QueryException $e) {
+    } catch (QueryException $e) {
 
-          $error = 'Erro ao actualizar o Item! Erro relacionado ao DB. Necessária a intervenção do Administrador da Base de Dados.!';
-          return redirect()->back()->with('error', $error);
+      $error = 'Erro ao actualizar o Item! Erro relacionado ao DB. Necessária a intervenção do Administrador da Base de Dados.!';
+      return redirect()->back()->with('error', $error);
 
-      }
   }
+}
 
     /**
      * Remove the specified resource from storage.

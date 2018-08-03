@@ -65,8 +65,8 @@
                         $arry_valor_pago_soma = array();
 
                         if($venda->aplicacao_motivo_iva == 1){
-                            $valor_total = $venda->valor_total;
-                          }
+                          $valor_total = $venda->valor_total;
+                        }
 
                         foreach($venda->pagamentosVenda as $pagamento){
                           $arry_valor_pago_soma[] = $pagamento->valor_pago;

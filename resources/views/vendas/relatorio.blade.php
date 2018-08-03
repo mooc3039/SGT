@@ -78,7 +78,7 @@ Dados do Cliente</span></em></strong><br />
 </div>
 <br />
 <div style="border: 2px solid black; border-radius: 10px; height: 93px;"><br />
-<h2 style="color: red; text-align: center;">N&ordm; {{$venda->id}}/{{date('Y', strtotime($venda->created_at))}}</h2>
+<h2 style="color: red; text-align: center;">N&ordm; {{$venda->codigo}}</h2>
 </div>
 </td>
 </tr>

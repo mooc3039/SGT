@@ -28,51 +28,51 @@
             <a href="{{ route('fornecedores.create') }}" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i></a>
           </div>
           <div class="col-md-4">
-                <input type="text" id="pesq" class="form-control" placeholder="Pesquisa...">
-              </div>
+            <input type="text" id="pesq" class="form-control" placeholder="Pesquisa...">
+          </div>
         </div>
         
         <div class="row">
           <div class="col-md-12">
             <table class="table table-striped table-advance table-hover" id="tbl_index_fornecedores" data-order='[[ 0, "asc" ]]'>
-          
-          <thead>
-            <tr>
-              <th><i class="icon_profile"></i>Nome do Fornecedor</th>
-              <th><i class="icon_profile"></i>NUIT</th>
-              <th><i class="icon_mobile"></i> Endereço</th>
-              <th><i class="icon_mail_alt"></i> Email</th>
-              <th><i class="icon_pin_alt"></i> Telefone</th>
-              <th><i class="icon_calendar"></i> Rubrica</th>
-              <th><i class="fa fa-unlock-alt"></i> Activo </th>
-              <th class="text-right"><i class="icon_cogs"></i> Operações</th>
-            </tr>
-          </thead>
 
-          <tbody>
-            
-            @foreach($fornecedores as $fornecedor)
-            <tr>
-              <td> {{$fornecedor->nome}}</td>
-              <td> {{$fornecedor->nuit}}</td>
-              <td>{{$fornecedor->endereco}}</td>
-              <td>{{$fornecedor->email}}</td>
-              <td>{{$fornecedor->telefone}}</td>
-              <td>{{$fornecedor->rubrica}}</td>
-              <td>{{Form::checkbox('activo', $fornecedor->activo, $fornecedor->activo, ['disabled'])}}</td>
-              <td>
-                <div class="btn-group btn-group-sm pull-right">
+              <thead>
+                <tr>
+                  <th>Nome do Fornecedor</th>
+                  <th>NUIT</th>
+                  <th>Endereço</th>
+                  <th>Email</th>
+                  <th>Telefone</th>
+                  <th>Rubrica</th>
+                  <th>Activo </th>
+                  <th class="text-right"><i class="icon_cogs"></i>Operações</th>
+                </tr>
+              </thead>
+
+              <tbody>
+
+                @foreach($fornecedores as $fornecedor)
+                <tr>
+                  <td> {{$fornecedor->nome}}</td>
+                  <td> {{$fornecedor->nuit}}</td>
+                  <td>{{$fornecedor->endereco}}</td>
+                  <td>{{$fornecedor->email}}</td>
+                  <td>{{$fornecedor->telefone}}</td>
+                  <td>{{$fornecedor->rubrica}}</td>
+                  <td>{{Form::checkbox('activo', $fornecedor->activo, $fornecedor->activo, ['disabled'])}}</td>
+                  <td>
+                    <div class="btn-group btn-group-sm pull-right">
 
 
 
-                  <a class="btn btn-primary" href="#"><i class="icon_plus_alt2"></i></a>
-                  <a class="btn btn-success" href="{{route('fornecedores.edit', $fornecedor->id)}}"><i class="fa fa-pencil"></i></a>
+                      <a class="btn btn-primary" href="#"><i class="icon_plus_alt2"></i></a>
+                      <a class="btn btn-success" href="{{route('fornecedores.edit', $fornecedor->id)}}"><i class="fa fa-pencil"></i></a>
 
-                  @if($fornecedor->activo == true)
-                  <a class="btn btn-danger" href="{{route('fornecedores_desactivar', $fornecedor->id)}}"><i class="fa fa-lock"></i></a>
-                  @else
-                  <a class="btn btn-info" href="{{route('fornecedores_activar', $fornecedor->id)}}"><i class="fa fa-unlock"></i></a>
-                  @endif
+                      @if($fornecedor->activo == true)
+                      <a class="btn btn-danger" href="{{route('fornecedores_desactivar', $fornecedor->id)}}"><i class="fa fa-lock"></i></a>
+                      @else
+                      <a class="btn btn-info" href="{{route('fornecedores_activar', $fornecedor->id)}}"><i class="fa fa-unlock"></i></a>
+                      @endif
                <!-- {!!Form::open(['route'=>['fornecedores.destroy', $fornecedor->fornecedor_id], 'method'=>'DELETE'])!!}
                 {{Form::submit('Delete', ['class' => 'btn btn-danger'])}} -->
                 {!!Form::close() !!}
@@ -84,44 +84,43 @@
           @endforeach
         </tbody>
       </table>
-          </div>
-        </div>
+    </div>
+  </div>
+
+</div>
+
+
+
+<div class="panel-footer">
+
+  <div class="row">
+    <div class="col-md-6 text-left">
+    </div>
+    <div class="col-md-6 text-right">
+      <div class="btn-group btn-group-sm">
+
+      <a href="{{route('fornecedores.index')}}" class="btn btn-info">
+        Todos
+      </a>
+      <a href="{{route('fornecedores_inactivos')}}" class="btn btn-danger">
+        Inactivos
+      </a>
+      <a href="{{route('fornecedores_activos')}}" class="btn btn-info">
+        Activos
+      </a>
+</div>
+
 
     </div>
-    
+  </div>
 
 
-    <div class="panel-footer">
 
-      <div class="row">
-        <div class="col-md-6 text-left">
-        </div>
-        <div class="col-md-6 text-right">
 
-          @if($fornecedor->activo == true)
 
-          <a href="{{route('fornecedores_inactivos')}}" class="btn btn-primary">
-            Inactivos
-          </a>
+</div>
 
-          @else
-
-          <a href="{{route('fornecedores.index')}}" class="btn btn-primary">
-            Activos
-          </a>
-
-          @endif
-
-        </div>
-      </div>
- 
-
-      
-      
-
-    </div>
-
-  </section>
+</section>
 </div>
 </div>
 
@@ -132,16 +131,16 @@
 @section('script')
 <script type="text/javascript">
     // DataTables Inicio
-  $(document).ready(function() {
+    $(document).ready(function() {
 
-    var titulo = "Fornecedores";   
-    var msg_bottom = "Papelaria Agenda & Serviços";
+      var titulo = "Fornecedores";   
+      var msg_bottom = "Papelaria Agenda & Serviços";
 
-    var oTable = $('#tbl_index_fornecedores').DataTable( {
-      "processing": true,
-      "pagingType": "full_numbers",
-      "dom": 'Brtpl',
-      buttons: [
+      var oTable = $('#tbl_index_fornecedores').DataTable( {
+        "processing": true,
+        "pagingType": "full_numbers",
+        "dom": 'Brtpl',
+        buttons: [
             // 'print',
             // 'excelHtml5',
             // 'pdfHtml5'
@@ -169,11 +168,11 @@
             ]
           });
 
-    $('#pesq').keyup(function(){
-      oTable.search($(this).val()).draw();
-    });
+      $('#pesq').keyup(function(){
+        oTable.search($(this).val()).draw();
+      });
 
-  } );
+    } );
   // DataTables Fim
 </script>
 @endsection

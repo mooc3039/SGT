@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use App\Http\Requests\TipoClienteStoreUpdateFormRequest;
 use App\Model\TipoCliente;
+use Illuminate\Support\Facades\Gate;
 
 class TipoClienteController extends Controller
 {
@@ -22,7 +23,11 @@ class TipoClienteController extends Controller
      */
     public function index()
     {
-        //
+        if (Gate::denies('listar_tipo_cliente'))
+            // abort(403, "Sem autorizacao");
+          return redirect()->route('noPermission');
+
+
         $tipos_cliente = $this->tipo_cliente->get();
         return view('parametrizacao.cliente.tipos_cliente.index_tipos_cliente', compact('tipos_cliente'));    
     }
@@ -34,7 +39,11 @@ class TipoClienteController extends Controller
      */
     public function create()
     {
-        //
+        if (Gate::denies('criar_tipo_cliente'))
+            // abort(403, "Sem autorizacao");
+          return redirect()->route('noPermission');
+
+
         return view ('parametrizacao.cliente.tipos_cliente.create_edit_tipos_cliente');
 
     }
@@ -47,7 +56,12 @@ class TipoClienteController extends Controller
      */
     public function store(TipoClienteStoreUpdateFormRequest $request)
     {
-        //
+        // dd($request->all());
+        if (Gate::denies('criar_tipo_cliente'))
+            // abort(403, "Sem autorizacao");
+          return redirect()->route('noPermission');
+
+
         $dataForm = $request->all();
 
         try {
@@ -93,7 +107,11 @@ class TipoClienteController extends Controller
      */
     public function edit($id)
     {
-        //
+        if (Gate::denies('editar_tipo_cliente'))
+            // abort(403, "Sem autorizacao");
+          return redirect()->route('noPermission');
+
+
         $tipo_cliente = $this->tipo_cliente->findOrFail($id);
         return view('parametrizacao.cliente.tipos_cliente.create_edit_tipos_cliente', compact('tipo_cliente'));
     }
@@ -107,7 +125,11 @@ class TipoClienteController extends Controller
      */
     public function update(TipoClienteStoreUpdateFormRequest $request, $id)
     {
-        //
+        if (Gate::denies('editar_tipo_cliente'))
+            // abort(403, "Sem autorizacao");
+          return redirect()->route('noPermission');
+
+
         $dataForm = $request->all();
         $tipo_cliente = $this->tipo_cliente->findOrFail($id);
 
@@ -141,7 +163,11 @@ class TipoClienteController extends Controller
      */
     public function destroy($id)
     {
-        //
+        if (Gate::denies('apagar_tipo_cliente'))
+            // abort(403, "Sem autorizacao");
+          return redirect()->route('noPermission');
+
+
         $tipo_cliente = $this->tipo_cliente->findOrFail($id);
 
         try {

@@ -27,10 +27,11 @@ class UsuarioRequest extends FormRequest
         $id = $this->get('usuario_id');
 
         return [
+            'role_id' => 'required',
             'name' => 'required',
             'email' => 'unique:users,email,'.$id.',id',
             'occupation' => 'required',
-            'username' => 'required',
+            'username' => 'required|unique:users,username,'.$id.',id',
             'password'=>'required|min:6|confirmed',
             'password_confirmation'=>'required_with:password',
             'active' => 'required',
@@ -40,10 +41,12 @@ class UsuarioRequest extends FormRequest
     public function messages(){
 
         return [
+            'role_id.required' => 'O Tipo do Usuário é obrigatório',
             'name.required' => 'O nome do Usuário é obrigatório.',
             'email.unique' => 'O Email já existe!',
             'occupation.required' => 'A ocupação é obrigatório.',
             'username.required' => 'O usuário é obrigado.',
+            'username.unique' => 'O Usuário indicado já existe.',
             'password.required' => 'O password é obrigatório.',
             'password_confirmation.required' => 'A confirmação do password não corresponde',
             'active.required' => 'O usuário deve ser Activo ou Inactivo.',

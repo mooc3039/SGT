@@ -67,20 +67,28 @@
 					<thead>
 
 						<tr>
-							<th><i class="icon_profile"></i>Código da venda </th>
-							<th><i class="icon_mobile"></i> Data de venda </th>
-							<th><i class="icon_mail_alt"></i> Valor </th>
-							<th><i class="icon_mail_alt"></i> Cliente </th>
-							<th><i class="icon_mail_alt"></i> Usúario Cadastrante </th>
+							<th>Código da venda </th>
+							<th>Data de venda </th>
+							<th>Valor Total (Mtn) </th>
+							<th>Valor Total - IVA (Mtn) </th>
+							<th>Cliente </th>
+							<th>Usúario Cadastrante </th>
 						</tr>
 					</thead>
 					<tbody id="data">
 						@foreach($vendas as $venda)
 						<tr>
 
-							<td> {{$venda->id}} </td>
+							<td> {{$venda->codigo}} </td>
 							<td> {{date('d-m-Y', strtotime($venda->created_at))}} </td>
-							<td> {{$venda->valor_iva}} </td>
+							<td> {{number_format($venda->valor_total, 2, '.', ',')}} </td>
+							<td>
+								@if($venda->aplicacao_motivo_iva == 1)
+								{{""}}
+								@else
+								{{number_format($venda->valor_iva, 2, '.', ',')}}
+								@endif
+							</td>
 							<td> {{$venda->cliente->nome}} </td>
 							<td> {{$venda->user->name}} </td>
 
@@ -91,7 +99,7 @@
 					<tbody id="data-ajax">
 
 					</tbody>
-					<tfoot id="data-footer-ajax">
+					<!-- <tfoot id="data-footer-ajax">
 						<tr>
 							<td></td>
 							<td></td>
@@ -106,7 +114,7 @@
 							<td>Valor Pago</td>
 							<td><span class="valor_pago">{{ $valor_venda_pago }}</span></td>
 						</tr>
-					</tfoot>
+					</tfoot> -->
 				</table>
 
 			</div>
@@ -187,10 +195,10 @@
 		});
 
 
-		var valor_total_vend = $('#valor_total').val()*1;
-		var valor_pago_vend = $('#valor_pago').val()*1;
-		$('.valor_total').html(valor_total_vend.formatMoney(2,',','.')+ " Mtn");
-		$('.valor_pago').html(valor_pago_vend.formatMoney(2,',','.')+ " Mtn");
+		var valor_total_vend = Number.parseFloat($('#valor_total').val());
+		var valor_pago_vend = Number.parseFloat($('#valor_pago').val());
+		$('.valor_total').html(valor_total_vend.formatMoney()+ " Mtn");
+		$('.valor_pago').html(valor_pago_vend.formatMoney()+ " Mtn");
 	} );
 
 </script>

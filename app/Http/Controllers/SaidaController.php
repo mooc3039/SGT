@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-// use Illuminate\Database\QueryException;
-// use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\QueryException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use App\Http\Requests\SaidaStoreUpdateFormRequest;
 use App\Http\Requests\PagamentoSaidaStoreUpdateFormRequest;
@@ -24,6 +24,7 @@ use App\User;
 use DB;
 use Session;
 use PDF;
+use Illuminate\Support\Facades\Gate;
 
 class SaidaController extends Controller
 {
@@ -59,9 +60,40 @@ class SaidaController extends Controller
      */
     public function index()
     {
-        //
+      if (Gate::denies('listar_factura'))
+            // abort(403, "Sem autorizacao");
+        return redirect()->route('noPermission');
+
 
       $saidas = $this->saida->with('itensSaida', 'pagamentosSaida')->get();
+      $formas_pagamento = DB::table('forma_pagamentos')->pluck('descricao', 'id')->all();
+
+      return view('saidas.index_saida', compact('saidas', 'formas_pagamento'));
+
+    }
+
+    public function IndexSaidaNormal()
+    {
+      if (Gate::denies('listar_factura'))
+            // abort(403, "Sem autorizacao");
+        return redirect()->route('noPermission');
+
+
+      $saidas = $this->saida->with('itensSaida', 'pagamentosSaida')->where('concurso_id', 0)->get();
+      $formas_pagamento = DB::table('forma_pagamentos')->pluck('descricao', 'id')->all();
+
+      return view('saidas.index_saida', compact('saidas', 'formas_pagamento'));
+
+    }
+
+    public function IndexSaidaDeConcurso()
+    {
+      if (Gate::denies('listar_factura'))
+            // abort(403, "Sem autorizacao");
+        return redirect()->route('noPermission');
+
+
+      $saidas = $this->saida->with('itensSaida', 'pagamentosSaida')->where('concurso_id', '!=', 0)->get();
       $formas_pagamento = DB::table('forma_pagamentos')->pluck('descricao', 'id')->all();
 
       return view('saidas.index_saida', compact('saidas', 'formas_pagamento'));
@@ -75,7 +107,11 @@ class SaidaController extends Controller
      */
     public function create()
     {
-        //
+      if (Gate::denies('criar_factura'))
+            // abort(403, "Sem autorizacao");
+        return redirect()->route('noPermission');
+
+
       $acronimo = TipoCliente::select('id')->where('acronimo', 'publico')->first();
       $acronimo_id = $acronimo->id;
 
@@ -96,8 +132,11 @@ class SaidaController extends Controller
      */
     public function store(SaidaStoreUpdateFormRequest $request)
     {
-      // dd($request->all());
-        //
+      if (Gate::denies('criar_factura'))
+            // abort(403, "Sem autorizacao");
+        return redirect()->route('noPermission');
+
+
       $acronimo_forma_pagamento_naoaplicavel = FormaPagamento::select('id')->where('acronimo', 'naoaplicavel')->first();
       $acronimo_forma_pagamento_naoaplicavel_id = $acronimo_forma_pagamento_naoaplicavel->id;
       $bad_symbols = array(",");
@@ -271,7 +310,10 @@ class SaidaController extends Controller
      */
     public function show($id)
     {
-        //
+      if (Gate::denies('visualizar_factura'))
+            // abort(403, "Sem autorizacao");
+        return redirect()->route('noPermission');
+
 
         $saida = $this->saida->with('itensSaida.produto', 'cliente')->findOrFail($id); // Tras a saida. Tras os Itens da Saida e dentro da relacao ItensSaida eh possivel pegar a relacao Prodtuo atraves do dot ou ponto. NOTA: a relacao produto nao esta na saida e sim na itensSaida, mas eh possivel ter os seus dados partido da saida como se pode ver.
         $empresa = Empresa::with('enderecos', 'telefones', 'emails', 'contas')->findOrFail(1); 
@@ -289,7 +331,11 @@ class SaidaController extends Controller
      */
     public function edit($id)
     {
-        //
+      if (Gate::denies('editar_factura'))
+            // abort(403, "Sem autorizacao");
+        return redirect()->route('noPermission');
+
+
       $produtos = DB::table('produtos')->pluck('descricao', 'id')->all();
       $motivos_iva = DB::table('motivo_ivas')->pluck('motivo_nao_aplicacao', 'id')->all();
       $saida = $this->saida->with('itensSaida.produto', 'cliente')->findOrFail($id); 
@@ -308,7 +354,11 @@ class SaidaController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+      if (Gate::denies('editar_factura'))
+            // abort(403, "Sem autorizacao");
+        return redirect()->route('noPermission');
+
+
       $saida = $this->saida->findOrFail($id);
 
       $saida->aplicacao_motivo_iva = $request->aplicacao_motivo_iva;
@@ -328,7 +378,12 @@ class SaidaController extends Controller
     }
 
     public function motivoNaoAplicacaoImposto(Request $request){
-    // dd($request->all());
+
+      if (Gate::denies('editar_factura'))
+            // abort(403, "Sem autorizacao");
+        return redirect()->route('noPermission');
+
+
       $saida_id = $request->saida_id;
 
       $dataForm = [
@@ -359,7 +414,11 @@ class SaidaController extends Controller
      */
     public function destroy($id)
     {
-        //
+      if (Gate::denies('apagar_factura'))
+            // abort(403, "Sem autorizacao");
+        return redirect()->route('noPermission');
+
+
       DB::beginTransaction();
       try {
 
@@ -387,6 +446,12 @@ class SaidaController extends Controller
     }
 
     public function saidaPublicoCreate(){
+
+      if (Gate::denies('criar_factura'))
+            // abort(403, "Sem autorizacao");
+        return redirect()->route('noPermission');
+
+
       $acronimo = TipoCliente::select('id')->where('acronimo', 'publico')->first();
       $acronimo_id = $acronimo->id;
 
@@ -400,6 +465,12 @@ class SaidaController extends Controller
     }
 
     public function saidaConcursoCreate(){
+
+      if (Gate::denies('criar_factura'))
+            // abort(403, "Sem autorizacao");
+        return redirect()->route('noPermission');
+
+
       // $concurso_valor_zero_id = Concurso::select('id')->where('valor_total', 0)->get();
       $concurso_id_qtd_rest_zero = ItenConcurso::select('concurso_id')->where('quantidade_rest','>', 0)->distinct()->get();
       $array_concurso_id = array();
@@ -419,7 +490,12 @@ class SaidaController extends Controller
     }
 
     public function pagamentoSaida(PagamentoSaidaStoreUpdateFormRequest $request){
-        // dd($request->all());
+
+      if (Gate::denies('efectuar_pagamento_factura'))
+            // abort(403, "Sem autorizacao");
+        return redirect()->route('noPermission');
+
+
       $acronimo_forma_pagamento_naoaplicavel = FormaPagamento::select('id')->where('acronimo', 'naoaplicavel')->first();
       $acronimo_forma_pagamento_naoaplicavel_id = $acronimo_forma_pagamento_naoaplicavel->id;
       $bad_symbols = array(",");
@@ -534,7 +610,12 @@ class SaidaController extends Controller
     }
 
     public function createPagamentoSaida($id){
-      // dd($id);
+
+      if (Gate::denies('efectuar_pagamento_factura'))
+            // abort(403, "Sem autorizacao");
+        return redirect()->route('noPermission');
+
+
       $formas_pagamento = DB::table('forma_pagamentos')->pluck('descricao', 'id')->all();
       $saida = $this->saida->with('pagamentosSaida.formaPagamento')->where('id', $id)->first();
       // dd($saida);
@@ -566,23 +647,34 @@ class SaidaController extends Controller
 
       public function showRelatorio($id)
       {
-        //
+        if (Gate::denies('imprimir_factura'))
+            // abort(403, "Sem autorizacao");
+          return redirect()->route('noPermission');
+
+
         $saida = $this->saida->with('itensSaida.produto', 'cliente')->findOrFail($id); 
         $empresa = Empresa::with('enderecos', 'telefones', 'emails', 'contas')->findOrFail(1);
         $pdf = PDF::loadView('saidas.relatorio', compact('saida','empresa'));
-        return $pdf->download('saida.pdf');
+        return $pdf->download('factura-'.$saida->codigo.'.pdf');
         
       }
 
       public function reportGeralSaidas(){
 
+        if (Gate::denies('relatorio_geral_factura'))
+            // abort(403, "Sem autorizacao");
+          return redirect()->route('noPermission');
 
-        $valor_saida = Saida::sum('valor_iva');
-        $valor_saida_pago = PagamentoSaida::sum('valor_pago');
+        $valor_saida_sem_iva = $this->saida->where('concurso_id', 0)->where('aplicacao_motivo_iva', 1)->sum('valor_total');
+        $valor_saida_com_iva = $this->saida->where('concurso_id', 0)->where('aplicacao_motivo_iva', 0)->sum('valor_iva');
+        $valor_saida = $valor_saida_sem_iva + $valor_saida_com_iva;
+        $valor_saida_pago = PagamentoSaida::whereIn('saida_id', function($query){
+          $query->select('id')->from('saidas')->where('concurso_id', 0);
+        })->sum('valor_pago');
         $mes = null;
         $ano = null;
 
-        $saidas = $this->saida->with('itensSaida', 'user', 'cliente')->get();
+        $saidas = $this->saida->with('itensSaida', 'user', 'cliente')->where('concurso_id', 0)->get();
         $anos = DB::table('anos')->pluck('ano', 'id')->all();
         $meses = DB::table('mes')->pluck('nome', 'id')->all();
 
@@ -590,7 +682,37 @@ class SaidaController extends Controller
 
       }
 
+      public function reportGeralSaidasDeConcurso(){
+
+        if (Gate::denies('relatorio_geral_factura'))
+            // abort(403, "Sem autorizacao");
+          return redirect()->route('noPermission');
+
+
+        $valor_saida_sem_iva = $this->saida->where('concurso_id', '!=', 0)->where('aplicacao_motivo_iva', 1)->sum('valor_total');
+        $valor_saida_com_iva = $this->saida->where('concurso_id', '!=', 0)->where('aplicacao_motivo_iva', 0)->sum('valor_iva');
+        $valor_saida = $valor_saida_sem_iva + $valor_saida_com_iva;
+        $valor_saida_pago = PagamentoSaida::WhereIn('saida_id', function($query){
+          $query->select('id')->from('saidas')->where('concurso_id', '!=', 0);
+        })->sum('valor_pago');
+        $mes = null;
+        $ano = null;
+
+        $saidas = $this->saida->with('itensSaida', 'user', 'cliente')->where('concurso_id', '!=', 0)->get();
+        $anos = DB::table('anos')->pluck('ano', 'id')->all();
+        $meses = DB::table('mes')->pluck('nome', 'id')->all();
+
+        return view('reports.saidas.report_geral_saidas_concursos', compact('saidas', 'valor_saida', 'valor_saida_pago', 'anos', 'meses', 'mes', 'ano'));
+
+      }
+
       public function listarSaidaPorMes(Request $request){
+
+        if (Gate::denies('relatorio_geral_factura'))
+            // abort(403, "Sem autorizacao");
+          return redirect()->route('noPermission');
+
+
         $mes_id = $request->mes_id;
         $mes_model = Me::select('nome')->where('id', $mes_id)->firstOrFail();
         $mes = $mes_model->nome;
@@ -599,7 +721,9 @@ class SaidaController extends Controller
 
 
         $saidas = $this->saida->with('itensSaida', 'pagamentosSaida', 'user', 'cliente')->where('concurso_id', 0)->whereMonth('data', $mes_id)->get();
-        $valor_saida = Saida::where('concurso_id', 0)->whereMonth('data', $mes_id)->sum('valor_iva');
+        $valor_saida_sem_iva = $this->saida->where('concurso_id', 0)->where('aplicacao_motivo_iva', 1)->whereMonth('data', $mes_id)->sum('valor_total');
+        $valor_saida_com_iva = $this->saida->where('concurso_id', 0)->where('aplicacao_motivo_iva', 0)->whereMonth('data', $mes_id)->sum('valor_iva');
+        $valor_saida = $valor_saida_sem_iva + $valor_saida_com_iva;
         $valor_saida_pago = 0;
         $anos = DB::table('anos')->pluck('ano', 'id')->all();
         $meses = DB::table('mes')->pluck('nome', 'id')->all();
@@ -614,33 +738,105 @@ class SaidaController extends Controller
 
      }
 
-     public function listarSaidaPorAno(Request $request){
-       //dd($request->all());
-       $ano_id = $request->ano_id;
-       $ano_model = Ano::select('ano')->where('id', $ano_id)->firstOrFail();
-       $ano = $ano_model->ano;
-       $mes = null;
+     public function listarSaidaDeConcursoPorMes(Request $request){
+
+      if (Gate::denies('relatorio_geral_factura'))
+            // abort(403, "Sem autorizacao");
+        return redirect()->route('noPermission');
 
 
-       $saidas = $this->saida->with('itensSaida', 'pagamentosSaida', 'user', 'cliente')->where('concurso_id', 0)->whereYear('data', $ano)->get();
-       $valor_saida = Saida::where('concurso_id', 0)->whereYear('data', $ano)->sum('valor_iva');
-       $valor_saida_pago = 0;
-       $anos = DB::table('anos')->pluck('ano', 'id')->all();
-       $meses = DB::table('mes')->pluck('nome', 'id')->all();
+      $mes_id = $request->mes_id;
+      $mes_model = Me::select('nome')->where('id', $mes_id)->firstOrFail();
+      $mes = $mes_model->nome;
+      $ano = null;
+      // dd($mes_id);
 
-       foreach ($saidas as $saida) {
-         foreach ($saida->pagamentosSaida as $pagamentos) {
-           $valor_saida_pago = $valor_saida_pago + $pagamentos->valor_pago;
-         }
+
+      $saidas = $this->saida->with('itensSaida', 'pagamentosSaida', 'user', 'cliente')->where('concurso_id', '!=', 0)->whereMonth('data', $mes_id)->get();
+      $valor_saida_sem_iva = $this->saida->where('concurso_id', '!=', 0)->where('aplicacao_motivo_iva', 1)->whereMonth('data', $mes_id)->sum('valor_total');
+      $valor_saida_com_iva = $this->saida->where('concurso_id', '!=',  0)->where('aplicacao_motivo_iva', 0)->whereMonth('data', $mes_id)->sum('valor_iva');
+      $valor_saida = $valor_saida_sem_iva + $valor_saida_com_iva;
+      $valor_saida_pago = 0;
+      $anos = DB::table('anos')->pluck('ano', 'id')->all();
+      $meses = DB::table('mes')->pluck('nome', 'id')->all();
+
+      foreach ($saidas as $saida) {
+       foreach ($saida->pagamentosSaida as $pagamentos) {
+         $valor_saida_pago = $valor_saida_pago + $pagamentos->valor_pago;
        }
-
-
-       return view('reports.saidas.report_geral_saidas', compact('saidas', 'valor_saida', 'valor_saida_pago', 'anos', 'meses', 'ano', 'mes'));
      }
 
-     public function findConcursoDados(Request $request)
-     {
-      $concurso = $this->concurso->with('itensConcurso.produto', 'pagamentosConcurso.formaPagamento', 'cliente', 'formaPagamento')->findOrFail($request->id);
-      return response()->json($concurso);
-    }
-  }
+     return view('reports.saidas.report_geral_saidas_concursos', compact('saidas', 'valor_saida', 'valor_saida_pago', 'anos', 'meses', 'mes', 'ano'));
+
+   }
+
+   public function listarSaidaPorAno(Request $request){
+
+    if (Gate::denies('relatorio_geral_factura'))
+            // abort(403, "Sem autorizacao");
+      return redirect()->route('noPermission');
+
+
+       //dd($request->all());
+    $ano_id = $request->ano_id;
+    $ano_model = Ano::select('ano')->where('id', $ano_id)->firstOrFail();
+    $ano = $ano_model->ano;
+    $mes = null;
+
+
+    $saidas = $this->saida->with('itensSaida', 'pagamentosSaida', 'user', 'cliente')->where('concurso_id', 0)->whereYear('data', $ano)->get();
+    $valor_saida_sem_iva = $this->saida->where('concurso_id', 0)->where('aplicacao_motivo_iva', 1)->whereYear('data', $ano)->sum('valor_total');
+    $valor_saida_com_iva = $this->saida->where('concurso_id', 0)->where('aplicacao_motivo_iva', 0)->whereYear('data', $ano)->sum('valor_iva');
+    $valor_saida = $valor_saida_sem_iva + $valor_saida_com_iva;
+    $valor_saida_pago = 0;
+    $anos = DB::table('anos')->pluck('ano', 'id')->all();
+    $meses = DB::table('mes')->pluck('nome', 'id')->all();
+
+    foreach ($saidas as $saida) {
+     foreach ($saida->pagamentosSaida as $pagamentos) {
+       $valor_saida_pago = $valor_saida_pago + $pagamentos->valor_pago;
+     }
+   }
+
+
+   return view('reports.saidas.report_geral_saidas', compact('saidas', 'valor_saida', 'valor_saida_pago', 'anos', 'meses', 'ano', 'mes'));
+ }
+
+ public function listarSaidaDeConcursoPorAno(Request $request){
+
+  if (Gate::denies('relatorio_geral_factura'))
+            // abort(403, "Sem autorizacao");
+    return redirect()->route('noPermission');
+
+
+       //dd($request->all());
+  $ano_id = $request->ano_id;
+  $ano_model = Ano::select('ano')->where('id', $ano_id)->firstOrFail();
+  $ano = $ano_model->ano;
+  $mes = null;
+
+
+  $saidas = $this->saida->with('itensSaida', 'pagamentosSaida', 'user', 'cliente')->where('concurso_id', '!=',  0)->whereYear('data', $ano)->get();
+  $valor_saida_sem_iva = $this->saida->where('concurso_id', '!=',  0)->where('aplicacao_motivo_iva', 1)->whereYear('data', $ano)->sum('valor_total');
+  $valor_saida_com_iva = $this->saida->where('concurso_id', '!=',  0)->where('aplicacao_motivo_iva', 0)->whereYear('data', $ano)->sum('valor_iva');
+  $valor_saida = $valor_saida_sem_iva + $valor_saida_com_iva;
+  $valor_saida_pago = 0;
+  $anos = DB::table('anos')->pluck('ano', 'id')->all();
+  $meses = DB::table('mes')->pluck('nome', 'id')->all();
+
+  foreach ($saidas as $saida) {
+   foreach ($saida->pagamentosSaida as $pagamentos) {
+     $valor_saida_pago = $valor_saida_pago + $pagamentos->valor_pago;
+   }
+ }
+
+
+ return view('reports.saidas.report_geral_saidas_concursos', compact('saidas', 'valor_saida', 'valor_saida_pago', 'anos', 'meses', 'ano', 'mes'));
+}
+
+public function findConcursoDados(Request $request)
+{
+  $concurso = $this->concurso->with('itensConcurso.produto', 'pagamentosConcurso.formaPagamento', 'cliente', 'formaPagamento')->findOrFail($request->id);
+  return response()->json($concurso);
+}
+}

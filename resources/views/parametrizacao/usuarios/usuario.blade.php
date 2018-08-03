@@ -14,109 +14,149 @@
 <div class="row"> 
   <div class="col-lg-12">
     <section class="panel panel-default"> 
-      <header class="panel-heading">
-        Parametrizar Usuários do Sistema
-      </header>
       @if(isset($usuario))
 
-      {{ Form::model($usuario, ['route' => ['usuarios.update', $usuario->id], 'method' => 'PUT']) }}
+      {{ Form::model($usuario, ['route' => ['usuarios.update', $usuario->id], 'method' => 'PUT', 'class'=>'form-horizontal']) }}
 
       @else
 
       {{ Form::open(['route' => 'usuarios.store','method'=>'POST']) }}
 
       @endif
-        
-        <div class="panel-body" style="border-bottom: 1px solid #ccc; ">
-          <div class="form-group">
 
-            <div class="col-sm-3">
-                  <label for="role_id">Função/Papel</label>
-                  <div class="input-group">
-                    <select class="form-control" name="role_id" >
-                          <option selected disabled>Selecione o Papel</option>
-                      @foreach($papel as $papeis) 
-                          <option value="{{$papeis->id}}">{{$papeis->nome}}</option>
-                      @endforeach
-                    </select>
-                    <div class="input-group-addon">
-                      <span class="fa fa-plus"></span>
-                    </div>
-                  </div>
-                </div>
-
-            <div class="col-sm-3">
-              {{Form::label('name', 'Nome Completo')}}
-              {{Form::text('name', null, ['placeholder' => 'Nome Completo', 'class' => 'form-control'])}}
-            </div>          
-
-            <div class="col-sm-3">
-              {{Form::label('email', 'Email')}}
-              {{Form::text('email', null, ['placeholder' => 'Email', 'class' => 'form-control'])}}
-            </div>
-
-
-            <div class="col-sm-3">
-              {{Form::label('occupation', 'Ocupação')}}
-              {{Form::text('occupation', null, ['placeholder' => 'Ocupação', 'class' => 'form-control'])}}
-            </div>
-            
-            <div class="col-sm-3">
-              {{Form::label('username', 'Usuário')}}
-              {{Form::text('username', null, ['placeholder' => 'Usuário', 'class' => 'form-control'])}}
-            </div>
-
-            <div class="col-sm-3">
-              {{Form::label('password', 'Password')}}
-              {{Form::text('password', null, ['placeholder' => 'Password', 'class' => 'form-control'])}}
-            </div>
-            <div class="col-sm-3">
-              {{Form::label('password_confirmation', 'Confirmar Password')}}
-              {{Form::text('password_confirmation', null, ['placeholder' => 'Confirmar Password', 'class' => 'form-control'])}}
-            </div>
-            
-            <div class="col-md-3" >
-              <div class="radio-inline" style="margin: 25px">
-                <input type="radio" name="active" value="1" id="activo"><label for="activo">Activo</label>
-              </div>
-              <div class="radio-inline">
-                <input type="radio" name="active" value="1" id="inactivo"><label for="inactivo">Inactivo</label>
+      <div class="panel-body" style="border-bottom: 1px solid #ccc; ">
+        <div class="form-group">
+          <div class="col-md-3">
+            {{ Form::label('role_id', 'Tipo de Usúario', ['class'=>'control-label']) }}
+            <div class="input-group">
+              {{ Form::select('role_id', [''=>'Tipo de Usúario',] + $roles, null, ['class'=>'form-control select_search']) }}
+              <div class="input-group-addon">
+                <span class="fa fa-plus"></span>
               </div>
             </div>
-
           </div>
-        </div>
 
-        <div class="panel-footer">
-        <div class="row">
-          <div class="col-md-6">
+          <div class="col-sm-3">
+            {{Form::label('name', 'Nome Completo')}}
+            {{Form::text('name', null, ['placeholder' => 'Nome Completo', 'class' => 'form-control'])}}
+          </div>          
 
-            @if(isset($usuario))
-
-            {{Form::hidden('usuario_id', $usuario->id)}}
-
-            {{Form::submit('Actualizar', ['class'=>'btn btn-primary submit_iten'])}}
-
-            @else
-
-            {{Form::submit('Salvar', ['class'=>'btn btn-primary submit_iten'])}}
-            {{Form::reset('Limpar', ['class'=>'btn btn-default'])}}
-
-            @endif
-
+          <div class="col-sm-3">
+            {{Form::label('email', 'Email')}}
+            {{Form::text('email', null, ['placeholder' => 'Email', 'class' => 'form-control'])}}
           </div>
-          <div class="col-md-6">
 
-            <a href="{{route('usuarios.index')}}" class="btn btn-warning pull-right"> Cancelar</a>
 
+          <div class="col-sm-3">
+            {{Form::label('Telefone', 'Telefone')}}
+            {{Form::text('telefone', null, ['placeholder' => 'Telefone', 'class' => 'form-control'])}}
           </div>
+
+          <div class="col-sm-3">
+            {{Form::label('endereco', 'Endereço')}}
+            {{Form::text('endereco', null, ['placeholder' => 'Endereço', 'class' => 'form-control'])}}
+          </div>
+
+          <div class="col-sm-3">
+            {{Form::label('occupation', 'Ocupação')}}
+            {{Form::text('occupation', null, ['placeholder' => 'Ocupação', 'class' => 'form-control'])}}
+          </div>
+
+          <div class="col-md-3" >
+            <div class="radio-inline" style="margin: 25px">
+              <input type="radio" name="active" value="1" id="activo" 
+              @if(isset($usuario))
+              @if($usuario->active == 1)
+              {{'checked'}}
+              @endif
+              @endif><label for="activo">Activo</label>
+            </div>
+            <div class="radio-inline">
+              <input type="radio" name="active" value="0" id="inactivo" 
+              @if(isset($usuario))
+              @if($usuario->active == 0)
+              {{'checked'}}
+              @endif
+              @endif><label for="inactivo">Inactivo</label>
+            </div>
+          </div>
+
         </div>
       </div>
 
-      {!! Form::close() !!}
     </section>
   </div>
 </div>
+<div class="row">
+  <div class="col-sm-12">
+    <div class="profile-widget profile-widget-info">
+      <div class="panel-body">
+        <div class="col-sm-12">
+          <h6 style="text-align: center">
+            <span><i class="fa fa-user"></i> LOGIN </span>
+          </h6>
+        </div>
+      </div>
+      <section class="panel panel-default">
+
+        <div class="panel-body bio-graph-info" style="border-bottom: 1px solid #ccc; ">
+          @if(!isset($usuario))
+          <div class="row form-group" style="margin-bottom: 15px">
+
+            {{Form::label('username', 'Usuário', ['class'=>'col-sm-2 col-sm-offset-2 control-label'])}}
+            <div class="col-sm-4">
+              {{Form::text('username', null, ['placeholder' => 'Usuário', 'class' => 'form-control '])}}
+            </div>
+          </div>
+          <div class="row form-group" style="margin-bottom: 15px">
+
+            {{Form::label('password', 'Nova Senha', ['class'=>'col-sm-2 col-sm-offset-2 control-label'])}}
+            <div class="col-sm-4">
+              {{Form::password('password', ['placeholder' => 'Senha', 'class' => 'form-control'])}}
+            </div>
+          </div>
+          <div class="row form-group" style="margin-bottom: 15px">
+
+            {{Form::label('password_confirmation', 'Confirmar Senha', ['class'=>'col-sm-2 col-sm-offset-2 control-label'])}}
+            <div class="col-sm-4">
+              {{Form::password('password_confirmation', ['placeholder' => 'Confirmar Senha', 'class' => 'form-control'])}}
+            </div>
+
+          </div>
+          @endif
+        </div>
+
+      </section>
+    </div>
+  </div>
+</div>
+
+
+<div class="row">
+  <div class="col-md-6">
+
+    @if(isset($usuario))
+
+    {{Form::hidden('usuario_id', $usuario->id)}}
+
+    {{Form::submit('Actualizar', ['class'=>'btn btn-primary submit_iten'])}}
+
+    @else
+
+    {{Form::submit('Salvar', ['class'=>'btn btn-primary submit_iten'])}}
+    {{Form::reset('Limpar', ['class'=>'btn btn-default'])}}
+
+    @endif
+
+  </div>
+  <div class="col-md-6">
+
+    <a href="{{route('usuarios.index')}}" class="btn btn-warning pull-right"> Cancelar</a>
+
+  </div>
+</div>
+
+{!! Form::close() !!}
 
 @endsection
 @section('script')

@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Model\Produto;
 use App\Model\ItenEntrada;
 use DB;
+use Illuminate\Support\Facades\Gate;
 
 class ItenEntradaController extends Controller
 {
@@ -47,8 +48,11 @@ class ItenEntradaController extends Controller
      */
     public function store(ItenEntregaStoreUpdateFormRequest $request)
     {
-        //
-        //dd($request->all());
+        if (Gate::denies('editar_entrada'))
+            // abort(403, "Sem autorizacao");
+          return redirect()->route('noPermission');
+
+
         $bad_symbols = array(",");
         $dataForm = [
             'entrada_id' => $request->entrada_id,
@@ -114,54 +118,57 @@ class ItenEntradaController extends Controller
      */
     public function update(ItenEntregaStoreUpdateFormRequest $request, $id)
     {
-        //
-        //dd($request->all());
-        $bad_symbols = array(",");
+        if (Gate::denies('editar_entrada'))
+            // abort(403, "Sem autorizacao");
+          return redirect()->route('noPermission');
 
-        $dataForm = [
-            'produto_id' => $request->produto_id,
-            'quantidade' => $request->quantidade,
-            'valor' => str_replace($bad_symbols, "", $request->valor),
-            'desconto' => str_replace($bad_symbols, "", $request->desconto),
-            'subtotal' => str_replace($bad_symbols, "", $request->subtotal),
-            'entrada_id' => $request->entrada_id,
-        ];
-        
-        $entrada_id = $request->entrada_id;
-        $produto_id = $request->produto_id;
+      
+      $bad_symbols = array(",");
 
-
-        try {
-
-            if($request->quantidade_dispo < $request->qtd_dispo_referencial){
-
-                $error = 'Quantidade Disponivel resultante desta operacao:'.$request->quantidade_dispo.' nao pode ser menor do que a Quantidade dispnivel na Base de Dados: '.$request->qtd_dispo_referencial;
-                return redirect()->back()->with('error', $error);
-
-            }else{
-
-                $iten_entrada = ItenEntrada::where('entrada_id', $entrada_id)->where('produto_id', $produto_id)->first();
-
-                if($iten_entrada->update($dataForm)){
-
-                    $sucess = 'Item actualizado com sucesso!';
-                    return redirect()->back()->with('success', $sucess);
+      $dataForm = [
+        'produto_id' => $request->produto_id,
+        'quantidade' => $request->quantidade,
+        'valor' => str_replace($bad_symbols, "", $request->valor),
+        'desconto' => str_replace($bad_symbols, "", $request->desconto),
+        'subtotal' => str_replace($bad_symbols, "", $request->subtotal),
+        'entrada_id' => $request->entrada_id,
+    ];
+    
+    $entrada_id = $request->entrada_id;
+    $produto_id = $request->produto_id;
 
 
-                }else{
-                    $error = 'Erro ao actualizar o Item!';
-                    return redirect()->back()->with('error', $error);
+    try {
 
+        if($request->quantidade_dispo < $request->qtd_dispo_referencial){
 
-                }
-            }
-        } catch (QueryException $e) {
-        //echo $e;
-            $error = 'Erro ao actualizar o Item! Erro relacionado ao DB. Necessária a intervenção do Administrador da Base de Dados.!';
+            $error = 'Quantidade Disponivel resultante desta operacao:'.$request->quantidade_dispo.' nao pode ser menor do que a Quantidade dispnivel na Base de Dados: '.$request->qtd_dispo_referencial;
             return redirect()->back()->with('error', $error);
 
+        }else{
+
+            $iten_entrada = ItenEntrada::where('entrada_id', $entrada_id)->where('produto_id', $produto_id)->first();
+
+            if($iten_entrada->update($dataForm)){
+
+                $sucess = 'Item actualizado com sucesso!';
+                return redirect()->back()->with('success', $sucess);
+
+
+            }else{
+                $error = 'Erro ao actualizar o Item!';
+                return redirect()->back()->with('error', $error);
+
+
+            }
         }
+    } catch (QueryException $e) {
+        //echo $e;
+        $error = 'Erro ao actualizar o Item! Erro relacionado ao DB. Necessária a intervenção do Administrador da Base de Dados.!';
+        return redirect()->back()->with('error', $error);
+
     }
+}
 
     /**
      * Remove the specified resource from storage.
@@ -171,7 +178,11 @@ class ItenEntradaController extends Controller
      */
     public function destroy($id)
     {
-        //
+        if (Gate::denies('editar_entrada'))
+            // abort(403, "Sem autorizacao");
+          return redirect()->route('noPermission');
+
+      
         $iten_entrada = $this->iten_entrada->findOrFail($id);
         $qtd_iten_entrada = $iten_entrada->quantidade;
 

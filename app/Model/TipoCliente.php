@@ -11,6 +11,7 @@ class TipoCliente extends Model
     protected $fillable = [
     	'tipo_cliente',
       'descricao',
+      'acronimo',
     ];
     public $timestamps = false;
 

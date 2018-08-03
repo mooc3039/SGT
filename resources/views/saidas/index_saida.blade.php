@@ -173,6 +173,20 @@
         <div class="row">
           <div class="col-md-6">
           </div>
+          <div class="col-md-6 text-right">
+            <div class="btn-group btn-group-sm">
+                <a href="{{route('saida.index')}}" class="btn btn-info">
+                  Todas Facturas
+                </a>
+                <a href="{{route('saida_normal')}}" class="btn btn-info">
+                  Facturas Normais
+                </a>
+
+                <a href="{{route('saida_de_concurso')}}" class="btn btn-info">
+                  Facturas de Concursos
+                </a>
+              </div>
+          </div>
         </div>
       </div>
 

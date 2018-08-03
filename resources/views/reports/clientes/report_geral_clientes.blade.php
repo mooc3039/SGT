@@ -61,13 +61,13 @@
           <thead>
 
             <tr>
-              <th><i class="icon_mail_alt"></i> Nome </th>
-              <th><i class="icon_profile"></i> Endereço </th>
-              <th><i class="icon_mobile"></i> Email </th>
-              <th><i class="icon_mobile"></i> Telefone </th>
-              <th><i class="icon_mail_alt"></i> NUIT </th>
-              <th><i class="icon_mail_alt"></i> Activo </th>
-              <th><i class="icon_mail_alt"></i> Tipo Cliente </th>
+              <th> Nome </th>
+              <th> Endereço </th>
+              <th> Email </th>
+              <th> Telefone </th>
+              <th> NUIT </th>
+              <th> Activo </th>
+              <th>Tipo Cliente </th>
 
             </tr>
             </thead>

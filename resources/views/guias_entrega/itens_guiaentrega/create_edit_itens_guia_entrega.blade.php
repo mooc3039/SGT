@@ -157,7 +157,7 @@
 
 			</div>
 			<div class="row">
-				<div class="col-md-6"><a href="" class="btn btn-primary">Imprimir Saída</a>
+				<div class="col-md-6"><a href="" class="btn btn-primary">Imprimir</a>
 
 				</div>
 				<div class="col-md-6 text-right"><a href="{{route('show_guia_entrega', $guia_entrega->saida_id)}}" class="btn btn-warning">Cancelar</a>

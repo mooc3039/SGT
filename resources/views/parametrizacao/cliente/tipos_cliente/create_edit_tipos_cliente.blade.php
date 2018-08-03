@@ -30,6 +30,10 @@ Clientes      </ol>
                 {{Form::label('tipo_cliente', 'Tipo de Cliente')}}
                 {{Form::text('tipo_cliente', null, ['placeholder' => 'Tipo de Cliente', 'class' => 'form-control'])}}
               </div>
+              <div class="col-sm-4">
+                {{Form::label('acronimo', 'Acrónimo')}}
+                {{Form::text('acronimo', null, ['placeholder' => 'Acrónimo', 'class' => 'form-control'])}}
+              </div>
 
             </div>
 

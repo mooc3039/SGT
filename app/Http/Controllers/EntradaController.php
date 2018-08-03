@@ -19,6 +19,7 @@ use App\User;
 use DB;
 use Session;
 use PDF;
+use Illuminate\Support\Facades\Gate;
 
 class EntradaController extends Controller
 {
@@ -43,8 +44,12 @@ class EntradaController extends Controller
      */
     public function index()
     {
-        //
-      $entradas = $this->entrada->orderBy('created_at', 'asc')->paginate(10);
+      if (Gate::denies('listar_entrada'))
+            // abort(403, "Sem autorizacao");
+        return redirect()->route('noPermission');
+
+
+      $entradas = $this->entrada->get();
       $formas_pagamento = DB::table('forma_pagamentos')->pluck('descricao', 'id')->all();
 
       return view('entradas.index_entrada', compact('entradas', 'formas_pagamento'));
@@ -57,7 +62,11 @@ class EntradaController extends Controller
      */
     public function create()
     {
-        //
+      if (Gate::denies('criar_entrada'))
+            // abort(403, "Sem autorizacao");
+        return redirect()->route('noPermission');
+
+
       $fornecedor =DB::table('fornecedors')->pluck('nome','id')->all();
       $formas_pagamento = DB::table('forma_pagamentos')->pluck('descricao', 'id')->all();
       $produtos = $this->produto->select('id', 'descricao')->get();
@@ -66,12 +75,18 @@ class EntradaController extends Controller
     }
 
     public function createPagamentoEntrada($id){
-     $formas_pagamento = DB::table('forma_pagamentos')->pluck('descricao', 'id')->all();
-     $entrada = $this->entrada->with('pagamentosEntrada.formaPagamento')->where('id', $id)->first();
+
+      if (Gate::denies('efectuar_pagamento_entrada'))
+            // abort(403, "Sem autorizacao");
+        return redirect()->route('noPermission');
+
+
+      $formas_pagamento = DB::table('forma_pagamentos')->pluck('descricao', 'id')->all();
+      $entrada = $this->entrada->with('pagamentosEntrada.formaPagamento')->where('id', $id)->first();
       // dd($entrada);
 
-     return view('entradas.pagamentos.index_pagamentos_entrada', compact('formas_pagamento', 'entrada'));
-   }
+      return view('entradas.pagamentos.index_pagamentos_entrada', compact('formas_pagamento', 'entrada'));
+    }
 
     /**
      * Store a newly created resource in storage.
@@ -81,8 +96,11 @@ class EntradaController extends Controller
      */
     public function store(EntradaStoreUpdateFormRequest $request)
     {
-        //
-        // dd($request->all());
+      if (Gate::denies('criar_entrada'))
+            // abort(403, "Sem autorizacao");
+        return redirect()->route('noPermission');
+
+
       $acronimo_forma_pagamento_naoaplicavel = FormaPagamento::select('id')->where('acronimo', 'naoaplicavel')->first();
       $acronimo_forma_pagamento_naoaplicavel_id = $acronimo_forma_pagamento_naoaplicavel->id;
       $bad_symbols = array(",");
@@ -210,7 +228,11 @@ class EntradaController extends Controller
      */
     public function show($id)
     {
-        //
+      if (Gate::denies('visualizar_entrada'))
+            // abort(403, "Sem autorizacao");
+      return redirect()->route('noPermission');
+
+
       $entrada = $this->entrada->with('itensEntrada.produto', 'user')->findOrFail($id);
       $empresa = Empresa::with('enderecos', 'telefones', 'emails', 'contas')->findOrFail(1);
 
@@ -218,11 +240,15 @@ class EntradaController extends Controller
     }
     public function showRelatorio($id)
     {
-        //
+      if (Gate::denies('imprimir_entrada'))
+            // abort(403, "Sem autorizacao");
+      return redirect()->route('noPermission');
+
+
       $entrada = $this->entrada->with('itensEntrada.produto', 'user')->findOrFail($id);
       $empresa = Empresa::with('enderecos', 'telefones', 'emails', 'contas')->findOrFail(1);
       $pdf = PDF::loadView('entradas.relatorio', compact('entrada','empresa'));
-      return $pdf->download('entrada.pdf');
+      return $pdf->download('entrada-'.$entrada->codigo.'.pdf');
 
     }
     /**
@@ -233,7 +259,11 @@ class EntradaController extends Controller
      */
     public function edit($id)
     {
-        //
+      if (Gate::denies('editar_entrada'))
+            // abort(403, "Sem autorizacao");
+      return redirect()->route('noPermission');
+
+
       $produtos = DB::table('produtos')->pluck('descricao', 'id')->all();
       $formas_pagamento = DB::table('forma_pagamentos')->pluck('descricao', 'id')->all();
       $entrada = $this->entrada->with('itensEntrada.produto', 'formaPagamento', 'fornecedor')->findOrFail($id);
@@ -263,7 +293,10 @@ class EntradaController extends Controller
      */
     public function destroy($id)
     {
-        //
+      if (Gate::denies('apagar_entrada'))
+            // abort(403, "Sem autorizacao");
+      return redirect()->route('noPermission');
+
 
       DB::beginTransaction();
       try {
@@ -293,7 +326,12 @@ class EntradaController extends Controller
     }
 
     public function pagamentoEntrada(PagamentoEntradaStoreUpdateFormRequest $request){
-        //dd($request->all());
+      
+      if (Gate::denies('efectuar_pagamento_entrada'))
+            // abort(403, "Sem autorizacao");
+      return redirect()->route('noPermission');
+
+
 
       $acronimo_forma_pagamento_naoaplicavel = FormaPagamento::select('id')->where('acronimo', 'naoaplicavel')->first();
       $acronimo_forma_pagamento_naoaplicavel_id = $acronimo_forma_pagamento_naoaplicavel->id;
@@ -406,9 +444,10 @@ class EntradaController extends Controller
 
     public function reportGeralEntradas(){
 
-      // $entradas = $this->entrada->with('user')->orderBy('id', 'asc')->get();
+      if (Gate::denies('relatorio_geral_entrada'))
+            // abort(403, "Sem autorizacao");
+      return redirect()->route('noPermission');
 
-      // return view('reports.entradas.report_geral_entradas', compact('entradas'));
 
       $valor_entrada = Entrada::sum('valor_total');
       $valor_entrada_pago = PagamentoEntrada::sum('valor_pago');
@@ -424,6 +463,12 @@ class EntradaController extends Controller
     }
 
     public function listarEntradaPorMes(Request $request){
+    
+      if (Gate::denies('relatorio_geral_entrada'))
+            // abort(403, "Sem autorizacao");
+      return redirect()->route('noPermission');
+
+
       $mes_id = $request->mes_id;
       $mes_model = Me::select('nome')->where('id', $mes_id)->firstOrFail();
       $mes = $mes_model->nome;
@@ -448,7 +493,12 @@ class EntradaController extends Controller
    }
 
    public function listarEntradaPorAno(Request $request){
-       //dd($request->all());
+    
+     if (Gate::denies('relatorio_geral_entrada'))
+            // abort(403, "Sem autorizacao");
+      return redirect()->route('noPermission');
+
+
      $ano_id = $request->ano_id;
      $ano_model = Ano::select('ano')->where('id', $ano_id)->firstOrFail();
      $ano = $ano_model->ano;

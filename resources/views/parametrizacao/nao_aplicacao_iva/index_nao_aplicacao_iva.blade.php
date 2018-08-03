@@ -33,7 +33,7 @@
 
           <thead>
             <tr>
-              <th><i class="icon_profile"></i>Tipo de Cliente</th>
+              <th>Tipo de Cliente</th>
               <th class="text-right"><i class="icon_cogs"></i> Operações</th>
             </tr>
           </thead>

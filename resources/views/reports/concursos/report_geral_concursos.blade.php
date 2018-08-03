@@ -67,11 +67,12 @@
          <thead>
 
           <tr>
-            <th><i class="icon_profile"></i>Código do Concurso </th>
-            <th><i class="icon_mobile"></i> Data de Registo </th>
-            <th><i class="icon_mail_alt"></i> Cliente </th>
-            <th><i class="icon_mail_alt"></i> Valor Total </th>
-            <th><i class="icon_mail_alt"></i> Facturas </th>
+            <th>Código do Concurso </th>
+            <th> Data de Registo </th>
+            <th> Cliente </th>
+            <th> Valor Total (Mtn) </th>
+            <th> Valor Total - IVA (Mtn) </th>
+            <th> Facturas </th>
           </tr>
         </thead>
 
@@ -83,7 +84,14 @@
             <td> {{$concurso->codigo_concurso}} </td>
             <td> {{date('d-m-Y', strtotime($concurso->created_at))}} </td>
             <td> {{$concurso->cliente->nome}} </td>
-            <td> {{$concurso->valor_iva}} </td>
+            <td> {{number_format($concurso->valor_total, 2, '.', ',')}} </td>
+            <td> 
+              @if($concurso->aplicacao_motivo_iva == 1)
+              {{""}}
+              @else
+              {{number_format($concurso->valor_iva, 2, '.', ',')}}
+              @endif 
+            </td>
             <td> 
               <a class="btn btn-primary btn-sm" href="{{ route('facturasConcurso', $concurso->id)}}">F</a>
             </td>
@@ -173,10 +181,10 @@
     });
 
 
-    var valor_total_vend = $('#valor_total').val()*1;
-    var valor_pago_vend = $('#valor_pago').val()*1;
-    $('.valor_total_visual').html(valor_total_vend.formatMoney(2,',','.')+ " Mtn");
-    $('.valor_pago_visual').html(valor_pago_vend.formatMoney(2,',','.')+ " Mtn");
+    var valor_total_vend = Number.parseFloat($('#valor_total').val());
+    var valor_pago_vend = Number.parseFloat($('#valor_pago').val());
+    $('.valor_total_visual').html(valor_total_vend.formatMoney()+ " Mtn");
+    $('.valor_pago_visual').html(valor_pago_vend.formatMoney()+ " Mtn");
   } );
 
 </script>

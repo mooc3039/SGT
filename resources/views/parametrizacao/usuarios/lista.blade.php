@@ -38,11 +38,12 @@
           
           <thead>
             <tr>
-              <th><i class="icon_profile"></i>Nome Completo</th>
-              <th><i class="icon_mobile"></i> Telefone</th>
-              <th><i class="icon_mail_alt"></i> Email</th>
-              <th><i class="icon_pin_alt"></i> Ocupação</th>
-              <th><i class="fa fa-unlock-alt"></i> Activo </th>
+              <th>Nome Completo</th>
+              <th>Telefone</th>
+              <th>Email</th>
+              <th>Ocupação</th>
+              <th>Activo </th>
+              <th>Alterar Senha </th>
               <th class="text-right"><i class="icon_cogs"></i> Operações</th>
             </tr>
           </thead>
@@ -56,6 +57,7 @@
               <td>{{$usuario->email}}</td>
               <td>{{$usuario->occupation}}</td>
               <td>{{Form::checkbox('active', $usuario->active, $usuario->active, ['disabled'])}}</td>
+              <td><a href="{{route('create_alterar_senha_usuario', $usuario->id)}}" class="btn btn-info btn-sm">Alterar Login</a></td>
               <td>
                 <div class="btn-group btn-group-sm pull-right">
 
@@ -87,21 +89,18 @@
   <div class="col-md-6 text-left">
   </div>
   <div class="col-md-6 text-right">
+<div class="btn-group btn-group-sm">
+    <a href="{{route('usuarios.index')}}" class="btn btn-info">
+        Todos
+      </a>
+      <a href="{{route('usuarios_inactivos')}}" class="btn btn-danger">
+        Inactivos
+      </a>
 
-    @if($usuario->active == true)
-
-    <a href="{{route('usuarios_inactivos')}}" class="btn btn-primary">
-      Inactivos
-    </a>
-
-    @else
-
-    <a href="{{route('usuarios.index')}}" class="btn btn-primary">
-      Activos
-    </a>
-
-    @endif
-
+      <a href="{{route('usuarios_activos')}}" class="btn btn-info">
+        Activos
+      </a>
+</div>
   </div>
 </div>
 

@@ -34,7 +34,7 @@
 
             <thead>
                 <tr>
-                    <th><i class="icon_profile"></i>Nome da Categoria </th>
+                    <th>Nome da Categoria </th>
                     <th class="text-right"><i class="icon_cogs"></i> Operações</th>
                 </tr>
             </thead>

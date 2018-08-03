@@ -35,22 +35,40 @@
           <input type="password" name="password" class="form-control" placeholder="Password">
         </div>
         <label class="checkbox">
-                <input type="checkbox" value="remember-me"> Remember me
-                <span class="pull-right"> <a href="#"> Forgot Password?</a></span>
-            </label>
-        <button class="btn btn-primary btn-lg btn-block" type="submit">Login</button>
-        <button class="btn btn-info btn-lg btn-block" type="submit">Signup</button>
-      </div>
-    </form>
-    <div class="text-center">
-      <div class="credits">
+          <input type="checkbox" value="remember-me"> Remember me
+          <span class="pull-right"> <a href="#"> Forgot Password?</a></span>
+        </label>
+        <button class="btn btn-primary btn-lg btn-block" type="submit" style="margin-bottom: 15px">Login</button>
+        <!-- <button class="btn btn-info btn-lg btn-block" type="submit">Signup</button> -->
+        
 
-          <a href="#/">Sistema de Gestão de Stock</a> desenvolvido por <a href="#/">M<b>2</b>OC -Dev. Ltd.</a>
+        @if($errors->first('username'))
+        <div class="alert alert-danger" style="text-align: center;">
+          <span>
+            Usuário ou senha incorrectos.
+          </span>
+          @endif
+
+
+          @if($errors->first('password'))
+          <div class="alert alert-danger" style="text-align: center;">
+            <span>
+              Usuário ou senha incorrectos.
+            </span>
+            @endif
+
+          </div>
         </div>
+      </form>
+      <div class="text-center">
+        <div class="credits">
+
+          <a href="#/">Sistema de Gestão de Stock</a> desenvolvido por <a href="#/">MOOC -Dev. Ltd.</a>
+        </div>
+      </div>
     </div>
-  </div>
 
 
-</body>
+  </body>
 
-</html>
+  </html>

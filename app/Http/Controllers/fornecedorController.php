@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\DB;
 use App\Model\Fornecedor;
 use App\Http\Requests\FornecedorStoreUpdateFormRequest;
+use Illuminate\Support\Facades\Gate;
 
 class fornecedorController extends Controller
 {
@@ -29,9 +30,13 @@ class fornecedorController extends Controller
      */
     public function index()
     {
-      //  $fornecedores = Fornecedor::all(); 
-      $fornecedores = Fornecedor::where('activo', 1)->orderBy('nome','asc')->get();
-      return view('parametrizacao.fornecedor.lista')->with('fornecedores',$fornecedores);
+      if (Gate::denies('listar_fornecedor'))
+            // abort(403, "Sem autorizacao");
+        return redirect()->route('noPermission');
+
+
+      $fornecedores = $this->fornecedor->all();
+      return view('parametrizacao.fornecedor.lista', compact('fornecedores'));
 
 
     }
@@ -44,6 +49,11 @@ class fornecedorController extends Controller
     public function create()
     {
 
+      if (Gate::denies('criar_fornecedor'))
+            // abort(403, "Sem autorizacao");
+        return redirect()->route('noPermission');
+
+
      return view('parametrizacao.fornecedor.create_edit_fornecedor');
    }
 
@@ -55,6 +65,11 @@ class fornecedorController extends Controller
      */
     public function store(FornecedorStoreUpdateFormRequest $request)
     {
+      if (Gate::denies('criar_fornecedor'))
+            // abort(403, "Sem autorizacao");
+        return redirect()->route('noPermission');
+
+
       $dataForm = $request->all();
 
       $cadastro = $this->fornecedor->create($dataForm);
@@ -81,6 +96,10 @@ class fornecedorController extends Controller
     public function show($id)
     {
 
+      if (Gate::denies('visualizar_fornecedor'))
+            // abort(403, "Sem autorizacao");
+        return redirect()->route('noPermission');
+
     }
 
     /**
@@ -91,6 +110,11 @@ class fornecedorController extends Controller
      */
     public function edit($id)
     {
+      if (Gate::denies('editar_fornecedor'))
+            // abort(403, "Sem autorizacao");
+        return redirect()->route('noPermission');
+
+
       $fornecedor = Fornecedor::findOrFail($id);
       return view('parametrizacao.fornecedor.create_edit_fornecedor', compact('fornecedor'));
     }
@@ -104,6 +128,11 @@ class fornecedorController extends Controller
      */
     public function update(FornecedorStoreUpdateFormRequest $request, $id)
     {
+      if (Gate::denies('editar_fornecedor'))
+            // abort(403, "Sem autorizacao");
+        return redirect()->route('noPermission');
+
+
       /*$this->validate($request, [
         'nome' => 'required',
         'endereco' => 'required',
@@ -150,10 +179,21 @@ class fornecedorController extends Controller
      */
     public function destroy($id)
     {
-        //echo $id;
+      if (Gate::denies('apagar_fornecedor'))
+            // abort(403, "Sem autorizacao");
+        return redirect()->route('noPermission');
+
+
       $fornece = Fornecedor::findOrFail($id);
       $fornece->delete();
       return redirect('/fornecedores')->with('success', 'Fornecedor eliminado com sucesso!');
+    }
+
+    public function activos(){
+
+      $fornecedores = $this->fornecedor->where('activo', 1)->get();
+      
+      return view('parametrizacao.fornecedor.lista', compact('fornecedores'));
     }
 
     public function inactivos(){
@@ -166,6 +206,12 @@ class fornecedorController extends Controller
     // Funcao para activar o Fornecedor
     public function activar($id){
 
+      if (Gate::denies('activar_fornecedor'))
+            // abort(403, "Sem autorizacao");
+        return redirect()->route('noPermission');
+
+
+
       DB::select('call SP_activar_fornecedor(?)', array($id));
 
       return redirect()->back();
@@ -173,6 +219,10 @@ class fornecedorController extends Controller
     }
 
     public function desactivar($id){
+
+      if (Gate::denies('desactivar_fornecedor'))
+            // abort(403, "Sem autorizacao");
+        return redirect()->route('noPermission');
 
       DB::select('call SP_desactivar_fornecedor(?)', array($id));
 
@@ -182,6 +232,12 @@ class fornecedorController extends Controller
 
     public function reportGeralFornecedores(){
 
+      if (Gate::denies('relatorio_geral_fornecedor'))
+            // abort(403, "Sem autorizacao");
+        return redirect()->route('noPermission');
+
+
+
         $fornecedores = $this->fornecedor->orderBy('nome', 'asc')->get();
 
         return view('reports.fornecedores.report_geral_fornecedores', compact('fornecedores'));
@@ -189,6 +245,12 @@ class fornecedorController extends Controller
     }
 
     public function storeRedirectBack(FornecedorStoreUpdateFormRequest $request){
+
+      if (Gate::denies('criar_fornecedor'))
+            // abort(403, "Sem autorizacao");
+        return redirect()->route('noPermission');
+
+
 
         $fornecedor = $this->fornecedor->all();
 

@@ -11,17 +11,20 @@
 |
 */
 
-Route::get('/',['as'=>'/','uses'=>'LoginController@getLogin']);
-Route::post('/login',['as'=>'login','uses'=>'LoginController@postLogin']);
+// Route::get('/',['as'=>'/','uses'=>'LoginController@getLogin']);
+// Route::post('/login',['as'=>'login','uses'=>'LoginController@postLogin']);
+Route::get('/', function () {
+    return view('auth.login');
+});
 
 Route::get('/noPermission',function(){
   return view('layouts.permission.noPermission');
-});
+})->name('noPermission');
 
 
 Route::group(['middleware'=>['authen']],function(){
 
-  Route::get('/logout',['as'=>'logout','uses'=>'LoginController@getLogout']);
+  // Route::get('/logout',['as'=>'logout','uses'=>'LoginController@getLogout']);
   Route::get('/dashboard',['as'=>'dashboard','uses'=>'DashboardController@dashboard']);
   Route::get('/dashboard/inicio',['as'=>'paginainicial','uses'=>'DashboardController@paginaInicial']);
 
@@ -65,6 +68,9 @@ Route::group(['middleware'=>['authen']],function(){
   //======================= FIM Venda ============================
 
   //======================= Saida ============================
+  // LISTAR SAIDAS, TODAS SAIDAS, SAIDAS NORMAIS E SAIDAS DE Concursos
+  Route::get('/saida/saidas_normais', 'SaidaController@IndexSaidaNormal')->name('saida_normal');
+  Route::get('/saida/saidas_de_concursos', 'SaidaController@IndexSaidaDeConcurso')->name('saida_de_concurso');
   // GERIR PAGAMENTO DA SAIDA => Malache
   Route::post('/saida/pagamento', 'SaidaController@pagamentoSaida')->name('pagamentoSaida');
   Route::get('/saida/create_pagamento/{id}', 'SaidaController@createPagamentoSaida')->name('createPagamentoSaida');
@@ -130,7 +136,8 @@ Route::group(['middleware'=>['authen']],function(){
 
 });
 
-Route::group(['middleware'=>['authen','roles'],'roles'=>['Administrador']],function(){
+// Route::group(['middleware'=>['authen','roles'],'roles'=>['Administrador']],function(){
+Route::group(['middleware'=>'auth'],function(){
 
 
   // CADSTRAR CATEGORIA FAZENDO o redirect()->back() => Malache
@@ -144,6 +151,7 @@ Route::group(['middleware'=>['authen','roles'],'roles'=>['Administrador']],funct
    // CADSTRAR FORNECEDOR FAZENDO o redirect()->back() => Malache
   Route::post('/fornecedores/fornecedor_salvar_rback', 'fornecedorController@storeRedirectBack')->name('fornecedor_salvar_rback');
   Route::get('/fornecedores/inactivos', ['as'=>'fornecedores_inactivos', 'uses'=>'fornecedorController@inactivos']);
+  Route::get('/fornecedores/activos', ['as'=>'fornecedores_activos', 'uses'=>'fornecedorController@activos']);
   //======================= FIM Fornecedor ============================
 
   //======================= Cliente ============================
@@ -154,6 +162,7 @@ Route::group(['middleware'=>['authen','roles'],'roles'=>['Administrador']],funct
 
   Route::get('/clientes/report_geral_clientes/pdf', ['as'=>'pdf_clientes', 'uses'=>'ClienteController@pdf']);
   // Rotas para Clientes ACTIVOS e para ACTIVAR e DESACTIVAR o Cliente => Malache
+  Route::get('/clientes/activos', ['as'=>'clientes_activos', 'uses'=>'ClienteController@activos']);
   Route::get('/clientes/inactivos', ['as'=>'clientes_inactivos', 'uses'=>'ClienteController@inactivos']);
   Route::get('/clientes/activar/{id}', ['as'=>'clientes_activar', 'uses'=>'ClienteController@activar']);
   Route::get('/clientes/desactivar/{id}', ['as'=>'clientes_desactivar', 'uses'=>'ClienteController@desactivar']);
@@ -174,10 +183,13 @@ Route::group(['middleware'=>['authen','roles'],'roles'=>['Administrador']],funct
 
   //======================= Usuario ============================
   //para administrador
-  Route::get('/usuarios/inactivos', ['as'=>'usuarios_inactivos', 'uses'=>'UsuarioController@inactivos']);
+  Route::get('/usuarios/create_alterar_senha/{id}', 'UsuarioController@createAlterarSenhUsuarioa')->name('create_alterar_senha_usuario');
+  Route::post('/usuarios/alterar_senha/{id}', 'UsuarioController@AlterarSenhUsuarioa')->name('alterar_senha_usuario');
   Route::get('/usuarios/activar/{id}', ['as'=>'usuarios_activar', 'uses'=>'UsuarioController@activar']);
   Route::get('/usuarios/desactivar/{id}', ['as'=>'usuarios_desactivar', 'uses'=>'UsuarioController@desactivar']);
   Route::get('/usuarios/lista', ['as'=>'indexUsuario','uses'=>'UsuarioController@index']);
+  Route::get('/usuarios/activos', ['as'=>'usuarios_activos', 'uses'=>'UsuarioController@activos']);
+  Route::get('/usuarios/inactivos', ['as'=>'usuarios_inactivos', 'uses'=>'UsuarioController@inactivos']);
   //======================= FIM Usuario ============================
 
   //======================= Saida (resource acima) ============================
@@ -185,6 +197,10 @@ Route::group(['middleware'=>['authen','roles'],'roles'=>['Administrador']],funct
   Route::get('/saidas/report_geral_saidas', ['as'=>'rg_saidas', 'uses'=>'SaidaController@reportGeralSaidas']);
   Route::post('/saida/report_geral/listar_saida_mes', 'SaidaController@listarSaidaPorMes')->name('listar_saida_mes');
   Route::post('/saida/report_geral/listar_saida_ano', 'SaidaController@listarSaidaPorAno')->name('listar_saida_ano');
+
+  Route::get('/saidas/report_geral_saidas_concursos', ['as'=>'rg_saidas_de_concurso', 'uses'=>'SaidaController@reportGeralSaidasDeConcurso']);
+  Route::post('/saida/report_geral/listar_saida_concurso_mes', 'SaidaController@listarSaidaDeConcursoPorMes')->name('listar_saida_de_concurso_mes');
+  Route::post('/saida/report_geral/listar_saida_concurso_ano', 'SaidaController@listarSaidaDeConcursoPorAno')->name('listar_saida_concurso_ano');
   //======================= FIM Saida ============================
 
   //======================= Concurso (resource acima) ============================
@@ -242,9 +258,15 @@ Route::group(['middleware'=>['authen','roles'],'roles'=>['Administrador']],funct
   Route::resource('/tipo_cliente', 'TipoClienteController');
   Route::resource('/motivo_nao_aplicacao_iva', 'MotivoNaoAplicacaoIvaController');
   Route::resource('/usuarios', 'UsuarioController');
+  Route::resource('/role', 'RoleController');
+  Route::resource('/role_permissao', 'RolePermissaoController');
 
 
   Route::resource('/tipo_cotacao', 'TipoCotacaoController');
 
 
 });
+
+Auth::routes();
+
+// Route::get('/home', 'HomeController@index')->name('home');

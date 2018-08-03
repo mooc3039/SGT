@@ -44,7 +44,9 @@ class DashboardController extends Controller
 
    // SAIDA
    $saidas = Saida::whereMonth('data', $mes)->where('concurso_id', '=', 0)->get();
-   $valor_saida = Saida::with('pagamentosSaida')->whereMonth('data', $mes)->where('concurso_id', '=', 0)->sum('valor_iva');
+   $valor_saida_sem_iva = Saida::with('pagamentosSaida')->whereMonth('data', $mes)->where('concurso_id', 0)->where('aplicacao_motivo_iva', 1)->sum('valor_total');
+   $valor_saida_com_iva = Saida::with('pagamentosSaida')->whereMonth('data', $mes)->where('concurso_id', 0)->where('aplicacao_motivo_iva', 0)->sum('valor_iva');
+   $valor_saida = $valor_saida_sem_iva + $valor_saida_com_iva;
   //  $saida_ids_concurso_zero = Saida::where('concurso_id', '=', 0)->get();
 
   //  $array_saida_id = array();
@@ -66,7 +68,9 @@ class DashboardController extends Controller
   // FIM SAIDA
 
   $vendas = Venda::whereMonth('created_at', $mes)->get();
-  $valor_venda = Venda::whereMonth('created_at', $mes)->sum('valor_iva');
+  $valor_venda_sem_iva = Venda::whereMonth('created_at', $mes)->where('aplicacao_motivo_iva', 1)->sum('valor_total');
+  $valor_venda_com_iva = Venda::whereMonth('created_at', $mes)->where('aplicacao_motivo_iva', 0)->sum('valor_iva');
+  $valor_venda = $valor_venda_sem_iva + $valor_venda_com_iva;
   // $valor_venda_pago = PagamentoVenda::whereMonth('updated_at', $mes)->sum('valor_pago');
   $valor_venda_pago = 0;
 

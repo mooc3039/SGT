@@ -107,7 +107,7 @@
           </li>
         </ul>
       </li>
-       task notificatoin end -->
+      task notificatoin end -->
       <!-- inbox notificatoin start
       <li id="mail_notificatoin_bar" class="dropdown">
         <a data-toggle="dropdown" class="dropdown-toggle" href="#">
@@ -172,7 +172,7 @@
           </li>
         </ul>
       </li>
-       inbox notificatoin end -->
+      inbox notificatoin end -->
       <!-- alert notification start
       <li id="alert_notificatoin_bar" class="dropdown">
         <a data-toggle="dropdown" class="dropdown-toggle" href="#">
@@ -218,33 +218,50 @@
           </li>
         </ul>
       </li>
-       alert notification end-->
+      alert notification end-->
+      @if(Auth::guest())
+      <li> Usuário não registado </li>
+      @else
       <!-- user login dropdown start-->
       <li class="dropdown">
         <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                        <span class="profile-ava">
-                            <img alt="" src="/img/profile/{{Auth::user()->avatar}}" style="width:32px; height:32px;">
-                        </span>
-                        <span class="username">{{ Auth::user()->name }}</span>
-                        <b class="caret"></b>
-                    </a>
+          <span class="profile-ava">
+            <img alt="" src="/img/profile/{{Auth::user()->avatar}}" style="width:32px; height:32px;">
+          </span>
+          <span class="username">{{ Auth::user()->name }}</span>
+          <span class="username" style="color: #fed189">[ {{ Auth::user()->role->nome }} ]</span>
+          <b class="caret"></b>
+        </a>
         <ul class="dropdown-menu extended logout">
           <div class="log-arrow-up"></div>
           <li class="eborder-top">
             <a href="{{ url('/dashboard/'.Auth::user()->name.'/profile')}}"><i class="icon_profile"></i> Meu Perfíl</a>
           </li>
+          <li class="eborder-top">
+            <a href="{{ route('create_alterar_senha_usuario', Auth::user()->id) }}"><i class="icon_profile"></i> Alterar Login</a>
+          </li>
           
           <li>
-            <a href="{{ route('logout') }}"><i class="icon_key_alt"></i> Log Out</a>
-          </li>
-          <li>
-            <a href="#"><i class="icon_key_alt"></i> Documentation</a>
-          </li>
-        </ul>
-      </li>
-      <!-- user login dropdown end -->
-    </ul>
-    <!-- notificatoin dropdown end-->
-  </div>
+              <a href="{{url('/logout')}}" 
+              onclick="event.preventDefault();
+              document.getElementById('form-submit').submit();"
+              id="logout"
+              >
+              <i class="icon_key_alt"></i> Log Out 
+            </a>
+        </li>
+        <li>
+          <a href="#"><i class="icon_key_alt"></i> Documentation</a>
+        </li>
+      </ul>
+    </li>
+    @endif
+    <form id="form-submit" action="{{url('/logout')}}" method="POST" >
+      {{ csrf_field() }}
+    </form>
+    <!-- user login dropdown end -->
+  </ul>
+  <!-- notificatoin dropdown end-->
+</div>
 </header>
 <!--header end-->

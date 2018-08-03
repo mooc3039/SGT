@@ -68,20 +68,20 @@
           <thead>
 
             <tr>
-              <th><i class="icon_profile"></i>Código da Entrada </th>
-              <th><i class="icon_mobile"></i> Data de Entrada </th>
-              <th><i class="icon_mail_alt"></i> Valor </th>
-              <th><i class="icon_mail_alt"></i> Fornecedor </th>
-              <th><i class="icon_mail_alt"></i> Usúario Cadastrante </th>
+              <th>Código da Entrada </th>
+              <th>Data de Entrada </th>
+              <th>Valor </th>
+              <th>Fornecedor </th>
+              <th>Usúario Cadastrante </th>
             </tr>
           </thead>
           <tbody>
             @foreach($entradas as $entrada)
             <tr>
 
-              <td> {{$entrada->id}} </td>
+              <td> {{$entrada->codigo}} </td>
               <td> {{date('d-m-Y', strtotime($entrada->created_at))}} </td>
-              <td> {{$entrada->valor_total}} </td>
+              <td> {{number_format($entrada->valor_total, 2, '.', ',')}} </td>
               <td> {{$entrada->fornecedor->nome}} </td>
               <td> {{$entrada->user->name}} </td>
 
@@ -170,10 +170,10 @@
     });
 
 
-    var valor_total_vend = $('#valor_total').val()*1;
-    var valor_pago_vend = $('#valor_pago').val()*1;
-    $('.valor_total_visual').html(valor_total_vend.formatMoney(2,',','.')+ " Mtn");
-    $('.valor_pago_visual').html(valor_pago_vend.formatMoney(2,',','.')+ " Mtn");
+    var valor_total_vend = Number.parseFloat($('#valor_total').val());
+    var valor_pago_vend = Number.parseFloat($('#valor_pago').val());
+    $('.valor_total_visual').html(valor_total_vend.formatMoney()+ " Mtn");
+    $('.valor_pago_visual').html(valor_pago_vend.formatMoney()+ " Mtn");
   } );
 
 </script>

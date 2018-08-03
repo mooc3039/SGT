@@ -27,20 +27,22 @@
           <thead>
 
             <tr>
-              <th><i class="icon_profile"></i>Código da Cotação </th>
-              <th><i class="icon_mobile"></i> Data de Emissão </th>
-              <th><i class="icon_mail_alt"></i> Cliente </th>
-              <th><i class="icon_mail_alt"></i> Valor Total </th>
+              <th>Código da Cotação </th>
+              <th>Data de Emissão </th>
+              <th>Cliente </th>
+              <th>Valor Total (Mtn) </th>
+              <th>Valor Total - IVA (Mtn)</th>
             </tr>
           </thead>
           <tbody>
             @foreach($cotacoes as $cotacao)
             <tr>
 
-              <td> {{$cotacao->id}} </td>
+              <td> {{$cotacao->codigo}} </td>
               <td> {{date('d-m-Y', strtotime($cotacao->created_at))}} </td>
               <td> {{$cotacao->cliente->nome}} </td>
-              <td> {{$cotacao->valor_total}} </td>
+              <td> {{number_format($cotacao->valor_total, 2, '.', ',')}} </td>
+              <td> {{number_format($cotacao->valor_iva, 2, '.', ',')}} </td>
 
             </tr>
 

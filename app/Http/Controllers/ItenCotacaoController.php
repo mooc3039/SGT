@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use App\Http\Requests\ItenCotacaoStoreUpdateFormRequest;
 use App\Model\ItenCotacao;
+use Illuminate\Support\Facades\Gate;
 
 class ItenCotacaoController extends Controller
 {
@@ -14,6 +15,7 @@ class ItenCotacaoController extends Controller
   private $iten_cotacao;
 
   public function __construct(ItenCotacao $iten_cotacao){
+
     $this->iten_cotacao = $iten_cotacao;
   }
   /**
@@ -44,9 +46,13 @@ class ItenCotacaoController extends Controller
   */
   public function store(ItenCotacaoStoreUpdateFormRequest $request)
   {
-    // dd($request->all());
+    if (Gate::denies('editar_cotacao'))
+            // abort(403, "Sem autorizacao");
+      return redirect()->route('noPermission');
+
+
     $bad_symbols = array(",");
-    $iten_cotacao = $this->iten_cotacao;
+    $iten_cotacao = new ItenCotacao;
 
     $iten_cotacao->cotacao_id = $request['cotacao_id'];
     $iten_cotacao->produto_id = $request['produto_id'];
@@ -109,6 +115,11 @@ class ItenCotacaoController extends Controller
   */
   public function update(ItenCotacaoStoreUpdateFormRequest $request, $id)
   {
+    if (Gate::denies('editar_cotacao'))
+            // abort(403, "Sem autorizacao");
+      return redirect()->route('noPermission');
+
+    
     $bad_symbols = array(",");
     $cotacao_id = $request->cotacao_id;
     $produto_id = $request->produto_id;
@@ -155,7 +166,11 @@ class ItenCotacaoController extends Controller
   */
   public function destroy($id)
   {
-    //
+    if (Gate::denies('editar_cotacao'))
+            // abort(403, "Sem autorizacao");
+      return redirect()->route('noPermission');
+
+    
     $iten_cotacao = $this->iten_cotacao->findOrFail($id);
 
     try {

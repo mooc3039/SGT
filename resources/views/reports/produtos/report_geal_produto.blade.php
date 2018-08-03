@@ -57,12 +57,12 @@
 
           <thead>
             <tr>
-              <th><i class="fa fa-shopping-cart"></i> Descricão </th>
-              <th><i class="fa fa-database"></i> Quantidade Disponivel </th>
-              <th><i class="fa fa-money"></i> Preco Venda </th>
-              <th><i class="fa fa-money"></i> Preco Aquisicao </th>
-              <th><i class="fa fa-suitcase"></i> Categoria </th>
-              <th><i class="fa fa-user"></i> Fornecedor </th>
+              <th> Descricão </th>
+              <th> Quantidade Disponivel </th>
+              <th> Preco Venda </th>
+              <th> Preco Aquisicao </th>
+              <th> Categoria </th>
+              <th> Fornecedor </th>
 
             </tr>
           </thead>
@@ -81,8 +81,8 @@
         >
         <td>{{$produto->descricao}}</td>
         <td>{{$produto->quantidade_dispo}}</td>
-        <td>{{$produto->preco_venda}}</td>
-        <td>{{$produto->preco_aquisicao}}</td>
+        <td>{{number_format($produto->preco_venda, 2, '.', ',')}}</td>
+        <td>{{number_format($produto->preco_aquisicao, 2, '.', ',')}}</td>
         <td>{{$produto->categoria->nome}}</td>
         <td>{{$produto->fornecedor->nome}}</td>
       </tr>

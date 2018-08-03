@@ -129,7 +129,6 @@ class ProfileController extends Controller
         $user->occupation = $request['occupation'];
         $user->email = $request['email'];
         $user->telefone = $request['telefone'];
-        $user->password = bcrypt($request['password']);
         $user->save();
         return redirect('/dashboard/'.$name.'/profile')->with('success','Perfíl Actualizado!');
       }else{

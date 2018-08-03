@@ -4,6 +4,8 @@ namespace App;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use App\Model\Role;
+use App\Model\Permissao;
 
 class User extends Authenticatable
 {
@@ -33,27 +35,38 @@ class User extends Authenticatable
 
     public function role()
   {
-    return $this->hasOne('App\Role','id','role_id');
+    return $this->belongsTo('App\Model\Role');
   }
 
-  private function checkIfUserHasRole($need_role)
-  {
-    return (strtolower($need_role)==strtolower($this->role->nome)) ? true : null;
+  public function hasAccess(Permissao $permission){
+    return $this->hasRole($permission->roles);
   }
 
-  public function hasRole($roles)
-  {
-    if (is_array($roles)) {
-      foreach ($roles as $need_role) {
-        if ($this->checkIfUserHasRole($need_role))
-        {
+  public function hasRole($roles){
+    // dd($roles);
+    // Verifica se a Role do Usuario logado esta no conjunto $roles
+    if($roles->count() > 0){
+
+      if(is_array($roles) || is_object($roles)){
+
+      foreach ($roles as $role) {
+
+        if($this->role()->where('nome', $role->nome)->first()){
           return true;
         }
+
       }
-    } else {
-      return $this->checkIfUserHasRole($roles);
+
+      return false;
     }
-    return false;
+
+    }else{
+
+      return false;
+
+    }
+    
   }
+
 }
  

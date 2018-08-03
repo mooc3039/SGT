@@ -7,6 +7,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests\MotivoNaoAplicacaoIvaStoreUpdateFormRequest;
 use App\Model\MotivoIva;
+use Illuminate\Support\Facades\Gate;
 
 class MotivoNaoAplicacaoIvaController extends Controller
 {
@@ -24,7 +25,11 @@ class MotivoNaoAplicacaoIvaController extends Controller
 
     public function index()
     {
-        //
+        if (Gate::denies('listar_motivo_nao_aplicacao_iva'))
+            // abort(403, "Sem autorizacao");
+      return redirect()->route('noPermission');
+
+
         $motivos_nao_aplicacao_iva = $this->motivo_nao_aplicacao_iva->get();
         return view('parametrizacao.nao_aplicacao_iva.index_nao_aplicacao_iva', compact('motivos_nao_aplicacao_iva'));
     }
@@ -36,7 +41,11 @@ class MotivoNaoAplicacaoIvaController extends Controller
      */
     public function create()
     {
-        //
+        if (Gate::denies('criar_motivo_nao_aplicacao_iva'))
+            // abort(403, "Sem autorizacao");
+      return redirect()->route('noPermission');
+
+
         return view ('parametrizacao.nao_aplicacao_iva.create_edit_nao_aplicacao_iva');
     }
 
@@ -48,7 +57,11 @@ class MotivoNaoAplicacaoIvaController extends Controller
      */
     public function store(MotivoNaoAplicacaoIvaStoreUpdateFormRequest $request)
     {
-        //
+        if (Gate::denies('criar_motivo_nao_aplicacao_iva'))
+            // abort(403, "Sem autorizacao");
+      return redirect()->route('noPermission');
+
+
         $dataForm = $request->all();
 
         try {
@@ -93,7 +106,11 @@ class MotivoNaoAplicacaoIvaController extends Controller
      */
     public function edit($id)
     {
-        //
+        if (Gate::denies('editar_motivo_nao_aplicacao_iva'))
+            // abort(403, "Sem autorizacao");
+      return redirect()->route('noPermission');
+
+
         $motivo_nao_aplicacao_iva = $this->motivo_nao_aplicacao_iva->findOrFail($id);
         return view('parametrizacao.nao_aplicacao_iva.create_edit_nao_aplicacao_iva', compact('motivo_nao_aplicacao_iva'));
     }
@@ -107,7 +124,11 @@ class MotivoNaoAplicacaoIvaController extends Controller
      */
     public function update(MotivoNaoAplicacaoIvaStoreUpdateFormRequest $request, $id)
     {
-        //
+        if (Gate::denies('editar_motivo_nao_aplicacao_iva'))
+            // abort(403, "Sem autorizacao");
+      return redirect()->route('noPermission');
+
+
         $dataForm = $request->all();
         $motivo_nao_aplicacao_iva = $this->motivo_nao_aplicacao_iva->findOrFail($id);
 
@@ -141,7 +162,11 @@ class MotivoNaoAplicacaoIvaController extends Controller
      */
     public function destroy($id)
     {
-        //
+        if (Gate::denies('apagar_motivo_nao_aplicacao_iva'))
+            // abort(403, "Sem autorizacao");
+      return redirect()->route('noPermission');
+
+
         $motivo_nao_aplicacao_iva = $this->motivo_nao_aplicacao_iva->findOrFail($id);
 
         try {

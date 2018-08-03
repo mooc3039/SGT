@@ -23,6 +23,7 @@ use App\Model\Cliente;
 use DB;
 use Session;
 use PDF;
+use Illuminate\Support\Facades\Gate;
 
 class ConcursoController extends Controller
 {
@@ -51,7 +52,11 @@ class ConcursoController extends Controller
      */
     public function index()
     {
-        //
+      if (Gate::denies('listar_concurso'))
+            // abort(403, "Sem autorizacao");
+        return redirect()->route('noPermission');
+
+
       $concursos = $this->concurso->with('itensConcurso')->get();
       $formas_pagamento = DB::table('forma_pagamentos')->pluck('descricao', 'id')->all();
 
@@ -65,7 +70,11 @@ class ConcursoController extends Controller
      */
     public function create()
     {
-        //
+      if (Gate::denies('criar_concurso'))
+            // abort(403, "Sem autorizacao");
+        return redirect()->route('noPermission');
+
+
       $clientes = DB::table('clientes')->pluck('nome', 'id')->all();
       $tipos_cliente = DB::table('tipo_clientes')->pluck('tipo_cliente', 'id')->all();
       $formas_pagamento = DB::table('forma_pagamentos')->pluck('descricao', 'id')->all();
@@ -76,7 +85,11 @@ class ConcursoController extends Controller
     }
 
     public function createPagamentoConcurso($id){
-      // dd($id);
+      if (Gate::denies('efectuar_pagamento_concurso'))
+            // abort(403, "Sem autorizacao");
+        return redirect()->route('noPermission');
+
+
       $formas_pagamento = DB::table('forma_pagamentos')->pluck('descricao', 'id')->all();
       $concurso = $this->concurso->with('pagamentosConcurso.formaPagamento')->where('id', $id)->first();
       // dd($concurso);
@@ -92,8 +105,11 @@ class ConcursoController extends Controller
      */
     public function store(ConcursoStoreUpdateFormRequest $request)
     {
-        //
-      // dd($request->all());
+      if (Gate::denies('criar_concurso'))
+            // abort(403, "Sem autorizacao");
+        return redirect()->route('noPermission');
+
+
       $acronimo_forma_pagamento_naoaplicavel = FormaPagamento::select('id')->where('acronimo', 'naoaplicavel')->first();
       $acronimo_forma_pagamento_naoaplicavel_id = $acronimo_forma_pagamento_naoaplicavel->id;
       $bad_symbols = array(",");
@@ -242,7 +258,11 @@ class ConcursoController extends Controller
      */
     public function show($id)
     {
-        //
+      if (Gate::denies('visualizar_concurso'))
+            // abort(403, "Sem autorizacao");
+        return redirect()->route('noPermission');
+
+
       $concurso = $this->concurso->with('itensConcurso.produto', 'cliente')->findOrFail($id);
       $empresa = Empresa::with('enderecos', 'telefones', 'emails', 'contas')->findOrFail(1); 
 
@@ -251,11 +271,15 @@ class ConcursoController extends Controller
 
     public function showRelatorio($id)
     {
-      //
+      if (Gate::denies('imprimir_concurso'))
+            // abort(403, "Sem autorizacao");
+        return redirect()->route('noPermission');
+
+
       $concurso = $this->concurso->with('itensConcurso.produto', 'cliente')->findOrFail($id); 
       $empresa = Empresa::with('enderecos', 'telefones', 'emails', 'contas')->findOrFail(1); 
       $pdf = PDF::loadView('concursos.relatorio', compact('concurso','empresa'));
-      return $pdf->download('concursos.pdf');
+      return $pdf->download('concurso-'.$concurso->codigo_concurso.'.pdf');
       
     }
 
@@ -267,7 +291,11 @@ class ConcursoController extends Controller
      */
     public function edit($id)
     {
-        //
+      if (Gate::denies('editar_concurso'))
+            // abort(403, "Sem autorizacao");
+        return redirect()->route('noPermission');
+
+
       $produtos = DB::table('produtos')->pluck('descricao', 'id')->all();
       $formas_pagamento = DB::table('forma_pagamentos')->pluck('descricao', 'id')->all();
       $concurso = $this->concurso->with('itensConcurso.produto', 'formaPagamento', 'cliente')->findOrFail($id); 
@@ -289,28 +317,33 @@ class ConcursoController extends Controller
     }
 
     public function motivoNaoAplicacaoImposto(Request $request){
-    // dd($request->all());
-    $concurso_id = $request->concurso_id;
 
-    $dataForm = [
-      'motivo_justificativo_nao_iva' => $request->motivo_justificativo_nao_iva,
-    ];
-
-    $venda_motivo_justificativo = $this->concurso->findOrFail($concurso_id);
-
-    if($concurso_motivo_justificativo->update($dataForm)){
-
-      $sucess = 'Motivo justificativo da não aplicação de imposto actualizado com sucesso!';
-      return redirect()->back()->with('success', $sucess);
+      if (Gate::denies('editar_concurso'))
+            // abort(403, "Sem autorizacao");
+        return redirect()->route('noPermission');
 
 
-    }else{
-      $error = 'Erro ao actualizar o Motivo justificativo da não aplicação de imposto!';
-      return redirect()->back()->with('error', $error);
+      $concurso_id = $request->concurso_id;
+
+      $dataForm = [
+        'motivo_justificativo_nao_iva' => $request->motivo_justificativo_nao_iva,
+      ];
+
+      $venda_motivo_justificativo = $this->concurso->findOrFail($concurso_id);
+
+      if($concurso_motivo_justificativo->update($dataForm)){
+
+        $sucess = 'Motivo justificativo da não aplicação de imposto actualizado com sucesso!';
+        return redirect()->back()->with('success', $sucess);
 
 
+      }else{
+        $error = 'Erro ao actualizar o Motivo justificativo da não aplicação de imposto!';
+        return redirect()->back()->with('error', $error);
+
+
+      }
     }
-  }
 
     /**
      * Remove the specified resource from storage.
@@ -320,7 +353,9 @@ class ConcursoController extends Controller
      */
     public function destroy($id)
     {
-        //
+      if (Gate::denies('apagar_concurso'))
+            // abort(403, "Sem autorizacao");
+          return redirect()->route('noPermission');
 
       DB::beginTransaction();
       try {
@@ -540,7 +575,12 @@ class ConcursoController extends Controller
 }
 
 public function pagamentoConcurso(PagamentoConcursoStoreUpdateFormRequest $request){
-        //dd($request->all());
+  
+  if (Gate::denies('efectuar_pagamento_concurso'))
+            // abort(403, "Sem autorizacao");
+          return redirect()->route('noPermission');
+
+
   $acronimo_forma_pagamento_naoaplicavel = FormaPagamento::select('id')->where('acronimo', 'naoaplicavel')->first();
   $acronimo_forma_pagamento_naoaplicavel_id = $acronimo_forma_pagamento_naoaplicavel->id;
   $bad_symbols = array(",");
@@ -654,11 +694,15 @@ public function pagamentoConcurso(PagamentoConcursoStoreUpdateFormRequest $reque
 
 public function reportGeralConcursos(){
 
-      // $concursos = $this->concurso->with('cliente')->get();
+  if (Gate::denies('relatorio_geral_concurso'))
+            // abort(403, "Sem autorizacao");
+          return redirect()->route('noPermission');
 
-      // return view('reports.concursos.report_geral_concursos', compact('concursos'));
 
-  $valor_concurso = Concurso::sum('valor_iva');
+
+  $valor_concurso_sem_iva = $this->concurso->where('aplicacao_motivo_iva', 1)->sum('valor_total');
+  $valor_concurso_com_iva = $this->concurso->where('aplicacao_motivo_iva', 0)->sum('valor_iva');
+  $valor_concurso = $valor_concurso_sem_iva + $valor_concurso_com_iva;
   $valor_concurso_pago = PagamentoConcurso::sum('valor_pago');
   $mes = null;
   $ano = null;
@@ -672,6 +716,12 @@ public function reportGeralConcursos(){
 }
 
 public function listarconcursoPorMes(Request $request){
+
+  if (Gate::denies('relatorio_geral_concurso'))
+            // abort(403, "Sem autorizacao");
+          return redirect()->route('noPermission');
+
+
   $mes_id = $request->mes_id;
   $mes_model = Me::select('nome')->where('id', $mes_id)->firstOrFail();
   $mes = $mes_model->nome;
@@ -680,7 +730,9 @@ public function listarconcursoPorMes(Request $request){
 
 
   $concursos = $this->concurso->with('pagamentosConcurso', 'user', 'cliente')->whereMonth('created_at', $mes_id)->get();
-  $valor_concurso = Concurso::whereMonth('created_at', $mes_id)->sum('valor_iva');
+  $valor_concurso_sem_iva = $this->concurso->where('aplicacao_motivo_iva', 1)->whereMonth('created_at', $mes_id)->sum('valor_total');
+  $valor_concurso_com_iva = $this->concurso->where('aplicacao_motivo_iva', 0)->whereMonth('created_at', $mes_id)->sum('valor_iva');
+  $valor_concurso = $valor_concurso_sem_iva + $valor_concurso_com_iva;
   $valor_concurso_pago = 0;
   $anos = DB::table('anos')->pluck('ano', 'id')->all();
   $meses = DB::table('mes')->pluck('nome', 'id')->all();
@@ -696,7 +748,12 @@ public function listarconcursoPorMes(Request $request){
 }
 
 public function listarconcursoPorAno(Request $request){
-       //dd($request->all());
+ 
+ if (Gate::denies('relatorio_geral_concurso'))
+            // abort(403, "Sem autorizacao");
+          return redirect()->route('noPermission');
+
+
  $ano_id = $request->ano_id;
  $ano_model = Ano::select('ano')->where('id', $ano_id)->firstOrFail();
  $ano = $ano_model->ano;
@@ -704,7 +761,9 @@ public function listarconcursoPorAno(Request $request){
 
 
  $concursos = $this->concurso->with('pagamentosConcurso', 'user', 'cliente')->whereYear('created_at', $ano)->get();
- $valor_concurso = concurso::whereYear('created_at', $ano)->sum('valor_iva');
+ $valor_concurso_sem_iva = $this->concurso->where('aplicacao_motivo_iva', 1)->whereYear('created_at', $ano)->sum('valor_total');
+ $valor_concurso_com_iva = $this->concurso->where('aplicacao_motivo_iva', 0)->whereYear('created_at', $ano)->sum('valor_iva');
+ $valor_concurso = $valor_concurso_sem_iva + $valor_concurso_com_iva;
  $valor_concurso_pago = 0;
  $anos = DB::table('anos')->pluck('ano', 'id')->all();
  $meses = DB::table('mes')->pluck('nome', 'id')->all();
@@ -721,8 +780,12 @@ public function listarconcursoPorAno(Request $request){
 
 public function facturasConcurso($concurso_id){
 
+  if (Gate::denies('listar_factura'))
+            // abort(403, "Sem autorizacao");
+          return redirect()->route('noPermission');
 
-  $concurso = Concurso::where('id', $concurso_id)->first();
+
+  $concurso = Concurso::where('id', $concurso_id)->firstOrFail();
   $saidas = Saida::with('itensSaida', 'pagamentosSaida')->where('concurso_id', $concurso_id)->get();
       // dd($concursos);
   $formas_pagamento = DB::table('forma_pagamentos')->pluck('descricao', 'id')->all();

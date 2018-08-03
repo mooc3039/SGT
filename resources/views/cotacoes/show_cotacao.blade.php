@@ -155,7 +155,7 @@
 
 					</div>
 					<div class="row">
-						<div class="col-md-6"><a href="{{route('cotacao.show', $cotacao->id)}}/relatorio" class="btn btn-primary">Imprimir Saída</a>
+						<div class="col-md-6"><a href="{{route('cotacao.show', $cotacao->id)}}/relatorio" class="btn btn-primary">Imprimir Cotação</a>
 
 						</div>
 						<div class="col-md-6 text-right"><a href="{{route('cotacao.index')}}" class="btn btn-warning">Cancelar</a>
