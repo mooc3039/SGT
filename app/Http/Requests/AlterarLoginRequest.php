@@ -23,6 +23,8 @@ class AlterarLoginRequest extends FormRequest
      */
     public function rules()
     {
+        $id = $this->get('usuario_id');
+        
         return [
             'username' => 'required|unique:users,username,'.$id.',id',
             'senha' => 'required|confirmed',

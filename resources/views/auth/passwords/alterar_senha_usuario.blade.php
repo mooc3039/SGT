@@ -58,6 +58,8 @@
           <div class="row">
             <div class="col-md-6">
 
+              {{Form::hidden('usuario_id', $usuario->id)}}
+
               {{Form::submit('Actualizar', ['class'=>'btn btn-primary submit_iten'])}}
               {{Form::reset('Limpar', ['class'=>'btn btn-default'])}}
 
