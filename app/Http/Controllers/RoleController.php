@@ -72,17 +72,20 @@ class RoleController extends Controller
 
 
       $permissoes = $request->check_permissoes;
+      DB::beginTransaction();
 
       try{
 
         $role = $this->role->create($dataForm);
         $role_id = $role->id;
         $role->permissoes()->attach($permissoes);
+        DB::commit();
 
         $success = "Tipo de Usúario cadastrado com sucesso.";
         return redirect()->route('role.create')->with('success', $success);
 
     }catch(QueryException $e){
+        DB::rollback();
         $error = "Não foi possível cadastrar o Tipo de Usúario";
         return redirect()->route('role.create')->with('error', $error);
     }
