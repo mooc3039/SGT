@@ -34,8 +34,10 @@
 
 							<div class="panel panel-default">
 								<div class="panel-body text-center">
-									<h2> <b> Numero Factura </b> </h2> <hr>
-									<h1>{{$saida->codigo}}</h1>
+									<h2> <b> Nota de Falta</b> </h2>
+									<hr>
+									<h2> <b> Número Factura </b> </h2>
+									<h2>{{$saida->codigo}}</h2>
 								</div>
 							</div>
 
@@ -59,18 +61,31 @@
 									<tr>
 										<th> Quantidade</th>
 										<th> Designação </th>
-										<th> Preço Unitário (Mtn)</th>
-										<th> Valor Total (Mtn)</th>
+										<th class="text-right"> Preço Unitário (Mtn)</th>
+										<th class="text-right"> Valor (Mtn)</th>
+										<th class="text-right"> Desconto (%)</th>
+										<th class="text-right"> Subtotal (Mtn)</th>
+										
 									</tr>
 
-									@foreach($saida->itensSaida as $iten_saida)
+									@php
+										$valor_total_itens = 0;
+
+									@endphp
+
+									@foreach($nota_falta->itensNotaFalta as $iten_nota_falta)
 									<tr>
-										<td> {{$iten_saida->quantidade}} </td>
-										<td> {{$iten_saida->produto->descricao}} </td>
-										<td> {{number_format($iten_saida->produto->preco_venda, 2, '.', ',')}} </td>
-										<td> {{number_format($iten_saida->valor, 2, '.', ',')}} </td>
+										<td> {{$iten_nota_falta->quantidade}} </td>
+										<td> {{$iten_nota_falta->produto->descricao}} </td>
+										<td class="text-right"> {{number_format($iten_nota_falta->produto->preco_venda, 2, '.', ',')}} </td>
+										<td class="text-right"> {{number_format($iten_nota_falta->valor, 2, '.', ',')}} </td>
+										<td class="text-right"> {{$iten_nota_falta->desconto}} </td>
+										<td class="text-right"> {{number_format($iten_nota_falta->subtotal, 2, '.', ',')}} </td>
 
 									</tr>
+									@php
+									$valor_total_itens = $valor_total_itens + $iten_nota_falta->subtotal_rest;
+									@endphp
 									@endforeach
 								</tbody>
 							</table>
@@ -89,10 +104,10 @@
 									Motivo Justificativo da não aplicação de imposto
 								</div>
 								<div class="panel-body">
-									@if($saida->motivo_iva_id == null)
+									@if($nota_falta->motivo_iva_id == null)
 									{{""}}
 									@else
-									{{$saida->motivoIva->motivo_nao_aplicacao}}
+									{{$nota_falta->motivoIva->motivo_nao_aplicacao}}
 									@endif
 								</div>
 							</div>
@@ -101,27 +116,38 @@
 
 						<div class="col-md-6 text-right">
 							<table class="pull-right">
-								@if($saida->aplicacao_motivo_iva == 1)
+								@if($nota_falta->aplicacao_motivo_iva == 1)
+								
 								<tr>
-									<td>Valor Total:</td>
+									<td>Valor Total da Nota de Falta:</td>
 									<td style="width: 10px"></td>
-									<td>{{number_format($saida->valor_total, 2, '.', ',')}} Mtn</td>
+									<td>{{number_format($nota_falta->valor_total, 2, '.', ',')}} Mtn</td>
+								</tr>
+								<tr>
+									<td style="border-top: 1px solid #ccc"><b>Valor Total da Factura:</b></td>
+									<td style="border-top: 1px solid #ccc; width: 10px"></td>
+									<td style="border-top: 1px solid #ccc"><b>{{number_format($saida->valor_total, 2, '.', ',')}} Mtn</b></td>
 								</tr>
 								@else
 								<tr>
-									<td>Sub-Total:</td>
+									<td>Sub-Total da Nota de Falta:</td>
 									<td style="width: 10px"></td>
-									<td>{{number_format($saida->valor_total, 2, '.', ',')}} Mtn</td>
+									<td>{{number_format($nota_falta->valor_total, 2, '.', ',')}} Mtn</td>
 								</tr>
 								<tr>
-									<td>IVA(17%):</td>
+									<td>IVA(17%) da Nota de Falta:</td>
 									<td></td>
-									<td>{{number_format($saida->iva, 2, '.', ',')}} Mtn</td>
+									<td>{{number_format($nota_falta->iva, 2, '.', ',')}} Mtn</td>
 								</tr>
 								<tr>
-									<td>Valor Total:</td>
-									<td></td>
-									<td><b>{{number_format($saida->valor_iva, 2, '.', ',')}} Mtn</b></td>
+									<td>Valor Total da Nota de Falta:</td>
+									<td style="width: 10px"></td>
+									<td>{{number_format($nota_falta->valor_iva, 2, '.', ',')}} Mtn</td>
+								</tr>
+								<tr>
+									<td style="border-top: 1px solid #ccc"><b>Valor Total da Factura:</b></td>
+									<td style="border-top: 1px solid #ccc"></td>
+									<td style="border-top: 1px solid #ccc"><b>{{number_format($saida->valor_iva, 2, '.', ',')}} Mtn</b></td>
 								</tr>
 								@endif
 							</table>
@@ -154,11 +180,11 @@
 					</div>
 					<div class="row">
 						<div class="col-md-6">
-							<a href="{{route('saida.show', $saida->id)}}/relatorio" class="btn btn-primary">Imprimir Saída</a>
-							<a href="{{route('nota_de_falta', $saida->id)}}" class="btn btn-info">Nota de Falta</a>
+							<a href="" class="btn btn-primary">Imprimir Nota de Falta</a>
+							<a href="{{route('saida.show', $saida->id)}}" class="btn btn-info">Factura</a>
 
 						</div>
-						<div class="col-md-6 text-right"><a href="{{route('saida.index')}}" class="btn btn-warning">Cancelar</a>
+						<div class="col-md-6 text-right"><a href="{{route('saida.index')}}" class="btn btn-warning">Listar Facturas</a>
 
 						</div>
 					</div>

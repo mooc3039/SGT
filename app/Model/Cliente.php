@@ -39,6 +39,12 @@ class Cliente extends Model
 
 	}
 
+	public function notasFalta(){
+
+		return $this->hasMany('App\Model\NotaFalta');
+
+	}
+
 	public function tipo_cliente(){
 
 		return $this->belongsTo('App\Model\TipoCliente');

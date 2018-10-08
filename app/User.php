@@ -9,7 +9,7 @@ use App\Model\Permissao;
 
 class User extends Authenticatable
 {
-    use Notifiable;
+  use Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -17,7 +17,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'username', 'email', 'password', 'active', 'role_id','bday','occupation','about',
+      'name', 'username', 'email', 'password', 'active', 'role_id','bday','occupation','about',
     ];
 
     /**
@@ -25,48 +25,52 @@ class User extends Authenticatable
      *
      * @var array
      */
-    protected $hidden = [
-        'password', 'remember_token',
-    ];
+    protected $hidden = ['password', 'remember_token', ];
+
     public function setPasswordAttribute($password)
     {   
-        $this->attributes['password'] = bcrypt($password);
+      $this->attributes['password'] = bcrypt($password);
+    }
+
+    public function notasFalta(){
+
+      return $this->hasMany('App\Model\NotaFalta');
+
     }
 
     public function role()
-  {
-    return $this->belongsTo('App\Model\Role');
-  }
+    {
+      return $this->belongsTo('App\Model\Role');
+    }
 
-  public function hasAccess(Permissao $permission){
-    return $this->hasRole($permission->roles);
-  }
+    public function hasAccess(Permissao $permission){
+      return $this->hasRole($permission->roles);
+    }
 
-  public function hasRole($roles){
+    public function hasRole($roles){
     // dd($roles);
     // Verifica se a Role do Usuario logado esta no conjunto $roles
-    if($roles->count() > 0){
+      if($roles->count() > 0){
 
-      if(is_array($roles) || is_object($roles)){
+        if(is_array($roles) || is_object($roles)){
 
-      foreach ($roles as $role) {
+          foreach ($roles as $role) {
 
-        if($this->role()->where('nome', $role->nome)->first()){
-          return true;
+            if($this->role()->where('nome', $role->nome)->first()){
+              return true;
+            }
+
+          }
+
+          return false;
         }
+
+      }else{
+
+        return false;
 
       }
 
-      return false;
     }
 
-    }else{
-
-      return false;
-
-    }
-    
   }
-
-}
- 

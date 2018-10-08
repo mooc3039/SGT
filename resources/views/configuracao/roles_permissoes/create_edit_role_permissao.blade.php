@@ -59,7 +59,7 @@
           </div>
           <div class="col-md-6 text-right">
 
-            <a href="{{route('role_permissao.index')}}" class="btn btn-warning"> Cancelar </a>
+            <a href="{{route('role.index')}}" class="btn btn-warning"> Cancelar </a>
           </div>
         </div>
 

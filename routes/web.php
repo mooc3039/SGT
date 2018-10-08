@@ -11,8 +11,7 @@
 |
 */
 
-// Route::get('/',['as'=>'/','uses'=>'LoginController@getLogin']);
-// Route::post('/login',['as'=>'login','uses'=>'LoginController@postLogin']);
+
 Route::get('/', function () {
     return view('auth.login');
 });
@@ -80,6 +79,8 @@ Route::group(['middleware'=>['authen']],function(){
   Route::post('/saida/concurso/dados', 'SaidaController@findConcursoDados')->name('findConcursoDados');
   // Impressao das Saidas
   Route::get('/saida/{id}/relatorio', ['as'=>'saidaRelatorio','uses'=>'SaidaController@showRelatorio']);
+  // Notas de Falta Saida
+  Route::get('saida/nota_de_falta/{id}', 'SaidaController@notaDeFalta')->name('nota_de_falta');
   //Rotas get para gerar impressao em formato pdf => Malache
   Route::get('/saida/pdf/{id}', ['as'=>'saida_pdf', 'uses'=>'SaidaController@report']);
   // EDITAR O MODTIVO JUSTIFICATIVO DA NAO APLICACAO DO IMPOSTO

@@ -55,6 +55,12 @@ class Saida extends Model
         
     }
 
+    public function notasFalta(){
+
+        return $this->hasMany('App\Model\NotaFalta');
+        
+    }
+
     public function pagamentosSaida(){
 
         return $this->hasMany('App\Model\PagamentoSaida');

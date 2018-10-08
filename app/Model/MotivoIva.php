@@ -29,4 +29,10 @@ class MotivoIva extends Model
         return $this->hasMany('App\Model\Venda');
 
     }
+
+    public function notasFalta(){
+
+        return $this->hasMany('App\Model\NotaFalta');
+
+    }
 }

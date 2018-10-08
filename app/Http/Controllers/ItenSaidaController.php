@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Database\QueryException;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
+// use Illuminate\Database\QueryException;
+// use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use App\Http\Requests\ItenSaidaStoreUpdateFormRequest;
 use App\Model\ItenSaida;
+use App\Model\NotaFalta;
+use App\Model\ItenNotaFalta;
 use App\Model\GuiaEntrega;
 use App\Model\ItenGuiaentrega;
 use DB;
@@ -78,6 +80,18 @@ class ItenSaidaController extends Controller
       }else{
 
         try {
+
+          $nota_falta = NotaFalta::where('saida_id', $request->saida_id)->first();
+
+          $iten_nota_falta =  new ItenNotaFalta;
+
+          $iten_nota_falta->produto_id = $request->produto_id;
+          $iten_nota_falta->quantidade = 0;
+          $iten_nota_falta->valor = 0.0;
+          $iten_nota_falta->desconto = 0;
+          $iten_nota_falta->subtotal = 0.0;
+          $iten_nota_falta->nota_falta_id = $nota_falta->id;
+          $iten_nota_falta->save();
 
           if($this->iten_saida->create($dataForm)){
 
@@ -226,7 +240,7 @@ class ItenSaidaController extends Controller
     {
       if (Gate::denies('editar_factura'))
             // abort(403, "Sem autorizacao");
-          return redirect()->route('noPermission');
+        return redirect()->route('noPermission');
 
 
       $iten_saida = $this->iten_saida->findOrFail($id);

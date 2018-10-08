@@ -1,0 +1,58 @@
+29-09-2018
+* Acrescimo da permissao nota_de_falta no codigo;
+* Acrescimo da permissao nota_de_falta na DB;
+
+- create_edit_role_permissao
+	Ao cancelar a operacao, o sistema voltava para o role_permissao.index e esta rota nao tem nenhum conteudo;
+	Foi necessario redirecionar para a rota role.index.
+
+30-09-2018
+NA DATABASE
+* Criacao da Tabela notas_falta na DB;
+* Criacao da Tabela iten_nota_faltas na DB;
+* Criacao do Procedimento "SP_incrementar_valor_total_nota_falta";
+* Criacao do Procedimento "SP_decrementar_valor_total_nota_falta";
+* Criacao do Trigger "tr_actuatlizar_valor_total_nota_falta_after_insert" => AFTER INSERT, na tabela "iten_nota_faltas";
+* Criacao do Trigger "tr_actuatlizar_iten_nota_falta_after_update" => AFTER UPDATE na tabela "iten_nota_faltas";
+* Criacao do Trigger "tr_actuatlizar_valor_total_nota_falta_after_delete" => AFTER DELETEna tabela "iten_nota_faltas";
+
+02-09-2018
+NA DATABASE
+* Criacao do Procedimento "SP_decrementar_iten_nota_faltas";
+* Criacao do Procedimento "SP_incrementar_iten_nota_faltas";
+
+// NA TABELA ITEN-SAIDAS
+--NO TRIGGER "tr_actuatlizar_valor_total_saida_after_insert" AFTER INSERT, DA TABELA "iten_saidas"
+	* Acrescentou-se o codigo:
+		-CALL SP_incrementar_iten_nota_faltas(NEW.produto_id, NEW.quantidade, NEW.desconto, NEW.saida_id);
+
+--NO TRIGGER "tr_actuatlizar_valor_total_saida_after_delete" AFTER DELETE, DA TABELA "iten_saidas:
+	* Acrescentou-se o codigo:
+		-CALL SP_decrementar_iten_nota_faltas(OLD.produto_id, OLD.quantidade, OLD.desconto, OLD.saida_id);
+		-CALL SP_eliminar_iten_nota_faltas(OLD.produto_id, OLD.saida_id);
+
+--NO TRIGGER "tr_actuatlizar_iten_saidas_after_update" AFTER UPDATE, DA TABELA "iten_saidas":
+	* Acrescentou-se o codigp:
+		-CALL SP_incrementar_iten_nota_faltas(NEW.produto_id, @quantidade, NEW.desconto, NEW.saida_id);
+		-CALL SP_decrementar_iten_nota_faltas(NEW.produto_id, @quantidade, NEW.desconto, NEW.saida_id);
+// FIM NA TABELA ITEN-SAIDAS
+
+--NO TRIGGER "tr_actuatlizar_iten_saidas_after_update" AFTER UPDATE, DA TABELA "iten_saidas":
+	* Acrescentou-se o codigo:
+		-CALL SP_incrementar_iten_nota_faltas(NEW.produto_id, @quantidade, NEW.desconto, NEW.saida_id);
+		-CALL SP_decrementar_iten_nota_faltas(NEW.produto_id, @quantidade, NEW.desconto, NEW.saida_id);
+
+
+
+
+
+--NO TRIGGER "tr_actuatlizar_rest_iten_saidas_after_update" AFTER UPDATE, DA TABELA "iten_guiaentregas":
+	* Acrescentou-se o codigo:
+		-CALL SP_incrementar_iten_nota_faltas(NEW.produto_id, @quantidade, NEW.desconto, NEW.saida_id);
+		-CALL SP_decrementar_iten_nota_faltas(NEW.produto_id, @quantidade, NEW.desconto, NEW.saida_id);
+
+NO CODIGO
+* Salvar a "NotaFalta" com os mesmos dados da "Saida";
+* Salvar os "ItenNotaFalta" com os mesmos dados da "ItenSaida";
+	- Para que na criacao da "Saida" a "NotaFalta" tenha os mesmos dados que da "Saida" para que possam posteriormente ser descontados a medida que se emite a "GuiaEntrega",
+	  "NotaFalta" eh o que sobra da factura ao emitir a GuiaEntrega;

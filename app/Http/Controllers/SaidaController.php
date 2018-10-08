@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Database\QueryException;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
+// use Illuminate\Database\QueryException;
+// use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use App\Http\Requests\SaidaStoreUpdateFormRequest;
 use App\Http\Requests\PagamentoSaidaStoreUpdateFormRequest;
@@ -11,10 +11,12 @@ use App\Model\Empresa;
 use App\Model\Ano;
 use App\Model\Me;
 use App\Model\Saida;
+use App\Model\NotaFalta;
 use App\Model\Concurso;
 use App\Model\ItenConcurso;
 use App\Model\TipoCliente;
 use App\Model\ItenSaida;
+use App\Model\ItenNotaFalta;
 use App\Model\PagamentoSaida;
 use App\Model\FormaPagamento;
 use App\Model\Produto;
@@ -31,6 +33,7 @@ class SaidaController extends Controller
 
   private $saida;
   private $pagamento_saida;
+  private $nota_falta;
   private $iten_saida;
   private $concurso;
   private $iten_concurso;
@@ -40,11 +43,12 @@ class SaidaController extends Controller
   private $tipo_cliente;
   private $user;
 
-  public function __construct(Saida $saida, Concurso $concurso, ItenConcurso $iten_concurso, Produto $produto, MotivoIva $motivo_iva, Cliente $cliente, TipoCliente $tipo_cliente, User $user){
+  public function __construct(Saida $saida, Concurso $concurso, ItenConcurso $iten_concurso, NotaFalta $nota_falta, Produto $produto, MotivoIva $motivo_iva, Cliente $cliente, TipoCliente $tipo_cliente, User $user){
 
     $this->saida = $saida;
     $this->concurso = $concurso;
     $this->iten_concurso = $iten_concurso;
+    $this->nota_falta = $nota_falta;
     $this->produto = $produto;
     $this->motivo_iva = $motivo_iva;
     $this->cliente = $cliente;
@@ -205,53 +209,94 @@ class SaidaController extends Controller
 
         try {
 
-          $saida = new Saida;
+          $cliente_id = $request['cliente_id'];
+          $user_id = $request['user_id'];
+          $aplicacao_motivo_iva = $request['aplicacao_motivo_iva'];
+          $motivo_iva_id = $request['motivo_iva_id'];
+          $valor_total = 0; 
+          $valor_iva = 0;
+          $iva = 0;
 
-          $saida->cliente_id = $request['cliente_id'];
-          $saida->user_id = $request['user_id'];
-          $saida->aplicacao_motivo_iva = $request['aplicacao_motivo_iva'];
-          $saida->motivo_iva_id = $request['motivo_iva_id'];
-          $saida->valor_total = 0; 
-          $saida->valor_iva = 0;
-          $saida->iva = 0;
-          // Eh necessario que o valor total seja zero, uma vez que este campo na tabela cotacaos eh actualizado pelo trigger apos o "insert" bem como o "update" na tabela itens_cotacaos de acordo com o codigo da cotacao. Nao pode ser o valor_total vindo do formulario, pois este valor sera acrescido a cada insercao abaixo quando executar o iten_cotacao->save().
+          $saida = new Saida;
+          $nota_falta = new NotaFalta;
+
+          $saida->cliente_id = $cliente_id;
+          $saida->user_id = $user_id;
+          $saida->aplicacao_motivo_iva = $aplicacao_motivo_iva;
+          $saida->motivo_iva_id = $motivo_iva_id;
+          $saida->valor_total = $valor_total; 
+          $saida->valor_iva = $valor_iva;
+          $saida->iva = $iva;
+          // Eh necessario que o valor total seja zero, uma vez que este campo na tabela saidas eh actualizado pelo trigger apos o "insert" bem como o "update" na tabela itens_saidas de acordo com o codigo da saida. Nao pode ser o valor_total vindo do formulario, pois este valor sera acrescido a cada insercao abaixo quando executar o iten_cotacao->save().
 
           $saida->pago = $pago;
-          // $saida->valor_pago = $valor_pago;
-          // $saida->remanescente = $remanescente;
-          // $saida->forma_pagamento_id = $forma_pagamento_id;
-          // $saida->nr_documento_forma_pagamento = $nr_documento_forma_pagamento;
           $saida->nr_referencia = $nr_referencia;
           $saida->concurso_id = $concurso_id;
 
-
           if($saida->save()){
 
-            if(isset($request->salvar_saida_concurso)){
-              $concu_id = array('0' => $request->concurso_id);
-            }
+            // Nota de Falta
+            $nota_falta->cliente_id = $cliente_id;
+            $nota_falta->user_id = $user_id;
+            $nota_falta->aplicacao_motivo_iva = $aplicacao_motivo_iva;
+            $nota_falta->motivo_iva_id = $motivo_iva_id;
+            $nota_falta->valor_total = $valor_total; 
+            $nota_falta->valor_iva = $valor_iva;
+            $nota_falta->iva = $iva;
+            $nota_falta->saida_id = $saida->id; // pega o id da saida apos ter-se salvo a saida;
+
+            // Salva a nota de falta com os mesmos dados da saida
+            $nota_falta->save();
 
             $count = count($request->produto_id);
 
               $sai_id = array('0' => $saida->id); // Para inserir o cotacao_id no iten_cotacaos eh necessario converter este unico valor em array, o qual ira assumir o mesmo valor no loop da insercao como eh o mesmo id da cotacao para varios itens;
+              $nota_f_id = array('0' => $nota_falta->id);
 
               for($i=0; $i<$count; $i++){
 
                 $array_saida_id[$i] = $sai_id[0]; // A cada iteracao o a variavel cotacao_id recebe o mesmo id transformado em array com um unico valor na posicao zero;
+                $array_nota_falta_id[$i] = $nota_f_id[0];
 
+                $produto_id = $request['produto_id'][$i];
+                $quantidade = str_replace($bad_symbols, "", $request['quantidade'][$i]);
+                $quantidade_rest = str_replace($bad_symbols, "", $request['quantidade'][$i]);
+                $valor = str_replace($bad_symbols, "", $request['valor'][$i]);
+                $valor_rest = str_replace($bad_symbols, "", $request['valor'][$i]);
+                $desconto = str_replace($bad_symbols, "", $request['desconto'][$i]);
+                $subtotal = str_replace($bad_symbols, "", $request['subtotal'][$i]);
+                $subtotal_rest = str_replace($bad_symbols, "", $request['subtotal'][$i]) ;
+                $saida_id = $array_saida_id[$i];
+                $nota_falta_id = $array_nota_falta_id[$i];
+
+                $iten_nota_falta =  new ItenNotaFalta;
                 $iten_saida =  new ItenSaida;
 
-                $iten_saida->produto_id = $request['produto_id'][$i];
-                $iten_saida->quantidade = str_replace($bad_symbols, "", $request['quantidade'][$i]);
-                $iten_saida->quantidade_rest = str_replace($bad_symbols, "", $request['quantidade'][$i]);
-                $iten_saida->valor = str_replace($bad_symbols, "", $request['valor'][$i]);
-                $iten_saida->valor_rest = str_replace($bad_symbols, "", $request['valor'][$i]);
-                $iten_saida->desconto = str_replace($bad_symbols, "", $request['desconto'][$i]);
-                $iten_saida->subtotal = str_replace($bad_symbols, "", $request['subtotal'][$i]);
-                $iten_saida->subtotal_rest = str_replace($bad_symbols, "", $request['subtotal'][$i]) ;
-                $iten_saida->saida_id = $array_saida_id[$i];
+                $iten_nota_falta->produto_id = $produto_id;
+                $iten_nota_falta->quantidade = 0;
+                $iten_nota_falta->valor = 0.0;
+                $iten_nota_falta->desconto = 0.0;
+                $iten_nota_falta->subtotal = 0.0;
+                $iten_nota_falta->nota_falta_id = $nota_falta_id;
 
+                $iten_saida->produto_id = $produto_id;
+                $iten_saida->quantidade = $quantidade;
+                $iten_saida->quantidade_rest = $quantidade_rest;
+                $iten_saida->valor = $valor;
+                $iten_saida->valor_rest = $valor_rest;
+                $iten_saida->desconto = $desconto;
+                $iten_saida->subtotal = $subtotal;
+                $iten_saida->subtotal_rest = $subtotal_rest;
+                $iten_saida->saida_id = $saida_id;
+
+
+                $iten_nota_falta->save();
                 $iten_saida->save();
+                
+
+                if(isset($request->salvar_saida_concurso)){
+                  $concu_id = array('0' => $request->concurso_id);
+                }
 
                 if(isset($request->salvar_saida_concurso)){
                   $array_concurso_id[$i] = $concu_id[0];
@@ -266,6 +311,7 @@ class SaidaController extends Controller
 
               }
 
+              // Pagamento da Saida
               $pagamento_saida = new PagamentoSaida;
               $pagamento_saida->saida_id = $saida->id;
               $pagamento_saida->valor_pago = $valor_pago;
@@ -360,20 +406,33 @@ class SaidaController extends Controller
 
 
       $saida = $this->saida->findOrFail($id);
+      $nota_falta = $this->nota_falta->where('saida_id', $saida->id)->firstOrFail(); // Existe apenas uma Nota de Falta para cada Saida;
 
-      $saida->aplicacao_motivo_iva = $request->aplicacao_motivo_iva;
-      $saida->motivo_iva_id = $request->motivo_iva_id;
+      $aplicacao_motivo_iva = $request->aplicacao_motivo_iva;
+      $motivo_iva_id = $request->motivo_iva_id;
 
-      if($saida->update()){
+      // Actualizar motivo da nao aplicacao do iva na Saida
+      $saida->aplicacao_motivo_iva = $aplicacao_motivo_iva;
+      $saida->motivo_iva_id = $motivo_iva_id;
 
+      // Actualizar motivo da nao aplicacao do iva na Nota de Falta
+      $nota_falta->aplicacao_motivo_iva = $aplicacao_motivo_iva;
+      $nota_falta->motivo_iva_id = $motivo_iva_id;
+
+      DB::beginTransaction();
+
+      try{
+        $saida->update();
+        $nota_falta->update();
+
+        DB::commit();
         $sucess = 'Saída actualizada com sucesso!';
         return redirect()->back()->with('success', $sucess);
 
-      }else{
-
+      }catch(QueryException $e){
+        DB::rollback();
         $error = 'Erro ao actualizar a Saída!';
         return redirect()->back()->with('error', $error);
-
       }
     }
 
@@ -659,6 +718,20 @@ class SaidaController extends Controller
         
       }
 
+      public function notaDeFalta($id){
+
+        if (Gate::denies('visualizar_nota_de_falta'))
+          return redirect()->route('noPermission');
+
+
+        // Existe apenas uma Nota de Falta para esta Saida na DB
+        $saida = $this->saida->findOrFail($id);
+        $nota_falta = $this->nota_falta->with('itensNotaFalta.produto', 'cliente')->where('saida_id', $saida->id)->firstOrFail();
+        $empresa = Empresa::with('enderecos', 'telefones', 'emails', 'contas')->findOrFail(1); 
+        
+        return view('saidas.nota_de_falta_saida', compact('saida', 'nota_falta', 'empresa'));
+      }
+
       public function reportGeralSaidas(){
 
         if (Gate::denies('relatorio_geral_factura'))
@@ -741,7 +814,6 @@ class SaidaController extends Controller
      public function listarSaidaDeConcursoPorMes(Request $request){
 
       if (Gate::denies('relatorio_geral_factura'))
-            // abort(403, "Sem autorizacao");
         return redirect()->route('noPermission');
 
 
@@ -749,7 +821,6 @@ class SaidaController extends Controller
       $mes_model = Me::select('nome')->where('id', $mes_id)->firstOrFail();
       $mes = $mes_model->nome;
       $ano = null;
-      // dd($mes_id);
 
 
       $saidas = $this->saida->with('itensSaida', 'pagamentosSaida', 'user', 'cliente')->where('concurso_id', '!=', 0)->whereMonth('data', $mes_id)->get();
@@ -761,16 +832,48 @@ class SaidaController extends Controller
       $meses = DB::table('mes')->pluck('nome', 'id')->all();
 
       foreach ($saidas as $saida) {
+        foreach ($saida->pagamentosSaida as $pagamentos) {
+          $valor_saida_pago = $valor_saida_pago + $pagamentos->valor_pago;
+        }
+      }
+
+      return view('reports.saidas.report_geral_saidas_concursos', compact('saidas', 'valor_saida', 'valor_saida_pago', 'anos', 'meses', 'mes', 'ano'));
+
+    }
+
+    public function listarSaidaPorAno(Request $request){
+
+      if (Gate::denies('relatorio_geral_factura'))
+            // abort(403, "Sem autorizacao");
+        return redirect()->route('noPermission');
+
+
+       //dd($request->all());
+      $ano_id = $request->ano_id;
+      $ano_model = Ano::select('ano')->where('id', $ano_id)->firstOrFail();
+      $ano = $ano_model->ano;
+      $mes = null;
+
+
+      $saidas = $this->saida->with('itensSaida', 'pagamentosSaida', 'user', 'cliente')->where('concurso_id', 0)->whereYear('data', $ano)->get();
+      $valor_saida_sem_iva = $this->saida->where('concurso_id', 0)->where('aplicacao_motivo_iva', 1)->whereYear('data', $ano)->sum('valor_total');
+      $valor_saida_com_iva = $this->saida->where('concurso_id', 0)->where('aplicacao_motivo_iva', 0)->whereYear('data', $ano)->sum('valor_iva');
+      $valor_saida = $valor_saida_sem_iva + $valor_saida_com_iva;
+      $valor_saida_pago = 0;
+      $anos = DB::table('anos')->pluck('ano', 'id')->all();
+      $meses = DB::table('mes')->pluck('nome', 'id')->all();
+
+      foreach ($saidas as $saida) {
        foreach ($saida->pagamentosSaida as $pagamentos) {
          $valor_saida_pago = $valor_saida_pago + $pagamentos->valor_pago;
        }
      }
 
-     return view('reports.saidas.report_geral_saidas_concursos', compact('saidas', 'valor_saida', 'valor_saida_pago', 'anos', 'meses', 'mes', 'ano'));
 
+     return view('reports.saidas.report_geral_saidas', compact('saidas', 'valor_saida', 'valor_saida_pago', 'anos', 'meses', 'ano', 'mes'));
    }
 
-   public function listarSaidaPorAno(Request $request){
+   public function listarSaidaDeConcursoPorAno(Request $request){
 
     if (Gate::denies('relatorio_geral_factura'))
             // abort(403, "Sem autorizacao");
@@ -784,58 +887,26 @@ class SaidaController extends Controller
     $mes = null;
 
 
-    $saidas = $this->saida->with('itensSaida', 'pagamentosSaida', 'user', 'cliente')->where('concurso_id', 0)->whereYear('data', $ano)->get();
-    $valor_saida_sem_iva = $this->saida->where('concurso_id', 0)->where('aplicacao_motivo_iva', 1)->whereYear('data', $ano)->sum('valor_total');
-    $valor_saida_com_iva = $this->saida->where('concurso_id', 0)->where('aplicacao_motivo_iva', 0)->whereYear('data', $ano)->sum('valor_iva');
+    $saidas = $this->saida->with('itensSaida', 'pagamentosSaida', 'user', 'cliente')->where('concurso_id', '!=',  0)->whereYear('data', $ano)->get();
+    $valor_saida_sem_iva = $this->saida->where('concurso_id', '!=',  0)->where('aplicacao_motivo_iva', 1)->whereYear('data', $ano)->sum('valor_total');
+    $valor_saida_com_iva = $this->saida->where('concurso_id', '!=',  0)->where('aplicacao_motivo_iva', 0)->whereYear('data', $ano)->sum('valor_iva');
     $valor_saida = $valor_saida_sem_iva + $valor_saida_com_iva;
     $valor_saida_pago = 0;
     $anos = DB::table('anos')->pluck('ano', 'id')->all();
     $meses = DB::table('mes')->pluck('nome', 'id')->all();
 
     foreach ($saidas as $saida) {
-     foreach ($saida->pagamentosSaida as $pagamentos) {
+      foreach ($saida->pagamentosSaida as $pagamentos) {
        $valor_saida_pago = $valor_saida_pago + $pagamentos->valor_pago;
      }
    }
 
 
-   return view('reports.saidas.report_geral_saidas', compact('saidas', 'valor_saida', 'valor_saida_pago', 'anos', 'meses', 'ano', 'mes'));
+   return view('reports.saidas.report_geral_saidas_concursos', compact('saidas', 'valor_saida', 'valor_saida_pago', 'anos', 'meses', 'ano', 'mes'));
  }
 
- public function listarSaidaDeConcursoPorAno(Request $request){
-
-  if (Gate::denies('relatorio_geral_factura'))
-            // abort(403, "Sem autorizacao");
-    return redirect()->route('noPermission');
-
-
-       //dd($request->all());
-  $ano_id = $request->ano_id;
-  $ano_model = Ano::select('ano')->where('id', $ano_id)->firstOrFail();
-  $ano = $ano_model->ano;
-  $mes = null;
-
-
-  $saidas = $this->saida->with('itensSaida', 'pagamentosSaida', 'user', 'cliente')->where('concurso_id', '!=',  0)->whereYear('data', $ano)->get();
-  $valor_saida_sem_iva = $this->saida->where('concurso_id', '!=',  0)->where('aplicacao_motivo_iva', 1)->whereYear('data', $ano)->sum('valor_total');
-  $valor_saida_com_iva = $this->saida->where('concurso_id', '!=',  0)->where('aplicacao_motivo_iva', 0)->whereYear('data', $ano)->sum('valor_iva');
-  $valor_saida = $valor_saida_sem_iva + $valor_saida_com_iva;
-  $valor_saida_pago = 0;
-  $anos = DB::table('anos')->pluck('ano', 'id')->all();
-  $meses = DB::table('mes')->pluck('nome', 'id')->all();
-
-  foreach ($saidas as $saida) {
-   foreach ($saida->pagamentosSaida as $pagamentos) {
-     $valor_saida_pago = $valor_saida_pago + $pagamentos->valor_pago;
-   }
- }
-
-
- return view('reports.saidas.report_geral_saidas_concursos', compact('saidas', 'valor_saida', 'valor_saida_pago', 'anos', 'meses', 'ano', 'mes'));
-}
-
-public function findConcursoDados(Request $request)
-{
+ public function findConcursoDados(Request $request)
+ {
   $concurso = $this->concurso->with('itensConcurso.produto', 'pagamentosConcurso.formaPagamento', 'cliente', 'formaPagamento')->findOrFail($request->id);
   return response()->json($concurso);
 }
