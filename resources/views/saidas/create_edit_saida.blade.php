@@ -74,7 +74,7 @@
           </div>
         </div>
 
-        <div class="row">
+        <div class="row" style="margin-top: 10px">
           <div class="col-md-6">
             {{ Form::label('forma_pagamento_id', 'Forma Pgamento')}}
             {{Form::select('forma_pagamento_id', [''=>'Forma Pgamento',] + $formas_pagamento, null, ['class'=>'form-control', 'id'=>'forma_pagamento_id'] )}}
@@ -82,6 +82,12 @@
           <div class="col-md-6">
             {{ Form::label('nr_documento_forma_pagamento', 'Documento')}}
             {{ Form::text('nr_documento_forma_pagamento', null, ['class'=>'form-control', 'id'=>'nr_documento_forma_pagamento', 'placeholder'=>'Padrão: Não Aplicavel'])}}
+          </div>
+        </div>
+        <div class="row" style="margin-top: 10px">
+          <div class="col-md-6 col-md-offset-6">
+            {{Form::label('pagamento_saida_banco_id', 'Banco', ['id'=>'label_pagamento_saida_banco_id'])}}
+            {{Form::select('pagamento_saida_banco_id', [''=>'Banco', ] + $bancos, null, ['id'=>'pagamento_saida_banco_id', 'class'=>'form-control'])}}
           </div>
         </div>
       </div>
@@ -309,6 +315,15 @@
       });
     });
 
+    $(document).ready(function(){
+      var frm_pagamento = document.getElementById('forma_pagamento_id').options[document.getElementById('forma_pagamento_id').selectedIndex].text;
+      var res_frm_pagamento = frm_pagamento.toLowerCase();
+
+      var cheque = frm_pagamento.match(/cheque/gi);
+      var transferencia = frm_pagamento.match(/transferencia/gi);
+      mostrarBanco(cheque, transferencia);
+    });
+
   // $('.submit_cliente').on('click',function(){
   //   $(".wait").css("display", "block");
   // });
@@ -379,7 +394,7 @@
         show_iva[i].style.display = "block";
       }
 
-      trocaRemanescentePorSubtotalSemIva();
+      // trocaRemanescentePorSubtotalSemIva();
       alertaremanescentePagamento();
 
     }
@@ -396,7 +411,7 @@
         show_iva[i].style.display = "none";
       }
 
-      trocaRemanescentePorTotalComIva();
+      // trocaRemanescentePorTotalComIva();
       alertaremanescentePagamento();
     }
 
@@ -445,8 +460,26 @@
         $('#nr_documento_forma_pagamento').focus();
         $('#nr_documento_forma_pagamento').val('');
       }
+
+      var cheque = frm_pagamento.match(/cheque/gi);
+      var transferencia = frm_pagamento.match(/transferencia/gi);
+      mostrarBanco(cheque, transferencia);
       
     });
+
+    function mostrarBanco(cheque, transferencia){
+
+      if(cheque!==null || transferencia!==null){
+        document.getElementById('label_pagamento_saida_banco_id').style.display="block";
+        document.getElementById('pagamento_saida_banco_id').style.display="block";
+        
+      }else{
+        document.getElementById('label_pagamento_saida_banco_id').style.display="none";
+        document.getElementById('pagamento_saida_banco_id').style.display="none";
+        $('#pagamento_saida_banco_id').val("");
+      }
+        
+    }
 
 
     $('#valor_pago').keyup(function(){

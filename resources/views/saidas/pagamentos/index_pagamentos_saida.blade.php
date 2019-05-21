@@ -140,6 +140,7 @@
                   <th> Valor Pago (Mtn) </th>
                   <th> Data Pagamento </th>
                   <th> Data Actualizacao </th>
+                  <th> Recibo </th>
                 </tr>
               </thead>
 
@@ -162,6 +163,29 @@
                   </td>
                   <td>
                     {{ date('d-m-Y H:m:s', strtotime($pagamento_saida->updated_at))}}
+                  </td>
+                  <td>
+
+                    {{Form::open()}}
+
+                    <div class="btn-group btn-group-sm">
+                      <a href="{{route('show_recibo_saida', [$pagamento_saida->saida_id, $pagamento_saida->id])}}" class="btn btn-info btn-sm">
+                      <i class="fa fa-eye"></i>
+                      Visualizar
+                    </a>
+
+                    <div class="btn-group btn-group-sm">
+                      <a href="{{route('imprimir_recibo_pagamento', [$pagamento_saida->saida_id, $pagamento_saida->id])}}" class="btn btn-info btn-sm">
+                      <i class="fa fa-print"></i>
+                      Imprimir
+                    </a>
+
+                      <!-- {{Form::hidden('pagamento_saida_id', $pagamento_saida->id)}}
+                      {{Form::button('<i class="fa fa-print"></i> Imprimir', ['type'=>'submit', 'class'=>'btn btn-success btn-sm', 'name'=>'submitFormReciboPagamentoSaida', 'id'=>'submitFormReciboPagamentoSaida'])}} -->
+
+                    </div>
+
+                    {{Form::close()}}
                   </td>
                 </tr>
                 @endif

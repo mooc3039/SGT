@@ -73,6 +73,10 @@ Route::group(['middleware'=>['authen']],function(){
   // GERIR PAGAMENTO DA SAIDA => Malache
   Route::post('/saida/pagamento', 'SaidaController@pagamentoSaida')->name('pagamentoSaida');
   Route::get('/saida/create_pagamento/{id}', 'SaidaController@createPagamentoSaida')->name('createPagamentoSaida');
+  // VISUALIZAR Recibos da SAIDA
+  Route::get('/saida/show_recibo_saida/{saida_id}/{pagamento_saida_id}', 'SaidaController@showReciboSaida')->name('show_recibo_saida');
+  // IMPRIMIR Recibos da SAIDA
+  Route::get('/saida/imprimir_recibo_pagamento/{saida_id}/{pagamento_saida_id}', 'SaidaController@imprimirReciboPagamento')->name('imprimir_recibo_pagamento');
    // SAIDAS, Privado, Publico, Concurso
   Route::get('/saida/saida_pubblico_create/', 'SaidaController@saidaPublicoCreate')->name('saidaPublicoCreate');
   Route::get('/saida/saida_concurso_create/', 'SaidaController@saidaConcursoCreate')->name('saidaConcursoCreate');

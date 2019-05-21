@@ -208,7 +208,7 @@ class CotacaoController extends Controller
     $cotacao = $this->cotacao->with('itensCotacao.produto', 'cliente')->findOrFail($id); 
     $empresa = Empresa::with('enderecos', 'telefones', 'emails', 'contas')->findOrFail(1); 
     $pdf = PDF::loadView('cotacoes.relatorio', compact('cotacao','empresa'));
-    return $pdf->download('cotação-'.$cotacao->codigo.'.pdf');
+    return $pdf->stream('cotação-'.$cotacao->codigo.'.pdf');
 
   }
 

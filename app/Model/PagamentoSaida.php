@@ -24,4 +24,7 @@ class PagamentoSaida extends Model
 		return $this->belongsTo('App\Model\FormaPagamento');
 		
 	}
+	public function banco(){
+		return $this->belongsTo('App\Model\Banco');
+	}
 }

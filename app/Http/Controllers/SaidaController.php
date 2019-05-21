@@ -43,9 +43,10 @@ class SaidaController extends Controller
   private $tipo_cliente;
   private $user;
 
-  public function __construct(Saida $saida, Concurso $concurso, ItenConcurso $iten_concurso, NotaFalta $nota_falta, Produto $produto, MotivoIva $motivo_iva, Cliente $cliente, TipoCliente $tipo_cliente, User $user){
+  public function __construct(Saida $saida,PagamentoSaida $pagamento_saida, Concurso $concurso, ItenConcurso $iten_concurso, NotaFalta $nota_falta, Produto $produto, MotivoIva $motivo_iva, Cliente $cliente, TipoCliente $tipo_cliente, User $user){
 
     $this->saida = $saida;
+    $this->pagamento_saida = $pagamento_saida;
     $this->concurso = $concurso;
     $this->iten_concurso = $iten_concurso;
     $this->nota_falta = $nota_falta;
@@ -124,8 +125,9 @@ class SaidaController extends Controller
       $formas_pagamento = DB::table('forma_pagamentos')->pluck('descricao', 'id')->all();
       $produtos = $this->produto->select('id', 'descricao')->get();
       $motivos_iva = $this->motivo_iva->select('id', 'motivo_nao_aplicacao')->get();
+      $bancos = DB::table('bancos')->pluck('nome', 'id')->all();
 
-      return view('saidas.create_edit_saida', compact('clientes', 'tipos_cliente', 'formas_pagamento' , 'produtos', 'motivos_iva'));
+      return view('saidas.create_edit_saida', compact('clientes', 'tipos_cliente', 'formas_pagamento' , 'produtos', 'motivos_iva', 'bancos'));
     }
 
     /**
@@ -136,6 +138,7 @@ class SaidaController extends Controller
      */
     public function store(SaidaStoreUpdateFormRequest $request)
     {
+      // dd($request->all());
       if (Gate::denies('criar_factura'))
             // abort(403, "Sem autorizacao");
         return redirect()->route('noPermission');
@@ -153,6 +156,7 @@ class SaidaController extends Controller
         $remanescente = 0.00;
         $forma_pagamento_id = $acronimo_forma_pagamento_naoaplicavel_id;
         $nr_documento_forma_pagamento = "Nao Aplicavel";
+        $pagamento_saida_banco_id = null;
         $nr_referencia = "Nao Aplivael";
         $concurso_id = 0;
 
@@ -171,10 +175,12 @@ class SaidaController extends Controller
           $remanescente = $remanescente;
           $forma_pagamento_id = $forma_pagamento_id;
           $nr_documento_forma_pagamento = $nr_documento_forma_pagamento;
+          $banco_id = $pagamento_saida_banco_id;
 
         }else{
 
           $pago = $request['pago'];
+          $banco_id = $request['pagamento_saida_banco_id'];
 
           if(!empty($request['valor_pago'])){
             $valor_pago = str_replace($bad_symbols, "", $request['valor_pago']);
@@ -317,6 +323,7 @@ class SaidaController extends Controller
               $pagamento_saida->valor_pago = $valor_pago;
               $pagamento_saida->forma_pagamento_id = $forma_pagamento_id;
               $pagamento_saida->nr_documento_forma_pagamento = $nr_documento_forma_pagamento;
+              $pagamento_saida->banco_id = $banco_id;
               $pagamento_saida->remanescente = $remanescente;
               $pagamento_saida->save();
 
@@ -365,6 +372,17 @@ class SaidaController extends Controller
         $empresa = Empresa::with('enderecos', 'telefones', 'emails', 'contas')->findOrFail(1); 
         
         return view('saidas.show_saida', compact('saida', 'empresa'));
+
+      }
+
+      public function showReciboSaida($saida_id, $pagamento_saida_id){
+
+        $saida = $this->saida->findOrFail($saida_id);
+        $pagamentos_saida = $this->pagamento_saida->with('banco')->findOrFail($pagamento_saida_id);
+        $empresa = Empresa::with('enderecos', 'telefones', 'emails', 'contas')->findOrFail(1);
+        // dd($pagamentos_saida);
+
+        return view('saidas.recibo.show_recibo_saida', compact('saida', 'pagamentos_saida', 'empresa'));
 
       }
 
@@ -682,6 +700,19 @@ class SaidaController extends Controller
       return view('saidas.pagamentos.index_pagamentos_saida', compact('formas_pagamento', 'saida'));
     }
 
+    // Imprimir o(s) recibo(s) de pagamento da saida
+    public function imprimirReciboPagamento($saida_id, $pagamento_saida_id){
+
+      $saida = $this->saida->findOrFail($saida_id);
+      $pagamentos_saida = $this->pagamento_saida->with('banco')->findOrFail($pagamento_saida_id);
+      $empresa = Empresa::with('enderecos', 'telefones', 'emails', 'contas')->findOrFail(1);
+        // dd($saida_id);
+
+      $pdf = PDF::loadView('saidas.recibo.show_recibo_saida_teste', compact('saida','pagamentos_saida', 'empresa'));
+      return $pdf->stream('saida-'.$saida->codigo.'.pdf');
+      
+    }
+
     public function report($id){
 
         // Relatorio em pdf
@@ -714,7 +745,7 @@ class SaidaController extends Controller
         $saida = $this->saida->with('itensSaida.produto', 'cliente')->findOrFail($id); 
         $empresa = Empresa::with('enderecos', 'telefones', 'emails', 'contas')->findOrFail(1);
         $pdf = PDF::loadView('saidas.relatorio', compact('saida','empresa'));
-        return $pdf->download('factura-'.$saida->codigo.'.pdf');
+        return $pdf->stream('factura-'.$saida->codigo.'.pdf');
         
       }
 
